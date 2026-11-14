@@ -23,6 +23,20 @@ public class AgentService {
     @org.springframework.beans.factory.annotation.Value("${ainative.public-base-url:http://localhost:7011}")
     private String publicBaseUrl;
 
+    /**
+     * 执行器安装源:决定「启动命令」里怎么装运行时。
+     * - release(默认):pip 装 GitHub Release 的 wheel —— 要求仓库已公开,否则匿名下载 404
+     * - npm:            npx -y ymai-codeflow@&lt;version&gt; —— 要求 npm 上有该版本
+     * - local:          假定运行时已在 PATH(自行 pip/uv 装过),命令里只给 connect
+     * 私有仓库请用 local 或 npm,避免生成一条 404 的安装命令。
+     */
+    @org.springframework.beans.factory.annotation.Value("${ainative.runtime-source:release}")
+    private String runtimeSource;
+
+    /** 自定义安装前缀(留空则按 runtime-source 自动生成)。 */
+    @org.springframework.beans.factory.annotation.Value("${ainative.runtime-install-prefix:}")
+    private String runtimeInstallPrefix;
+
     public AgentService(AgentDao dao, com.ainative.v2.daemon.ExecutorHub executorHub) {
         this.dao = dao;
         this.executorHub = executorHub;
@@ -146,22 +160,58 @@ public class AgentService {
         String base = publicBaseUrl.replaceFirst("^http", "ws");
         String provider = "claude";
         int maxTasks = 2;
-        String command = "npx -y ymai-codeflow connect"
+        // 运行时版本锁定:平台 v2 的协议依赖 0.3.33 的行为(产物递归回传/环境变量合并/
+        // 会话去重复合键)。不锁版本会让用户拉到旧版而命中必现故障。
+        String runtimeVersion = runtimeVersion();
+        String connectArgs = " connect"
                 + " --ws-url " + base + "/ws/executor"
                 + " --token " + effective
                 + " --executor-id " + executorId
                 + " --provider " + provider
                 + " --memory-mode provider-local"
                 + " --max-tasks " + maxTasks;
+        String source = runtimeSource == null ? "release" : runtimeSource.trim().toLowerCase();
+        String npmCommand = "npx -y ymai-codeflow@" + runtimeVersion + connectArgs;
+        String command;
+        if ("local".equals(source)) {
+            // 运行时已就位:命令里只给 connect,安装交给用户自己的环境
+            command = "ainative" + connectArgs;
+        } else if ("npm".equals(source)) {
+            command = npmCommand;
+        } else {
+            // release(默认):独立 venv 安装官方 wheel(零依赖、跨平台、与仓库源码同一份)。
+            // 不直接 pip install 到系统 Python:macOS/Homebrew 的 externally-managed 环境会拒绝。
+            // 注意:仓库为 private 时匿名下载会 404 —— 此时请用 runtime-source=local 或 npm。
+            String wheel = runtimeInstallPrefix != null && !runtimeInstallPrefix.isBlank()
+                    ? runtimeInstallPrefix
+                    : "https://github.com/qsumm/CodeFlow/releases/download/runtime-v" + runtimeVersion
+                      + "/ainative_runtime-" + runtimeVersion + "-py3-none-any.whl";
+            command = "posix".equalsIgnoreCase(os)
+                    ? "python3 -m venv ~/.ainative-runtime && ~/.ainative-runtime/bin/pip install " + wheel
+                      + " && ~/.ainative-runtime/bin/ainative" + connectArgs
+                    : "python -m venv %USERPROFILE%\\.ainative-runtime"
+                      + " && %USERPROFILE%\\.ainative-runtime\\Scripts\\pip install " + wheel
+                      + " && %USERPROFILE%\\.ainative-runtime\\Scripts\\ainative" + connectArgs;
+        }
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("executorId", executorId);
         out.put("clientKind", e.clientKind());
         out.put("provider", provider);
         out.put("command", command);
+        out.put("npmCommand", npmCommand);
+        out.put("runtimeVersion", runtimeVersion);
+        out.put("runtimeSource", source);
         if (token == null || token.isBlank()) {
             out.put("token", effective);
         }
         return out;
+    }
+
+    /** 运行时版本:与 GitHub Release tag / npm 包版本一致。升级运行时时只改这里。 */
+    private static final String RUNTIME_VERSION = "0.3.33";
+
+    private String runtimeVersion() {
+        return RUNTIME_VERSION;
     }
 
     public Map<String, Object> modelPolicy(long executorId) {

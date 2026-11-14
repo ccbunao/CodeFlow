@@ -14,6 +14,12 @@ ainative:
   jwt-ttl-seconds: 7200
   public-base-url: ${AINATIVE_PUBLIC_BASE_URL_V2:http://localhost:7011}
   download-secret: ${AINATIVE_DOWNLOAD_SECRET:v2-download-secret}
+  # 执行器安装源(决定「启动命令」里怎么装运行时):
+  #   release(默认)= pip 装 GitHub Release wheel —— 要求仓库已公开,否则匿名下载 404
+  #   npm           = npx -y ymai-codeflow@<version> —— 要求 npm 上有该版本
+  #   local         = 运行时已在 PATH,命令只给 connect
+  runtime-source: ${AINATIVE_RUNTIME_SOURCE:release}
+  runtime-install-prefix: ${AINATIVE_RUNTIME_INSTALL_PREFIX:}
 logging:
   level:
     com.ainative.v2: INFO
