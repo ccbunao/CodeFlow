@@ -50,21 +50,8 @@ public class ExPullService {
         if (baseUrl == null || baseUrl.isBlank()) {
             throw new RuntimeException("绑定缺少 baseUrl 配置");
         }
-        // provider 分支:禅道(Token 头 + /api.php/v1)与 TAPD(Basic Auth + data 包装)形态不同
-        String provider = providerOf(bindingId);
-        JsonNode payload;
-        if ("TAPD".equals(provider)) {
-            // 真实 TAPD 契约:GET /bugs?workspace_id=&fields=&order=&page=&limit=
-            // 响应 {"status":1,"data":[{"Bug":{...}}]} —— 条目按实体名嵌套,必须解包
-            String url = baseUrl.replaceAll("/+$", "") + "/bugs"
-                    + "?workspace_id=" + binding.projectId()
-                    + "&fields=id,title,description,status,priority,reporter,current_owner,created,modified"
-                    + "&order=modified%20desc&page=1&limit=" + TAPD_PAGE_LIMIT;
-            payload = fetchBasic(url, credentialOf(bindingId));
-        } else {
-            String url = baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs?product=" + binding.projectId();
-            payload = fetch(url, credentialOf(bindingId));
-        }
+        String url = baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs?product=" + binding.projectId();
+        JsonNode payload = fetch(url, credentialOf(bindingId));
         List<JsonNode> items = itemsOf(payload);
         int imported = 0;
         int skipped = 0;
@@ -80,14 +67,7 @@ public class ExPullService {
                 skipped++;
                 continue;
             }
-            // Bug 用 title,Story 用 name;都缺时退回带 ID 的占位标题
-            String title = item.path("title").asText("");
-            if (title.isBlank()) {
-                title = item.path("name").asText("");
-            }
-            if (title.isBlank()) {
-                title = "外部条目 " + externalId;
-            }
+            String title = item.path("title").asText("外部条目 " + externalId);
             String body = item.path("description").asText("");
             Long stateId = mappedState(bindingId, item.path("status").asText(""), bindingWorkspace);
             Long flowId = mappedFlow(bindingId, bindingWorkspace);
@@ -107,11 +87,6 @@ public class ExPullService {
         return out;
     }
 
-    private String providerOf(long bindingId) {
-        List<String> rows = jdbc.queryForList("SELECT provider FROM ex_binding WHERE id=?", String.class, bindingId);
-        return rows.isEmpty() ? "ZENTAO" : rows.get(0);
-    }
-
     private String extractBaseUrl(String configJson) {
         try {
             JsonNode node = mapper.readTree(configJson);
@@ -124,26 +99,6 @@ public class ExPullService {
     private String credentialOf(long bindingId) {
         List<String> rows = jdbc.queryForList("SELECT credential_ref FROM ex_binding WHERE id=?", String.class, bindingId);
         return rows.isEmpty() || rows.get(0) == null ? "" : rows.get(0);
-    }
-
-    /** TAPD 形态:Basic Auth(clientKey:accessSecret)。credential_ref 存 "user:secret"。 */
-    private JsonNode fetchBasic(String url, String credential) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-                    .timeout(Duration.ofSeconds(15))
-                    .header("Authorization", "Basic "
-                            + java.util.Base64.getEncoder().encodeToString(
-                                    credential.getBytes(java.nio.charset.StandardCharsets.UTF_8)))
-                    .header("Accept", "application/json")
-                    .GET().build();
-            HttpResponse<String> resp = http.send(request, HttpResponse.BodyHandlers.ofString());
-            if (resp.statusCode() / 100 != 2) {
-                throw new RuntimeException("外部平台返回 HTTP " + resp.statusCode());
-            }
-            return mapper.readTree(resp.body());
-        } catch (java.io.IOException | InterruptedException e) {
-            throw new RuntimeException("外部平台请求失败:" + e.getMessage(), e);
-        }
     }
 
     private JsonNode fetch(String url, String token) {
@@ -166,24 +121,11 @@ public class ExPullService {
         }
     }
 
-    private static final int TAPD_PAGE_LIMIT = 50;
-
-    /**
-     * 解析外部条目。
-     * 禅道:{data:[{...}]};TAPD:{status:1,data:[{"Bug":{...}}]} —— 条目按实体名
-     * (Bug/Story)嵌套,此处统一解包成扁平条目,后续字段读取对两种 provider 一致。
-     */
     private static List<JsonNode> itemsOf(JsonNode payload) {
         List<JsonNode> items = new ArrayList<>();
         JsonNode array = payload.isArray() ? payload : payload.path("data");
         if (array.isArray()) {
-            array.forEach(row -> {
-                JsonNode nested = row.path("Bug");
-                if (nested.isMissingNode() || nested.isNull()) {
-                    nested = row.path("Story");
-                }
-                items.add(nested.isMissingNode() || nested.isNull() ? row : nested);
-            });
+            array.forEach(items::add);
         } else if (array.has("items") && array.get("items").isArray()) {
             array.get("items").forEach(items::add);
         }
@@ -196,9 +138,8 @@ public class ExPullService {
                 Long.class, bindingId, externalStatus);
         if (rows.isEmpty()) {
             List<Long> fallback = jdbc.queryForList(
-                    "SELECT s.id FROM wi_flow_state s JOIN wi_flow f ON f.id=s.flow_id"
-                            + " WHERE s.workspace_id=" + workspaceId + " AND s.category='NEW' AND f.deleted_at IS NULL"
-                            + " ORDER BY s.sort_no LIMIT 1", Long.class);
+                    "SELECT s.id FROM wi_flow_state s WHERE s.workspace_id=" + workspaceId
+                            + " AND s.category='NEW' ORDER BY s.sort_no LIMIT 1", Long.class);
             return fallback.isEmpty() ? null : fallback.get(0);
         }
         return rows.get(0);
@@ -212,7 +153,8 @@ public class ExPullService {
             return rows.get(0);
         }
         List<Long> fallback = jdbc.queryForList(
-                "SELECT id FROM wi_flow WHERE workspace_id=" + workspaceId + " AND deleted_at IS NULL ORDER BY is_default DESC, id LIMIT 1", Long.class);
+                "SELECT id FROM wi_flow WHERE workspace_id=" + workspaceId
+                        + " AND deleted_at IS NULL ORDER BY is_default DESC, id LIMIT 1", Long.class);
         return fallback.isEmpty() ? null : fallback.get(0);
     }
 
