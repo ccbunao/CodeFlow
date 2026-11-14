@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,8 +122,8 @@ public class DaemonCommentController {
         Thread.startVirtualThread(() -> {
             try {
                 List<Map<String, Object>> links = jdbc.queryForList(
-                        "SELECT l.binding_id, l.external_id, b.config_json, b.credential_ref FROM ex_item_link l"
-                                + " JOIN ex_binding b ON b.id=l.binding_id"
+                        "SELECT l.binding_id, l.external_id, b.workspace_id, b.provider, b.config_json, b.credential_ref"
+                                + " FROM ex_item_link l JOIN ex_binding b ON b.id=l.binding_id"
                                 + " WHERE l.ticket_id=? AND l.deleted_at IS NULL", ticketId);
                 if (links.isEmpty()) {
                     return;
@@ -137,16 +138,38 @@ public class DaemonCommentController {
                 if (baseUrl.isBlank()) {
                     return;
                 }
-                String url = baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs/"
-                        + link.get("external_id") + "/comments";
-                var request = java.net.http.HttpRequest.newBuilder(URI.create(url))
-                        .timeout(Duration.ofSeconds(10))
-                        .header("Token", String.valueOf(link.get("credential_ref")))
-                        .header("Content-Type", "application/json")
-                        .POST(java.net.http.HttpRequest.BodyPublishers.ofString(
-                                JSON_BODY_PREFIX + new com.fasterxml.jackson.databind.ObjectMapper()
-                                        .writeValueAsString("[CodeFlow 交付备注] " + content) + JSON_BODY_SUFFIX))
-                        .build();
+                // 按 provider 分支(两家的协议完全不同,见内部仓 v1 TapdClient/Provider):
+                //   禅道:POST /api.php/v1/bugs/{id}/comments,Token 头,JSON 体
+                //   TAPD:POST /comments,Basic Auth,**form 表单**
+                //        (workspace_id/entry_id/description/author;JSON 会被 TAPD 拒)
+                boolean tapd = "TAPD".equals(String.valueOf(link.get("provider")));
+                java.net.http.HttpRequest request;
+                if (tapd) {
+                    String body = "workspace_id=" + urlencode(String.valueOf(link.get("workspace_id")))
+                            + "&entry_id=" + urlencode(String.valueOf(link.get("external_id")))
+                            + "&description=" + urlencode("[CodeFlow 交付备注] " + content)
+                            + "&author=" + urlencode(commentAuthorOf(link));
+                    request = java.net.http.HttpRequest.newBuilder(
+                                    URI.create(baseUrl.replaceAll("/+$", "") + "/comments"))
+                            .timeout(Duration.ofSeconds(10))
+                            .header("Content-Type", "application/x-www-form-urlencoded")
+                            .header("Authorization", "Basic " + Base64.getEncoder()
+                                    .encodeToString(String.valueOf(link.get("credential_ref"))
+                                            .getBytes(java.nio.charset.StandardCharsets.UTF_8)))
+                            .POST(java.net.http.HttpRequest.BodyPublishers.ofString(body))
+                            .build();
+                } else {
+                    request = java.net.http.HttpRequest.newBuilder(URI.create(
+                                    baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs/"
+                                            + link.get("external_id") + "/comments"))
+                            .timeout(Duration.ofSeconds(10))
+                            .header("Content-Type", "application/json")
+                            .header("Token", String.valueOf(link.get("credential_ref")))
+                            .POST(java.net.http.HttpRequest.BodyPublishers.ofString(
+                                    JSON_BODY_PREFIX + new com.fasterxml.jackson.databind.ObjectMapper()
+                                            .writeValueAsString("[CodeFlow 交付备注] " + content) + JSON_BODY_SUFFIX))
+                            .build();
+                }
                 var resp = java.net.http.HttpClient.newHttpClient()
                         .send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
                 boolean ok = resp.statusCode() / 100 == 2;
@@ -159,6 +182,31 @@ public class DaemonCommentController {
                 log.warn("external writeback failed ticket={} error={}", ticketId, e.getMessage());
             }
         });
+    }
+
+    /** TAPD 备注作者:优先 config_json.commentAuthor,否则用 apiUser(去掉密码)。 */
+    private String commentAuthorOf(Map<String, Object> link) {
+        try {
+            var cfg = new com.fasterxml.jackson.databind.ObjectMapper()
+                    .readTree(String.valueOf(link.get("config_json")));
+            String author = cfg.path("commentAuthor").asText("");
+            if (!author.isBlank()) {
+                return author;
+            }
+            String apiUser = cfg.path("apiUser").asText("");
+            if (!apiUser.isBlank()) {
+                return apiUser;
+            }
+        } catch (Exception ignored) {
+            // 配置缺失时退回凭据里的用户名部分
+        }
+        String cred = String.valueOf(link.get("credential_ref"));
+        int colon = cred.indexOf(':');
+        return colon > 0 ? cred.substring(0, colon) : cred;
+    }
+
+    private static String urlencode(String value) {
+        return java.net.URLEncoder.encode(value == null ? "" : value, java.nio.charset.StandardCharsets.UTF_8);
     }
 
     private long workspaceOf(long dispatchId) {
