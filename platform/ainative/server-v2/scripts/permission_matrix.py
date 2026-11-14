@@ -24,7 +24,7 @@ def check(name, cond, detail=""):
 
 def login(user, pwd):
     r = call("POST", "/api/auth/login", {"username": user, "password": pwd})
-    return r["data"]["access_token"] if r.get("success") else None
+    return r["data"].get("accessToken") or r["data"].get("access_token") if r.get("success") else None
 
 def main():
     suffix = str(int(time.time()))[-6:]

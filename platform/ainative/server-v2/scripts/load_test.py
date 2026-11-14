@@ -13,7 +13,9 @@ def login():
         {"username": "v2smoke", "password": "secret123"}).encode(), method="POST")
     req.add_header("Content-Type", "application/json")
     with urllib.request.urlopen(req, timeout=10) as r:
-        return json.loads(r.read())["data"]["access_token"]
+        d = json.loads(r.read())["data"]
+    # 登录响应已对齐前端契约(accessToken),兼容旧字段名
+    return d.get("accessToken") or d.get("access_token") or ""
 
 TOKEN = login()
 PATHS = ["/api/workitems?pageNum=1&pageSize=20", "/api/agents", "/api/squads",

@@ -54,14 +54,14 @@ def main():
     check("注册", s == 200 and r.get("success"), r)
     s, r = call("POST", "/api/auth/login", {"username": user, "password": "secret123"})
     check("登录", s == 200 and r.get("success"), r)
-    token = r["data"]["access_token"] if r.get("success") else ""
+    token = r["data"].get("accessToken") or r["data"].get("access_token") if r.get("success") else ""
     s, r = call("GET", "/api/auth/me", token=token)
     check("me", s == 200 and r.get("success") and r["data"]["username"] == user, r)
     s, r = call("POST", "/api/auth/login", {"username": user, "password": "bad"})
     check("错误密码被拒", r.get("code") == "10401", r)
     # 平台管理域用例需要管理员令牌(预置账号 v2smoke 为管理员)
     s, r = call("POST", "/api/auth/login", {"username": "v2smoke", "password": "secret123"})
-    admin_token = r["data"]["access_token"] if r.get("success") else token
+    admin_token = r["data"].get("accessToken") or r["data"].get("access_token") if r.get("success") else token
 
     case("工作项域")
     s, r = call("POST", "/api/workitems", {"workType": "REQ", "title": f"E2E 工单 {suffix}", "contentMd": "端到端验证", "priority": 2}, token=token)
