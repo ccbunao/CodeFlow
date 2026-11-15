@@ -44,7 +44,7 @@ then the template seed. `.database.imported` remains the schema checkpoint;
 `.database.templatesImported` is the template checkpoint. A missing template
 checkpoint on an older manifest runs only the idempotent template seed.
 
-JSON escapes in the SQL string literals are doubled so MySQL parsing preserves
+JSON escapes in the SQL string literals are doubled so the SQL parser preserves
 them for the JSON parser. The seed removes `NO_BACKSLASH_ESCAPES` only in its own
 session and restores the previous mode; deployment must not change global
 `sql_mode` to import the templates.

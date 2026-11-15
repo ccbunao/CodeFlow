@@ -6,7 +6,7 @@ AI Native 软件需求交付平台的服务端与前端源码:需求接入、数
 - 运行配置见 [`docs/community/runtime-configuration.md`](docs/community/runtime-configuration.md)
 - 数据库结构见 [`docs/ainative-schema.sql`](docs/ainative-schema.sql)
 
-技术栈:Spring Boot 2.7 + MyBatis + MySQL 8 + Redis + MinIO/S3;React + Vite 前端。
+技术栈:Spring Boot 2.7 + MyBatis + seekdb(OceanBase)+ Redis + MinIO/S3;React + Vite 前端。
 
 ## 本地构建
 

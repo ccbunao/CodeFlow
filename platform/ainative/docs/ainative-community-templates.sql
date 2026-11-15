@@ -1,7 +1,7 @@
 -- AINative system squad templates.
 -- Idempotent by system template name; no fixed database IDs are used.
 
--- JSON escapes are doubled for MySQL string literals. Force deterministic
+-- JSON escapes are doubled for SQL string literals. Force deterministic
 -- parsing even when the server enables NO_BACKSLASH_ESCAPES globally.
 -- charset guard: 该文件含中文字面量,必须显式声明 utf8mb4,
 -- 否则客户端默认 latin1 会把 UTF-8 字节误解码后二次编码,导致全表中文乱码(DEF-015)。

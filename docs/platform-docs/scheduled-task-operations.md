@@ -39,9 +39,9 @@
 | Workitem 写入 p95 | `${MAX_WORKITEM_WRITE_P95_MS}` ms | 停止后续语句；扩容、限流或改期 | SRE + 应用 Owner |
 | Workitem 5xx/业务失败率 | `${MAX_WORKITEM_ERROR_RATE_PERCENT}`% | 立即停止发布并保留普通工单证据 | SRE |
 
-在等量数据的预发/影子库演练 `docs/migration/V041__scheduled_task.sql`，记录每条语句的耗时、锁等待、磁盘增量和复制延迟。生产执行前确认 MySQL 8.0、DDL/`information_schema` 权限、磁盘余量、执行器在线和上述信号均低于阈值。
+在等量数据的预发/影子库演练 `docs/migration/V041__scheduled_task.sql`，记录每条语句的耗时、锁等待、磁盘增量和复制延迟。生产执行前确认目标库为 seekdb、DDL/`information_schema` 权限、磁盘余量、执行器在线和上述信号均低于阈值。
 
-每次发布使用唯一证据目录，并在执行任何 SQL 前确认数据库身份。MySQL 凭证只放在专用、权限 `0600` 的 option file；使用 `--defaults-file`（不是 `--defaults-extra-file`）作为 `mysql` 的**第一个选项**。runner 必须在专用 OS 用户或一次性容器中运行，以权限 `0700` 的隔离 HOME 启动，并证明其中没有 `.mylogin.cnf`，防止登录路径覆盖目标；不要添加未经 MySQL 8.0 验证的 client option。以下变量来自审批后的发布单，不能临时猜测：
+每次发布使用唯一证据目录，并在执行任何 SQL 前确认数据库身份。数据库凭证只放在专用、权限 `0600` 的 option file；使用 `--defaults-file`（不是 `--defaults-extra-file`）作为 `mysql` 的**第一个选项**。runner 必须在专用 OS 用户或一次性容器中运行，以权限 `0700` 的隔离 HOME 启动，并证明其中没有 `.mylogin.cnf`，防止登录路径覆盖目标；不要添加未经客户端版本验证的 client option。以下变量来自审批后的发布单，不能临时猜测：
 
 ```bash
 set -euo pipefail
@@ -102,7 +102,7 @@ printf 'APPROVED\t%s\n' "${approval}" >> "${EVIDENCE_DIR}/database-identity.tsv"
 
 若身份不匹配或没有人工逐字确认，脚本以非 0 退出；不得执行预检或 DDL。后续命令复用同一受控 Shell 中的 `MYSQL`、`RELEASE_DIR` 与 `EVIDENCE_DIR`。初次执行必须使用 `V037_RESUME=false`；恢复时使用相同 customer/release、新的唯一 attempt ID 和 `V037_RESUME=true`，重新核对身份与碰撞门禁，但沿用 release 级 append-only ledger，不能覆盖旧证据。
 
-发布平台应在每个 runner 镜像升级时执行以下无凭证 contract check；本手册修订时已用 `mysql:8.0`（client 8.0.46）验证该 option 形态成功：
+发布平台应在每个 runner 镜像升级时执行以下无凭证 contract check；本手册修订时已用 mysql 协议客户端（8.0.46）验证该 option 形态成功：
 
 ```bash
 docker run --rm mysql:8.0 \
@@ -156,7 +156,7 @@ test "${collision_count}" = "0"
 
 ### 4. 用校验清单逐语句执行 V037
 
-V037 含多个 DDL；MySQL 会逐条提交，整个文件**不是一个事务**。两个 `CREATE TABLE` 带 `IF NOT EXISTS`，后续 `ALTER TABLE` 是无条件语句，部分失败后盲目重跑整份文件会遇到重复列/索引错误，甚至掩盖物理定义不一致。
+V037 含多个 DDL；seekdb 会逐条提交，整个文件**不是一个事务**。两个 `CREATE TABLE` 带 `IF NOT EXISTS`，后续 `ALTER TABLE` 是无条件语句，部分失败后盲目重跑整份文件会遇到重复列/索引错误，甚至掩盖物理定义不一致。
 
 禁止把整个 migration 直接交给 `mysql`，也禁止用 `;`、正则或通用文本工具猜测 SQL 语句边界。生成列表达式、字符串或注释内都可能出现分号。当前 V037 的审批制品必须精确匹配：
 
@@ -180,8 +180,8 @@ V037 含多个 DDL；MySQL 会逐条提交，整个文件**不是一个事务**�
 2. 在读取共享 ledger/选择 ID **之前**，通过发布平台或分布式协调服务取得 V037 lease。lease 包含唯一 owner、attempt 和单调 fencing token；TTL 必须大于客户批准的最大单条 DDL + reconciliation 时间，runner 持续 heartbeat。无法 acquire/renew 时禁止执行。lease 服务必须实现 `ACTIVE → LOST/QUARANTINED` 状态机：TTL 到期、heartbeat 丢失或 release 结果不确定时只能进入隔离，**严禁因 TTL 到期自动重新分配 owner/token**。
 3. 在持有 lease 的情况下读取 ledger，ID 必须是 manifest 顺序的第一个非 `SUCCESS` 项；一次 invocation 只允许一个 ID。`RELEASE_DIR`/ledger 必须位于跨 runner 可见的耐久证据存储，不能把单机文件锁或本地目录称为跨主机互斥。
 4. 执行客户批准的 threshold gate，且 gate 自身的路径与 SHA-256 已在发布单固定。gate 在语句前后检查 metadata lock、长事务、replica lag、Workitem p95/错误率；任一超阈值都返回非 0，runner 记录 `BLOCKED` 并停止。
-5. 将 `STARTED`、UTC 时间、owner 和 fencing token 写入 append-only ledger，然后仅执行该临时 SQL 文件。MySQL 非 0 时记录 `FAILED`、归档 stderr 并立即停止；不得继续下一 ID。
-6. MySQL 成功只记录 `APPLIED_UNRECONCILED`。随后运行审批过的 reconciliation gate，将本 ID 的 `information_schema` 物理定义与 V037 精确合同核对；只有 gate 与语句后 threshold gate 都成功才能追加 `SUCCESS`。lease 必须一直持有到最终 ledger append 完成，再用相同 owner/token 条件释放。
+5. 将 `STARTED`、UTC 时间、owner 和 fencing token 写入 append-only ledger，然后仅执行该临时 SQL 文件。客户端返回非 0 时记录 `FAILED`、归档 stderr 并立即停止；不得继续下一 ID。
+6. 客户端成功只记录 `APPLIED_UNRECONCILED`。随后运行审批过的 reconciliation gate，将本 ID 的 `information_schema` 物理定义与 V037 精确合同核对；只有 gate 与语句后 threshold gate 都成功才能追加 `SUCCESS`。lease 必须一直持有到最终 ledger append 完成，再用相同 owner/token 条件释放。
 
 安全 runner 的核心形态如下；`${V037_THRESHOLD_GATE}` 与 `${V037_RECONCILE_GATE}` 必须是平台已审批、校验过 SHA-256 的**绝对可执行文件**，不得使用 `eval` 或从发布单拼接 Shell：
 
@@ -356,7 +356,7 @@ trap - EXIT HUP INT TERM
 
 每次只运行一个 ID，例如 `NEXT_STATEMENT_ID=03`，人工审核 ledger 与证据后再启动下一次。生产 runner 还必须用 trap 清理临时 SQL；上面示例保留失败分片供事故取证。
 
-lease/ledger 命令必须内置客户批准的连接/请求总超时，任何 acquire、renew、release 或 append 不可用都按失败处理。`V037_LEASE_ACQUIRE/RENEW/RELEASE` 及服务端必须实现 quarantine 语义：heartbeat 丢失、TTL 到期或 release 不确定后，key 保持 `LOST/QUARANTINED`，普通 acquire 永远失败；release 也不能清除 quarantine。不能依赖本地 `kill`、trap 或 fencing token 杀死 MySQL DDL——Shell 在前台 `mysql` 进程返回前可能延迟处理 TERM，旧 runner/数据库语句可能在 lease 丢失后继续执行。heartbeat/trap 只保证 runner 一旦重新取得控制就不再开始后续语句，**不证明正在执行的 DDL 已停止**。
+lease/ledger 命令必须内置客户批准的连接/请求总超时，任何 acquire、renew、release 或 append 不可用都按失败处理。`V037_LEASE_ACQUIRE/RENEW/RELEASE` 及服务端必须实现 quarantine 语义：heartbeat 丢失、TTL 到期或 release 不确定后，key 保持 `LOST/QUARANTINED`，普通 acquire 永远失败；release 也不能清除 quarantine。不能依赖本地 `kill`、trap 或 fencing token 杀死正在执行的 DDL——Shell 在前台 `mysql` 进程返回前可能延迟处理 TERM，旧 runner/数据库语句可能在 lease 丢失后继续执行。heartbeat/trap 只保证 runner 一旦重新取得控制就不再开始后续语句，**不证明正在执行的 DDL 已停止**。
 
 发生 quarantine 后禁止自动接管。DBA 必须以 `SHOW FULL PROCESSLIST`、`performance_schema.events_statements_current`、`performance_schema.metadata_locks`（以及客户平台的会话/审计记录）证明旧连接和该 DDL 已不存在或已由 DBA 明确终止，归档连接 ID、SQL digest、metadata-lock 状态与采集时间；同时把 ledger、分片 checksum、`information_schema` 物理结构和当前 threshold 全部对账。若任何连接/DDL 状态未知，保持隔离并升级事故。只有上述证据闭合后，才允许两个不同人员（DBA 与 SRE/发布 Owner）审批一次带原 owner、attempt、最后 token 和证据哈希的 fenced force-clear/reissue；lease 服务原子记录审批与更高 token 后才解除 quarantine。新 runner 取得新 token 后还要在 lease 内再次 reconciliation，不能因 force-clear 推断旧 DDL 未生效。发布平台 helper/API 必须强制这些状态和双人审批，不能把它们只写成 runbook 约定。
 
@@ -624,7 +624,7 @@ scheduled_zero_gate \
 
 ## DDL 兼容性与性能
 
-V037 是加法迁移，保留旧字段和旧索引。`dispatch.normalized_idempotency_key` 使用 MySQL 8.0 支持的 `GENERATED ALWAYS AS (...) STORED`、`REGEXP` 和 `CASE/CONCAT`，把 Workitem 的历史数字键规范为 `WORKITEM:<原键>`，其它键保持不变。
+V037 是加法迁移，保留旧字段和旧索引。`dispatch.normalized_idempotency_key` 使用 seekdb 支持的 `GENERATED ALWAYS AS (...) STORED`、`REGEXP` 和 `CASE/CONCAT`，把 Workitem 的历史数字键规范为 `WORKITEM:<原键>`，其它键保持不变。
 
 生成列只统一唯一性表示，不改变上述写入协议：Workitem 永久写 raw 数字键，非 Workitem 来源才写命名空间键；prefixed Workitem 仅作为兼容存量读取。
 
@@ -717,7 +717,7 @@ V037 是加法迁移，保留旧字段和旧索引。`dispatch.normalized_idempo
 AINATIVE_DOCKER_RELEASE_GATE=true ./scripts/verify-v037-docker-gates.sh
 ```
 
-当前门禁覆盖 8 个真实 MySQL/Redis 测试类。测试总数由脚本根据当次新生成的 Surefire 报告动态汇总；成功输出必须满足 `tests>0 failures=0 errors=0 skipped=0`，不得用历史固定数量代替当次报告。任何 0 tests、failure、error、skip、Docker 不可达或未显式 opt-in 都不是通过。
+当前门禁覆盖 8 个真实 seekdb/Redis 测试类。测试总数由脚本根据当次新生成的 Surefire 报告动态汇总；成功输出必须满足 `tests>0 failures=0 errors=0 skipped=0`，不得用历史固定数量代替当次报告。任何 0 tests、failure、error、skip、Docker 不可达或未显式 opt-in 都不是通过。
 
 ```bash
 mvn -DskipFrontend=true -DskipGitCommitId=true \

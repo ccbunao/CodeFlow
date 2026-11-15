@@ -70,13 +70,13 @@ CodeFlow 把这些**工程化环节**做成平台:数字员工小队按可编排
 
 ```bash
 git clone https://github.com/qsumm/CodeFlow.git && cd CodeFlow/platform
-docker compose up -d          # MySQL 8 + 后端 v2(前端随 jar 内嵌,自动建表)
+docker compose up -d          # seekdb + 后端 v2(前端随 jar 内嵌,自动建表)
 ```
 
 打开 **http://localhost:7001** — 注册的第一个账号即平台管理员。
 
 > **架构说明**:后端为 v2 全量重写(Spring Boot 3.3,零 v1 衍生,~1.4 万行),
-> 数据库 schema 自动初始化(docs/seekdb-schema-v1-*.sql,MySQL 8 兼容),
+> 数据库 schema 自动初始化(docs/seekdb-schema-v1-*.sql),
 > 产物/附件存本地卷 `/app/artifacts`(对象存储可插拔)。
 > 公网部署请替换 `MYSQL_PASSWORD` / `AINATIVE_JWT_SECRET` / `DOWNLOAD_SECRET`
 > 并设置 `PUBLIC_BASE_URL` 为实际对外地址(MCP 地址与执行器启动命令会随之生成)。
@@ -113,7 +113,7 @@ docs/                用户手册、集成指南、SDLC 设计、发布清单、
 - **可靠投递** — 离线派发落 PENDING 重放、断线自动重连、attempt 递增、同分钟判重防抖
 - **产物完整性** — deliverables 递归回传(含子目录,`__` 编码保留结构),下载带 sha256 校验
 - **外部工单** — 禅道接入:自动轮询拉取入库,交付备注回写源头
-- **零 ORM** — 后端只用 JdbcTemplate,SQL 全手写可见;数据库 MySQL 8 / OceanBase seekdb 双兼容
+- **零 ORM** — 后端只用 JdbcTemplate,SQL 全手写可见;数据库统一使用 seekdb(OceanBase)
 
 ## 🔗 禅道闭环(已真实验证)
 

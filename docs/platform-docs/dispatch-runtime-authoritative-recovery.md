@@ -62,7 +62,7 @@ not ready, capacity exhausted, and deterministic configuration failure.
 Server and Runtime rollback order is unrestricted because both heartbeat forms remain accepted. No
 production data mutation is part of rollback.
 
-Stop reconciliation reads MySQL `DATETIME` with JDBC `getTimestamp`, rather than casting the
+Stop reconciliation reads seekdb `DATETIME` with JDBC `getTimestamp`, rather than casting the
 driver-dependent result of `getObject`. Regression coverage includes the `LocalDateTime` mapping
 returned by Connector/J, for both periodic and heartbeat-triggered reconciliation.
 

@@ -10,7 +10,7 @@
 
 ## 一、受影响记录排查 SQL
 
-> 注意：排查条件必须用 `TRIM(client_kind) = ''` 而不是 `client_kind = ''`。executor 表为 utf8mb4 无显式 COLLATE，MySQL 8 默认解析为 `utf8mb4_0900_ai_ci`（NO PAD，尾部空格参与比较），`'  ' = ''` 为假——等值写法会漏掉纯空白记录，这正是修复前的缺陷语义。
+> 注意：排查条件必须用 `TRIM(client_kind) = ''` 而不是 `client_kind = ''`。executor 表为 utf8mb4 无显式 COLLATE，旧库（MySQL 8）默认解析为 `utf8mb4_0900_ai_ci`（NO PAD，尾部空格参与比较），`'  ' = ''` 为假——等值写法会漏掉纯空白记录，这正是修复前的缺陷语义。
 
 按租户统计受影响数量：
 

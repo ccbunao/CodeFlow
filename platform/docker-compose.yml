@@ -1,4 +1,4 @@
-# CodeFlow v2:seekdb(MySQL 协议兼容)+ 应用(同 jar 内嵌前端 SPA)。
+# CodeFlow v2:seekdb(OceanBase)+ 应用(同 jar 内嵌前端 SPA)。
 # schema 由 db-init 任务在 seekdb 就绪后自动导入(docs/seekdb-schema-v1-*.sql)。
 services:
   seekdb:
@@ -13,8 +13,9 @@ services:
     networks: [community]
 
   # schema 初始化:等 seekdb 就绪后按序导入三份 DDL(core → rest → workitem)
+  # 用 seekdb 镜像自带的 mysql 协议客户端,不额外引入数据库镜像
   db-init:
-    image: mysql:8.0
+    image: docker.m.daocloud.io/oceanbase/seekdb:latest
     entrypoint: >
       sh -c '
       echo "waiting for seekdb…" &&
