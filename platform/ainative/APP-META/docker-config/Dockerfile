@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # CodeFlow v2 后端(server-v2,原创重写)+ 同 jar 内嵌前端 SPA。
-# 数据库:MySQL 8(或兼容协议的 OceanBase seekdb),schema 见 docs/seekdb-schema-v1-*.sql
+# 数据库:seekdb(OceanBase),schema 见 docs/seekdb-schema-v1-*.sql
 
 # ── 阶段 1:前端构建(vite,产物进后端 resources 一起打包)──
 FROM node:20-bookworm AS frontend
