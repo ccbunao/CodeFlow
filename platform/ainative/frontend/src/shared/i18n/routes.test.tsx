@@ -48,12 +48,12 @@ it('updates a routed login form in place and preserves entered credentials acros
 it('subscribes the routed sidebar itself so cached route elements update navigation labels', async () => {
   const router = createMemoryRouter([{ path: '/', element: <WorkbenchTree /> }]);
   render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><RouterProvider router={router} /></QueryClientProvider>);
-  expect(screen.getByText('工作项')).toBeInTheDocument();
+  expect(screen.getByText('需求录入')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
-  expect(screen.getByText('Work items')).toBeInTheDocument();
-  expect(screen.queryByText('工作项')).not.toBeInTheDocument();
+  expect(screen.getByText('Requirement intake')).toBeInTheDocument();
+  expect(screen.queryByText('需求录入')).not.toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByText('工作项')).toBeInTheDocument();
+  expect(screen.getByText('需求录入')).toBeInTheDocument();
 });
 
 it('resolves shared access labels and document validation in the current language at call time', async () => {

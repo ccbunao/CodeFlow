@@ -40,22 +40,22 @@ function TestWrapper({
 
 it('renders translated tree labels and swaps them in place across languages', async () => {
   render(<TestWrapper><WorkbenchTree /></TestWrapper>);
-  const workitems = screen.getByText('工作项');
+  const workitems = screen.getByText('需求录入');
   expect(screen.getByRole('navigation', { name: '导航树' })).toContainElement(workitems);
   await act(async () => { await i18n.changeLanguage('en-US'); });
-  expect(screen.getByText('Work items')).toBe(workitems);
-  expect(screen.queryByText('工作项')).not.toBeInTheDocument();
+  expect(screen.getByText('Requirement intake')).toBe(workitems);
+  expect(screen.queryByText('需求录入')).not.toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByText('工作项')).toBeInTheDocument();
+  expect(screen.getByText('需求录入')).toBeInTheDocument();
 });
 
 describe('导航树结构(设计契约 v5)', () => {
-  it('交付分组按动线排序:工作项 → 流水线 → 项目总览 → 执行记录 → 回收站', () => {
+  it('需求交付分组按动线排序:需求录入 → 交付流程 → 项目总览 → 运行记录 → 回收站', () => {
     const delivery = NAV_SECTIONS.find((section) => section.key === 'delivery');
     expect(delivery?.items.map((item) => item.key))
       .toEqual(['/workitems', '/sdlcs', '/overview', '/executions', '/workitems/recycled']);
-    expect(delivery?.items[0]?.label).toBe('工作项');
-    expect(delivery?.items[1]?.label).toBe('流水线');
+    expect(delivery?.items[0]?.label).toBe('需求录入');
+    expect(delivery?.items[1]?.label).toBe('交付流程');
     expect(delivery?.items[2]?.label).toBe('项目总览');
     expect(resolveSelectedNavKey('/sdlcs')).toBe('/sdlcs');
   });
@@ -66,18 +66,18 @@ describe('导航树结构(设计契约 v5)', () => {
     expect(keysOf('automation')).toEqual(['/scheduled-tasks', '/executors', '/agents']);
     expect(keysOf('assets')).toEqual(['/repos', '/memories', '/skills', '/status-templates']);
     expect(keysOf('project')).toEqual(['/integrations', '/settings/members', '/settings/backups', '/settings/environment-variables', '/settings']);
-    expect(NAV_SECTIONS.map((section) => section.label)).toEqual(['交付', '分析', '自动化', '资产', '项目']);
+    expect(NAV_SECTIONS.map((section) => section.label)).toEqual(['需求交付', '分析', '执行与自动化', '配置资产', '项目设置']);
   });
 
-  it('沿用新术语:运行器/AI 成员/连接/操作日志/效能分析/记忆库/技能', () => {
+  it('导航用用户语言:运行节点/AI 员工/外部连接/操作审计/交付分析/AI 记忆/AI 技能', () => {
     const labelOf = (key: string) => allNavItems().find((item) => item.key === key)?.label;
-    expect(labelOf('/executors')).toBe('运行器');
-    expect(labelOf('/agents')).toBe('AI 成员');
-    expect(labelOf('/integrations')).toBe('连接');
-    expect(labelOf('/audit-logs')).toBe('操作日志');
-    expect(labelOf('/insights')).toBe('效能分析');
-    expect(labelOf('/memories')).toBe('记忆库');
-    expect(labelOf('/skills')).toBe('技能');
+    expect(labelOf('/executors')).toBe('运行节点');
+    expect(labelOf('/agents')).toBe('AI 员工');
+    expect(labelOf('/integrations')).toBe('外部连接');
+    expect(labelOf('/audit-logs')).toBe('操作审计');
+    expect(labelOf('/insights')).toBe('交付分析');
+    expect(labelOf('/memories')).toBe('AI 记忆');
+    expect(labelOf('/skills')).toBe('AI 技能');
   });
 
   it('成员管理保持单一入口,旧路由别名归并到成员管理', () => {
@@ -110,7 +110,7 @@ describe('导航树结构(设计契约 v5)', () => {
 describe('树渲染行为', () => {
   it('渲染全部可见分组与树底固定入口(文档/设置/关于)', () => {
     render(<TestWrapper><WorkbenchTree /></TestWrapper>);
-    for (const label of ['交付', '分析', '自动化', '资产', '项目']) {
+    for (const label of ['需求交付', '分析', '执行与自动化', '配置资产', '项目设置']) {
       expect(screen.getByText(label)).toBeInTheDocument();
     }
     expect(screen.getByText('文档中心')).toBeInTheDocument();
@@ -122,11 +122,11 @@ describe('树渲染行为', () => {
 
   it('标记当前路由为选中态', () => {
     render(<TestWrapper initialEntries={['/insights']}><WorkbenchTree /></TestWrapper>);
-    expect(screen.getByRole('button', { name: /效能分析/ })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('button', { name: /工作项/ })).not.toHaveAttribute('aria-current');
+    expect(screen.getByRole('button', { name: /交付分析/ })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('button', { name: /需求录入/ })).not.toHaveAttribute('aria-current');
   });
 
-  it('徽标计数渲染在工作项入口上', () => {
+  it('徽标计数渲染在需求录入入口上', () => {
     render(<TestWrapper><WorkbenchTree badges={{ '/agents': 125 }} /></TestWrapper>);
     expect(screen.getByText('125')).toBeInTheDocument();
   });
@@ -152,7 +152,7 @@ describe('定时任务 V037 门控(沿用)', () => {
     render(<TestWrapper><WorkbenchTree /></TestWrapper>);
 
     expect(screen.queryByText('定时任务')).not.toBeInTheDocument();
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求录入')).toBeInTheDocument();
     await waitFor(() => expect(resolveCapability).toBeTypeOf('function'));
     act(() => resolveCapability?.());
     expect(await screen.findByText('定时任务')).toBeInTheDocument();
@@ -167,7 +167,7 @@ describe('定时任务 V037 门控(沿用)', () => {
     render(<TestWrapper queryClient={queryClient}><WorkbenchTree /></TestWrapper>);
 
     await waitFor(() => expect(queryClient.getQueryState(scheduledTaskCapabilityQueryKey)?.status).toBe('success'));
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求录入')).toBeInTheDocument();
     expect(screen.queryByText('定时任务')).not.toBeInTheDocument();
   });
 
@@ -180,7 +180,7 @@ describe('定时任务 V037 门控(沿用)', () => {
     render(<TestWrapper queryClient={queryClient}><WorkbenchTree /></TestWrapper>);
 
     await waitFor(() => expect(queryClient.getQueryState(scheduledTaskCapabilityQueryKey)?.status).toBe('error'));
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求录入')).toBeInTheDocument();
     expect(screen.queryByText('定时任务')).not.toBeInTheDocument();
   });
 
@@ -210,7 +210,7 @@ describe('定时任务 V037 门控(沿用)', () => {
 
     render(<TestWrapper queryClient={queryClient}><WorkbenchTree /></TestWrapper>);
 
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求录入')).toBeInTheDocument();
     expect(screen.queryByText('定时任务')).not.toBeInTheDocument();
     await waitFor(() => expect(queryClient.getQueryState(scheduledTaskCapabilityQueryKey)?.status).toBe('error'));
     expect(screen.queryByText('定时任务')).not.toBeInTheDocument();

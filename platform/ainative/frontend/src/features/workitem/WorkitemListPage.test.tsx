@@ -97,7 +97,7 @@ describe('WorkitemListPage', () => {
     expect(screen.getByText('修复搜索Bug')).toBeInTheDocument();
     expect(screen.getAllByText('待处理').length).toBeGreaterThan(0);
     expect(screen.getAllByText('执行中').length).toBeGreaterThan(0);
-    expect(screen.getByText((_, element) => element?.textContent === '工作项 6001 个' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
+    expect(screen.getByText((_, element) => element?.textContent === '共 6001 个需求与缺陷' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
   });
 
   it('shows the 定时执行 icon for scheduled workitems in kanban view', async () => {
@@ -323,7 +323,7 @@ describe('WorkitemListPage', () => {
     await userEvent.click(await screen.findByRole('button', { name: /新建工作项/ }));
 
     expect(error).toHaveBeenCalledWith('当前为只读权限，新建工作项需要读写权限');
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求录入')).toBeInTheDocument();
   });
 
   it('disables delete button for non-deletable workitems in table view', async () => {
@@ -455,7 +455,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    expect(await screen.findByText((_, element) => element?.textContent === '工作项 42 个' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
+    expect(await screen.findByText((_, element) => element?.textContent === '共 42 个需求与缺陷' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
   });
 
   it('updates total count when workType filter changes', async () => {
@@ -472,13 +472,13 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    expect(await screen.findByText((_, element) => element?.textContent === '工作项 120 个' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
+    expect(await screen.findByText((_, element) => element?.textContent === '共 120 个需求与缺陷' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
 
     const selectInput = document.querySelector('.ant-select-selector')!;
     await userEvent.click(selectInput);
     await userEvent.click(await screen.findByTitle('缺陷'));
 
-    expect(await screen.findByText((_, element) => element?.textContent === '工作项 5 个' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
+    expect(await screen.findByText((_, element) => element?.textContent === '共 5 个需求与缺陷' && !Array.from(element.children).some(child => child.textContent === element.textContent))).toBeInTheDocument();
   });
 
   it('restores the scope preference from localStorage', async () => {
@@ -559,7 +559,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
 
     await userEvent.click(screen.getByText('指派给我的'));
 
@@ -631,7 +631,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
 
     await waitFor(() => {
       expect(requests.some((q) => q.includes('pendingDecisionOnly=true'))).toBe(true);
@@ -660,7 +660,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
 
     await waitFor(() => expect(requests.length).toBeGreaterThan(0));
     expect(requests[0]).not.toContain('statusCategory');
@@ -693,7 +693,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
 
     const statusSelect = document.querySelectorAll('.ant-select-selector')[1]!;
     await userEvent.click(statusSelect);
@@ -749,7 +749,7 @@ describe('WorkitemListPage', () => {
     );
 
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
 
     const searchInput = screen.getByPlaceholderText('搜索工作项ID或标题');
     await userEvent.type(searchInput, '测试{enter}');
@@ -1240,7 +1240,7 @@ describe('WorkitemListPage 视图偏好记忆', () => {
 
   it('saves the view immediately when switching and restores it after remount', async () => {
     const first = renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
     await userEvent.click(screen.getByLabelText('表格视图'));
     expect(window.localStorage.getItem('ainative.workitems.view')).toBe('table');
 
@@ -1260,7 +1260,7 @@ describe('WorkitemListPage 视图偏好记忆', () => {
   it('falls back to the kanban view for an invalid stored preference', async () => {
     window.localStorage.setItem('ainative.workitems.view', 'gallery');
     renderPage();
-    await screen.findByText('工作项');
+    await screen.findByText('需求录入');
     expect(screen.queryByRole('columnheader', { name: '当前处理人' })).not.toBeInTheDocument();
     expect(screen.getByTestId('kanban-column-NEW')).toBeInTheDocument();
   });

@@ -130,7 +130,7 @@ describe('AppLayout', () => {
       </MemoryRouter>,
     );
 
-    const workitems = await screen.findByRole('button', { name: /工作项/ });
+    const workitems = await screen.findByRole('button', { name: /需求录入/ });
     expect(workitems).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('button', { name: /项目总览/ })).not.toHaveAttribute('aria-current');
   });
@@ -448,9 +448,9 @@ describe('AppLayout', () => {
     const paletteButtons = await screen.findAllByRole('button', { name: '命令面板' });
     await userEvent.click(paletteButtons[0]);
     const paletteInput = await screen.findByRole('textbox');
-    await userEvent.type(paletteInput, '效能');
+    await userEvent.type(paletteInput, '交付分析');
     const dialog = screen.getByRole('dialog');
-    await userEvent.click(within(dialog).getByText('效能分析'));
+    await userEvent.click(within(dialog).getByText('交付分析'));
 
     expect(await screen.findByText('效能分析页')).toBeInTheDocument();
   });
