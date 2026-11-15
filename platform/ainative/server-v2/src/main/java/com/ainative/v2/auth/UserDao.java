@@ -41,16 +41,17 @@ public class UserDao {
         return rows.stream().findFirst();
     }
 
-    public long insert(String username, String nickname, String email, String passwordHash) {
+    public long insert(String username, String nickname, String email, String passwordHash, boolean admin) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO id_user (username, nickname, email, password_hash, is_admin, status) VALUES (?,?,?,?,0,'ACTIVE')",
+                    "INSERT INTO id_user (username, nickname, email, password_hash, is_admin, status) VALUES (?,?,?,?,?,'ACTIVE')",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, username);
             ps.setString(2, nickname);
             ps.setString(3, email);
             ps.setString(4, passwordHash);
+            ps.setInt(5, admin ? 1 : 0);
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();

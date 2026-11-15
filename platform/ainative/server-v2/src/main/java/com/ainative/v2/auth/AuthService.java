@@ -42,15 +42,18 @@ public class AuthService {
         if (users.findByUsername(username.trim()).isPresent()) {
             throw new BizException("10002", "用户名已存在");
         }
+        // 全新部署时没有别的管理员:第一个注册的用户必须拿到平台管理员,
+        // 否则平台配置/品牌/定时任务/审计这些管理员域在界面上全部进不去。
+        boolean firstUser = users.countUsers() == 0;
         long id = users.insert(username.trim(), nickname == null ? username.trim() : nickname,
-                email, encoder.encode(password));
+                email, encoder.encode(password), firstUser);
         long workspaceId = createDefaultWorkspace(id, username.trim());
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("id", id);
         out.put("username", username.trim());
         out.put("nickname", nickname == null ? username.trim() : nickname);
         out.put("email", email);
-        out.put("isAdmin", false);
+        out.put("isAdmin", firstUser);
         out.put("workspaceId", workspaceId);
         return out;
     }
