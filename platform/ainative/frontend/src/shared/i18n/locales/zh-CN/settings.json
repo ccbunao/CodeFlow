@@ -115,7 +115,7 @@
   "showSecret": "显示密钥",
   "hideSecret": "隐藏密钥",
   "backupCreated": "项目配置已备份到对象存储",
-  "backups": "项目配置备份",
+  "backups": "配置备份",
   "createBackup": "创建项目备份",
   "backupNow": "立即备份到云端",
   "refresh": "刷新",
@@ -212,5 +212,11 @@
       "SETTING": "系统设置中的 AI、通知和系统默认项；菜单暂时隐藏，不包含个人偏好。",
       "EVOLUTION": "自进化：改进提案、验证、发布和回滚；菜单暂时隐藏。"
     }
+  },
+  "membersPage": {
+    "description": "项目成员、角色与权限申请审批"
+  },
+  "backupsPage": {
+    "description": "备份与恢复项目配置（编队、数字人、流程、仓库等）"
   }
 }

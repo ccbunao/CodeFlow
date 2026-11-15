@@ -32,7 +32,7 @@
   "target": "Target",
   "summary": "Summary",
   "details": "Details",
-  "title": "Audit logs",
+  "title": "Audit log",
   "description": "Human actions by default; switch to AI members or system events. Field details live in each entry.",
   "subtitle": "Who changed what, and when — all on record.",
   "countChip_one": "{{count}} record in current filter",
@@ -51,7 +51,7 @@
   "reset": "Reset",
   "resetFilters": "Reset filters",
   "empty": "Nothing recorded under these filters",
-    "emptyHint": "Relax the filters, or clear them and search again",
+  "emptyHint": "Relax the filters, or clear them and search again",
   "detailTitle": "Audit log details",
   "logId": "Record ID",
   "rawAction": "Raw action",
@@ -83,5 +83,8 @@
   "keywords": "Detail keywords",
   "loading": "Loading audit logs",
   "total_one": "{{count}} record",
-  "total_other": "{{count}} records"
+  "total_other": "{{count}} records",
+  "page": {
+    "description": "Who changed what and when — filter by action type and object"
+  }
 }

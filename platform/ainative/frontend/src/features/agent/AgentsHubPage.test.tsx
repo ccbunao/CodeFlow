@@ -54,8 +54,8 @@ describe('AgentsHubPage', () => {
 
   it('renders the merged hub with the three tabs and the default pane', () => {
     renderHub();
-    expect(screen.getByRole('heading', { name: 'AI 成员' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'AI 成员' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'AI 数字员工' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: '数字员工' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '版本审核' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '编队' })).toBeInTheDocument();
     expect(screen.getByTestId('agent-list-pane')).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe('AgentsHubPage', () => {
     expect(await screen.findByTestId('squad-list-pane')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByTestId('hub-location')).toHaveTextContent('/agents?tab=squads'));
 
-    await user.click(screen.getByRole('tab', { name: 'AI 成员' }));
+    await user.click(screen.getByRole('tab', { name: '数字员工' }));
     expect(await screen.findByTestId('agent-list-pane')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByTestId('hub-location')).toHaveTextContent('/agents(empty)'));
   });
@@ -106,7 +106,7 @@ describe('AgentsHubPage', () => {
     renderHub('/agents?tab=reviews');
     expect(screen.getByTestId('agent-review-pane')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: 'AI 成员' }));
+    await user.click(screen.getByRole('tab', { name: '数字员工' }));
     expect(screen.queryByTestId('agent-review-pane')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: '版本审核' }));

@@ -423,7 +423,7 @@ export function SkillListPage() {
   return (
     <>
       <Card
-        className="cf-content-card" title={<PageHeading title={t('title')} />}
+        className="cf-content-card" title={<PageHeading title={t('title')} description={t('page.description')} />}
         extra={<Button type="primary" icon={<PlusOutlined aria-hidden="true" />} onClick={skillForm.openCreate}>{t('create')}</Button>}
       >
         <Toolbar filters={<>

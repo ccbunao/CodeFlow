@@ -8,7 +8,7 @@
     "back": "返回"
   },
   "page": {
-    "title": "记忆库",
+    "title": "AI 记忆",
     "create": "写一条记忆",
     "loadError": "记忆目录没读到,刷新再试",
     "owners": "归属",
@@ -27,7 +27,8 @@
     "acl": "访问授权",
     "imports": "本地档案",
     "agentImports": "本地档案挂在具体 AI 成员的个人记忆下,选一个 AI 成员查看。",
-    "deleteConfirm": "连索引引用一起删除这条记忆?"
+    "deleteConfirm": "连索引引用一起删除这条记忆?",
+    "description": "AI 数字员工的长期记忆，可按空间查看与清理"
   },
   "commands": {
     "saveMemory": "存这条记忆",

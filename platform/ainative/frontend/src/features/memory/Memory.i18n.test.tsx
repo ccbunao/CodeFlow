@@ -60,7 +60,7 @@ describe('memory live locale', () => {
     const dialog = screen.getByRole('dialog', { name: raw });
     expect(within(dialog).getByRole('button', { name: '关闭' })).toBeInTheDocument();
     await language('en-US');
-    expect(screen.getByRole('heading', { name: 'Memory' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'AI memory' })).toBeInTheDocument();
     expect(screen.getByText('Org shared area')).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Entries (1)' })).toBeInTheDocument();
     expect(within(dialog).getByText(/Feedback & conventions/)).toBeInTheDocument();

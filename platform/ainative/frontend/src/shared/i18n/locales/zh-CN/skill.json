@@ -153,7 +153,7 @@
   "deleteConfirm": "确认删除这个技能?",
   "deleteAction": "删技能",
   "delete": "删除",
-  "title": "技能库",
+  "title": "AI 技能",
   "clearSelection": "清空选择",
   "detailTitle": "技能档案",
   "close": "关闭",
@@ -222,5 +222,8 @@
   "selection": {
     "row": "选中技能 {{name}}",
     "all": "选中本页全部技能"
+  },
+  "page": {
+    "description": "可复用的能力包，挂载给 AI 数字员工使用"
   }
 }

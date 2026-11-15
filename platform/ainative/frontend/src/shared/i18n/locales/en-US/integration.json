@@ -262,7 +262,7 @@
     "credentialsRequired": "Fill in the ZenTao URL, account and password first",
     "bindingSaved": "ZenTao binding saved"
   },
-  "zentaoDescription": "Bind a ZenTao product; AI members handle defects and write results back",
+  "zentaoDescription": "Bind a ZenTao project to pull requirements and defects, and write delivery results back",
   "tapdTab": "TAPD",
   "tapdDescription": "Connect a TAPD project, import requirements and defects, and write delivery results back.",
   "tapd": {
@@ -291,5 +291,8 @@
     "pause": "Pause",
     "resume": "Enable",
     "synced": "Imported {{imported}}, updated {{updated}}."
+  },
+  "page": {
+    "description": "Connect ZenTao / TAPD to pull requirements and defects, configure chat channels, and write results back"
   }
 }

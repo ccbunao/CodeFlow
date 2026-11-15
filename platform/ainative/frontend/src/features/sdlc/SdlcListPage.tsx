@@ -172,6 +172,7 @@ export function SdlcListPage() {
     <div>
       <PageHeading
         title={t('list.title')}
+        description={t('list.description')}
         extra={activeTab === 'templates' && (
           <Space>
             {SDLC_AI_ENABLED && (

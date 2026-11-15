@@ -139,5 +139,8 @@
     "dependency": "依赖",
     "service": "服务互调",
     "other": "其他"
+  },
+  "list": {
+    "description": "项目关联的代码仓库及其依赖关系"
   }
 }

@@ -186,7 +186,8 @@
     "dayToday": "今天",
     "dayYesterday": "昨天",
     "tableEmpty": "还没有需求",
-    "tableEmptyHint": "新建一个需求,或调整筛选条件后再试"
+    "tableEmptyHint": "新建一个需求,或调整筛选条件后再试",
+    "description": "录入需求与缺陷，在这里发起 AI 澄清、派发交付并跟踪结果"
   },
   "recycleBin": {
     "title": "回收站",
@@ -201,7 +202,8 @@
     "restore": "恢复",
     "restoreCommand": "恢复需求",
     "restoreConfirmTitle": "把「{{title}}」恢复回来?",
-    "restoreConfirmDescription": "恢复后将回到删除前状态，历史产物自动可见；仅恢复可见性，不会自动恢复执行，需重新指派。"
+    "restoreConfirmDescription": "恢复后将回到删除前状态，历史产物自动可见；仅恢复可见性，不会自动恢复执行，需重新指派。",
+    "description": "已删除的需求与缺陷，可恢复或彻底删除"
   },
   "assignee": {
     "unassigned": "未指派",

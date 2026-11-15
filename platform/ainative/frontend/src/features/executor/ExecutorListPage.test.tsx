@@ -463,7 +463,7 @@ describe('ExecutorListPage', () => {
       })),
     );
     renderPage();
-    expect(await screen.findByRole('heading', { name: '运行器' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '运行节点' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /新建运行器/ })).toBeInTheDocument();
   });
 
@@ -3036,7 +3036,7 @@ describe('ExecutorListPage', () => {
     mockGroupedExecutorApis([]);
     renderPage();
 
-    expect(await screen.findByRole('heading', { name: '运行器' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '运行节点' })).toBeInTheDocument();
     expect(document.querySelector('.ant-collapse')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /新建运行器/ })).toBeInTheDocument();
   });
@@ -3281,7 +3281,7 @@ describe('ExecutorListPage', () => {
       mockGroupedExecutorApis([]);
       renderPage();
 
-      expect(await screen.findByRole('heading', { name: '运行器' })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: '运行节点' })).toBeInTheDocument();
       expect(document.querySelector('.ant-collapse')).not.toBeInTheDocument();
       expect(document.querySelector('.ant-table')).toBeInTheDocument();
     });

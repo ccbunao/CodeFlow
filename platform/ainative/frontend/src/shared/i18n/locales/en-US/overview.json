@@ -121,5 +121,8 @@
     "retry": "Retry",
     "emptyHint": "Every dispatch in this range finished successfully"
   },
-  "separator": "·"
+  "separator": "·",
+  "page": {
+    "description": "Delivery volume, completion and recent activity for this project"
+  }
 }

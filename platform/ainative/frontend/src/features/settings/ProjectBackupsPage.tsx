@@ -62,7 +62,7 @@ function ProjectBackupsPanel({ workspaceId, isAdmin }: { workspaceId?: number; i
       link.click();
     },
   });
-  return <Card className="cf-content-card" title={<PageHeading title={t('backups')} />}
+  return <Card className="cf-content-card" title={<PageHeading title={t('backups')} description={t('backupsPage.description')} />}
     extra={isAdmin && <Space>
       <Button type="primary" icon={<CloudUploadOutlined aria-hidden="true" />} aria-label={t('backupNow')} loading={create.isPending} onClick={() =>
         runAccessCommand('ADMIN', t('createBackup'), () => create.mutate())}>{t('backupNow')}</Button>

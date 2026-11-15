@@ -256,7 +256,7 @@
     "credentialsRequired": "请先填写禅道地址、账号与密码",
     "bindingSaved": "禅道绑定已存"
   },
-  "zentaoDescription": "绑定禅道产品,缺陷交给 AI 成员处理,结果回写禅道",
+  "zentaoDescription": "绑定禅道项目拉取需求与缺陷,交付结果回写禅道",
   "tapdTab": "TAPD",
   "tapdDescription": "绑定 TAPD 项目，导入需求和缺陷，并回写交付结论。",
   "tapd": {
@@ -285,5 +285,8 @@
     "pause": "暂停",
     "resume": "启用",
     "synced": "新增 {{imported}} 条，更新 {{updated}} 条。"
+  },
+  "page": {
+    "description": "接入禅道 / TAPD 拉取需求与缺陷，配置消息渠道；结果回写源头"
   }
 }

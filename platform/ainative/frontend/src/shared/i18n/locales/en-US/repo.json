@@ -139,5 +139,8 @@
     "dependency": "Dependency",
     "service": "Service-to-service",
     "other": "Other"
+  },
+  "list": {
+    "description": "Repositories linked to this project and how they depend on each other"
   }
 }

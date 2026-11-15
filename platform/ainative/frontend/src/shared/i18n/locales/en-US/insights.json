@@ -312,8 +312,8 @@
     "summary": "Busy members <fraction/> · in-flight requirements <count/>"
   },
   "analytics": {
-    "title": "Insights",
-    "description": "Run progress, human/machine split and delivery",
+    "title": "Delivery analytics",
+    "description": "Delivery efficiency, human-agent split, stage durations and cost trends",
     "agent": "Agent",
     "allAgents": "All Agents",
     "date": "Date",

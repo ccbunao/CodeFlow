@@ -8,7 +8,7 @@
     "back": "Back"
   },
   "page": {
-    "title": "Memory",
+    "title": "AI memory",
     "create": "New memory",
     "loadError": "Could not load the memory catalog — refresh and retry",
     "owners": "Owners",
@@ -27,7 +27,8 @@
     "acl": "Access grants",
     "imports": "Local files",
     "agentImports": "Local files belong to individual agent memories — pick an agent to view them.",
-    "deleteConfirm": "Delete this memory and its index references?"
+    "deleteConfirm": "Delete this memory and its index references?",
+    "description": "Long-term memory of AI digital workers — review and clean up by scope"
   },
   "commands": {
     "saveMemory": "Save memory",

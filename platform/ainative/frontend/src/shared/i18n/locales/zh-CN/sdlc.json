@@ -119,13 +119,14 @@
     "disableDetail": "确认停用该模板?"
   },
   "list": {
-    "title": "流程模板",
+    "title": "交付流程",
     "templates": "流程模版",
     "gallery": "模版间",
     "empty": "暂无 流水线 模版",
-      "emptyHint": "新建一个流程模版,或切换到模版间挑选现成方案",
+    "emptyHint": "新建一个流程模版,或切换到模版间挑选现成方案",
     "groupCount_other": "{{count}} 个",
-    "total_other": "共 {{count}} 条"
+    "total_other": "共 {{count}} 条",
+    "description": "定义一次交付要经过哪些步骤、由谁执行、何时交接给下一步"
   },
   "validation": {
     "policyObject": "填合法 JSON 对象",

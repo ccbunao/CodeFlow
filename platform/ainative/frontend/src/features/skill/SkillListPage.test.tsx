@@ -76,7 +76,7 @@ describe('SkillListPage', () => {
     renderPage();
     expect(await screen.findByText('GitHub MCP')).toBeInTheDocument();
     expect(screen.getByText('Code Review')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /新建技能/ }).closest('.ant-card') ?? document.body).toHaveTextContent('技能库');
+    expect(screen.getByRole('button', { name: /新建技能/ }).closest('.ant-card') ?? document.body).toHaveTextContent('AI 技能');
     expect(screen.getByRole('button', { name: /新建技能/ })).toBeInTheDocument();
     expect(screen.getByText('全部')).toBeInTheDocument();
     expect(screen.getAllByText('MCP 服务').length).toBeGreaterThanOrEqual(1);

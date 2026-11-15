@@ -1,6 +1,6 @@
 {
   "list": {
-    "title": "Execution ledger",
+    "title": "Run history",
     "refresh": "Refresh",
     "time": "Time",
     "workitem": "Requirement",
@@ -18,7 +18,8 @@
     "last90Days": "Last 90d",
     "total_one": "{{total}} execution",
     "total_other": "{{total}} records",
-    "empty": "No runs yet"
+    "empty": "No runs yet",
+    "description": "Execution history for every dispatch, with logs, artifacts and failure reasons"
   },
   "detail": {
     "title": "Run profile",

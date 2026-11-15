@@ -69,10 +69,10 @@ describe('导航树结构(设计契约 v5)', () => {
     expect(NAV_SECTIONS.map((section) => section.label)).toEqual(['需求交付', '分析', '执行与自动化', '配置资产', '项目设置']);
   });
 
-  it('导航用用户语言:运行节点/AI 员工/外部连接/操作审计/交付分析/AI 记忆/AI 技能', () => {
+  it('导航用用户语言:运行节点/AI 数字员工/外部连接/操作审计/交付分析/AI 记忆/AI 技能', () => {
     const labelOf = (key: string) => allNavItems().find((item) => item.key === key)?.label;
     expect(labelOf('/executors')).toBe('运行节点');
-    expect(labelOf('/agents')).toBe('AI 员工');
+    expect(labelOf('/agents')).toBe('AI 数字员工');
     expect(labelOf('/integrations')).toBe('外部连接');
     expect(labelOf('/audit-logs')).toBe('操作审计');
     expect(labelOf('/insights')).toBe('交付分析');

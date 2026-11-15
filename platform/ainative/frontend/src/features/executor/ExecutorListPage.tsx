@@ -879,7 +879,7 @@ export function ExecutorListPage() {
         onCopyToken={handleCopyRowToken}
         onRestart={(update) => runAccessCommand('READ_WRITE', update ? t('accessUpdateRestart') : t('accessRestart'), () => restartMut.mutate({ id: detail!.id, update }), 'EXECUTOR')}
       />
-      <Card className="cf-content-card" title={<PageHeading title={t('title')} extra={
+      <Card className="cf-content-card" title={<PageHeading title={t('title')} description={t('pageDescription')} extra={
         <span className="exec-status-strip" role="status">
           <span className="exec-status-strip__item"><i data-tone="online" aria-hidden="true" />{t('onlineCount', { count: executors.filter((e) => e.status === 'ONLINE').length })}</span>
           <span className="exec-status-strip__item"><i data-tone="busy" aria-hidden="true" />{t('busyCount', { count: executors.filter((e) => e.status === 'BUSY').length })}</span>

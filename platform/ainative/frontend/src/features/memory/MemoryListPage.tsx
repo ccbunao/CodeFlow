@@ -66,7 +66,7 @@ export function MemoryListPage() {
   if (isLoading) return <Spin />;
   if (isError) return <Alert type="error" showIcon message={t('page.loadError')} />;
   return <div>
-    <PageHeading title={t('page.title')}
+    <PageHeading title={t('page.title')} description={t('page.description')}
       extra={<Button type="primary" icon={<PlusOutlined aria-hidden="true" />} disabled={!writable} onClick={() => runWithAccess('READ_WRITE', t('page.create'), () => setEditing(null))}>{t('page.create')}</Button>} />
     {directory?.migration && <Alert style={{ marginBottom: 16 }} showIcon type={directory.migration.pending ? 'warning' : 'info'}
       message={t('migration.summary', { migrated: t('migration.migrated', { count: directory.migration.migrated }), pending: t('migration.pending', { count: directory.migration.pending }) })}

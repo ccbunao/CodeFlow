@@ -1,6 +1,6 @@
 {
   "title": "环境变量",
-  "description": "运行器需要的敏感配置都在这里:值加密存储,管理页不回显,只能覆盖重写。",
+  "description": "运行节点需要的敏感配置都在这里：值加密存储，管理页不回显，只能覆盖重写。",
   "add": "加变量",
   "edit": "改变量",
   "refresh": "刷新",
@@ -40,5 +40,8 @@
   "dismissError": "关掉提示",
   "showValue": "看值",
   "hideValue": "藏值",
-  "loading": "读取变量"
+  "loading": "读取变量",
+  "page": {
+    "description": "供 AI 数字员工在交付过程中使用的环境变量"
+  }
 }

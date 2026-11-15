@@ -208,11 +208,11 @@
     "codeReview": "Code review"
   },
   "display": {
-    "hubTitle": "AI members",
-    "hubListDescription": "Scan the roster by role and runner availability",
+    "hubTitle": "AI digital workers",
+    "hubListDescription": "Review digital workers by role and runner-node status",
     "hubReviewsDescription": "Review submitted versions; approved ones enter the publish flow",
     "hubSquadsDescription": "Review squads by size, roles and runner status",
-    "agents": "Agents",
+    "agents": "Digital workers",
     "reviews": "Version reviews",
     "squads": "Squads",
     "standardAgents": "Standard agents",
@@ -336,7 +336,13 @@
     "bindingLabel": "{{name}} ({{label}})",
     "close": "Close",
     "createAction": "Create an agent",
-    "officialCapabilities": "Platform capabilities (read-only)"
+    "officialCapabilities": "Platform capabilities (read-only)",
+    "description": {
+      "list": "Review digital workers by role and runner-node status"
+    }
   },
-  "groupLabel": "{{name}} ({{squads}})"
+  "groupLabel": "{{name}} ({{squads}})",
+  "list": {
+    "description": "Define each AI digital worker's responsibilities, skills and hand-offs"
+  }
 }

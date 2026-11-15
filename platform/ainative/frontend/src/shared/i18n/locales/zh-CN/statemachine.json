@@ -1,8 +1,9 @@
 {
   "page": {
-    "title": "状态模板",
+    "title": "状态流转",
     "create": "新建模板",
-    "empty": "暂无模板"
+    "empty": "暂无模板",
+    "description": "需求在各状态之间如何流转，以及每一步的进入条件"
   },
   "workTypes": {
     "REQ": "需求(REQ)",

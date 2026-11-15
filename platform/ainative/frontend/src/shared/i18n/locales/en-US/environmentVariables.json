@@ -1,6 +1,6 @@
 {
   "title": "Environment variables",
-  "description": "Sensitive config for executors lives here: values are stored encrypted, never echoed back — overwrite only.",
+  "description": "Sensitive configuration for runner nodes: values are encrypted and never shown back — overwrite to change.",
   "add": "Add variable",
   "edit": "Edit variable",
   "refresh": "Refresh",
@@ -40,5 +40,8 @@
   "dismissError": "Dismiss",
   "showValue": "Show value",
   "hideValue": "Hide value",
-  "loading": "Loading variables"
+  "loading": "Loading variables",
+  "page": {
+    "description": "Environment variables available to AI digital workers during delivery"
+  }
 }

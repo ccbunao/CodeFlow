@@ -1,6 +1,6 @@
 {
   "list": {
-    "title": "执行台账",
+    "title": "运行记录",
     "refresh": "刷新",
     "time": "时间",
     "workitem": "需求",
@@ -17,7 +17,8 @@
     "last30Days": "30 天内",
     "last90Days": "90 天内",
     "total_other": "共 {{total}} 条",
-    "empty": "还没有执行留痕"
+    "empty": "还没有执行留痕",
+    "description": "每次派发的执行过程与结果，可回看日志、产物与失败原因"
   },
   "detail": {
     "title": "执行档案",

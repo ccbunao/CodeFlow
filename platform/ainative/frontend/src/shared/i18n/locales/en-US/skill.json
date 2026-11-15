@@ -158,7 +158,7 @@
   "deleteConfirm": "Delete this skill?",
   "deleteAction": "Delete skill",
   "delete": "Delete",
-  "title": "Skills",
+  "title": "AI skills",
   "clearSelection": "Clear selection",
   "detailTitle": "Skill profile",
   "close": "Close",
@@ -231,5 +231,8 @@
   "selection": {
     "row": "Select skill {{name}}",
     "all": "Select all on this page"
+  },
+  "page": {
+    "description": "Reusable capability packages that AI digital workers can load"
   }
 }

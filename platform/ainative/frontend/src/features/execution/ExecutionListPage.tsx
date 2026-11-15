@@ -68,7 +68,7 @@ export function ExecutionListPage() {
 
   return (
     <Card
-      className="cf-content-card" title={<PageHeading title={t('list.title')} />}
+      className="cf-content-card" title={<PageHeading title={t('list.title')} description={t('list.description')} />}
     >
       <Toolbar
         filters={<>

@@ -96,7 +96,7 @@
   "hide": "Hide",
   "show": "Show",
   "copyToken": "Copy token",
-  "title": "Executors",
+  "title": "Runner nodes",
   "autoUpdateHelp": "When enabled, the server sends update commands between task assignments when an Executor is behind the target version. Configure this setting in the server application.yml (enabled by default).",
   "autoUpdate": "Automatic updates",
   "enabled": "Enabled",
@@ -251,5 +251,6 @@
   "clientKindCLAUDE_CODE": "Claude Code",
   "clientKindGEMINI_CLI": "Gemini CLI",
   "clientKindCODEX_CLI": "Codex CLI",
-  "clientKindCURSOR_CLI": "Cursor CLI"
+  "clientKindCURSOR_CLI": "Cursor CLI",
+  "pageDescription": "Runner nodes that host AI digital workers: registration, start command and status"
 }

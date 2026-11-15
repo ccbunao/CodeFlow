@@ -58,7 +58,7 @@ describe('StatusTemplatePage', () => {
       }),
     );
     renderPage();
-    expect(await screen.findByText('状态模板')).toBeInTheDocument();
+    expect(await screen.findByText('状态流转')).toBeInTheDocument();
     expect(await screen.findByText('加节点')).toBeInTheDocument();
     expect(screen.getAllByText('developing').length).toBeGreaterThan(0);
     expect(screen.getAllByText('released').length).toBeGreaterThan(0);
@@ -162,7 +162,7 @@ describe('status template locale contracts', () => {
     setupRouted();
     await screen.findByText('加节点');
     await switchLanguage('en-US');
-    expect(screen.getByText('Status templates')).toBeInTheDocument();
+    expect(screen.getByText('Status transitions')).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Requirement (REQ)' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByText('Start')).toBeInTheDocument();
     expect(screen.getByText('开发中')).toBeInTheDocument();

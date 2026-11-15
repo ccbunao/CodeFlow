@@ -216,7 +216,7 @@ export function MembersPage() {
   ];
 
   return (
-    <Card className="cf-content-card" title={<PageHeading title={t('members')} />}
+    <Card className="cf-content-card" title={<PageHeading title={t('members')} description={t('membersPage.description')} />}
       extra={
         <Space size={12}>
           {adminOnlyTip(

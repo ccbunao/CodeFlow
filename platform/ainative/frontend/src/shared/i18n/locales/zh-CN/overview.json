@@ -118,5 +118,8 @@
     "retry": "重试",
     "emptyHint": "区间内所有调度都成功结束"
   },
-  "separator": "·"
+  "separator": "·",
+  "page": {
+    "description": "本项目的交付量、达成情况与近期动态"
+  }
 }

@@ -119,15 +119,16 @@
     "disableDetail": "Disable this template?"
   },
   "list": {
-    "title": "Workflow templates",
+    "title": "Delivery workflow",
     "templates": "Workflows",
     "gallery": "Template gallery",
     "empty": "No Pipeline workflows",
-      "emptyHint": "Create a workflow template, or browse the template gallery for a ready-made one",
+    "emptyHint": "Create a workflow template, or browse the template gallery for a ready-made one",
     "groupCount_other": "{{count}}",
     "total_other": "{{count}} workflows total",
     "groupCount_one": "{{count}} workflow",
-    "total_one": "{{count}} workflow total"
+    "total_one": "{{count}} workflow total",
+    "description": "Define the steps of a delivery, who runs each one, and when it hands off"
   },
   "validation": {
     "policyObject": "Enter a valid JSON object",

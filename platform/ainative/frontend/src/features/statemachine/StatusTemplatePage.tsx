@@ -50,7 +50,7 @@ export function StatusTemplatePage() {
   const deleteTransitionMut = useDeleteTransition(selectedId || 0);
 
   return (
-    <Card className="cf-content-card" title={<PageHeading title={t('page.title')} />}
+    <Card className="cf-content-card" title={<PageHeading title={t('page.title')} description={t('page.description')} />}
       extra={<Button type="primary" icon={<PlusOutlined aria-hidden="true" />} onClick={() => accessCommand(
         'READ_WRITE', t('actions.createTemplate'), () => setCreateOpen(true),
       )}>{t('page.create')}</Button>}

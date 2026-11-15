@@ -87,7 +87,7 @@ it('updates the actual cached executions route while retaining filters, page and
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(<QueryClientProvider client={client}><RouterProvider router={router} /></QueryClientProvider>);
   const user = userEvent.setup();
-  const heading = await screen.findByRole('heading', { name: /执行台账|Execution ledger/ });
+  const heading = await screen.findByRole('heading', { name: /运行记录|Run history/ });
   const input = screen.getByPlaceholderText('需求 ID');
   await act(async () => { await user.type(input, '312'); });
   await waitFor(() => expect(requests[requests.length - 1]?.searchParams.get('workitem_id')).toBe('312'));
@@ -111,7 +111,7 @@ it('updates the actual cached executions route while retaining filters, page and
   const requestCount = requests.length;
   const supportingRequestCount = supportingRequests;
   await act(async () => { await i18n.changeLanguage('en-US'); });
-  expect(screen.getByRole('heading', { name: /执行台账|Execution ledger/ })).toBe(heading);
+  expect(screen.getByRole('heading', { name: /运行记录|Run history/ })).toBe(heading);
   expect(screen.getByPlaceholderText('Requirement ID')).toBe(input);
   expect(input).toHaveValue('312');
   expect(screen.getByTitle('2')).toHaveClass('ant-pagination-item-active');
@@ -141,7 +141,7 @@ it('updates the actual cached executions route while retaining filters, page and
   await waitFor(() => expect(requests[requests.length - 1]?.searchParams.get('page')).toBe('2'));
   const filteredRequestCount = requests.length;
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByRole('heading', { name: /执行台账|Execution ledger/ })).toBe(heading);
+  expect(screen.getByRole('heading', { name: /运行记录|Run history/ })).toBe(heading);
   expect(screen.getByText('共 21 条')).toBeInTheDocument();
   expect(screen.getByText('成功', { selector: '.ant-select-selection-item' })).toBeInTheDocument();
   expect(screen.getByTitle('2')).toHaveClass('ant-pagination-item-active');
@@ -213,7 +213,7 @@ describe('ExecutionListPage', () => {
       })),
     );
     renderPage();
-    expect(await screen.findByText('执行台账')).toBeInTheDocument();
+    expect(await screen.findByText('运行记录')).toBeInTheDocument();
     expect(await screen.findByText('前端开发')).toBeInTheDocument();
     expect(screen.getByText('成功')).toBeInTheDocument();
   });
@@ -259,7 +259,7 @@ describe('ExecutionListPage', () => {
       })),
     );
     renderPage();
-    await screen.findByText('执行台账');
+    await screen.findByText('运行记录');
     fireEvent.click(screen.getByText('7 天内'));
     await waitFor(() => expect(lastUrl).toContain('time_range=7d'));
   });

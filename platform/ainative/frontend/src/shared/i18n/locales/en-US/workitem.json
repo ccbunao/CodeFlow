@@ -188,7 +188,8 @@
     "dayToday": "Today",
     "dayYesterday": "Yesterday",
     "tableEmpty": "No requirements yet",
-    "tableEmptyHint": "Create a requirement, or adjust the filters and try again"
+    "tableEmptyHint": "Create a requirement, or adjust the filters and try again",
+    "description": "Capture requirements and defects, then start clarification, dispatch and track delivery"
   },
   "recycleBin": {
     "title": "Recycle bin",
@@ -203,7 +204,8 @@
     "restore": "Restore",
     "restoreCommand": "Restore requirement",
     "restoreConfirmTitle": "Restore “{{title}}”?",
-    "restoreConfirmDescription": "The requirement returns to its pre-deletion status and its existing artifacts become visible again. This only restores visibility; delivery does not resume automatically and must be reassigned."
+    "restoreConfirmDescription": "The requirement returns to its pre-deletion status and its existing artifacts become visible again. This only restores visibility; delivery does not resume automatically and must be reassigned.",
+    "description": "Deleted requirements and defects — restore or delete permanently"
   },
   "assignee": {
     "unassigned": "Unassigned",

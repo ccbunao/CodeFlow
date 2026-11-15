@@ -96,7 +96,7 @@
   "hide": "隐藏",
   "show": "显示",
   "copyToken": "复制 Token",
-  "title": "运行器",
+  "title": "运行节点",
   "autoUpdateHelp": "开启后，服务端发现运行器版本落后于目标版本时，会在派单间隙自动下发升级指令；开关由服务端 application.yml 配置（默认开启）",
   "autoUpdate": "自动升级",
   "enabled": "已开启",
@@ -246,5 +246,6 @@
   "clientKindCLAUDE_CODE": "Claude Code",
   "clientKindGEMINI_CLI": "Gemini CLI",
   "clientKindCODEX_CLI": "Codex CLI",
-  "clientKindCURSOR_CLI": "Cursor CLI"
+  "clientKindCURSOR_CLI": "Cursor CLI",
+  "pageDescription": "管理运行 AI 数字员工的节点：注册、启动命令与在线状态"
 }

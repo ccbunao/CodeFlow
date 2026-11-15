@@ -208,11 +208,11 @@
     "codeReview": "代码审核员"
   },
   "display": {
-    "hubTitle": "AI 成员",
-    "hubListDescription": "按角色与运行器在线状态过一遍成员名单",
+    "hubTitle": "AI 数字员工",
+    "hubListDescription": "按角色与运行节点在线状态过一遍数字员工名单",
     "hubReviewsDescription": "审 AI 成员版本提交,通过后进入上线流转",
     "hubSquadsDescription": "按编队查看协作阵容与成员构成",
-    "agents": "AI 成员",
+    "agents": "数字员工",
     "reviews": "版本审核",
     "squads": "编队",
     "standardAgents": "标准AI 成员",
@@ -334,7 +334,13 @@
     "bindingLabel": "{{name}}（{{label}}）",
     "close": "关闭",
     "createAction": "新建AI 成员",
-    "officialCapabilities": "平台内置能力（只读）"
+    "officialCapabilities": "平台内置能力（只读）",
+    "description": {
+      "list": "按角色与运行节点在线状态过一遍数字员工名单"
+    }
   },
-  "groupLabel": "{{name}}（{{squads}}）"
+  "groupLabel": "{{name}}（{{squads}}）",
+  "list": {
+    "description": "定义 AI 数字员工的职责、技能与流水线交接方式"
+  }
 }

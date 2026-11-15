@@ -1,8 +1,9 @@
 {
   "page": {
-    "title": "Status templates",
+    "title": "Status transitions",
     "create": "New template",
-    "empty": "No templates"
+    "empty": "No templates",
+    "description": "How requirements move between states and what each transition requires"
   },
   "workTypes": {
     "REQ": "Requirement (REQ)",

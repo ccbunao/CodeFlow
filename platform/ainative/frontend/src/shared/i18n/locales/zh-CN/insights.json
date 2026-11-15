@@ -301,8 +301,8 @@
     "summary": "忙碌成员 <fraction/> · 进行中需求 <count/>"
   },
   "analytics": {
-    "title": "效能分析",
-    "description": "执行进展、人机分工与交付情况",
+    "title": "交付分析",
+    "description": "交付效率、人机分工、阶段耗时与成本趋势",
     "agent": "AI 成员",
     "allAgents": "全部AI 成员",
     "date": "日期",

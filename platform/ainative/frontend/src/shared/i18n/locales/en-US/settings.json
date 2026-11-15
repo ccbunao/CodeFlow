@@ -116,7 +116,7 @@
   "showSecret": "Show secret",
   "hideSecret": "Hide secret",
   "backupCreated": "Project configuration backed up to object storage",
-  "backups": "Project configuration backups",
+  "backups": "Config backups",
   "createBackup": "Create project backup",
   "backupNow": "Back up to cloud now",
   "refresh": "Refresh",
@@ -214,5 +214,11 @@
       "SETTING": "AI, notification, and system defaults in System settings. The menu is currently hidden; personal preferences are separate.",
       "EVOLUTION": "Self-evolution: improvement proposals, validation, releases, and rollbacks. The menu is currently hidden."
     }
+  },
+  "membersPage": {
+    "description": "Project members, roles and access-request approvals"
+  },
+  "backupsPage": {
+    "description": "Back up and restore project configuration: squads, agents, workflows, repositories"
   }
 }
