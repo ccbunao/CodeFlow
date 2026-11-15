@@ -40,3 +40,6 @@ build/
 *.whl
 *.tar.gz
 !runtime-npm/ymai-codeflow-*.tgz
+
+# 部署密钥(deploy.sh 生成)
+platform/.env

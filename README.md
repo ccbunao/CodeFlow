@@ -58,7 +58,7 @@ CodeFlow 把这些**工程化环节**做成平台:数字员工小队按可编排
 
 | 交付进度跟踪(数字员工执行中) | |
 |---|---|
-| ![交付进度跟踪](docs/assets/screenshot-delivery.png) | 更多 32 张实机截图见 [docs/user-guide.md](docs/user-guide.md) |
+| ![交付进度跟踪](docs/assets/screenshot-delivery.png) | 更多实机截图见 [docs/19-用户操作手册.md](docs/19-用户操作手册.md) |
 
 </details>
 
@@ -70,16 +70,21 @@ CodeFlow 把这些**工程化环节**做成平台:数字员工小队按可编排
 
 ```bash
 git clone https://github.com/qsumm/CodeFlow.git && cd CodeFlow/platform
-docker compose up -d          # seekdb + 后端 v2(前端随 jar 内嵌,自动建表)
+./deploy.sh up                # 生成密钥 → 构建 → 起 seekdb + 应用 → 等待就绪
 ```
+
+`deploy.sh` 是一条命令的部署脚本,会在首次运行时生成 `.env`(JWT 密钥、凭据加密主密钥、
+下载密钥,chmod 600,勿提交),然后构建镜像并等待健康检查通过。其它子命令:
+`down`(停止)/ `restart` / `status` / `logs`。
+可覆盖端口:`APP_PORT=8080 SEEKDB_PORT=2882 ./deploy.sh up`。
 
 打开 **http://localhost:7001** — 注册的第一个账号即平台管理员。
 
 > **架构说明**:后端为 v2 全量重写(Spring Boot 3.3,零 v1 衍生,~1.4 万行),
 > 数据库 schema 自动初始化(docs/seekdb-schema-v1-*.sql),
 > 产物/附件存本地卷 `/app/artifacts`(对象存储可插拔)。
-> 公网部署请替换 `MYSQL_PASSWORD` / `AINATIVE_JWT_SECRET` / `DOWNLOAD_SECRET`
-> 并设置 `PUBLIC_BASE_URL` 为实际对外地址(MCP 地址与执行器启动命令会随之生成)。
+> 公网部署请把 `PUBLIC_BASE_URL` 设为实际对外地址(MCP 地址与执行器启动命令会随之生成),
+> 并妥善保管 `platform/.env` 里的密钥;`AINATIVE_SECRET_MASTER_KEY` 换掉后已保存的外部平台凭据需重新绑定。
 
 ### ② 跑起执行器(必做,全程界面操作)
 
@@ -94,7 +99,7 @@ docker compose up -d          # seekdb + 后端 v2(前端随 jar 内嵌,自动�
 ### ③ 交付第一条需求
 
 平台新建工单 → AI 需求澄清 → 启动交付 → 在「交付进度跟踪」看数字员工干活 → 验收发布。
-完整图文说明见 **[docs/user-guide.md](docs/user-guide.md)**(32 张实机截图)。
+完整图文说明见 **[docs/19-用户操作手册.md](docs/19-用户操作手册.md)**(附 PDF 版)。
 
 ## 🏗 架构
 
@@ -141,7 +146,7 @@ python3 platform/ainative/server-v2/scripts/permission_matrix.py http://localhos
 
 | 文档 | 内容 |
 |---|---|
-| [docs/user-guide.md](docs/user-guide.md) | 用户操作手册 — 32 张实机截图,覆盖全部 28 个页面 |
+| [docs/19-用户操作手册.md](docs/19-用户操作手册.md) | 用户操作手册 — 附 PDF,覆盖全部页面 |
 | [docs/zentao-integration.md](docs/zentao-integration.md) | 禅道绑定、拉取/回写语义、E2E 验证 |
 | [docs/sdlc-driver-design.md](docs/sdlc-driver-design.md) | SDLC 驱动器实现设计 |
 | [docs/release-checklist.md](docs/release-checklist.md) | 发布检查清单 |

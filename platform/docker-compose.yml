@@ -6,7 +6,7 @@ services:
     environment:
       ROOT_PASSWORD: ""
     ports:
-      - "2882:2881"
+      - "${SEEKDB_PORT:-2882}:2881"
     volumes:
       - seekdb-data:/var/lib/seekdb
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       AINATIVE_PUBLIC_BASE_URL_V2: ${PUBLIC_BASE_URL:-http://localhost:7001}
       AINATIVE_DOWNLOAD_SECRET: ${DOWNLOAD_SECRET:-please-change-download-secret}
     ports:
-      - "7001:7001"
+      - "${APP_PORT:-7001}:7001"
     volumes:
       - app-artifacts:/app/artifacts
     depends_on:
