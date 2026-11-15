@@ -25,7 +25,7 @@ afterEach(async () => { cleanup(); await i18n.changeLanguage('zh-CN'); });
 describe('WorkitemTimeline', () => {
   it('renders timeline events', () => {
     renderTimeline();
-    expect(screen.getByText(/创建了工作项/)).toBeInTheDocument();
+    expect(screen.getByText(/创建了需求/)).toBeInTheDocument();
     expect(screen.getByText(/in_progress/)).toBeInTheDocument();
   });
 

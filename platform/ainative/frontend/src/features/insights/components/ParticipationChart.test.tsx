@@ -105,6 +105,6 @@ describe('participation chart controls', () => {
     await userEvent.click(screen.getByRole('button', { name: '放大查看 人机占比趋势' }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     rerender(<ParticipationChart kind="ratio" data={[]} average={null} />);
-    expect(screen.getAllByText('此范围暂无完成工作项，请调整日期范围')).toHaveLength(2);
+    expect(screen.getAllByText('此范围暂无完成需求，请调整日期范围')).toHaveLength(2);
   });
 });

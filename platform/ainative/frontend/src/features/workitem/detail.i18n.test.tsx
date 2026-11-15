@@ -50,20 +50,20 @@ it('updates the actual cached detail route, retaining content and comment drafts
   server.use(http.put('/api/workitems/42/content', async ({ request }) => { payload = await request.json(); return ok(item); }));
   mount(<WorkitemDetailPage />); await screen.findByRole('heading', { name });
   fireEvent.click(within(screen.getByTestId('workitem-content-section')).getByRole('button', { name: /编辑/ }));
-  const title = screen.getByLabelText('工作项标题'), body = screen.getByLabelText('工作项正文');
+  const title = screen.getByLabelText('需求标题'), body = screen.getByLabelText('需求正文');
   const comment = screen.getByPlaceholderText('输入评论，键入 @ 选择成员...');
   fireEvent.change(title, { target: { value: name + ' draft' } }); fireEvent.change(body, { target: { value: '正文 <em>draft</em>' } }); fireEvent.change(comment, { target: { value: '评论 draft' } });
   await language('en-US');
   expect(screen.getByRole('button', { name: /Start delivery/ })).toBeInTheDocument();
   expect(screen.getByText('Comments & timeline')).toBeInTheDocument();
   expect(screen.getByText('Clarification materials (AI generated)')).toBeInTheDocument();
-  expect(screen.getByLabelText('Work item title')).toBe(title); expect(screen.getByLabelText('Work item body')).toBe(body);
+  expect(screen.getByLabelText('Requirement title')).toBe(title); expect(screen.getByLabelText('Requirement body')).toBe(body);
   expect(screen.getByPlaceholderText('Write a comment; type @ to choose a member…')).toBe(comment);
   expect(title).toHaveValue(name + ' draft'); expect(body).toHaveValue('正文 <em>draft</em>'); expect(comment).toHaveValue('评论 draft');
   expect(screen.getByText('AI 回复原文')).toBeInTheDocument(); expect(screen.getByText('AI 澄清原文')).toBeInTheDocument();
   expect(screen.getByTestId('comment-interaction-reply')).toHaveTextContent(name + ' replied to this question');
   expect(screen.getByTestId('comment-interaction-reply').querySelector('strong strong')).toBeNull();
-  await language('zh-CN'); expect(screen.getByLabelText('工作项标题')).toBe(title); await language('en-US');
+  await language('zh-CN'); expect(screen.getByLabelText('需求标题')).toBe(title); await language('en-US');
   await userEvent.click(within(screen.getByTestId('workitem-content-section')).getByRole('button', { name: /Save/ }));
   await waitFor(() => expect(payload).toEqual({ title: name + ' draft', contentMd: '正文 <em>draft</em>' })); expect(comment).toHaveValue('评论 draft');
 });
@@ -126,10 +126,10 @@ it('updates collaboration enums and timestamps while preserving source names, cu
   const { ExternalCollaborationCard } = await import('./components/ExternalCollaborationCard');
   mount(<ExternalCollaborationCard collaboration={{ provider: 'ZENTAO', externalProjectId: 'project', externalWorkitemId: 'A42', externalUrl: 'https://example.test/42', sourceStatusId: 'custom', sourceStatusName: name, sourceLifecycle: 'CLOSED', reporter: { id: 1, provider: 'ZENTAO', subjectType: 'USER', mappedUserId: null, subjectId: 'external7', displayName: name }, businessOwner: null, principalRelations: [], lastSyncAt: '2026-07-01T10:00:00Z', syncStatus: 'ACTION_REQUIRED', lastErrorCode: null, lastError: '外部原始错误' }} />);
   expect(screen.getByText('已关闭')).toBeInTheDocument(); await language('en-US');
-  expect(screen.getByRole('link', { name: /Open the Zentao work item/ })).toHaveAttribute('href', 'https://example.test/42');
+  expect(screen.getByRole('link', { name: /Open the Zentao requirement/ })).toHaveAttribute('href', 'https://example.test/42');
   expect(screen.getByText('Closed')).toBeInTheDocument(); expect(screen.getByText('Needs attention')).toBeInTheDocument();
   expect(screen.getByText(name)).toBeInTheDocument(); expect(screen.getByText(`${name}（external7）`)).toBeInTheDocument();
-  expect(screen.getByText('外部原始错误')).toBeInTheDocument(); expect(screen.getByText('An external work item still needs handling')).toBeInTheDocument();
+  expect(screen.getByText('外部原始错误')).toBeInTheDocument(); expect(screen.getByText('An external requirement still needs handling')).toBeInTheDocument();
 });
 
 it('updates attachment accessibility and open delete confirmation without altering names or document IDs', async () => {

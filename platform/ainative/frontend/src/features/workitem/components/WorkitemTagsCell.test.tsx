@@ -15,7 +15,7 @@ function workitem(partial: Partial<Workitem> = {}): Workitem {
   return {
     id: 500,
     workType: 'REQ',
-    title: '标签工作项',
+    title: '标签需求',
     statusCategory: 'IN_PROGRESS',
     statusName: '开发中',
     priority: 2,
@@ -148,7 +148,7 @@ describe('WorkitemTagsCell', () => {
 
     await user.click(screen.getByText('发布'));
 
-    expect(await screen.findByText(/「工作项」对当前角色为只读/)).toBeInTheDocument();
+    expect(await screen.findByText(/「需求」对当前角色为只读/)).toBeInTheDocument();
     expect(screen.queryByTestId('workitem-tags-editor')).not.toBeInTheDocument();
   });
 

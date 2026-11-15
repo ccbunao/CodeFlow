@@ -176,7 +176,7 @@ function renderPage(id = '1') {
       <MemoryRouter initialEntries={[`/workitems/${id}`]}>
         <Routes>
           <Route path="/workitems/:id" element={<WorkitemDetailPage />} />
-          <Route path="/workitems" element={<div>工作项列表</div>} />
+          <Route path="/workitems" element={<div>需求列表</div>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -243,7 +243,7 @@ describe('WorkitemDetailPage', () => {
     renderPage();
 
     expect(await screen.findByText('等人工介入:蔡何')).toBeInTheDocument();
-    expect(screen.getByText('当前工作项已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
+    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: '批准继续' })).toBeInTheDocument();
   });
 
@@ -559,9 +559,9 @@ describe('WorkitemDetailPage', () => {
     expect(screen.getByText('协作者')).toBeInTheDocument();
     expect(screen.getByText('外部协作者（003）')).toBeInTheDocument();
     expect(screen.queryByText('关注者')).not.toBeInTheDocument();
-    expect(screen.getByText('由外部工作项维护')).toBeInTheDocument();
+    expect(screen.getByText('由外部需求维护')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '编辑' })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /前往Zentao工作项/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /前往Zentao需求/ })).toHaveAttribute(
       'href',
       'https://zentao.example.com/v2/project/2087214/req/84877007',
     );
@@ -1171,10 +1171,10 @@ describe('WorkitemDetailPage', () => {
     renderPage();
 
     await userEvent.click(await screen.findByRole('button', { name: /编辑$/ }));
-    await userEvent.clear(screen.getByLabelText('工作项标题'));
-    await userEvent.type(screen.getByLabelText('工作项标题'), '跨境支付重构更新');
-    await userEvent.clear(screen.getByLabelText('工作项正文'));
-    await userEvent.type(screen.getByLabelText('工作项正文'), '# 背景\n重构支付并补充风控');
+    await userEvent.clear(screen.getByLabelText('需求标题'));
+    await userEvent.type(screen.getByLabelText('需求标题'), '跨境支付重构更新');
+    await userEvent.clear(screen.getByLabelText('需求正文'));
+    await userEvent.type(screen.getByLabelText('需求正文'), '# 背景\n重构支付并补充风控');
     await userEvent.click(screen.getByRole('button', { name: /保存/ }));
 
     await waitFor(() => {
@@ -1263,12 +1263,12 @@ describe('WorkitemDetailPage', () => {
 
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /删除工作项/ }));
-    const dialog = await screen.findByRole('dialog', { name: '删除工作项' });
+    await userEvent.click(await screen.findByRole('button', { name: /删除需求/ }));
+    const dialog = await screen.findByRole('dialog', { name: '删除需求' });
     await userEvent.click(within(dialog).getByRole('button', { name: /删\s*除/ }));
 
     await waitFor(() => expect(deleteRequested).toBe(true));
-    expect(await screen.findByText('工作项列表')).toBeInTheDocument();
+    expect(await screen.findByText('需求列表')).toBeInTheDocument();
   });
 
   it('shows backend reason when deleting a running workitem is rejected', async () => {
@@ -1276,7 +1276,7 @@ describe('WorkitemDetailPage', () => {
       ...setupHandlers(),
       http.delete('/api/workitems/1', () => {
         return HttpResponse.json({
-          success: false, code: '13007', message: '工作项正在执行中，请等待完成或结束后再删除', traceId: null,
+          success: false, code: '13007', message: '需求正在执行中，请等待完成或结束后再删除', traceId: null,
           data: null,
         }, { status: 409 });
       }),
@@ -1284,11 +1284,11 @@ describe('WorkitemDetailPage', () => {
 
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /删除工作项/ }));
-    const dialog = await screen.findByRole('dialog', { name: '删除工作项' });
+    await userEvent.click(await screen.findByRole('button', { name: /删除需求/ }));
+    const dialog = await screen.findByRole('dialog', { name: '删除需求' });
     await userEvent.click(within(dialog).getByRole('button', { name: /删\s*除/ }));
 
-    expect(await screen.findByText('工作项正在执行中，请等待完成或结束后再删除')).toBeInTheDocument();
+    expect(await screen.findByText('需求正在执行中，请等待完成或结束后再删除')).toBeInTheDocument();
   });
 
   it('disables delete action when workitem is not deletable', async () => {
@@ -1301,7 +1301,7 @@ describe('WorkitemDetailPage', () => {
           data: {
             ...mockWorkitem,
             deletable: false,
-            deletableReason: '工作项正在执行中，请等待完成或结束后再删除',
+            deletableReason: '需求正在执行中，请等待完成或结束后再删除',
           },
         });
       }),
@@ -1310,7 +1310,7 @@ describe('WorkitemDetailPage', () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /删除工作项/ })).toBeDisabled();
+      expect(screen.getByRole('button', { name: /删除需求/ })).toBeDisabled();
     });
   });
 
@@ -1571,7 +1571,7 @@ describe('WorkitemDetailPage', () => {
   });
 });
 
-describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
+describe('WorkitemDetailPage clarify URL persistence (需求 53035)', () => {
   /** 把当前 search 和一条真实的「返回列表」链接挂在页面上，
    *  既能断言 URL 写入，也能验证验收项 5：正常返回列表不受影响。 */
   function LocationProbe() {
@@ -1600,7 +1600,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
                 </>
               )}
             />
-            <Route path="/workitems" element={<div>工作项列表</div>} />
+            <Route path="/workitems" element={<div>需求列表</div>} />
           </Routes>
         </MemoryRouter>
       </QueryClientProvider>,
@@ -1634,7 +1634,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
   }
 
   beforeEach(() => {
-    // 选人会把预填记忆写进 localStorage，而本组用例共用工作项 1：不清会串味
+    // 选人会把预填记忆写进 localStorage，而本组用例共用需求 1：不清会串味
     window.localStorage.clear();
     useAuthStore.getState().clear();
     useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
@@ -1656,7 +1656,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
     await userEvent.click(screen.getByRole('button', { name: /AI 需求澄清/ }));
 
     await waitFor(() => expect(currentSearch()).toContain('panel=clarify'));
-    // 澄清态挂在同一个工作项路由上，不能变成另一条路由
+    // 澄清态挂在同一个需求路由上，不能变成另一条路由
     expect(screen.getByTestId('location-pathname').textContent).toBe('/workitems/1');
     expect(currentSearch()).not.toContain('fullscreen=1');
   });
@@ -1722,7 +1722,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
   });
 
   it('records the picked squad member in the URL, not the delivery history agents', async () => {
-    // 工作项 56281 回归点：评论 @ 出来的执行历史决定交付进度里的 agents，
+    // 需求 56281 回归点：评论 @ 出来的执行历史决定交付进度里的 agents，
     // 那份名单既不能限制澄清候选（Agent-A 不在其中也必须选得到），
     // 也不该出现在选人屏上（Agent-History 并不是任何编队的可选成员）。
     server.use(
@@ -1776,7 +1776,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
   });
 
   it('restores the clarify conversation after a refresh without bouncing to the picker', async () => {
-    // CR53035-002 / 工作项 56281：交付进度是轮询来的，挂载当帧 agents 必然为空。
+    // CR53035-002 / 需求 56281：交付进度是轮询来的，挂载当帧 agents 必然为空。
     // 恢复只认 URL 上下文与会话自己的归属：既不依赖交付进度，也不能把 agentId: null 写回
     // URL 抹掉自己的恢复源（否则刷新回来只能重新选人）。
     server.use(
@@ -1801,7 +1801,7 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
     expect(screen.queryByTestId('clarification-selection-column')).toBeNull();
     expect(screen.queryByText('选择编队和AI 成员')).toBeNull();
 
-    // 恢复源没被自己的写回抹掉：URL 仍是同一个工作项的同一条澄清会话
+    // 恢复源没被自己的写回抹掉：URL 仍是同一个需求的同一条澄清会话
     expect(currentSearch()).toContain('agent=2');
     expect(currentSearch()).toContain('conversation=101');
     expect(currentSearch()).toContain('fullscreen=1');
@@ -1868,12 +1868,12 @@ describe('WorkitemDetailPage clarify URL persistence (工作项 53035)', () => {
 
     await userEvent.click(screen.getByTestId('back-to-list'));
 
-    expect(await screen.findByText('工作项列表')).toBeInTheDocument();
+    expect(await screen.findByText('需求列表')).toBeInTheDocument();
     expect(screen.queryByTestId('clarify-resize-box')).toBeNull();
   });
 });
 
-describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 54819)', () => {
+describe('WorkitemDetailPage start-delivery clarify reminder (需求 53315 / 54819)', () => {
   function LocationProbe() {
     const location = useLocation();
     return <span data-testid="location-search">{location.search}</span>;
@@ -1882,7 +1882,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 
   function renderReminderPage(options: {
     sdlcId?: string | null;
     clarification?: { workitemId: string; contentMd: string | null } | null;
-    /** 需求文档：工作项 54819 起「已有需求文档」是抑制引导的条件之一，默认空数组保持既有用例行为。 */
+    /** 需求文档：需求 54819 起「已有需求文档」是抑制引导的条件之一，默认空数组保持既有用例行为。 */
     requirementDocuments?: unknown[];
   } = {}) {
     const { sdlcId = null, clarification = null, requirementDocuments = [] } = options;
@@ -1918,7 +1918,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 
                 </>
               )}
             />
-            <Route path="/workitems" element={<div>工作项列表</div>} />
+            <Route path="/workitems" element={<div>需求列表</div>} />
           </Routes>
         </MemoryRouter>
       </QueryClientProvider>,
@@ -1937,7 +1937,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 
   const SKIP_BUTTON = /^跳\s*过$/;
   /** 启动交付弹窗的取消按钮同样是两个中文字符，用宽松匹配避开 autoInsertSpace。 */
   const CANCEL_BUTTON = /^取\s*消$/;
-  /** 「记住我的选项，下次不再提醒」勾选项（工作项 54819）。 */
+  /** 「记住我的选项，下次不再提醒」勾选项（需求 54819）。 */
   const REMEMBER_CHECKBOX = { name: /记住我的选项/ };
   /** clarifyReminderPreference.ts 落盘用的 key，直接写字面量避免把存储 key 导出成公共 API。 */
   const CLARIFY_REMINDER_KEY = 'ainative.workitems.clarifyReminder';
@@ -2050,7 +2050,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 
     await userEvent.click(await screen.findByRole('button', { name: /启动交付/ }));
 
     // 权限守卫仍在引导之前：只读用户拿到的是既有的拒绝提示，而不是澄清引导
-    expect(await screen.findByText('当前为只读权限，启动工作项交付需要读写权限')).toBeInTheDocument();
+    expect(await screen.findByText('当前为只读权限，启动需求交付需要读写权限')).toBeInTheDocument();
     expect(screen.queryByText('建议先完成需求澄清')).toBeNull();
     expect(screen.queryByText(DELIVERY_MODAL_MARKER)).toBeNull();
   });
@@ -2060,7 +2060,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (工作项 53315 / 
 
     await userEvent.click(await screen.findByRole('button', { name: /启动交付/ }));
 
-    // 需求材料已经就位，直接进原流程（工作项 54819）
+    // 需求材料已经就位，直接进原流程（需求 54819）
     expect(await screen.findByText(DELIVERY_MODAL_MARKER)).toBeInTheDocument();
     expect(screen.queryByText('建议先完成需求澄清')).toBeNull();
   });
@@ -2149,7 +2149,7 @@ describe('WorkitemDetailPage 关注入口装配', () => {
     useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
   });
 
-  it('已关注工作项的操作栏入口展示「取消关注工作项/已关注」', async () => {
+  it('已关注需求的操作栏入口展示「取消关注需求/已关注」', async () => {
     server.use(
       http.get('/api/workitems/1', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
@@ -2160,11 +2160,11 @@ describe('WorkitemDetailPage 关注入口装配', () => {
     renderPage();
 
     const toggle = await screen.findByTestId('workitem-watch-toggle');
-    expect(toggle).toHaveAccessibleName('取消关注工作项');
+    expect(toggle).toHaveAccessibleName('取消关注需求');
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('点击未关注工作项的操作栏入口发起 POST /watch', async () => {
+  it('点击未关注需求的操作栏入口发起 POST /watch', async () => {
     const requests: Array<{ method: string; url: string }> = [];
     server.use(
       ...setupHandlers(),
@@ -2176,7 +2176,7 @@ describe('WorkitemDetailPage 关注入口装配', () => {
     renderPage();
 
     const toggle = await screen.findByTestId('workitem-watch-toggle');
-    expect(toggle).toHaveAccessibleName('关注工作项');
+    expect(toggle).toHaveAccessibleName('关注需求');
     await userEvent.click(toggle);
 
     await waitFor(() => expect(requests).toEqual([{ method: 'POST', url: '/api/workitems/1/watch' }]));

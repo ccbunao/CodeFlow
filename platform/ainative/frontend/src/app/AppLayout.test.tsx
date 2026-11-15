@@ -55,7 +55,7 @@ describe('AppLayout', () => {
       </MemoryRouter>,
     );
     expect(screen.getByRole('heading', { name: '帮助正文' })).toBeInTheDocument();
-    expect(await screen.findByRole('link', { name: /返回工作项列表/ })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /返回需求列表/ })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: '文档中心' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /登\s*录/ })).toBeInTheDocument();
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -103,7 +103,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -112,7 +112,7 @@ describe('AppLayout', () => {
     // 设计契约 v5:IDE 工作台骨架——顶栏(品牌+路径+⌘K) + 左树 + 底部状态栏
     const shell = document.querySelector('.wb-shell');
     expect(shell).not.toBeNull();
-    const brand = await screen.findByRole('link', { name: /返回工作项列表/ });
+    const brand = await screen.findByRole('link', { name: /返回需求列表/ });
     expect(brand.closest('.wb-top')).toBeTruthy();
     expect(screen.getByRole('navigation', { name: '导航树' })).toBeInTheDocument();
     expect(document.querySelector('.wb-status')).toBeTruthy();
@@ -124,7 +124,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项列表页</div>} />
+            <Route path="/workitems" element={<div>需求列表页</div>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -178,7 +178,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
             <Route path="/profile/settings" element={<div>个人设置页</div>} />
           </Route>
         </Routes>
@@ -224,7 +224,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems/42?workspaceId=8']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems/:id" element={<><LocationProbe /><div>工作项详情页</div></>} />
+            <Route path="/workitems/:id" element={<><LocationProbe /><div>需求详情页</div></>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -270,7 +270,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -316,7 +316,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<><LocationProbe /><div>工作项页</div></>} />
+            <Route path="/workitems" element={<><LocationProbe /><div>需求页</div></>} />
             <Route path="/workspaces" element={<div>项目选择页</div>} />
           </Route>
         </Routes>
@@ -353,7 +353,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
           </Route>
         </Routes>
       </MemoryRouter>,
@@ -379,7 +379,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
           </Route>
           <Route path="/login" element={<div>登录页</div>} />
         </Routes>
@@ -438,7 +438,7 @@ describe('AppLayout', () => {
       <MemoryRouter initialEntries={['/workitems']}>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/workitems" element={<div>工作项页</div>} />
+            <Route path="/workitems" element={<div>需求页</div>} />
             <Route path="/insights" element={<div>效能分析页</div>} />
           </Route>
         </Routes>

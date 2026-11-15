@@ -28,9 +28,9 @@
     "trigger": "Trigger",
     "scheduledAt": "Scheduled",
     "finishedAt": "Finished",
-    "workitem": "Work item",
+    "workitem": "Requirement",
     "phase": "Phase",
-    "workitemStatus": "Work item status",
+    "workitemStatus": "Requirement status",
     "plannedAt": "Planned"
   },
   "labels": {
@@ -42,7 +42,7 @@
   "list": {
     "awaitingResult": "Running / awaiting",
     "tasksTitle": "Scheduled tasks",
-    "workitemsTitle": "Scheduled work items",
+    "workitemsTitle": "Scheduled requirements",
     "summaryAria": "Summary",
     "summaryScope": "Current filters (all creators)",
     "scopeAria": "Scope",
@@ -53,8 +53,8 @@
     "successRate": "30-day success <rate>{{rate}}</rate>% (<success>{{success}}</success>/<completed>{{completed}}</completed>)",
     "totalTasks_one": "<number>{{total}}</number> task",
     "totalTasks_other": "<number>{{total}}</number> tasks",
-    "totalWorkitems_one": "<number>{{total}}</number> work item",
-    "totalWorkitems_other": "<number>{{total}}</number> work items",
+    "totalWorkitems_one": "<number>{{total}}</number> requirement",
+    "totalWorkitems_other": "<number>{{total}}</number> requirements",
     "totalRows_one": "{{total}} record",
     "totalRows_other": "{{total}} rows",
     "runningCount_one": "<number>{{total}}</number> running task",
@@ -103,7 +103,7 @@
     "preview": "Preview",
     "search": "Search",
     "clearTaskSearch": "Clear search",
-    "clearWorkitemSearch": "Clear scheduled work item search",
+    "clearWorkitemSearch": "Clear scheduled requirement search",
     "refresh": "Refresh"
   },
   "commands": {
@@ -206,13 +206,13 @@
     "disabledReason": "({{reason}})"
   },
   "workitems": {
-    "doneReason": "The work item is complete; its schedule cannot be changed",
+    "doneReason": "The requirement is complete; its schedule cannot be changed",
     "triggeredReason": "Already triggered — no longer editable",
     "editTime": "Modified",
     "executeNow": "Start now",
-    "scopeAria": "Scheduled work item scope",
-    "keywordAria": "Work item title filter",
-    "searchPlaceholder": "Search work item titles",
+    "scopeAria": "Scheduled requirement scope",
+    "keywordAria": "Requirement title filter",
+    "searchPlaceholder": "Search requirement titles",
     "actionAria": "{{action}} #{{id}}"
   },
   "phase": {
@@ -262,8 +262,8 @@
     "timedOut": "Timed out"
   },
   "derived": {
-    "title": "Derived work items",
-    "empty": "No derived work items"
+    "title": "Derived requirements",
+    "empty": "No derived requirements"
   },
   "artifacts": {
     "title": "Run artifacts",

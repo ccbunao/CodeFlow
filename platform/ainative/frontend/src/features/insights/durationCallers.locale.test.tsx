@@ -11,7 +11,7 @@ import WorkstationWall from './realtime/WorkstationWall';
 import { SlowTailTable } from './components/SlowTailTable';
 import type { RecentTask } from './realtime/api';
 
-const running = { dispatchId: 1, agentId: 2, agentName: '<b>AI 成员</b>', workitemId: 3, workitemTitle: '<strong>工作项</strong>', stepName: '<em>阶段</em>', runningMinutes: 1 };
+const running = { dispatchId: 1, agentId: 2, agentName: '<b>AI 成员</b>', workitemId: 3, workitemTitle: '<strong>需求</strong>', stepName: '<em>阶段</em>', runningMinutes: 1 };
 const finishedAt = '2026-09-25T12:30:00Z';
 beforeEach(async () => { await i18n.changeLanguage('zh-CN'); });
 afterEach(async () => { cleanup(); await i18n.changeLanguage('zh-CN'); });

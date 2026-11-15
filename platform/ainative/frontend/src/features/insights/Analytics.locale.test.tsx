@@ -23,13 +23,13 @@ afterEach(async () => { cleanup(); vi.useRealTimers(); await i18n.changeLanguage
 it('translates the four insight tabs without retired execution audit and requirement delivery entries', async () => {
  server.use(http.get('/api/dashboard/realtime', () => ok(null)), http.get('/api/dashboard/overview', () => ok(null)), http.get('/api/dashboard/pipeline-health', () => ok(null)), http.get('/api/insights/metrics', () => ok(metrics)), http.get('/api/insights/workers', () => ok([])), http.get('/api/insights/audit', () => ok({ items: [], total: 0 })));
  routed(<InsightsPage />);
- const zh = ['实时看板', '人机协作', '工作项交付', '阶段耗时'];
+ const zh = ['实时看板', '人机协作', '成员交付', '阶段耗时'];
  await screen.findByRole('radio', { name: zh[0] });
  for (const label of zh) expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
  expect(screen.queryByRole('radio', { name: '执行审计' })).toBeNull();
  expect(screen.queryByRole('radio', { name: '需求交付' })).toBeNull();
  await act(async () => { await i18n.changeLanguage('en-US'); });
- for (const label of ['Realtime dashboard', 'Human–Agent participation', 'Work item delivery', 'Stage duration']) expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
+ for (const label of ['Realtime dashboard', 'Human–Agent participation', 'Member delivery', 'Stage duration']) expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
  expect(screen.queryByRole('radio', { name: 'Execution audit' })).toBeNull();
  expect(screen.queryByRole('radio', { name: 'Requirement delivery' })).toBeNull();
 });
@@ -82,7 +82,7 @@ it('uses the current locale for member loading, error and retry empty state', as
  expect(screen.getByText('成员统计加载失败，请重试；日期范围最多 180 天。')).toBeInTheDocument();
  expect(suffixes()).toEqual(['项', '项', '项', '项']); expect(values()).toEqual(['—', '—', '—', '—']);
  await act(async () => { await i18n.changeLanguage('en-US'); });
- await userEvent.click(screen.getByRole('button', { name: 'Retry' })); expect(await screen.findByText('No work item deliveries in this window')).toBeInTheDocument(); expect(calls).toBe(2);
+ await userEvent.click(screen.getByRole('button', { name: 'Retry' })); expect(await screen.findByText('No requirement deliveries in this window')).toBeInTheDocument(); expect(calls).toBe(2);
  expect(values()).toEqual(['0', '0', '0', '0']); expect(suffixes()).toEqual(['tasks', 'tasks', 'tasks', 'tasks']);
  await act(async () => { await i18n.changeLanguage('zh-CN'); });
  expect(values()).toEqual(['0', '0', '0', '0']); expect(suffixes()).toEqual(['项', '项', '项', '项']);

@@ -22,7 +22,7 @@ describe('workitem API', () => {
         eventTime: '2026-09-02T10:00:00Z',
         eventType: 'agent.message',
         level: 'INFO' as const,
-        content: '正在分析工作项评论。',
+        content: '正在分析需求评论。',
       }],
     };
     vi.mocked(apiClient.get).mockResolvedValue({ data: timeline } as never);

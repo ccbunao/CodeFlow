@@ -9,7 +9,7 @@ describe('WorkitemActionBar watch toggle', () => {
 
     const button = screen.getByTestId('workitem-watch-toggle');
     expect(button).toBeInTheDocument();
-    expect(button).toHaveAccessibleName('关注工作项');
+    expect(button).toHaveAccessibleName('关注需求');
     expect(button).toHaveAttribute('aria-pressed', 'false');
   });
 
@@ -17,7 +17,7 @@ describe('WorkitemActionBar watch toggle', () => {
     render(<WorkitemActionBar watched />);
 
     const button = screen.getByTestId('workitem-watch-toggle');
-    expect(button).toHaveAccessibleName('取消关注工作项');
+    expect(button).toHaveAccessibleName('取消关注需求');
     expect(button).toHaveAttribute('aria-pressed', 'true');
   });
 

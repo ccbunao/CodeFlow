@@ -6,7 +6,7 @@
   "finishGoWorkitems": "Finish and open workspace",
   "finishLater": "Later — re-open this tour from About",
   "skipConfirmTitle": "No executor online yet",
-  "skipConfirmContent": "AI members are driven by runners. Without one, work items will stay in 'Waiting for runner'. Skip any",
+  "skipConfirmContent": "AI members are driven by runners. Without one, requirements will stay in 'Waiting for runner'. Skip any",
   "skipConfirmOk": "Skip anyway",
   "skipConfirmCancel": "Stay and configure",
   "step1": {
@@ -24,7 +24,7 @@
     "eyebrow": "THE MODEL · 01",
     "headingHtml": "Requirements <mark>in</mark>, releases <mark>out</mark>",
     "f1t": "Requirement in",
-    "f1d": "File a story in ZenTao; it lands in CodeFlow within 60 seconds as a work item",
+    "f1d": "File a story in ZenTao; it lands in CodeFlow within 60 seconds as a requirement",
     "f2t": "AI members run",
     "f2d": "Analysis → coding & tests → delivery, step by step through the Pipeline with full artifact and log trails",
     "f3t": "Code review",
@@ -46,7 +46,7 @@
     "s2": "On any machine that can reach the platform and a model endpoint, set the environment variables below;",
     "s3": "Start the daemon and come back — when the badge turns green you're set.",
     "onlineTitle": "Executor is online",
-    "onlineDesc": "All set. Continue to the next step, or go deliver your first work item.",
+    "onlineDesc": "All set. Continue to the next step, or go deliver your first requirement.",
     "offlineTitle": "No executor online yet",
     "offlineDesc": "Follow the three steps below — this page probes every 3 seconds and turns green automatically.",
     "h1Title": "① Register an executor",
@@ -88,7 +88,7 @@
   "step3": {
     "title": "Meet the preset squad",
     "heading": "A preset squad, ready out of the box",
-    "lead": "The system ships with a minimal working lineup — your first work item can run right now.",
+    "lead": "The system ships with a minimal working lineup — your first requirement can run right now.",
     "presetTag": "Preset",
     "squadTitle": "Dev & Review squad",
     "agentTitle": "Two AI members",
@@ -123,9 +123,9 @@
     "s3d": "File a story in ZenTao; it appears in the work-item list within 60 seconds",
     "eyebrow": "ZENTAO · 04"
   },
-  "step4.optionalNote": "Skipping is fine: create a work item manually to try a delivery — ZenTao can be connected any time.",
+  "step4.optionalNote": "Skipping is fine: create a requirement manually to try a delivery — ZenTao can be connected any time.",
   "step4.goIntegrations": "Open Integrations to bind ZenTao",
-  "step4.createManually": "Create a work item manually",
+  "step4.createManually": "Create a requirement manually",
   "skipDontShow": "Don't show this tour again",
   "pageTag": "FIRST-RUN GUIDE — {{current}} / {{total}}",
   "who": {

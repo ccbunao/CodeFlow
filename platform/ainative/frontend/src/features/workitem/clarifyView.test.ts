@@ -11,7 +11,7 @@ import {
   writeClarifyView,
 } from './clarifyView';
 
-/** 澄清视图挂在 URL 上，刷新才能停在原页面（工作项 53035）。
+/** 澄清视图挂在 URL 上，刷新才能停在原页面（需求 53035）。
  *  这是纯编解码层，页面/面板的所有恢复行为都由它兜底，所以按分支逐条钉死。 */
 describe('readClarifyView', () => {
   it('reads the progress view when the panel param is absent', () => {

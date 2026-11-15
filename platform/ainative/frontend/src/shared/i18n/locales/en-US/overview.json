@@ -14,25 +14,25 @@
     "retry": "Retry"
   },
   "created": {
-    "title": "New work items",
-    "caption": "Daily new work items over the last {{days}} days.",
-    "trendAria": "Daily trend of new work items over the last {{days}} days"
+    "title": "New requirements",
+    "caption": "Daily new requirements over the last {{days}} days.",
+    "trendAria": "Daily trend of new requirements over the last {{days}} days"
   },
   "delivered": {
-    "title": "Completed work items",
+    "title": "Completed requirements",
     "dailyAverage": "Daily average {{value}} per day",
     "change": "vs previous period {{value}}",
     "noBase": "No comparable base",
     "previous_one": "Previous {{start}} to {{end}}: {{count}} completed",
     "previous_other": "Previous {{start}} to {{end}}: {{count}} completed",
-    "method": "Method: work items entering a DONE-category status within the selected range are counted once per work item; canceled items are excluded. The change compares the previous period of equal length. Counted by completion time.",
+    "method": "Method: requirements entering a DONE-category status within the selected range are counted once per requirement; canceled items are excluded. The change compares the previous period of equal length. Counted by completion time.",
     "methodAria": "Completion metric method"
   },
   "pending": {
-    "title": "My pending work items",
+    "title": "My pending requirements",
     "caption": "All pending",
-    "hint": "Not limited by the stats range above; every unfinished work item assigned to you is listed.",
-    "workitem": "Work item",
+    "hint": "Not limited by the stats range above; every unfinished requirement assigned to you is listed.",
+    "workitem": "Requirement",
     "name": "Title",
     "status": "Status",
     "priority": "Priority",
@@ -45,16 +45,16 @@
     "total_one": "{{count}} item",
     "total_other": "{{count}} items",
     "loading": "Loading…",
-    "empty": "No pending work items",
-    "loadFailure": "Failed to load pending work items",
+    "empty": "No pending requirements",
+    "loadFailure": "Failed to load pending requirements",
     "retry": "Retry",
     "emptyHint": "Adjust the range, or clear the items currently waiting on you"
   },
   "createdList": {
-    "title": "New work items ({{range}})",
+    "title": "New requirements ({{range}})",
     "caption": "Selected range",
-    "hint": "Same scope as the New work items card above: every work item created in the selected range, including canceled ones; the list length equals the card value.",
-    "workitem": "Work item",
+    "hint": "Same scope as the New requirements card above: every requirement created in the selected range, including canceled ones; the list length equals the card value.",
+    "workitem": "Requirement",
     "name": "Title",
     "status": "Status",
     "priority": "Priority",
@@ -62,10 +62,10 @@
     "total_one": "{{count}} item",
     "total_other": "{{count}} items",
     "loading": "Loading…",
-    "empty": "No new work items in the selected range",
-    "loadFailure": "Failed to load new work items",
+    "empty": "No new requirements in the selected range",
+    "loadFailure": "Failed to load new requirements",
     "retry": "Retry",
-    "emptyHint": "No work items were created in this range"
+    "emptyHint": "No requirements were created in this range"
   },
   "leadTime": {
     "title": "Avg. Delivery Lead Time",

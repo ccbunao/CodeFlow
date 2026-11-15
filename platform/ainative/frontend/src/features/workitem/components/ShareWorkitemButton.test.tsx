@@ -34,7 +34,7 @@ function renderButton(seed: PlatformBranding | null, props: Partial<React.Compon
   if (seed) queryClient.setQueryData(BRANDING_QUERY_KEY, seed);
   return render(
     <QueryClientProvider client={queryClient}>
-      <ShareWorkitemButton workitemId={54863} title="工作项标题" {...props} />
+      <ShareWorkitemButton workitemId={54863} title="需求标题" {...props} />
     </QueryClientProvider>,
   );
 }
@@ -67,7 +67,7 @@ describe('ShareWorkitemButton', () => {
     fireEvent.click(screen.getByRole('button', { name: '分享' }));
     await act(async () => {});
 
-    expect(copyMock).toHaveBeenCalledWith('https://wonder.example.com/workitems/54863 《工作项标题》');
+    expect(copyMock).toHaveBeenCalledWith('https://wonder.example.com/workitems/54863 《需求标题》');
   });
 
   it('uses the per-deployment endpoint instead of the seeded internal domain', async () => {
@@ -81,7 +81,7 @@ describe('ShareWorkitemButton', () => {
     fireEvent.click(screen.getByRole('button', { name: '分享' }));
     await act(async () => {});
 
-    expect(copyMock).toHaveBeenCalledWith('https://ainative.customer.internal/workitems/54863 《工作项标题》');
+    expect(copyMock).toHaveBeenCalledWith('https://ainative.customer.internal/workitems/54863 《需求标题》');
   });
 
   it('falls back to the current origin when the branding endpoint is unavailable', async () => {
@@ -92,7 +92,7 @@ describe('ShareWorkitemButton', () => {
     fireEvent.click(screen.getByRole('button', { name: '分享' }));
     await act(async () => {});
 
-    expect(copyMock).toHaveBeenCalledWith(`${window.location.origin}/workitems/54863 《工作项标题》`);
+    expect(copyMock).toHaveBeenCalledWith(`${window.location.origin}/workitems/54863 《需求标题》`);
   });
 
   it('switches to a copied state and reverts after 1.5s', async () => {
@@ -164,7 +164,7 @@ describe('ShareWorkitemButton', () => {
     render(
       <StrictMode>
         <QueryClientProvider client={queryClient}>
-          <ShareWorkitemButton workitemId={54863} title="工作项标题" />
+          <ShareWorkitemButton workitemId={54863} title="需求标题" />
         </QueryClientProvider>
       </StrictMode>,
     );
@@ -172,7 +172,7 @@ describe('ShareWorkitemButton', () => {
     fireEvent.click(screen.getByRole('button', { name: '分享' }));
     await act(async () => {});
 
-    expect(copyMock).toHaveBeenCalledWith('https://wonder.example.com/workitems/54863 《工作项标题》');
+    expect(copyMock).toHaveBeenCalledWith('https://wonder.example.com/workitems/54863 《需求标题》');
     expect(screen.getByRole('button', { name: '已复制' })).toBeInTheDocument();
   });
 
@@ -207,7 +207,7 @@ describe('ShareWorkitemButton', () => {
     const view = renderButton(branding({ domain: null }));
 
     fireEvent.click(screen.getByRole('button', { name: '分享' }));
-    expect(copyMock).toHaveBeenCalledWith(`${window.location.origin}/workitems/54863 《工作项标题》`);
+    expect(copyMock).toHaveBeenCalledWith(`${window.location.origin}/workitems/54863 《需求标题》`);
     const hasFeedbackTimer = () => setSpy.mock.calls.some((args) => args[1] === SHARE_FEEDBACK_MS);
     expect(hasFeedbackTimer()).toBe(false);
 

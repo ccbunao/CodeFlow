@@ -133,7 +133,7 @@ function squadsPage(list: Array<{ id: number; name: string }>, total: number) {
   });
 }
 
-describe('findSquadIdForAgent (URL 恢复的编队归属, 工作项 56281)', () => {
+describe('findSquadIdForAgent (URL 恢复的编队归属, 需求 56281)', () => {
   it('resolves the squad that lists the agent as a member', async () => {
     server.use(
       http.get('/api/squads', () =>

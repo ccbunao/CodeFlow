@@ -8,7 +8,7 @@
   "section": {
     "agents": "AI 成员",
     "agentsSubtitle": "当前快照，不随时间窗口变化",
-    "delivery": "工作项交付",
+    "delivery": "需求交付",
     "cost": "成本分析"
   },
   "agents": {
@@ -24,31 +24,31 @@
     "squadHint": "不含已解散编队"
   },
   "delivery": {
-    "workitem": "工作项",
+    "workitem": "需求",
     "workitemHint": "{{days}} 天窗口内创建",
-    "workitemTooltip": "窗口内创建的工作项数，含已取消与已完成；按创建时间统计",
+    "workitemTooltip": "窗口内创建的需求数，含已取消与已完成；按创建时间统计",
     "completed": "已完成",
     "completedHint": "完成时间落在 {{days}} 天窗口内",
-    "completedTooltip": "当前已完成，且最近一次进入完成节点的时间落在窗口内；与工作项口径不同，不可相加",
+    "completedTooltip": "当前已完成，且最近一次进入完成节点的时间落在窗口内；与需求口径不同，不可相加",
     "inProgress": "进行中",
     "inProgressHint": "窗口内创建且当前未结束",
     "inProgressTooltip": "创建于窗口内，当前状态为初始或进行中（含待你处理）",
-    "topCompleted": "已完成工作项最多的空间",
-    "bottomCompleted": "已完成工作项最少的空间",
+    "topCompleted": "已完成需求最多的空间",
+    "bottomCompleted": "已完成需求最少的空间",
     "rankHint": "点击空间名可跳转该空间洞察页",
     "rankZeroHint": "0 单的空间同样计入"
   },
   "cost": {
     "total": "Credits 总消耗数",
     "totalHint": "{{days}} 天窗口内全部 AI 消耗",
-    "totalTooltip": "调度执行与会话两条用量来源汇总，含平台助手等非工作项会话；未计价记录按 0 计",
+    "totalTooltip": "调度执行与会话两条用量来源汇总，含平台助手等非需求会话；未计价记录按 0 计",
     "dailyAverage": "日均 Credits 消耗数",
     "dailyHint": "分母：窗口自然日 {{days}} 天",
     "dailyTooltip": "按自然日天数平均，无消耗的日期同样计入分母",
     "perWorkitem": "单任务 Credits 消耗数",
     "perWorkitemHint": "分母：交付窗口内已完成 {{done}} 单（全部类型）",
-    "perWorkitemUnavailableHint": "分母：交付窗口内无已完成工作项",
-    "perWorkitemTooltip": "分子为空间全部 AI 消耗，含非工作项会话，因此显著高于真实工作项成本，是成本上界",
+    "perWorkitemUnavailableHint": "分母：交付窗口内无已完成需求",
+    "perWorkitemTooltip": "分子为空间全部 AI 消耗，含非需求会话，因此显著高于真实需求成本，是成本上界",
     "unavailableValue": "--",
     "topCredits": "消耗 Credits 最多的空间",
     "bottomCredits": "消耗 Credits 最少的空间",
@@ -56,7 +56,7 @@
     "rankZeroHint": "0 消耗的空间同样计入"
   },
   "workType": {
-    "label": "工作项类型",
+    "label": "需求类型",
     "REQ": "需求",
     "BUG": "缺陷",
     "TASK": "任务"
@@ -68,7 +68,7 @@
     "drilldown": "跳转到「{{name}}」洞察页"
   },
   "range": {
-    "delivery": "工作项交付统计日期范围",
+    "delivery": "需求交付统计日期范围",
     "cost": "成本分析统计日期范围"
   },
   "state": {

@@ -56,7 +56,7 @@
   "codexComment": "# ~/.codex/config.toml 或项目 .codex/config.toml",
   "capabilities": {
     "workitem": {
-      "title": "工作项管理",
+      "title": "需求管理",
       "description": "CRUDL、分配、评论、暂停继续和状态流转。"
     },
     "sdlc": {

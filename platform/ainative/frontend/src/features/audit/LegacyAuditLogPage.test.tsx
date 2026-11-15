@@ -182,7 +182,7 @@ describe('LegacyAuditLogPage', () => {
     await user.click(comboboxes[1]);
     await user.click(await screen.findByText('删除'));
     await user.click(comboboxes[2]);
-    const workitemOptions = await screen.findAllByText('工作项');
+    const workitemOptions = await screen.findAllByText('需求');
     await user.click(workitemOptions[workitemOptions.length - 1]);
     await user.click(comboboxes[3]);
     await user.click(await screen.findByText('7 天内'));

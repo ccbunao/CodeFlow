@@ -102,7 +102,7 @@ describe('AgentDetailPage', () => {
       roleName: '项目管理员',
       roleCode: 'PROJECT_MANAGER',
       businessBackground: '负责在钉钉群里作为项目接口人参与沟通。',
-      responsibilities: '推动工作项流转、任务指派和进度汇报，不直接开发代码。',
+      responsibilities: '推动需求流转、任务指派和进度汇报，不直接开发代码。',
     });
 
     renderPage();
@@ -110,7 +110,7 @@ describe('AgentDetailPage', () => {
     expect(await screen.findByText('SOUL.md')).toBeInTheDocument();
     expect(screen.getByText('负责在钉钉群里作为项目接口人参与沟通。')).toBeInTheDocument();
     expect(screen.getByText('AGENT.md')).toBeInTheDocument();
-    expect(screen.getByText('推动工作项流转、任务指派和进度汇报，不直接开发代码。')).toBeInTheDocument();
+    expect(screen.getByText('推动需求流转、任务指派和进度汇报，不直接开发代码。')).toBeInTheDocument();
   });
 
   it('guides draft agents to edit configuration and submit for review', async () => {
@@ -168,7 +168,7 @@ describe('AgentDetailPage', () => {
       http.get('/api/workitems', () => ok({ list: [], total: 0, pageNum: 1, pageSize: 100 })),
     );
     renderPage();
-    expect(await screen.findByText('该员工暂无关联工作项')).toBeInTheDocument();
+    expect(await screen.findByText('该员工暂无关联需求')).toBeInTheDocument();
   });
 
   it('shows persistent rollback feedback after confirming rollback', async () => {

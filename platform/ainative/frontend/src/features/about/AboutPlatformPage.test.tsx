@@ -28,7 +28,7 @@ describe('AboutPlatformPage', () => {
     expect(screen.getByText('交付 9 号线 · 一单一趟,全程有站')).toBeInTheDocument();
     expect(screen.getByText('全程 9 站 · 全程留痕,产物归档')).toBeInTheDocument();
     expect(screen.getByText('持续迭代')).toBeInTheDocument();
-    expect(screen.queryByText('工作项系统集成')).not.toBeInTheDocument();
+    expect(screen.queryByText('需求系统集成')).not.toBeInTheDocument();
     expect(screen.queryByText('5 分钟理解工作流')).not.toBeInTheDocument();
   });
 

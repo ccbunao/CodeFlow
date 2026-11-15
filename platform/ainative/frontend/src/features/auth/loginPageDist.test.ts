@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
-// 工作项 #10022(同源 #10018/#10019)· 缺陷 A-03 —— 「登录页回车提交」在**源码**里达成,却可能在
+// 需求 #10022(同源 #10018/#10019)· 缺陷 A-03 —— 「登录页回车提交」在**源码**里达成,却可能在
 // **产物**里缺席,而这两者之间原本没有任何门禁:
 //
 //   * 平台默认构建路径 platform/build.sh = REUSE_DIST:把「随库分发的 frontend/dist」直接拷进

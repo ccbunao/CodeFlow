@@ -20,7 +20,7 @@ const terra: WorkspaceListItem = {
 const nebula: WorkspaceListItem = {
   id: 42,
   name: '禅道集成平台',
-  description: '连接禅道工作项与运行器集群',
+  description: '连接禅道需求与运行器集群',
   membershipStatus: 'NOT_MEMBER',
   accessLevel: null,
 };

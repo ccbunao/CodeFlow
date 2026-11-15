@@ -66,10 +66,10 @@ describe('ResultPane', () => {
     render(<ResultPane session={makeSession({
       scene: 'AGENT_CONFIG_GEN',
       resultJson: JSON.stringify({
-        name: 'Terraform 工作项分诊助手',
-        roleName: '工作项分诊专员',
+        name: 'Terraform 需求分诊助手',
+        roleName: '需求分诊专员',
         roleCode: 'TERRAFORM_TRIAGE',
-        businessBackground: '负责 Terraform 相关工作项分诊。',
+        businessBackground: '负责 Terraform 相关需求分诊。',
         responsibilities: '分析需求、识别负责人并输出处理建议。',
       }),
     })} />);

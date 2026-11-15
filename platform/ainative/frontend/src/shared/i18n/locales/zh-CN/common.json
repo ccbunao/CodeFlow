@@ -55,8 +55,8 @@
   "workspace": {
     "switched": "已切换到 {{name}}",
     "switchFailed": "切换项目失败",
-    "notMember": "你不在该工作项所属项目中",
-    "linkedSwitchFailed": "切换到工作项所属项目失败",
+    "notMember": "你不在该需求所属项目中",
+    "linkedSwitchFailed": "切换到需求所属项目失败",
     "manage": "管理项目...",
     "unselected": "未选择"
   },
@@ -67,7 +67,7 @@
     "content": "页面内容",
     "tree": "导航树",
     "commandPalette": "命令面板",
-    "commandPaletteSearch": "搜索工作项、运行器、文档…",
+    "commandPaletteSearch": "搜索需求、运行器、文档…",
     "paletteEmpty": "没有匹配的跳转目标",
     "paletteHint": "↑↓ 选择 · ↵ 打开 · esc 关闭",
     "docsHint": "在新标签页打开文档中心",

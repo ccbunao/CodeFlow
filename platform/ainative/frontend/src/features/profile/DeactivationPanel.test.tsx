@@ -104,7 +104,7 @@ describe('DeactivationPanel', () => {
   });
 
   it('keeps the session and surfaces the server reason when deletion is blocked', async () => {
-    const blocked = new ApiError('29002', '存在未完结工作项，无法注销', 'trace-1');
+    const blocked = new ApiError('29002', '存在未完结需求，无法注销', 'trace-1');
     vi.spyOn(profileApi, 'deleteMyAccount').mockRejectedValue(blocked);
     const { router } = renderPanel();
 
@@ -112,7 +112,7 @@ describe('DeactivationPanel', () => {
     await userEvent.type(input, username);
     await userEvent.click(screen.getByRole('button', { name: '确认注销' }));
 
-    await waitFor(() => expect(errorMock).toHaveBeenCalledWith('存在未完结工作项，无法注销'));
+    await waitFor(() => expect(errorMock).toHaveBeenCalledWith('存在未完结需求，无法注销'));
     expect(useAuthStore.getState().accessToken).toBe('test-access');
     expect(router.state.location.pathname).toBe('/profile/settings');
     expect(screen.getByRole('dialog')).toBeInTheDocument();

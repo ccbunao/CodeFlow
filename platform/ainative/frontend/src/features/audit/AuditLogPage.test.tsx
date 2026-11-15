@@ -22,7 +22,7 @@ const baseLog = (overrides: Partial<AuditLog> = {}): AuditLog => ({
   targetType: 'workitem',
   targetId: 42,
   detail: null,
-  detailJson: '{"triggerType":"EVENT","triggerSource":"USER_CLICK","eventType":"workitem.delete","message":"删除工作项 ZENTAO#123","stepName":""}',
+  detailJson: '{"triggerType":"EVENT","triggerSource":"USER_CLICK","eventType":"workitem.delete","message":"删除需求 ZENTAO#123","stepName":""}',
   gmtCreate: '2026-07-01T10:11:12',
   ...overrides,
 });
@@ -75,13 +75,13 @@ describe('AuditLogPage v2', () => {
 
     expect(await screen.findByText('张三')).toBeInTheDocument();
     expect(screen.getByText('HUMAN')).toBeInTheDocument();
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求')).toBeInTheDocument();
     expect(screen.getByText('DELETE')).toBeInTheDocument();
     expect(screen.getByText('高危')).toBeInTheDocument();
-    expect(screen.getByText('工作项 #42')).toBeInTheDocument();
+    expect(screen.getByText('需求 #42')).toBeInTheDocument();
     expect(screen.getByText('EVENT / USER_CLICK')).toBeInTheDocument();
     expect(screen.getByText('workitem.delete')).toBeInTheDocument();
-    expect(screen.getByText('message: 删除工作项 ZENTAO#123')).toBeInTheDocument();
+    expect(screen.getByText('message: 删除需求 ZENTAO#123')).toBeInTheDocument();
     expect(screen.getByText('2026-07-01 10:11:12')).toBeInTheDocument();
     expect(screen.getByText('命中 23 条')).toBeInTheDocument();
     expect(screen.getByText('共 23 条')).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe('AuditLogPage v2', () => {
     await choose(user, '风险', '高危');
     await waitFor(() => expect(lastListParams().get('riskLevel')).toBe('high'));
 
-    await choose(user, '对象类型', '工作项');
+    await choose(user, '对象类型', '需求');
     await waitFor(() => expect(lastListParams().get('targetType')).toBe('workitem'));
 
     await choose(user, '角色类型', 'AI 成员');
@@ -264,7 +264,7 @@ describe('AuditLogPage v2', () => {
     expect(screen.getByText('#3')).toBeInTheDocument();
     expect(screen.getAllByText('HUMAN')).toHaveLength(2);
     expect(screen.getAllByText('-').length).toBeGreaterThanOrEqual(3);
-    expect(screen.getByText('message: 删除工作项 ZENTAO#123')).toBeInTheDocument();
+    expect(screen.getByText('message: 删除需求 ZENTAO#123')).toBeInTheDocument();
     expect(container.querySelectorAll('.audit-detail-link')).toHaveLength(0);
 
     const user = userEvent.setup();

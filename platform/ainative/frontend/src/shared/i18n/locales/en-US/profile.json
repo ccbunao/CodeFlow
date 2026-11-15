@@ -43,10 +43,10 @@
   },
   "deactivation": {
     "title": "Delete account",
-    "notice": "Once deleted, your account can no longer sign in and every issued credential is invalidated immediately. Your work items, comments and other history are retained and shown under your username from before deletion.",
+    "notice": "Once deleted, your account can no longer sign in and every issued credential is invalidated immediately. Your requirements, comments and other history are retained and shown under your username from before deletion.",
     "warning": "This deletes your account immediately (data is retained)",
     "warningHint": "A deleted account cannot be restored from the profile page; contact a platform administrator to restore it under User management.",
-    "rule1": "1. Deletion is blocked while you have unfinished work items, are the sole administrator of a workspace, or own any workspace",
+    "rule1": "1. Deletion is blocked while you have unfinished requirements, are the sole administrator of a workspace, or own any workspace",
     "rule2": "2. Deletion takes effect immediately and cannot be undone from the profile page",
     "rule3": "3. A platform administrator can restore the account; workspace access and the IM user ID must be reconfigured by an administrator",
     "request": "Delete account",

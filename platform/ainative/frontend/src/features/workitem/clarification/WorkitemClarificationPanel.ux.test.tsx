@@ -300,7 +300,7 @@ describe('WorkitemClarificationPanel 回复体验（R1/R2/R3/R4）', () => {
   });
 });
 
-describe('WorkitemClarificationPanel 回复结束后的输入焦点（工作项 53305）', () => {
+describe('WorkitemClarificationPanel 回复结束后的输入焦点（需求 53305）', () => {
   afterEach(() => {
     clearClarificationPrefill('100');
     vi.restoreAllMocks();
@@ -339,7 +339,7 @@ describe('WorkitemClarificationPanel 回复结束后的输入焦点（工作项 
   });
 
   // 焦点只在「本轮回复结束」时归还：面板首次拉取会话时输入框同样经历一次
-  // 禁用→可用，回复结束的归还效应不能把这次跃迁误判为回复结束（工作项 53305 原始诉求）。
+  // 禁用→可用，回复结束的归还效应不能把这次跃迁误判为回复结束（需求 53305 原始诉求）。
   // 72ca85586 的「进入面板自动聚焦」（FR-001）有意在挂载、输入行可用后经
   // requestAnimationFrame 聚焦一次，所以本场景的终点是焦点落在输入框上；
   // 等待 rAF 落定后再断言，避免与断言赛跑（全量并发下 rAF 可能先于断言执行）。
@@ -358,7 +358,7 @@ describe('WorkitemClarificationPanel 回复结束后的输入焦点（工作项 
   });
 });
 
-describe('WorkitemClarificationPanel 终态先于结算与跨会话隔离（工作项 55851）', () => {
+describe('WorkitemClarificationPanel 终态先于结算与跨会话隔离（需求 55851）', () => {
   afterEach(() => {
     clearClarificationPrefill('100');
     vi.restoreAllMocks();

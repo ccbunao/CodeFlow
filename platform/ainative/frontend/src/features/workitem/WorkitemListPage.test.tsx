@@ -39,7 +39,7 @@ describe('WorkitemListPage', () => {
       const query = new URL(request.url).searchParams;
       const pending = query.get('statusCategory') === 'PENDING_DECISION';
       return HttpResponse.json({ success: true, code: '0', data: pageData(pending ? [{
-        id: 1, title: '别人的工作项', workType: 'REQ', statusCategory: 'PENDING_DECISION',
+        id: 1, title: '别人的需求', workType: 'REQ', statusCategory: 'PENDING_DECISION',
         statusName: '待你处理', assigneeType: 'HUMAN', assigneeRef: 99, assigneeDisplayName: '李四', priority: 2,
       }] : [], query.get('pendingDecisionOnly') === 'true' ? 73 : 100) });
     }));
@@ -106,15 +106,15 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 21, title: '定时工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartAt: '2026-09-01T02:00:00Z', version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
-            { id: 22, title: '普通工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 21, title: '定时需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartAt: '2026-09-01T02:00:00Z', version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 22, title: '普通需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('定时工作项')).toBeInTheDocument();
+    expect(await screen.findByText('定时需求')).toBeInTheDocument();
     expect(screen.getByLabelText('定时执行')).toBeInTheDocument();
   });
 
@@ -124,7 +124,7 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 23, title: '表格定时工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartAt: '2026-09-01T02:00:00Z', version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 23, title: '表格定时需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartAt: '2026-09-01T02:00:00Z', version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
           ]),
         });
       }),
@@ -132,7 +132,7 @@ describe('WorkitemListPage', () => {
 
     renderPage();
     await userEvent.click(await screen.findByLabelText('表格视图'));
-    expect(await screen.findByText('表格定时工作项')).toBeInTheDocument();
+    expect(await screen.findByText('表格定时需求')).toBeInTheDocument();
     expect(screen.getByLabelText('定时执行')).toBeInTheDocument();
   });
 
@@ -142,14 +142,14 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 24, title: '已触发定时工作项', workType: 'REQ', statusName: '开发中', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartTriggeredAt: '2026-08-26T10:00:00Z', version: 2, gmtCreate: '2026-07-01', gmtModified: '2026-08-26' },
+            { id: 24, title: '已触发定时需求', workType: 'REQ', statusName: '开发中', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', scheduledStartTriggeredAt: '2026-08-26T10:00:00Z', version: 2, gmtCreate: '2026-07-01', gmtModified: '2026-08-26' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('已触发定时工作项')).toBeInTheDocument();
+    expect(await screen.findByText('已触发定时需求')).toBeInTheDocument();
     expect(screen.getByLabelText('定时执行已触发')).toBeInTheDocument();
   });
 
@@ -159,14 +159,14 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 25, title: '定时任务派生工作项', workType: 'TASK', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', origin: { type: 'SCHEDULED_TASK_RUN', id: 9, scheduledTaskId: 77, scheduledTaskName: '每日巡检' }, version: 1, gmtCreate: '2026-08-26T02:00:00Z', gmtModified: '2026-08-26T02:00:00Z' },
+            { id: 25, title: '定时任务派生需求', workType: 'TASK', statusName: '待处理', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', origin: { type: 'SCHEDULED_TASK_RUN', id: 9, scheduledTaskId: 77, scheduledTaskName: '每日巡检' }, version: 1, gmtCreate: '2026-08-26T02:00:00Z', gmtModified: '2026-08-26T02:00:00Z' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('定时任务派生工作项')).toBeInTheDocument();
+    expect(await screen.findByText('定时任务派生需求')).toBeInTheDocument();
     expect(screen.getByLabelText('定时任务执行')).toBeInTheDocument();
   });
 
@@ -193,14 +193,14 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 6, title: '人工处理工作项', workType: 'REQ', statusName: '待处理', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: 10000, assigneeName: 'caihe', assigneeDisplayName: '蔡何', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
+            { id: 6, title: '人工处理需求', workType: 'REQ', statusName: '待处理', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: 10000, assigneeName: 'caihe', assigneeDisplayName: '蔡何', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('人工处理工作项')).toBeInTheDocument();
+    expect(await screen.findByText('人工处理需求')).toBeInTheDocument();
     expect(screen.queryByText('需要人工')).not.toBeInTheDocument();
     expect(screen.getByText('当前负责人:蔡何')).toBeInTheDocument();
   });
@@ -211,7 +211,7 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 7, title: '表格人工工作项', workType: 'REQ', statusName: '开发中', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: 10000, assigneeName: 'caihe', assigneeDisplayName: '蔡何(10000)', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
+            { id: 7, title: '表格人工需求', workType: 'REQ', statusName: '开发中', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: 10000, assigneeName: 'caihe', assigneeDisplayName: '蔡何(10000)', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
           ]),
         });
       }),
@@ -219,7 +219,7 @@ describe('WorkitemListPage', () => {
 
     renderPage();
     await userEvent.click(await screen.findByLabelText('表格视图'));
-    expect(await screen.findByText('表格人工工作项')).toBeInTheDocument();
+    expect(await screen.findByText('表格人工需求')).toBeInTheDocument();
     expect(screen.getByText('需要人工')).toBeInTheDocument();
     expect(screen.queryByText(/需人工（蔡何\(10000\)）/)).not.toBeInTheDocument();
   });
@@ -230,16 +230,16 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 8, title: '机器工作项', workType: 'REQ', statusName: '开发中', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
-            { id: 9, title: '未指派工作项', workType: 'REQ', statusName: '待处理', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
+            { id: 8, title: '机器需求', workType: 'REQ', statusName: '开发中', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
+            { id: 9, title: '未指派需求', workType: 'REQ', statusName: '待处理', statusCategory: 'PENDING_DECISION', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-05', gmtModified: '2026-07-05' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('机器工作项')).toBeInTheDocument();
-    expect(screen.getByText('未指派工作项')).toBeInTheDocument();
+    expect(await screen.findByText('机器需求')).toBeInTheDocument();
+    expect(screen.getByText('未指派需求')).toBeInTheDocument();
     expect(screen.queryByText(/需人工/)).not.toBeInTheDocument();
   });
 
@@ -261,11 +261,11 @@ describe('WorkitemListPage', () => {
     useAuthStore.setState({ accessLevel: 'READ_WRITE' });
     server.use(http.get('/api/workitems', () => HttpResponse.json({ success: true, data: pageData([]) })));
     renderPageWithProbe();
-    const button = await screen.findByRole('button', { name: '新建工作项' });
+    const button = await screen.findByRole('button', { name: '新建需求' });
     expect(within(button).queryByRole('img')).not.toBeInTheDocument();
     await act(async () => { await i18n.changeLanguage('en-US'); });
     try {
-      expect(screen.getByRole('button', { name: 'New work item' })).toBe(button);
+      expect(screen.getByRole('button', { name: 'New requirement' })).toBe(button);
       await userEvent.click(button);
       expect(screen.getByTestId('location-probe')).toHaveTextContent(/^\/workitems\/new$/);
     } finally { await act(async () => { await i18n.changeLanguage('zh-CN'); }); }
@@ -278,10 +278,10 @@ describe('WorkitemListPage', () => {
       return HttpResponse.json({ success: true, data: pageData([]) });
     }));
     renderPage();
-    const input = await screen.findByPlaceholderText('搜索工作项ID或标题');
+    const input = await screen.findByPlaceholderText('搜索需求ID或标题');
     await userEvent.type(input, '<raw 用户>{enter}');
     await waitFor(() => expect(requests.at(-1)?.get('keyword')).toBe('<raw 用户>'));
-    const clear = screen.getByRole('button', { name: '清空工作项搜索' });
+    const clear = screen.getByRole('button', { name: '清空需求搜索' });
     await userEvent.click(document.querySelectorAll('.ant-select-selector')[0]!);
     await userEvent.click(await screen.findByTitle('缺陷'));
     await waitFor(() => expect(requests.at(-1)?.get('workType')).toBe('BUG'));
@@ -289,7 +289,7 @@ describe('WorkitemListPage', () => {
     expect(screen.queryByRole('button', { name: '清空类型筛选' })).not.toBeInTheDocument();
     await act(async () => { await i18n.changeLanguage('en-US'); });
     try {
-      expect(screen.getByRole('button', { name: 'Clear work item search' })).toBe(clear);
+      expect(screen.getByRole('button', { name: 'Clear requirement search' })).toBe(clear);
       expect(screen.queryByRole('button', { name: 'Clear type filter' })).not.toBeInTheDocument();
       // 通过键盘仍可清空:聚焦 Select 后触发其内建清除
       await userEvent.click(document.querySelectorAll('.ant-select-selector')[0]!);
@@ -320,9 +320,9 @@ describe('WorkitemListPage', () => {
     );
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /新建工作项/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /新建需求/ }));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，新建工作项需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，新建需求需要读写权限');
     expect(screen.getByText('需求录入')).toBeInTheDocument();
   });
 
@@ -345,7 +345,7 @@ describe('WorkitemListPage', () => {
               gmtCreate: '2026-07-04',
               gmtModified: '2026-07-04',
               deletable: false,
-              deletableReason: '工作项正在执行中，请等待完成或结束后再删除',
+              deletableReason: '需求正在执行中，请等待完成或结束后再删除',
             },
           ]),
         });
@@ -355,13 +355,13 @@ describe('WorkitemListPage', () => {
     renderPage();
     await userEvent.click(await screen.findByLabelText('表格视图'));
 
-    expect(await screen.findByRole('button', { name: /删除工作项/ })).toBeDisabled();
+    expect(await screen.findByRole('button', { name: /删除需求/ })).toBeDisabled();
   });
 
   it('keeps the opened delete confirmation bilingual and decorative while preserving the delete request', async () => {
     useAuthStore.setState({ accessLevel: 'READ_WRITE' });
     window.localStorage.setItem('ainative.workitems.view', 'table');
-    const rawTitle = '<b>raw</b> 删除工作项';
+    const rawTitle = '<b>raw</b> 删除需求';
     const deleted: Array<{ method: string; path: string; body: string }> = [];
     let reads = 0;
     server.use(
@@ -381,10 +381,10 @@ describe('WorkitemListPage', () => {
     try {
       renderPageWithProbe();
       expect(await screen.findByText(rawTitle)).toBeInTheDocument();
-      await userEvent.click(screen.getByRole('button', { name: '删除工作项' }));
+      await userEvent.click(screen.getByRole('button', { name: '删除需求' }));
       const popup = await screen.findByRole('tooltip');
-      expect(within(popup).getByText('删除工作项')).toBeInTheDocument();
-      expect(within(popup).getByText('正在执行或外部连接的工作项不可删除')).toBeInTheDocument();
+      expect(within(popup).getByText('删除需求')).toBeInTheDocument();
+      expect(within(popup).getByText('正在执行或外部连接的需求不可删除')).toBeInTheDocument();
       expect(within(popup).getByRole('button', { name: /^删\s*除$/ })).toBeInTheDocument();
       expect(within(popup).getByRole('button', { name: /^取\s*消$/ })).toBeInTheDocument();
       expect(within(popup).queryByRole('img', { name: 'exclamation-circle' })).not.toBeInTheDocument();
@@ -394,8 +394,8 @@ describe('WorkitemListPage', () => {
       expect(glyph?.querySelector('svg')).toHaveAttribute('data-icon', 'exclamation-circle');
       const initialReads = reads;
       await act(async () => { await i18n.changeLanguage('en-US'); });
-      expect(within(popup).getByText('Delete work item')).toBeInTheDocument();
-      expect(within(popup).getByText('Work items that are running or integrated with an external platform cannot be deleted.')).toBeInTheDocument();
+      expect(within(popup).getByText('Delete requirement')).toBeInTheDocument();
+      expect(within(popup).getByText('Requirements that are running or integrated with an external platform cannot be deleted.')).toBeInTheDocument();
       expect(within(popup).getByRole('button', { name: 'Delete' })).toBeInTheDocument();
       expect(within(popup).getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
       expect(within(popup).queryByRole('img', { name: 'exclamation-circle' })).not.toBeInTheDocument();
@@ -526,14 +526,14 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 5, title: '我创建的工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 5, title: '我创建的需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('我创建的工作项')).toBeInTheDocument();
+    expect(await screen.findByText('我创建的需求')).toBeInTheDocument();
 
     await userEvent.click(screen.getByText('我创建的'));
 
@@ -579,14 +579,14 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 6, title: '我参与的工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01', myLastCommentAt: '2026-07-02T10:20:30Z' },
+            { id: 6, title: '我参与的需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01', myLastCommentAt: '2026-07-02T10:20:30Z' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('我参与的工作项')).toBeInTheDocument();
+    expect(await screen.findByText('我参与的需求')).toBeInTheDocument();
 
     await userEvent.click(screen.getByText('我参与的'));
 
@@ -686,7 +686,7 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData(canceled ? [
-            { id: 88, title: '已取消工作项', workType: 'REQ', statusName: '已取消', statusCategory: 'CANCELED', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 88, title: '已取消需求', workType: 'REQ', statusName: '已取消', statusCategory: 'CANCELED', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
           ] : []),
         });
       }),
@@ -703,10 +703,10 @@ describe('WorkitemListPage', () => {
       expect(requests.some(q => q.get('statusCategory') === 'CANCELED')).toBe(true);
     });
     expect(await screen.findByTestId('kanban-column-CANCELED')).toBeInTheDocument();
-    expect(await screen.findByText('已取消工作项')).toBeInTheDocument();
+    expect(await screen.findByText('已取消需求')).toBeInTheDocument();
 
     await userEvent.click(screen.getByLabelText('表格视图'));
-    expect(await screen.findByText('已取消工作项')).toBeInTheDocument();
+    expect(await screen.findByText('已取消需求')).toBeInTheDocument();
   });
 
   it('sends keyword param and resets page on search', async () => {
@@ -717,16 +717,16 @@ describe('WorkitemListPage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([
-            { id: 10, title: '搜索结果工作项', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
+            { id: 10, title: '搜索结果需求', workType: 'REQ', statusName: '待处理', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01' },
           ]),
         });
       }),
     );
 
     renderPage();
-    expect(await screen.findByText('搜索结果工作项')).toBeInTheDocument();
+    expect(await screen.findByText('搜索结果需求')).toBeInTheDocument();
 
-    const searchInput = screen.getByPlaceholderText('搜索工作项ID或标题');
+    const searchInput = screen.getByPlaceholderText('搜索需求ID或标题');
     await userEvent.type(searchInput, '登录{enter}');
 
     await waitFor(() => {
@@ -751,7 +751,7 @@ describe('WorkitemListPage', () => {
     renderPage();
     await screen.findByText('需求录入');
 
-    const searchInput = screen.getByPlaceholderText('搜索工作项ID或标题');
+    const searchInput = screen.getByPlaceholderText('搜索需求ID或标题');
     await userEvent.type(searchInput, '测试{enter}');
     await waitFor(() => {
       expect(requests.some((q) => q.includes('keyword='))).toBe(true);
@@ -769,7 +769,7 @@ describe('WorkitemListPage', () => {
 });
 
 // 看板列必须按状态各自向服务端查询：否则服务端先分页、前端再按状态分类，
-// 「执行中」列的内容会随全量列表的页码变化，用户只能一直翻页找执行中的工作项。
+// 「执行中」列的内容会随全量列表的页码变化，用户只能一直翻页找执行中的需求。
 describe('WorkitemListPage 看板按状态列查询', () => {
   const CARDS = [
     { id: 1, title: '待处理-A', statusName: '待处理', cat: 'NEW' },
@@ -823,18 +823,18 @@ describe('WorkitemListPage 看板按状态列查询', () => {
         expect(requests.some(q => q.includes(`statusCategory=${key}`))).toBe(true);
       }
     });
-    // 看板不再暴露全局分页，避免用户靠翻页找某个状态的工作项
+    // 看板不再暴露全局分页，避免用户靠翻页找某个状态的需求
     expect(document.querySelector('.ant-pagination')).toBeNull();
   });
 
-  it('执行中列一次展示该状态的工作项，不受其他状态工作项和页码影响', async () => {
+  it('执行中列一次展示该状态的需求，不受其他状态需求和页码影响', async () => {
     const requests: string[] = [];
     useStatusAwareServer(requests);
 
     renderPage();
     const inProgress = await screen.findByTestId('kanban-column-IN_PROGRESS');
 
-    // 两条执行中工作项同时出现在执行中列里（旧实现下第二条可能落到下一页）
+    // 两条执行中需求同时出现在执行中列里（旧实现下第二条可能落到下一页）
     await waitFor(() => {
       expect(within(inProgress).getByText('执行中-A')).toBeInTheDocument();
       expect(within(inProgress).getByText('执行中-B')).toBeInTheDocument();
@@ -936,8 +936,8 @@ describe('WorkitemListPage 关注入口', () => {
 
     const toggles = screen.getAllByTestId('workitem-watch-toggle');
     expect(toggles).toHaveLength(2);
-    expect(toggles[0]).toHaveAccessibleName('关注工作项');
-    expect(toggles[1]).toHaveAccessibleName('取消关注工作项');
+    expect(toggles[0]).toHaveAccessibleName('关注需求');
+    expect(toggles[1]).toHaveAccessibleName('取消关注需求');
 
     const unwatchedIcon = toggles[0].querySelector('.anticon-star')!;
     const watchedIcon = toggles[1].querySelector('.anticon-star')!;
@@ -948,7 +948,7 @@ describe('WorkitemListPage 关注入口', () => {
   it('点击未关注行的关注入口发起 POST /watch', async () => {
     const requests: Array<{ method: string; url: string }> = [];
     server.use(
-      http.get('/api/workitems', () => listResponse([watchRow(11, '未关注工作项', false)])),
+      http.get('/api/workitems', () => listResponse([watchRow(11, '未关注需求', false)])),
       http.post('/api/workitems/:id/watch', ({ request }) => {
         requests.push({ method: request.method, url: new URL(request.url).pathname });
         return HttpResponse.json({ success: true, code: '0', message: '', traceId: null, data: { workitemId: 11, watched: true, watcherCount: 1 } });
@@ -969,7 +969,7 @@ describe('WorkitemListPage 关注入口', () => {
   it('点击已关注行的关注入口发起 DELETE /watch', async () => {
     const requests: Array<{ method: string; url: string }> = [];
     server.use(
-      http.get('/api/workitems', () => listResponse([watchRow(12, '已关注工作项', true)])),
+      http.get('/api/workitems', () => listResponse([watchRow(12, '已关注需求', true)])),
       http.post('/api/workitems/:id/watch', ({ request }) => {
         requests.push({ method: request.method, url: new URL(request.url).pathname });
         return HttpResponse.json({ success: true, code: '0', message: '', traceId: null, data: { workitemId: 12, watched: true, watcherCount: 2 } });
@@ -990,7 +990,7 @@ describe('WorkitemListPage 关注入口', () => {
   it('点击关注入口不触发行跳转，而点击标题会跳转', async () => {
     const requests: Array<{ method: string; url: string }> = [];
     server.use(
-      http.get('/api/workitems', () => listResponse([watchRow(13, '跳转校验工作项', false)])),
+      http.get('/api/workitems', () => listResponse([watchRow(13, '跳转校验需求', false)])),
       http.post('/api/workitems/:id/watch', ({ request }) => {
         requests.push({ method: request.method, url: new URL(request.url).pathname });
         return HttpResponse.json({ success: true, code: '0', message: '', traceId: null, data: { workitemId: 13, watched: true, watcherCount: 1 } });
@@ -1007,13 +1007,13 @@ describe('WorkitemListPage 关注入口', () => {
     expect(screen.getByTestId('location-probe')).toHaveTextContent(/^\/workitems$/);
 
     // 正对照：标题链接确实会跳转到详情，证明探针能捕捉导航
-    await userEvent.click(screen.getByText('跳转校验工作项'));
+    await userEvent.click(screen.getByText('跳转校验需求'));
     await waitFor(() => expect(screen.getByTestId('location-probe')).toHaveTextContent(/^\/workitems\/13$/));
   });
 
   it('关注请求进行中时入口展示 loading', async () => {
     server.use(
-      http.get('/api/workitems', () => listResponse([watchRow(14, '加载态工作项', false)])),
+      http.get('/api/workitems', () => listResponse([watchRow(14, '加载态需求', false)])),
       http.post('/api/workitems/:id/watch', async () => {
         await delay('infinite');
         return HttpResponse.json({ success: true, code: '0', message: '', traceId: null, data: { workitemId: 14, watched: true, watcherCount: 1 } });
@@ -1034,7 +1034,7 @@ describe('WorkitemListPage 拖拽流转集成', () => {
   it('checks workflow rules, submits the guarded transition and refreshes columns', async () => {
     window.localStorage.clear();
     useAuthStore.setState({ accessLevel: 'READ_WRITE' });
-    let current = { id: 91, title: '拖拽集成工作项', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW',
+    let current = { id: 91, title: '拖拽集成需求', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW',
       statusNodeId: 20, templateId: 10, version: 3, priority: 3, assigneeType: 'HUMAN' };
     const submitted = vi.fn();
     server.use(
@@ -1054,7 +1054,7 @@ describe('WorkitemListPage 拖拽流转集成', () => {
       }),
     );
     renderPage();
-    await screen.findByText('拖拽集成工作项');
+    await screen.findByText('拖拽集成需求');
     const transfer = { setData: vi.fn(), effectAllowed: '', dropEffect: '' };
     fireEvent.dragStart(screen.getByTestId('workitem-card-91'), { dataTransfer: transfer });
     fireEvent.drop(screen.getByTestId('kanban-column-IN_PROGRESS'), { dataTransfer: transfer });
@@ -1064,13 +1064,13 @@ describe('WorkitemListPage 拖拽流转集成', () => {
   });
 });
 
-// 工作项列表收敛为 9 列、字段统一展示（当前处理人/中文优先级/去编号姓名/两行创建时间）：
+// 需求列表收敛为 9 列、字段统一展示（当前处理人/中文优先级/去编号姓名/两行创建时间）：
 // 这里锁定表头顺序、移除的列（流水线、来源）以及各单元格的展示语义。
 describe('WorkitemListPage 表格列与字段展示', () => {
   function fieldRow(overrides: Record<string, unknown>) {
     return {
       id: 41,
-      title: '字段工作项',
+      title: '字段需求',
       workType: 'REQ',
       statusName: '开发中',
       priority: 0,
@@ -1097,7 +1097,7 @@ describe('WorkitemListPage 表格列与字段展示', () => {
     );
   });
 
-  async function renderTableView(expectedTitle = '字段工作项') {
+  async function renderTableView(expectedTitle = '字段需求') {
     renderPage();
     await userEvent.click(await screen.findByLabelText('表格视图'));
     await screen.findByText(expectedTitle);
@@ -1131,13 +1131,13 @@ describe('WorkitemListPage 表格列与字段展示', () => {
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
         data: pageData([
-          fieldRow({ id: 42, title: 'AI 成员工作项', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'agent-40013', assigneeDisplayName: 'AW全栈开发(40013)' }),
-          fieldRow({ id: 43, title: '未指派工作项', assigneeRef: null, assigneeName: null, assigneeDisplayName: null }),
+          fieldRow({ id: 42, title: 'AI 成员需求', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'agent-40013', assigneeDisplayName: 'AW全栈开发(40013)' }),
+          fieldRow({ id: 43, title: '未指派需求', assigneeRef: null, assigneeName: null, assigneeDisplayName: null }),
         ]),
       })),
     );
 
-    await renderTableView('AI 成员工作项');
+    await renderTableView('AI 成员需求');
     expect(screen.getByText('AI')).toBeInTheDocument();
     expect(screen.getByText('AW全栈开发')).toBeInTheDocument();
     expect(screen.getByText('未指派')).toBeInTheDocument();
@@ -1148,14 +1148,14 @@ describe('WorkitemListPage 表格列与字段展示', () => {
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
         data: pageData([
-          fieldRow({ id: 44, title: '紧急工作项', priority: 0 }),
-          fieldRow({ id: 45, title: '低优工作项', priority: 3 }),
-          fieldRow({ id: 46, title: '未知工作项', priority: 9 }),
+          fieldRow({ id: 44, title: '紧急需求', priority: 0 }),
+          fieldRow({ id: 45, title: '低优需求', priority: 3 }),
+          fieldRow({ id: 46, title: '未知需求', priority: 9 }),
         ]),
       })),
     );
 
-    await renderTableView('紧急工作项');
+    await renderTableView('紧急需求');
     expect(screen.getByText('紧急')).toBeInTheDocument();
     expect(screen.getByText('低')).toBeInTheDocument();
     expect(screen.getByText('未知优先级')).toBeInTheDocument();
@@ -1168,13 +1168,13 @@ describe('WorkitemListPage 表格列与字段展示', () => {
         data: pageData([
           fieldRow({
             id: 47,
-            title: '外部创建工作项',
+            title: '外部创建需求',
             sourceType: 'EXTERNAL',
             sourceCreator: { id: 20001, provider: 'ZENTAO', subjectId: '440501', subjectType: 'USER', displayName: '煊童', mappedUserId: null },
           }),
           fieldRow({
             id: 48,
-            title: '本地兜底工作项',
+            title: '本地兜底需求',
             creatorDisplayName: null,
             creatorName: '后备(1)',
             gmtCreate: undefined,
@@ -1183,7 +1183,7 @@ describe('WorkitemListPage 表格列与字段展示', () => {
       })),
     );
 
-    await renderTableView('外部创建工作项');
+    await renderTableView('外部创建需求');
     expect(screen.getByText('煊童')).toBeInTheDocument();
     expect(screen.queryByText(/440501/)).not.toBeInTheDocument();
     const fallbackRow = screen.getByText('后备').closest('tr')!;
@@ -1202,11 +1202,11 @@ describe('WorkitemListPage 表格列与字段展示', () => {
     server.use(
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
-        data: pageData([fieldRow({ id: 49, title: '参与工作项', myLastCommentAt: '2026-07-02T10:20:30Z' })]),
+        data: pageData([fieldRow({ id: 49, title: '参与需求', myLastCommentAt: '2026-07-02T10:20:30Z' })]),
       })),
     );
 
-    await renderTableView('参与工作项');
+    await renderTableView('参与需求');
     expect(screen.queryByRole('columnheader', { name: '我最近参与时间' })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByText('我参与的'));
@@ -1272,7 +1272,7 @@ it.each(['zh-CN', 'en-US'])('final widget both workitem search buttons preserve 
  server.use(http.get('/api/workitems', ({ request }) => { requests.push(new URL(request.url).searchParams); return HttpResponse.json({ success: true, data: pageData([]) }); }));
  await i18n.changeLanguage(locale); renderPage();
  try {
-  const searchLabel = locale === 'en-US' ? 'Search work item ID or title' : '搜索工作项ID或标题';
+  const searchLabel = locale === 'en-US' ? 'Search requirement ID or title' : '搜索需求ID或标题';
   const tagLabel = locale === 'en-US' ? 'Filter by tag' : '按标签筛选';
   const input = screen.getByPlaceholderText(searchLabel); const tag = screen.getByPlaceholderText(tagLabel);
   const search = screen.getByRole('button', { name: searchLabel }); const tagSearch = screen.getByRole('button', { name: tagLabel });
@@ -1286,15 +1286,15 @@ it.each(['zh-CN', 'en-US'])('final widget both workitem search buttons preserve 
  } finally { await act(() => i18n.changeLanguage('zh-CN')); }
 });
 
-// 创建时间高级筛选（工作项 #55696）：入口在筛选栏，条件与既有关键词等筛选以 AND 叠加，
+// 创建时间高级筛选（需求 #55696）：入口在筛选栏，条件与既有关键词等筛选以 AND 叠加，
 // 表格与各看板状态列都必须携带同一份时间边界；应用/清除一律回到第 1 页，非法区间不提交。
 describe('WorkitemListPage 创建时间高级筛选', () => {
   const FROM = dayjs('2026-10-01').startOf('day').toDate().toISOString();
   const TO = dayjs('2026-10-10').startOf('day').add(1, 'day').toDate().toISOString();
 
   const ROWS = [
-    { id: 61, title: '范围工作项一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
-    { id: 62, title: '范围工作项二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
+    { id: 61, title: '范围需求一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
+    { id: 62, title: '范围需求二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
   ];
 
   function useRecordingServer(requests: URLSearchParams[]) {
@@ -1329,7 +1329,7 @@ describe('WorkitemListPage 创建时间高级筛选', () => {
     const requests: URLSearchParams[] = [];
     useRecordingServer(requests);
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     await userEvent.click(await screen.findByTitle('2'));
     await waitFor(() => expect(requests.at(-1)?.get('page')).toBe('2'));
@@ -1353,9 +1353,9 @@ describe('WorkitemListPage 创建时间高级筛选', () => {
     const requests: URLSearchParams[] = [];
     useRecordingServer(requests);
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
-    await userEvent.type(screen.getByPlaceholderText('搜索工作项ID或标题'), '巡检{enter}');
+    await userEvent.type(screen.getByPlaceholderText('搜索需求ID或标题'), '巡检{enter}');
     await waitFor(() => expect(requests.at(-1)?.get('keyword')).toBe('巡检'));
 
     const dialog = await openAdvancedFilter();
@@ -1388,7 +1388,7 @@ describe('WorkitemListPage 创建时间高级筛选', () => {
     const requests: URLSearchParams[] = [];
     useRecordingServer(requests);
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     typeDate(dialog, '起始日期', '2026-10-01');
@@ -1411,7 +1411,7 @@ describe('WorkitemListPage 创建时间高级筛选', () => {
     const requests: URLSearchParams[] = [];
     useRecordingServer(requests);
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     typeDate(dialog, '起始日期', '2026-10-10');
@@ -1427,15 +1427,15 @@ describe('WorkitemListPage 创建时间高级筛选', () => {
   });
 });
 
-// 创建者高级筛选（工作项 #56513）：候选来自项目成员，多选按 OR 生效，
+// 创建者高级筛选（需求 #56513）：候选来自项目成员，多选按 OR 生效，
 // 与创建时间等条件按 AND 叠加；表格、看板各列与「待我决策」汇总列共用同一份 creatorIds。
 describe('WorkitemListPage 创建者高级筛选', () => {
   const FROM = dayjs('2026-10-01').startOf('day').toDate().toISOString();
   const TO = dayjs('2026-10-10').startOf('day').add(1, 'day').toDate().toISOString();
 
   const ROWS = [
-    { id: 61, title: '范围工作项一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
-    { id: 62, title: '范围工作项二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
+    { id: 61, title: '范围需求一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
+    { id: 62, title: '范围需求二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
   ];
 
   const MEMBERS = [
@@ -1493,7 +1493,7 @@ describe('WorkitemListPage 创建者高级筛选', () => {
     useRecordingServer(requests);
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await selectCreators(dialog, ['张三', '李四']);
@@ -1519,7 +1519,7 @@ describe('WorkitemListPage 创建者高级筛选', () => {
     useRecordingServer(requests);
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await selectCreators(dialog, ['张三']);
@@ -1537,7 +1537,7 @@ describe('WorkitemListPage 创建者高级筛选', () => {
     useRecordingServer(requests);
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     await userEvent.click(screen.getByText('我创建的'));
     await waitFor(() => expect(requests.at(-1)?.get('mineScope')).toBe('CREATED'));
@@ -1560,7 +1560,7 @@ describe('WorkitemListPage 创建者高级筛选', () => {
     useRecordingServer(requests);
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     typeDate(dialog, '起始日期', '2026-10-01');
@@ -1582,7 +1582,7 @@ describe('WorkitemListPage 创建者高级筛选', () => {
     useRecordingServer(requests);
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await selectCreators(dialog, ['张三']);
@@ -1596,15 +1596,15 @@ describe('WorkitemListPage 创建者高级筛选', () => {
   });
 });
 
-// 标签逻辑条件（工作项 #56796）：条件序列化为 tagConditions 参数，与顶部单值 tag 及其他筛选整体 AND；
+// 标签逻辑条件（需求 #56796）：条件序列化为 tagConditions 参数，与顶部单值 tag 及其他筛选整体 AND；
 // 表格、看板各列与「待我决策」列共用同一份条件，关闭单条摘要后请求同步收窄。
 describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
   const FROM = dayjs('2026-10-01').startOf('day').toDate().toISOString();
   const TO = dayjs('2026-10-10').startOf('day').add(1, 'day').toDate().toISOString();
 
   const ROWS = [
-    { id: 61, title: '范围工作项一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
-    { id: 62, title: '范围工作项二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
+    { id: 61, title: '范围需求一', workType: 'REQ', statusName: '待处理', statusCategory: 'NEW', priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, version: 1, gmtCreate: '2026-10-03T02:00:00Z', gmtModified: '2026-10-03T02:00:00Z' },
+    { id: 62, title: '范围需求二', workType: 'REQ', statusName: '开发中', statusCategory: 'IN_PROGRESS', priority: 2, assigneeType: 'AGENT', assigneeRef: 5, assigneeName: '代码助手', version: 1, gmtCreate: '2026-10-05T02:00:00Z', gmtModified: '2026-10-05T02:00:00Z' },
   ];
 
   const TAG_OPTIONS = ['前端', '后端', 'P1'];
@@ -1685,7 +1685,7 @@ describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
     useRecordingServer(requests);
     useTagOptionsServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await addTagCondition(dialog, 1, ['前端', 'P1']);
@@ -1712,7 +1712,7 @@ describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
     useRecordingServer(requests);
     useTagOptionsServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await addTagCondition(dialog, 1, ['前端']);
@@ -1731,7 +1731,7 @@ describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
     useTagOptionsServer();
     useMembersServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const tagInput = screen.getByPlaceholderText('按标签筛选');
     await userEvent.type(tagInput, '自由标签');
@@ -1761,7 +1761,7 @@ describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
     useRecordingServer(requests);
     useTagOptionsServer();
     renderPage();
-    await screen.findByText('范围工作项一');
+    await screen.findByText('范围需求一');
 
     const dialog = await openAdvancedFilter();
     await addTagCondition(dialog, 1, ['前端']);
@@ -1781,7 +1781,7 @@ describe('WorkitemListPage 标签逻辑条件高级筛选', () => {
 });
 
 
-describe('WorkitemListPage 工作项标签', () => {
+describe('WorkitemListPage 需求标签', () => {
   beforeEach(() => {
     useAuthStore.getState().clear();
     window.localStorage.clear();
@@ -1805,7 +1805,7 @@ describe('WorkitemListPage 工作项标签', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: pageData([{
-            id: 900, title: '带标签工作项', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
+            id: 900, title: '带标签需求', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
             priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, tags: ['发布', '后端'],
             version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01',
           }]),
@@ -1814,7 +1814,7 @@ describe('WorkitemListPage 工作项标签', () => {
     );
 
     renderPage();
-    await screen.findByText('带标签工作项');
+    await screen.findByText('带标签需求');
     const cell = screen.getByTestId('workitem-tags-cell-900');
     expect(within(cell).getByText('发布')).toBeInTheDocument();
     expect(within(cell).getByText('后端')).toBeInTheDocument();
@@ -1832,7 +1832,7 @@ describe('WorkitemListPage 工作项标签', () => {
     server.use(http.get('/api/workitems', ({ request }) => {
       const category = new URL(request.url).searchParams.get('statusCategory');
       const list = category === 'IN_PROGRESS' ? [{
-        id: 901, title: '看板标签工作项', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
+        id: 901, title: '看板标签需求', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
         priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, tags: ['发布', '线上', '后端'],
         version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01',
       }] : [];
@@ -1856,7 +1856,7 @@ describe('WorkitemListPage 工作项标签', () => {
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
         data: pageData([{
-          id: 910, title: '多标签工作项', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
+          id: 910, title: '多标签需求', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
           priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null,
           tags: ['标签一', '标签二', '标签三', '标签四'],
           version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01',
@@ -1865,7 +1865,7 @@ describe('WorkitemListPage 工作项标签', () => {
     );
 
     renderPage();
-    await screen.findByText('多标签工作项');
+    await screen.findByText('多标签需求');
     const cell = screen.getByTestId('workitem-tags-cell-910');
     expect(within(cell).getByText('标签一')).toBeInTheDocument();
     expect(within(cell).getByText('标签二')).toBeInTheDocument();
@@ -1884,7 +1884,7 @@ describe('WorkitemListPage 工作项标签', () => {
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
         data: pageData([{
-          id: 911, title: '只读标签工作项', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
+          id: 911, title: '只读标签需求', workType: 'REQ', statusCategory: 'IN_PROGRESS', statusName: '开发中',
           priority: 2, assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, tags: ['发布'],
           version: 1, gmtCreate: '2026-07-01', gmtModified: '2026-07-01',
         }]),
@@ -1892,7 +1892,7 @@ describe('WorkitemListPage 工作项标签', () => {
     );
 
     renderPage();
-    await screen.findByText('只读标签工作项');
+    await screen.findByText('只读标签需求');
     const cell = screen.getByTestId('workitem-tags-cell-911');
     expect(within(cell).queryByRole('button', { name: '编辑标签' })).not.toBeInTheDocument();
 

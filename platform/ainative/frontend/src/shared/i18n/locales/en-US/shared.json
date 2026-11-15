@@ -35,7 +35,7 @@
       "STATEMACHINE": "Status templates",
       "TEMPLATE": "Pipeline gallery",
       "USER": "Personal settings",
-      "WORKITEM": "Work items",
+      "WORKITEM": "Requirements",
       "WORKSPACE": "Members & projects"
     },
     "domainReadOnly": "“{{domain}}” is read-only for your role; cannot {{action}}."
@@ -128,8 +128,8 @@
     "agent": "Agent",
     "user": "User",
     "loading": "Loading…",
-    "created": "<actor/> created the work item",
-    "edited": "<actor/> edited the work item",
+    "created": "<actor/> created the requirement",
+    "edited": "<actor/> edited the requirement",
     "status": "<actor/> changed the status",
     "commented": "<actor/> added a comment",
     "assigned": "<actor/> assigned this to <assignee/>",
@@ -223,7 +223,7 @@
   },
   "brand": {
     "workspaces": "{{name}}, back to workspaces",
-    "workitems": "{{name}}, back to work items"
+    "workitems": "{{name}}, back to requirements"
   },
   "bootstrap": {
     "loading": "Loading platform configuration…",

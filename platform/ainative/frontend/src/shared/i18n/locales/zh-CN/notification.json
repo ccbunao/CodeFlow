@@ -25,14 +25,14 @@
   "unknownRef": "未知类型",
   "close": "关闭",
   "types": {
-    "WORKITEM_ASSIGNED": "工作项分配",
+    "WORKITEM_ASSIGNED": "需求分配",
     "COMMENT_MENTION": "评论提及",
     "WORKSPACE_ACCESS_REQUEST": "项目访问申请",
     "WORKSPACE_ACCESS_REVIEWED": "项目访问申请审核",
-    "WATCHED_COMMENT": "关注工作项的新评论",
-    "WATCHED_ASSIGNED": "关注工作项的分配变更",
-    "WATCHED_STATUS_CHANGED": "关注工作项的状态变更",
-    "WATCHED_COMPLETED": "关注工作项已完成",
+    "WATCHED_COMMENT": "关注需求的新评论",
+    "WATCHED_ASSIGNED": "关注需求的分配变更",
+    "WATCHED_STATUS_CHANGED": "关注需求的状态变更",
+    "WATCHED_COMPLETED": "关注需求已完成",
     "EXTERNAL_COMMENT": "外部评论",
     "SCHEDULED_TASK_RESUME_DEGRADED": "定时任务恢复降级",
     "SCHEDULED_TASK_OWNER_INACTIVE": "定时任务所有者不可用",
@@ -53,7 +53,7 @@
     "PASSWORD_RESET_BY_ADMIN": "密码被管理员重置"
   },
   "refs": {
-    "WORKITEM": "工作项",
+    "WORKITEM": "需求",
     "WORKSPACE_ACCESS_REQUEST": "项目访问申请",
     "SCHEDULED_TASK_RUN": "定时任务运行"
   },

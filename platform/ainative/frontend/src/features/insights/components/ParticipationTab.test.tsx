@@ -116,8 +116,8 @@ it('applies the work type filter to the whole tab and persists the selection', a
   vi.mocked(useHumanAgentParticipation).mockReturnValue({ data, isLoading: false } as unknown as ReturnType<typeof useHumanAgentParticipation>);
   const { container } = render(<ParticipationTab />);
 
-  const select = screen.getByRole('combobox', { name: '工作项类型筛选' });
-  expect(container.querySelector('.ant-select-selection-item')).toHaveTextContent('全部工作项');
+  const select = screen.getByRole('combobox', { name: '需求类型筛选' });
+  expect(container.querySelector('.ant-select-selection-item')).toHaveTextContent('全部需求');
   expect(container.querySelector('[data-testid="slow-tail"]')).toHaveAttribute('data-worktype', 'ALL');
 
   await userEvent.click(select);
@@ -126,7 +126,7 @@ it('applies the work type filter to the whole tab and persists the selection', a
     expect(found.length).toBeGreaterThanOrEqual(4);
     return found.map(node => node.textContent);
   });
-  expect(labels).toEqual(expect.arrayContaining(['全部工作项', '需求', '缺陷', '任务']));
+  expect(labels).toEqual(expect.arrayContaining(['全部需求', '需求', '缺陷', '任务']));
   const bugOption = Array.from(document.querySelectorAll('.ant-select-item-option-content'))
     .find(node => node.textContent === '缺陷') as HTMLElement;
   await userEvent.click(bugOption);
@@ -161,7 +161,7 @@ it('shows the filtered empty state when the selected work type has no samples', 
   } as unknown as ReturnType<typeof useHumanAgentParticipation>);
   const { container } = render(<ParticipationTab />);
 
-  expect(screen.getByText('当前工作项类型与日期范围下暂无完成样本')).toBeInTheDocument();
+  expect(screen.getByText('当前需求类型与日期范围下暂无完成样本')).toBeInTheDocument();
   expect(container.querySelector('.participation-stat')).toBeNull();
   expect(container.querySelector('[data-testid="slow-tail"]')).toBeNull();
 });

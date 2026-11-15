@@ -151,7 +151,7 @@ describe('MarkdownComposer', () => {
       height: null,
     };
     const view = render(<MarkdownComposer value="" {...props} />);
-    const prompt = '请通过平台 MCP 读工作项 #100,与我做需求澄清。';
+    const prompt = '请通过平台 MCP 读需求 #100,与我做需求澄清。';
 
     // 外部预填（未经 onUpdate）→ 编辑器出现提示语
     view.rerender(<MarkdownComposer value={prompt} {...props} />);

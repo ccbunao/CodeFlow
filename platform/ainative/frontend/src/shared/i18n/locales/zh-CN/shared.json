@@ -35,7 +35,7 @@
       "STATEMACHINE": "状态模板",
       "TEMPLATE": "流程模板间",
       "USER": "个人设置",
-      "WORKITEM": "工作项",
+      "WORKITEM": "需求",
       "WORKSPACE": "成员与项目"
     },
     "domainReadOnly": "「{{domain}}」对当前角色为只读，无法{{action}}。"
@@ -128,8 +128,8 @@
     "agent": "AI 成员",
     "user": "用户",
     "loading": "读取中…",
-    "created": "<actor/> 创建了工作项",
-    "edited": "<actor/> 编辑了工作项",
+    "created": "<actor/> 创建了需求",
+    "edited": "<actor/> 编辑了需求",
     "status": "<actor/> 变更状态",
     "commented": "<actor/> 添加了评论",
     "assigned": "<actor/> 指派给 <assignee/>",
@@ -223,7 +223,7 @@
   },
   "brand": {
     "workspaces": "{{name}}，返回项目列表",
-    "workitems": "{{name}}，返回工作项列表"
+    "workitems": "{{name}}，返回需求列表"
   },
   "bootstrap": {
     "loading": "正在加载平台配置…",

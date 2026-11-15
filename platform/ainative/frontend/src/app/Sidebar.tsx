@@ -49,7 +49,6 @@ export const NAV_SECTIONS: NavSection[] = [
       { key: '/sdlcs', get label() { return i18n.t('shell:nav.sdlc'); }, icon: <ApartmentOutlined aria-hidden="true" /> },
       { key: '/overview', get label() { return i18n.t('shell:nav.overview'); }, icon: <DashboardOutlined aria-hidden="true" /> },
       { key: '/executions', get label() { return i18n.t('shell:nav.executions'); }, icon: <HistoryOutlined aria-hidden="true" /> },
-      { key: '/workitems/recycled', get label() { return i18n.t('shell:nav.recycled'); }, icon: <RestOutlined aria-hidden="true" /> },
     ],
   },
   {
@@ -88,6 +87,8 @@ export const NAV_SECTIONS: NavSection[] = [
       { key: '/settings/members', get label() { return i18n.t('shell:nav.members'); }, icon: <TeamOutlined aria-hidden="true" />, aliases: ['/settings/members-roles', '/settings/roles'] },
       { key: '/settings/backups', get label() { return i18n.t('shell:nav.backups'); }, icon: <HistoryOutlined aria-hidden="true" /> },
       { key: '/settings/environment-variables', get label() { return i18n.t('shell:nav.environment'); }, icon: <KeyOutlined aria-hidden="true" /> },
+      // 回收站是项目级数据(回收的是需求录入里的条目),放在项目设置组,不打断交付动线
+      { key: '/workitems/recycled', get label() { return i18n.t('shell:nav.recycled'); }, icon: <RestOutlined aria-hidden="true" /> },
       // 入口移至树底「设置」,路由元数据保留供选中态/标题解析
       { key: '/settings', get label() { return i18n.t('shell:nav.settings'); }, icon: <SettingOutlined aria-hidden="true" />, hidden: true },
     ],

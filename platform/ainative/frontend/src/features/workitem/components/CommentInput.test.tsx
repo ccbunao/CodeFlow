@@ -209,7 +209,7 @@ describe('CommentInput delivery-closed feedback', () => {
 
     act(() => {
       latestMutationOptions().onError(
-        new ApiError('13024', '评论未发送：该工作项的交付已关闭', null),
+        new ApiError('13024', '评论未发送：该需求的交付已关闭', null),
       );
     });
 
@@ -258,7 +258,7 @@ describe('CommentInput delivery-closed feedback', () => {
     insertAgentMention();
     clickSend();
     act(() => {
-      latestMutationOptions().onError(new ApiError('13024', '评论未发送：该工作项的交付已关闭', null));
+      latestMutationOptions().onError(new ApiError('13024', '评论未发送：该需求的交付已关闭', null));
     });
     expect(screen.getByRole('alert')).toBeInTheDocument();
 
@@ -286,7 +286,7 @@ describe('CommentInput delivery-closed feedback', () => {
     insertAgentMention();
     clickSend();
     act(() => {
-      latestMutationOptions().onError(new ApiError('13024', '评论未发送：该工作项的交付已关闭', null));
+      latestMutationOptions().onError(new ApiError('13024', '评论未发送：该需求的交付已关闭', null));
     });
     expect(screen.getByRole('alert')).toBeInTheDocument();
 

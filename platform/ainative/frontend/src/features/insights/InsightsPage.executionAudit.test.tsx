@@ -147,7 +147,7 @@ describe('InsightsPage execution audit handoff', () => {
 
     expect(await screen.findByText('效能分析')).toBeInTheDocument();
     expect(screen.queryByText('执行审计')).toBeNull();
-    for (const label of ['实时看板', '人机协作', '工作项交付', '阶段耗时']) {
+    for (const label of ['实时看板', '人机协作', '成员交付', '阶段耗时']) {
       expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
     }
     expect(screen.queryByRole('radio', { name: '需求交付' })).toBeNull();

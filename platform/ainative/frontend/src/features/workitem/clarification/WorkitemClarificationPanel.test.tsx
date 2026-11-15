@@ -230,7 +230,7 @@ describe('WorkitemClarificationPanel', () => {
     realtime.callback = null;
   });
 
-  // 工作项 56281：澄清候选只来自「编队 → 成员」。以前面板在有交付进度时改列交付历史里的
+  // 需求 56281：澄清候选只来自「编队 → 成员」。以前面板在有交付进度时改列交付历史里的
   // 数字人，评论 @ 出来的执行历史会反过来把候选限死，未参与过交付的澄清数字人直接消失。
   it('reaches a clarification worker that never appeared in any delivery history', async () => {
     mockSquads();
@@ -331,7 +331,7 @@ describe('WorkitemClarificationPanel', () => {
 
     expect(await screen.findByText('已选择的开发')).toBeInTheDocument();
     expect(screen.queryByText('AI 成员')).not.toBeInTheDocument();
-    await waitFor(() => expect(screen.getByPlaceholderText('输入消息...')).toHaveValue('请通过平台 MCP 读工作项 #100,与我做需求澄清。'));
+    await waitFor(() => expect(screen.getByPlaceholderText('输入消息...')).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
   });
 
   it('prefills the bootstrap prompt for an automatically created first session', async () => {
@@ -356,7 +356,7 @@ describe('WorkitemClarificationPanel', () => {
     renderPanel();
 
     expect(await screen.findByDisplayValue(
-      '请通过平台 MCP 读工作项 #100,与我做需求澄清。',
+      '请通过平台 MCP 读需求 #100,与我做需求澄清。',
     )).toBeInTheDocument();
   });
 
@@ -384,7 +384,7 @@ describe('WorkitemClarificationPanel', () => {
 
     renderPanel();
     const textarea = await screen.findByPlaceholderText('输入消息...');
-    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读工作项 #100,与我做需求澄清。'));
+    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
 
     fireEvent.keyDown(textarea, { key: 'Enter', code: 'Enter', shiftKey: true });
     await waitFor(() => expect(textarea).toHaveValue(''));
@@ -400,7 +400,7 @@ describe('WorkitemClarificationPanel', () => {
       http.get('/api/workitems/:workitemId/clarification-conversations/:conversationId', () =>
         HttpResponse.json({ success: true, data: empty })),
     );
-    const prompt = '请通过平台 MCP 读工作项 #100,与我做需求澄清。';
+    const prompt = '请通过平台 MCP 读需求 #100,与我做需求澄清。';
     const first = renderPanel({ fullscreen: true, initialConversationId: 7 });
     const input = await screen.findByDisplayValue(prompt);
     await typeComposer('');
@@ -1327,7 +1327,7 @@ describe('WorkitemClarificationPanel', () => {
     fireEvent.click(screen.getByRole('button', { name: /新对话/ }));
 
     await waitFor(() => expect(screen.getByTestId('clarification-conversation-select')).toHaveTextContent('会话 #303'));
-    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读工作项 #100,与我做需求澄清。'));
+    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
   });
 
   it('submits to the historical conversation after switching back to it', async () => {
@@ -1514,7 +1514,7 @@ describe('WorkitemClarificationPanel', () => {
     fireEvent.click(await screen.findByText(/会话 #101/));
 
     await screen.findByText('空历史会话AI 成员');
-    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读工作项 #100,与我做需求澄清。'));
+    await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
   });
 
   it('does not restore a failed send draft into a different selected session', async () => {
@@ -1714,7 +1714,7 @@ describe('WorkitemClarificationPanel', () => {
       return screen.getByTestId('clarification-composer');
     }
 
-    /** 工作项 53035：全屏后正文/选人/输入行共用一条跟着视口铺满的列，
+    /** 需求 53035：全屏后正文/选人/输入行共用一条跟着视口铺满的列，
      *  只由外层容器内距留小幅左右边距。曾经这里的 760px 限宽是超宽屏
      *  横向空出大半空间的唯一来源，三处节点都要钉住。 */
     function expectFluidColumn(column: HTMLElement) {
@@ -1805,7 +1805,7 @@ describe('WorkitemClarificationPanel', () => {
     });
   });
 
-  describe('URL 恢复上下文（工作项 53035 / 56281）', () => {
+  describe('URL 恢复上下文（需求 53035 / 56281）', () => {
     function mockConversationList(conversations: Array<ReturnType<typeof makeConversation>>) {
       server.use(
         http.get('/api/workitems/:workitemId/clarification-conversations', () =>
@@ -1822,7 +1822,7 @@ describe('WorkitemClarificationPanel', () => {
     }
 
     /** 外层会把面板上报的上下文写回 URL 再作为 prop 回流，props 要能中途换。
-     *  工作项 56281 之后恢复不再依赖交付进度里的数字人列表，所以只剩 props 这一条。 */
+     *  需求 56281 之后恢复不再依赖交付进度里的数字人列表，所以只剩 props 这一条。 */
     function renderRestorable(props: PanelTestProps = {}) {
       const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
       const element = (nextProps: PanelTestProps) => (
@@ -1887,7 +1887,7 @@ describe('WorkitemClarificationPanel', () => {
       expect(screen.queryByText('暂无对话')).toBeNull();
     });
 
-    // 工作项 56281 的核心：URL 里的数字人只靠「编队成员」校验，不需要任何交付进度输入。
+    // 需求 56281 的核心：URL 里的数字人只靠「编队成员」校验，不需要任何交付进度输入。
     // 修复前恢复源是交付列表，未参与过交付的澄清数字人刷新后会被弹回选人页。
     it('restores an agent recorded in the URL purely from squad membership', async () => {
       mockSquads();
@@ -2195,7 +2195,7 @@ describe('WorkitemClarificationPanel', () => {
   });
 
 
-  describe('历史加载状态与错误反馈（工作项 55411 缺陷一）', () => {
+  describe('历史加载状态与错误反馈（需求 55411 缺陷一）', () => {
     it('renders an explicit error and blocks sending instead of a blank history when the detail request fails', async () => {
       writeClarificationPrefill('100', { squadId: 9, agentId: 42 });
       mockSquads();

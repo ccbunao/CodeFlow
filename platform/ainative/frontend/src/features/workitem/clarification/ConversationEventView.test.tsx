@@ -31,7 +31,7 @@ describe('ConversationEventView', () => {
 
   it('keeps the processing spinner while only thinking is available', () => {
     const view = render(
-      <ConversationEventView nodes={nodesOf([event('thinking', '正在读取工作项')])} isProcessing />,
+      <ConversationEventView nodes={nodesOf([event('thinking', '正在读取需求')])} isProcessing />,
     );
 
     expect(view.container.querySelector('.ant-spin')).not.toBeNull();
@@ -88,7 +88,7 @@ describe('ConversationEventView', () => {
     const view = renderToStaticMarkup(
       <ConversationEventView
         nodes={nodesOf([
-          event('thinking', '正在读取工作项'),
+          event('thinking', '正在读取需求'),
           { ...event('log', '日志一行'), eventSeq: 2 },
         ])}
         isProcessing={false}

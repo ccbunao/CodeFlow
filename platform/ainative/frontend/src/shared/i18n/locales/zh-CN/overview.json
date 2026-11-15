@@ -14,24 +14,24 @@
     "retry": "重试"
   },
   "created": {
-    "title": "新增工作项",
-    "caption": "近 {{days}} 天，按日展示新增工作项数。",
-    "trendAria": "近 {{days}} 天每日新增工作项趋势"
+    "title": "新增需求",
+    "caption": "近 {{days}} 天，按日展示新增需求数。",
+    "trendAria": "近 {{days}} 天每日新增需求趋势"
   },
   "delivered": {
-    "title": "已完成工作项",
+    "title": "已完成需求",
     "dailyAverage": "日均 {{value}} 单/天",
     "change": "环比上期 {{value}}",
     "noBase": "无可比基数",
     "previous_other": "上期 {{start}} 至 {{end}}：已完成 {{count}} 个",
-    "method": "口径：按平台统一 DONE 分类统计所选范围内进入完成状态的工作项，取消不计入，同一工作项重复进入完成状态不重复计数；环比对比上一等长周期。统计按工作项完成时间。",
-    "methodAria": "已完成工作项统计口径"
+    "method": "口径：按平台统一 DONE 分类统计所选范围内进入完成状态的需求，取消不计入，同一需求重复进入完成状态不重复计数；环比对比上一等长周期。统计按需求完成时间。",
+    "methodAria": "已完成需求统计口径"
   },
   "pending": {
-    "title": "当前用户待处理工作项",
+    "title": "当前用户待处理需求",
     "caption": "全部待处理",
-    "hint": "不受上方统计范围限制，包含所有未完成且分配给你的工作项。",
-    "workitem": "工作项",
+    "hint": "不受上方统计范围限制，包含所有未完成且分配给你的需求。",
+    "workitem": "需求",
     "name": "标题",
     "status": "状态",
     "priority": "优先级",
@@ -43,37 +43,37 @@
     "reasonUnknown": "待处理",
     "total_other": "共 {{count}} 条",
     "loading": "加载中…",
-    "empty": "暂无待处理工作项",
-    "loadFailure": "待处理工作项加载失败",
+    "empty": "暂无待处理需求",
+    "loadFailure": "待处理需求加载失败",
     "retry": "重试",
-    "emptyHint": "调整统计范围,或先处理手头的工作项"
+    "emptyHint": "调整统计范围,或先处理手头的需求"
   },
   "createdList": {
-    "title": "{{range}}新增工作项",
+    "title": "{{range}}新增需求",
     "caption": "所选统计范围",
-    "hint": "与上方「新增工作项」同口径：所选统计范围内创建的工作项（含已取消），列表条数等于统计卡数值。",
-    "workitem": "工作项",
+    "hint": "与上方「新增需求」同口径：所选统计范围内创建的需求（含已取消），列表条数等于统计卡数值。",
+    "workitem": "需求",
     "name": "标题",
     "status": "状态",
     "priority": "优先级",
     "createdAt": "创建时间",
     "total_other": "共 {{count}} 条",
     "loading": "加载中…",
-    "empty": "所选范围内暂无新增工作项",
-    "loadFailure": "新增工作项列表加载失败",
+    "empty": "所选范围内暂无新增需求",
+    "loadFailure": "新增需求列表加载失败",
     "retry": "重试",
-    "emptyHint": "这段时间还没有新建工作项"
+    "emptyHint": "这段时间还没有新建需求"
   },
   "leadTime": {
     "title": "平均交付周期",
     "value": "{{value}} 天",
-    "method": "区间内完成工作项从创建到完成事件的平均时长;上期为紧邻等长区间,上期无完成时无可比基数。",
+    "method": "区间内完成需求从创建到完成事件的平均时长;上期为紧邻等长区间,上期无完成时无可比基数。",
     "methodAria": "查看平均交付周期口径说明",
     "noBase": "本期或上期无完成,暂无可比基数",
     "caption": "从创建到完成的平均时长"
   },
   "inProgress": {
-    "title": "进行中工作项",
+    "title": "进行中需求",
     "caption": "截至查询时刻的未结快照(含待处理与待你处理),历史不可回溯故无环比"
   },
   "firstPass": {

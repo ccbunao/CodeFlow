@@ -18,9 +18,9 @@ describe('useAccessCommand', () => {
     useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_ONLY');
     const { result } = renderHook(() => useAccessCommand());
 
-    act(() => result.current('READ_WRITE', '编辑工作项', command));
+    act(() => result.current('READ_WRITE', '编辑需求', command));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，编辑工作项需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，编辑需求需要读写权限');
     expect(command).not.toHaveBeenCalled();
   });
 
@@ -45,7 +45,7 @@ describe('useAccessCommand', () => {
     let commandResult: string | undefined;
 
     act(() => {
-      commandResult = result.current('READ_WRITE', '编辑工作项', command);
+      commandResult = result.current('READ_WRITE', '编辑需求', command);
     });
 
     expect(command).toHaveBeenCalledTimes(1);
@@ -75,7 +75,7 @@ describe('useAccessCommand', () => {
     let commandResult: string | undefined;
 
     act(() => {
-      commandResult = result.current('READ_WRITE', '编辑工作项', command, 'WORKITEM');
+      commandResult = result.current('READ_WRITE', '编辑需求', command, 'WORKITEM');
     });
 
     expect(command).toHaveBeenCalledTimes(1);

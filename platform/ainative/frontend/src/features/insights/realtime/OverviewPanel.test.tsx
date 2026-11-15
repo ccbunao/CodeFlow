@@ -45,7 +45,7 @@ afterEach(() => {
 it('renders the snapshot KPIs, category bars and the 100% status stack including canceled items', async () => {
   server.use(overviewHandler());
   const { container } = renderPanel();
-  const panel = within(await screen.findByRole('region', { name: '工作项概况' }));
+  const panel = within(await screen.findByRole('region', { name: '需求概况' }));
   await waitFor(() => expect(container.querySelectorAll('.insight-kpi-value')).toHaveLength(4));
 
   expect(panel.getByRole('status', { name: '自动刷新' })).toHaveTextContent('30s');
@@ -67,16 +67,16 @@ it('renders the snapshot KPIs, category bars and the 100% status stack including
     { label: '缺陷', value: '2', percent: '20.0%', width: '33.3%' },
     { label: '任务', value: '2', percent: '20.0%', width: '33.3%' },
   ]);
-  expect(panel.getByText('按工作项类型统计全部工作项（含已取消）')).toBeInTheDocument();
+  expect(panel.getByText('按需求类型统计全部需求（含已取消）')).toBeInTheDocument();
 
-  expect(panel.getByRole('img', { name: '工作项状态占比堆叠条' })).toBeInTheDocument();
+  expect(panel.getByRole('img', { name: '需求状态占比堆叠条' })).toBeInTheDocument();
   const segments = Array.from(container.querySelectorAll('.insight-status-seg')) as HTMLElement[];
   expect(segments.map((node) => node.style.width)).toEqual(['10.00%', '20.00%', '30.00%', '40.00%']);
   expect(segments.map((node) => node.getAttribute('aria-label'))).toEqual([
-    '待开始：1 工作项 · 10.0%',
-    '进行中：2 工作项 · 20.0%',
-    '已完成：3 工作项 · 30.0%',
-    '已取消：4 工作项 · 40.0%',
+    '待开始：1 需求 · 10.0%',
+    '进行中：2 需求 · 20.0%',
+    '已完成：3 需求 · 30.0%',
+    '已取消：4 需求 · 40.0%',
   ]);
   const legend = Array.from(container.querySelectorAll('.insight-status-item')).map((item) => ({
     label: item.querySelector('span')?.textContent,
@@ -89,7 +89,7 @@ it('renders the snapshot KPIs, category bars and the 100% status stack including
     { label: '已完成', value: '3', percent: '30.0%' },
     { label: '已取消', value: '4', percent: '40.0%' },
   ]);
-  expect(panel.getByText('占比基于全部工作项；已取消以灰色段呈现，不参与高亮')).toBeInTheDocument();
+  expect(panel.getByText('占比基于全部需求；已取消以灰色段呈现，不参与高亮')).toBeInTheDocument();
 });
 
 it('shows the status tooltip on hover with count and share', async () => {
@@ -101,7 +101,7 @@ it('shows the status tooltip on hover with count and share', async () => {
   const done = document.querySelectorAll('.insight-status-seg')[2];
   await user.hover(done);
 
-  expect(await screen.findByRole('tooltip')).toHaveTextContent('已完成：3 工作项 · 30.0%');
+  expect(await screen.findByRole('tooltip')).toHaveTextContent('已完成：3 需求 · 30.0%');
 });
 
 it('normalizes an all-zero inventory without NaN or division artifacts', async () => {
@@ -186,7 +186,7 @@ it('keeps the snapshot usable when the query fails and recovers on retry', async
   const user = userEvent.setup();
   renderPanel();
 
-  expect(await screen.findByText('工作项概况加载失败')).toBeInTheDocument();
+  expect(await screen.findByText('需求概况加载失败')).toBeInTheDocument();
   expect(screen.getByText('overview 聚合失败')).toBeInTheDocument();
   expect(screen.queryByText('正在运行')).not.toBeInTheDocument();
 
@@ -200,8 +200,8 @@ it('shows an empty state when the backend returns no snapshot', async () => {
   server.use(overviewHandler(null));
   renderPanel();
 
-  expect(await screen.findByText('暂无工作项概况数据')).toBeInTheDocument();
-  expect(screen.queryByText('工作项概况加载失败')).not.toBeInTheDocument();
+  expect(await screen.findByText('暂无需求概况数据')).toBeInTheDocument();
+  expect(screen.queryByText('需求概况加载失败')).not.toBeInTheDocument();
 });
 
 it('keeps a missing or unparsable generatedAt visible as a placeholder or raw value', async () => {

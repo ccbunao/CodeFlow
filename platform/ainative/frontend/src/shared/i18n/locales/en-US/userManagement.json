@@ -64,7 +64,7 @@
   "passwordResetFailed": "Failed to reset the password",
   "deleteTitle": "Delete user",
   "deleteWarning": "The user cannot sign in immediately after deletion, and all issued credentials become invalid.",
-  "deleteRule1": "The user's work items, comments and other history are kept and shown with the previous username.",
+  "deleteRule1": "The user's requirements, comments and other history are kept and shown with the previous username.",
   "deleteRule2": "A platform admin can restore the account from user management; workspace access and the IM user ID must be reconfigured.",
   "deleteConfirmPrompt": "Enter the target username {{username}} to confirm deletion:",
   "confirmDelete": "Confirm deletion",

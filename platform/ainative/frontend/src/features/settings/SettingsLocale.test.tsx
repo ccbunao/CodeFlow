@@ -150,7 +150,7 @@ it.each(['DINGTALK', 'FEISHU'])('keeps %s notification/system drafts and canonic
     await locale('en-US');
     expect(screen.getByLabelText(provider === 'FEISHU' ? 'Enable Feishu notifications' : 'Enable DingTalk notifications')).toBe(enabled);
     expect(enabled).toHaveAttribute('aria-checked', 'false');
-    const toggle = screen.getByRole('switch', { name: 'Work item assigned: In-app' });
+    const toggle = screen.getByRole('switch', { name: 'Requirement assigned: In-app' });
     await user.click(toggle);
     await locale('zh-CN');
     expect(toggle).toHaveAttribute('aria-checked', 'false');

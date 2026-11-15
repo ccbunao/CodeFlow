@@ -70,7 +70,7 @@ it('opens on today, renders one-decimal metrics and spells out the Shanghai wind
 
   expect(requests).toEqual(['?range=today']);
   expect(panel.getByRole('radio', { name: '今日' })).toBeChecked();
-  expect(panel.getByText('所选时间段内有执行行为的工作项')).toBeInTheDocument();
+  expect(panel.getByText('所选时间段内有执行行为的需求')).toBeInTheDocument();
   expect(panel.getByText('切换时间段后以下 4 项指标自动刷新')).toBeInTheDocument();
   expect(panel.getByText('不受上方实时快照影响')).toBeInTheDocument();
 
@@ -81,8 +81,8 @@ it('opens on today, renders one-decimal metrics and spells out the Shanghai wind
   expect(cards(container)).toEqual([
     { label: '成功率', value: '86.7%', sub: '13 / 15 次执行' },
     { label: '失败/超时', value: '2', sub: '含超时中断的执行' },
-    { label: '返工重试率', value: '12.5%', sub: '1 / 8 个工作项有返工' },
-    { label: '平均耗时', value: '1h 30m', sub: '工作项口径 · 创建→首次完成' },
+    { label: '返工重试率', value: '12.5%', sub: '1 / 8 个需求有返工' },
+    { label: '平均耗时', value: '1h 30m', sub: '需求口径 · 创建→首次完成' },
   ]);
   expect(panel.getByText('实时')).toBeInTheDocument();
 });
@@ -157,8 +157,8 @@ it('renders em dashes for missing rates and durations', async () => {
   expect(cards(container)).toEqual([
     { label: '成功率', value: '—', sub: '0 / 0 次执行' },
     { label: '失败/超时', value: '0', sub: '含超时中断的执行' },
-    { label: '返工重试率', value: '—', sub: '0 / 0 个工作项有返工' },
-    { label: '平均耗时', value: '—', sub: '工作项口径 · 创建→首次完成' },
+    { label: '返工重试率', value: '—', sub: '0 / 0 个需求有返工' },
+    { label: '平均耗时', value: '—', sub: '需求口径 · 创建→首次完成' },
   ]);
   expect(screen.queryByText(/NaN/)).not.toBeInTheDocument();
 });
@@ -177,7 +177,7 @@ it('explains the rework formula on hover and focus and closes the focused card w
   await user.hover(reworkCard);
   const tooltip = await screen.findByRole('tooltip');
   expect(tooltip).toHaveTextContent('返工重试次数:3 次');
-  expect(tooltip).toHaveTextContent('返工重试率 = 有返工重试的工作项 ÷ 有执行行为的工作项(1 / 8)· 今日');
+  expect(tooltip).toHaveTextContent('返工重试率 = 有返工重试的需求 ÷ 有执行行为的需求(1 / 8)· 今日');
 
   await user.unhover(reworkCard);
   act(() => { reworkCard.focus(); });
@@ -249,7 +249,7 @@ it('switches the whole panel to the current language without losing the range', 
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('Rework rate')).toBeInTheDocument();
   expect(screen.getByText('Average duration')).toBeInTheDocument();
-  expect(screen.getByText('Work item scope · created → first completion')).toBeInTheDocument();
+  expect(screen.getByText('Requirement scope · created → first completion')).toBeInTheDocument();
   expect(screen.getByRole('radio', { name: 'Last 7 days' })).toBeChecked();
   const chip = container.querySelector('.insight-pl-chip') as HTMLElement;
   expect(chip).toHaveAttribute('title', 'Last 7 days window: 2026-10-06 00:00 — 2026-10-13 00:00 (Asia/Shanghai, today excluded)');

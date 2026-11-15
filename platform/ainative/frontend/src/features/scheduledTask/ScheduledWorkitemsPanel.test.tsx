@@ -37,7 +37,7 @@ function renderPanel() {
       <MemoryRouter initialEntries={['/scheduled-tasks']}>
         <Routes>
           <Route path="/scheduled-tasks" element={<ScheduledWorkitemsPanel />} />
-          <Route path="/workitems/:id" element={<div>工作项详情页</div>} />
+          <Route path="/workitems/:id" element={<div>需求详情页</div>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -86,7 +86,7 @@ describe('ScheduledWorkitemsPanel', () => {
 
     expect(await screen.findByText('定时需求A')).toBeInTheDocument();
     expect(screen.getByText('定时需求B')).toBeInTheDocument();
-    expect(screen.getAllByText((_, element) => element?.textContent === '共 2 个工作项').length).toBeGreaterThan(0);
+    expect(screen.getAllByText((_, element) => element?.textContent === '共 2 个需求').length).toBeGreaterThan(0);
     expect(screen.getByText('全部')).toBeInTheDocument();
     expect(screen.getByRole('columnheader', { name: '所在阶段' })).toBeInTheDocument();
     expect(screen.getByText('待触发')).toBeInTheDocument();
@@ -126,7 +126,7 @@ describe('ScheduledWorkitemsPanel', () => {
 
     await user.hover(screen.getByRole('button', { name: '取消定时 #2' }).parentElement!);
 
-    expect(await screen.findByText('工作项已完成，无法再调整定时')).toBeInTheDocument();
+    expect(await screen.findByText('需求已完成，无法再调整定时')).toBeInTheDocument();
   });
 
   it('narrows to my own workitems and searches by title', async () => {
@@ -140,7 +140,7 @@ describe('ScheduledWorkitemsPanel', () => {
     await user.click(screen.getByText('我创建的'));
     await waitFor(() => expect(requests[requests.length - 1]).toContain('mineScope=CREATED'));
 
-    await user.type(screen.getByLabelText('工作项标题筛选'), '定时需求{Enter}');
+    await user.type(screen.getByLabelText('需求标题筛选'), '定时需求{Enter}');
     await waitFor(() => {
       const last = requests[requests.length - 1];
       expect(last).toContain(`keyword=${encodeURIComponent('定时需求')}`);
@@ -218,7 +218,7 @@ describe('ScheduledWorkitemsPanel', () => {
     renderPanel();
     await user.click(await screen.findByRole('button', { name: '查看 #1' }));
 
-    expect(await screen.findByText('工作项详情页')).toBeInTheDocument();
+    expect(await screen.findByText('需求详情页')).toBeInTheDocument();
   });
 
   it('refuses to cancel the schedule for read-only members without calling the api', async () => {
@@ -233,7 +233,7 @@ describe('ScheduledWorkitemsPanel', () => {
     renderPanel();
     await user.click(await screen.findByRole('button', { name: '取消定时 #1' }));
 
-    await waitFor(() => expect(errorSpy).toHaveBeenCalledWith('当前为只读权限，取消工作项定时执行需要读写权限'));
+    await waitFor(() => expect(errorSpy).toHaveBeenCalledWith('当前为只读权限，取消需求定时执行需要读写权限'));
     expect(calls).toHaveLength(0);
     errorSpy.mockRestore();
   });
@@ -285,11 +285,11 @@ it('reports a past scheduled time in the switched language without submitting it
 it.each(['zh-CN', 'en-US'])('final widget scheduled workitem clear preserves keyboard search and resets page in %s', async locale => {
  const requests: string[] = []; useWorkitemHandler([], requests);
  await i18n.changeLanguage(locale); renderPanel();
- const input = screen.getByLabelText(locale === 'en-US' ? 'Work item title filter' : '工作项标题筛选');
+ const input = screen.getByLabelText(locale === 'en-US' ? 'Requirement title filter' : '需求标题筛选');
  expect(screen.getByRole('button', { name: locale === 'en-US' ? 'Search' : '搜索' })).toBeEnabled();
  await userEvent.type(input, '<raw>中文{Enter}');
  await waitFor(() => expect(new URLSearchParams(requests.at(-1)).get('keyword')).toBe('<raw>中文'));
- await userEvent.click(screen.getByRole('button', { name: locale === 'en-US' ? 'Clear scheduled work item search' : '清空定时工作项搜索' }));
+ await userEvent.click(screen.getByRole('button', { name: locale === 'en-US' ? 'Clear scheduled requirement search' : '清空定时需求搜索' }));
  expect(input).toHaveValue(''); await waitFor(() => expect(new URLSearchParams(requests.at(-1)).has('keyword')).toBe(false));
  expect(new URLSearchParams(requests.at(-1)).get('page')).toBe('1');
 });

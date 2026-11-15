@@ -58,3 +58,16 @@ it('uses the accent tint for shared segmented selection and animation', () => {
     expect(createAppearanceTheme(mode, '#2563eb').components?.Segmented).toMatchObject({itemSelectedBg: `rgba(${v['--cf-accent-rgb']},.13)`, itemSelectedColor: v['--cf-accent-text']});
   }
 });
+
+it('gives the primary button white text on a derived, readable fill for every brand color', () => {
+  for (const mode of ['dark', 'light'] as const) for (const accent of ['#2383e2','#f97316','#2563eb','#059669','#4f46e5','#e11d48','#0891b2','#d97706','#7c3aed','#374151','#0f766e','#ffffff','#000000']) {
+    const v = getAppearanceVariables(mode, accent);
+    expect(v['--cf-btn-ink']).toBe('#ffffff');
+    // 填充色承载白字:≥4.5:1;顶部高光只是光泽,不低于 3:1
+    expect(contrastRatio(v['--cf-btn-fill'], '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(v['--cf-btn-ink']).toBe('#ffffff');
+    expect(v['--cf-btn-shadow']).toBe('none');
+    // 品牌色本身不被替换(链接/标签/菜单选中态仍是客户选的色)
+    expect(v['--cf-primary']).toBe(accent);
+  }
+});

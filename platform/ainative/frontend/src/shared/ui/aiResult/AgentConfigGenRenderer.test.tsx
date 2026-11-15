@@ -4,11 +4,11 @@ import { AgentConfigGenRenderer } from './AgentConfigGenRenderer';
 import type { AgentConfigGenResult } from '@/shared/types/ai';
 
 const draft: AgentConfigGenResult = {
-  name: 'Terraform 工作项分诊助手',
+  name: 'Terraform 需求分诊助手',
   avatarUrl: '',
-  roleName: '工作项分诊专员',
+  roleName: '需求分诊专员',
   roleCode: 'TERRAFORM_TRIAGE',
-  businessBackground: '负责 Terraform 相关工作项分诊。',
+  businessBackground: '负责 Terraform 相关需求分诊。',
   responsibilities: '分析需求、识别负责人并输出处理建议。',
   missingFields: ['workflow'],
   clarifyingQuestions: ['是否需要绑定默认处理流程？'],
@@ -16,7 +16,7 @@ const draft: AgentConfigGenResult = {
     executors: ['CLI 运行器'],
     skills: ['Terraform'],
     memories: ['基础设施规范'],
-    workflows: ['工作项分诊流程'],
+    workflows: ['需求分诊流程'],
   },
 };
 
@@ -27,7 +27,7 @@ describe('AgentConfigGenRenderer', () => {
     expect(screen.getByText('有待补充信息')).toBeInTheDocument();
     expect(screen.getByText('workflow')).toBeInTheDocument();
     expect(screen.getByText('是否需要绑定默认处理流程？')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('Terraform 工作项分诊助手')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Terraform 需求分诊助手')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Terraform')).toBeInTheDocument();
   });
 

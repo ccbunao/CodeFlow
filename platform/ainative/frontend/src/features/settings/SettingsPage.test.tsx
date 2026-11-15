@@ -121,7 +121,7 @@ describe('SettingsPage', () => {
     renderPage();
     await userEvent.click(await screen.findByRole('tab', { name: '通知配置' }));
 
-    expect(await screen.findByText('工作项指派')).toBeInTheDocument();
+    expect(await screen.findByText('需求指派')).toBeInTheDocument();
     expect(screen.getByText('交付阻塞')).toBeInTheDocument();
     const notifyPanel = screen.getByTestId('notify-settings-panel');
     expect(within(notifyPanel).getByText(/复用平台协作通知的机器人凭据/)).toBeInTheDocument();

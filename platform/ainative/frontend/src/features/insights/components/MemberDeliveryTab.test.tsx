@@ -55,10 +55,10 @@ describe('MemberDeliveryTab', () => {
     expect(requests[0].searchParams.has('work_type')).toBe(false);
     expect(screen.queryByRole('button', { name: '本周' })).not.toBeInTheDocument();
     expect(screen.queryByText('本周需求交付总数')).not.toBeInTheDocument();
-    for (const label of ['全部工作项', '需求', '缺陷', '任务']) {
+    for (const label of ['全部需求', '需求', '缺陷', '任务']) {
       expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
     }
-    expect(screen.getByRole('radio', { name: '全部工作项' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: '全部需求' })).toBeChecked();
     expect(container.querySelectorAll('.ant-statistic')).toHaveLength(4);
     expect(screen.getByText('所选周期 · 新建')).toBeInTheDocument();
     expect(screen.getByText('所选周期 · 已完成')).toBeInTheDocument();
@@ -66,9 +66,9 @@ describe('MemberDeliveryTab', () => {
     expect(screen.getByText('所选周期 · 任务总数')).toBeInTheDocument();
     expect(cardValues(container)).toEqual(['5', '6', '2', '10']);
     expect(screen.getByText('统计周期 · 作用于本页全部内容（全局）')).toBeInTheDocument();
-    expect(screen.getByText('工作项类型:全部工作项 · 只作用本区统计')).toBeInTheDocument();
+    expect(screen.getByText('需求类型:全部需求 · 只作用本区统计')).toBeInTheDocument();
     expect(screen.getByText('本区统计的时间范围跟随上方全局统计周期')).toBeInTheDocument();
-    expect(screen.getByText('工作项类型筛选仅作用于本区 4 个统计，不影响下方成员任务分析表')).toBeInTheDocument();
+    expect(screen.getByText('需求类型筛选仅作用于本区 4 个统计，不影响下方成员任务分析表')).toBeInTheDocument();
     expect(screen.getByText('新建与任务总数口径均剔除 CANCELED')).toBeInTheDocument();
   });
 
@@ -121,7 +121,7 @@ describe('MemberDeliveryTab', () => {
     // 类型筛选只收敛统计区：表格节点与数据都不重新挂载。
     expect(container.querySelector('table')).toBe(table);
     expect(names(container)).toEqual(before);
-    expect(screen.getByText('工作项类型:缺陷 · 只作用本区统计')).toBeInTheDocument();
+    expect(screen.getByText('需求类型:缺陷 · 只作用本区统计')).toBeInTheDocument();
     await waitFor(() => expect(container.querySelector('.insight-flash.is-flash')).not.toBeNull());
   });
 

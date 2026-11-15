@@ -283,7 +283,7 @@
     "identity": "Identity",
     "sdlcTag": "Pipeline: {{name}}",
     "evolutionTag": "Evolution: {{mode}}",
-    "workitems": "Work items",
+    "workitems": "Requirements",
     "repositoryTab": "Repos{{suffix}}",
     "capabilityTab": "Capabilities{{suffix}}",
     "environmentTab": "Variables{{suffix}}",

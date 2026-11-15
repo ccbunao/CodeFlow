@@ -364,7 +364,7 @@ describe('需求澄清面板发送方式（FR-005~FR-010 / AC-03~AC-07）', () =
   });
 });
 
-describe('发送方式快速连续切换的落库一致性（工作项 55511）', () => {
+describe('发送方式快速连续切换的落库一致性（需求 55511）', () => {
   beforeEach(() => {
     resetUserSettingStore();
     // 上一组用例的 message.error toast 会挂在 document.body 上跨用例残留，

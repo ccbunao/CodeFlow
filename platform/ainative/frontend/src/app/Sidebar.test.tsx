@@ -50,10 +50,10 @@ it('renders translated tree labels and swaps them in place across languages', as
 });
 
 describe('导航树结构(设计契约 v5)', () => {
-  it('需求交付分组按动线排序:需求录入 → 交付流程 → 项目总览 → 运行记录 → 回收站', () => {
+  it('需求交付分组只放交付动线,回收站归到项目设置', () => {
     const delivery = NAV_SECTIONS.find((section) => section.key === 'delivery');
     expect(delivery?.items.map((item) => item.key))
-      .toEqual(['/workitems', '/sdlcs', '/overview', '/executions', '/workitems/recycled']);
+      .toEqual(['/workitems', '/sdlcs', '/overview', '/executions']);
     expect(delivery?.items[0]?.label).toBe('需求录入');
     expect(delivery?.items[1]?.label).toBe('交付流程');
     expect(delivery?.items[2]?.label).toBe('项目总览');
@@ -65,7 +65,7 @@ describe('导航树结构(设计契约 v5)', () => {
     expect(keysOf('analysis')).toEqual(['/insights', '/audit-logs', '/evolution']);
     expect(keysOf('automation')).toEqual(['/scheduled-tasks', '/executors', '/agents']);
     expect(keysOf('assets')).toEqual(['/repos', '/memories', '/skills', '/status-templates']);
-    expect(keysOf('project')).toEqual(['/integrations', '/settings/members', '/settings/backups', '/settings/environment-variables', '/settings']);
+    expect(keysOf('project')).toEqual(['/integrations', '/settings/members', '/settings/backups', '/settings/environment-variables', '/workitems/recycled', '/settings']);
     expect(NAV_SECTIONS.map((section) => section.label)).toEqual(['需求交付', '分析', '执行与自动化', '配置资产', '项目设置']);
   });
 

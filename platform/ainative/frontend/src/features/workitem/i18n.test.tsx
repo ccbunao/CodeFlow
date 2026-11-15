@@ -23,7 +23,7 @@ function ok(data: unknown) {
 }
 const authoredName = '需求 <strong>Alice</strong>';
 const item = {
-  id: 42, title: '工作项标题', contentMd: 'AI 原文', workType: 'REQ', priority: 0,
+  id: 42, title: '需求标题', contentMd: 'AI 原文', workType: 'REQ', priority: 0,
   statusCategory: 'NEW', statusName: '待处理 <em>custom</em>', statusNodeId: 1, templateId: 1,
   assigneeType: 'HUMAN', assigneeRef: 1, assigneeDisplayName: authoredName,
   creatorDisplayName: authoredName, version: 1, sdlcName: '需求',
@@ -69,7 +69,7 @@ it('updates a cached create route and selected options in place, submitting unch
   fireEvent.change(title, { target: { value: '需求' } });
   fireEvent.change(description, { target: { value: authoredName } });
   await language('en-US');
-  expect(screen.getByText('New work item')).toBeInTheDocument();
+  expect(screen.getByText('New requirement')).toBeInTheDocument();
   expect(screen.getByLabelText('Title')).toBe(title);
   expect(screen.getByLabelText('Description')).toBe(description);
   expect(title).toHaveValue('需求');
@@ -83,7 +83,7 @@ it('updates a cached create route and selected options in place, submitting unch
   await userEvent.click(screen.getByRole('button', { name: 'Create' }));
   await screen.findByTestId('created');
   expect(submitted).toEqual({ workType: 'REQ', title: '需求', contentMd: authoredName, priority: 2 });
-  expect(success).toHaveBeenCalledWith('Work item created.');
+  expect(success).toHaveBeenCalledWith('Requirement created.');
 });
 
 it('refreshes a displayed create validation error without validating pristine fields or clearing input', async () => {
@@ -104,8 +104,8 @@ it('refreshes a displayed create validation error without validating pristine fi
 it('updates routed list columns and selected filters while preserving authored status, names and search draft', async () => {
   localStorage.setItem('ainative.workitems.view', 'table');
   route(<WorkitemListPage />);
-  await screen.findByText('工作项标题');
-  const search = screen.getByPlaceholderText('搜索工作项ID或标题');
+  await screen.findByText('需求标题');
+  const search = screen.getByPlaceholderText('搜索需求ID或标题');
   fireEvent.change(search, { target: { value: '需求' } });
   const selects = screen.getAllByRole('combobox');
   fireEvent.mouseDown(selects[1]);
@@ -115,7 +115,7 @@ it('updates routed list columns and selected filters while preserving authored s
   expect(screen.getByText('Urgent')).toBeInTheDocument();
   expect(screen.getByText('Requirement')).toBeInTheDocument();
   expect(screen.getAllByText('New').length).toBeGreaterThan(0);
-  expect(screen.getByPlaceholderText('Search work item ID or title')).toBe(search);
+  expect(screen.getByPlaceholderText('Search requirement ID or title')).toBe(search);
   expect(search).toHaveValue('需求');
   expect(screen.getByText(item.statusName!)).toBeInTheDocument();
   expect(screen.getAllByText(authoredName)).toHaveLength(2);
@@ -154,7 +154,7 @@ it('updates the mandatory metadata caller with safe rich placeholders and unchan
 
 it('updates the mandatory agent-list caller and its independent filter labels', async () => {
   route(<AgentWorkitemList agentId={1} />);
-  await screen.findByText('工作项标题');
+  await screen.findByText('需求标题');
   await language('en-US');
   expect(screen.getByRole('columnheader', { name: 'Updated' })).toBeInTheDocument();
   expect(screen.getByText('Requirement')).toBeInTheDocument();
@@ -207,5 +207,5 @@ it('uses completion-time locale for a mutation that began in Chinese', async () 
   await waitFor(() => expect(started).toBe(true));
   await language('en-US');
   finish();
-  await waitFor(() => expect(success).toHaveBeenCalledWith('Work item content saved'));
+  await waitFor(() => expect(success).toHaveBeenCalledWith('Requirement content saved'));
 });

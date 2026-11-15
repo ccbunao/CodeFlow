@@ -14,7 +14,7 @@ function Editor({ initial = [] }: { initial?: WorkspaceDomain[] }) {
 describe('ReadOnlyFeatures', () => {
   it('keeps all domain groups collapsed by default', () => {
     render(<Editor initial={['SDLC', 'AI', 'AUTH']} />);
-    expect(screen.getByRole('button', { name: /^交付与工作项协作/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: /^交付与需求协作/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.getByRole('button', { name: /^AI 成员/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.getByRole('button', { name: /^流程与项目配置/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.queryByRole('radio', { name: '读写' })).not.toBeInTheDocument();

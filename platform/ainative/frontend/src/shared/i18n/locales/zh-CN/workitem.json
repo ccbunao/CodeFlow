@@ -20,7 +20,7 @@
     "approvalDescription": "确认后才进下一步;先检查本步骤产物。此确认会一直等,不过期。",
     "approvers": "审批人:{{names}}。任一批准即可继续。",
     "nameSeparator": "、",
-    "creator": "工作项创建人",
+    "creator": "需求创建人",
     "userId": "用户 {{id}}",
     "onlyApprovers": "只有指定审批人能批准或要求修改;你可查看内容。",
     "artifacts": "查看本次确认的产物与版本",
@@ -78,14 +78,14 @@
     "actions": "操作"
   },
   "actions": {
-    "create": "创建工作项",
-    "new": "新建工作项",
-    "delete": "删除工作项",
+    "create": "创建需求",
+    "new": "新建需求",
+    "delete": "删除需求",
     "transition": "流转状态",
     "watch": "关注",
     "unwatch": "取消关注",
-    "watchAria": "关注工作项",
-    "unwatchAria": "取消关注工作项"
+    "watchAria": "关注需求",
+    "unwatchAria": "取消关注需求"
   },
   "tags": {
     "empty": "暂无标签",
@@ -108,13 +108,13 @@
     "tooLong": "单个标签不超过 {{max}} 字"
   },
   "create": {
-    "back": "返回工作项列表",
-    "title": "新建工作项",
+    "back": "返回需求列表",
+    "title": "新建需求",
     "submit": "创建",
     "cancel": "取消",
     "titleRequired": "标题不能为空",
     "descriptionRequired": "描述不能为空",
-    "titlePlaceholder": "填工作项标题",
+    "titlePlaceholder": "填需求标题",
     "descriptionPlaceholder": "填描述(支持 Markdown)"
   },
   "scope": {
@@ -129,17 +129,17 @@
   "list": {
     "clearType": "清空类型筛选",
     "clearStatus": "清空状态筛选",
-    "clearSearch": "清空工作项搜索",
+    "clearSearch": "清空需求搜索",
     "clearTag": "清空标签筛选",
     "title": "需求录入",
     "total_other": "共 <number>{{total}}</number> 个需求与缺陷",
     "typeFilter": "类型筛选",
     "statusFilter": "状态筛选",
-    "search": "搜索工作项ID或标题",
+    "search": "搜索需求ID或标题",
     "tagFilter": "按标签筛选",
     "kanbanView": "看板视图",
     "tableView": "表格视图",
-    "deleteDescription": "正在执行或外部连接的工作项不可删除",
+    "deleteDescription": "正在执行或外部连接的需求不可删除",
     "deleteConfirm": "删除",
     "cancel": "取消",
     "pagination_other": "共 {{count}} 条",
@@ -157,7 +157,7 @@
     "createdFilterRange": "{{from}} ~ {{to}} 创建",
     "createdFilterFrom": "{{from}} 起创建",
     "createdFilterTo": "{{to}} 前创建",
-    "flowView": "工作项流",
+    "flowView": "需求流",
     "creatorLabel": "创建者",
     "creatorPlaceholder": "选创建人(可多选)",
     "creatorNoData": "暂无成员",
@@ -185,12 +185,12 @@
     "statusAll": "全部状态",
     "dayToday": "今天",
     "dayYesterday": "昨天",
-    "tableEmpty": "还没有工作项",
-    "tableEmptyHint": "新建一个工作项,或调整筛选条件后再试"
+    "tableEmpty": "还没有需求",
+    "tableEmptyHint": "新建一个需求,或调整筛选条件后再试"
   },
   "recycleBin": {
     "title": "回收站",
-    "scope": "只列已删除的工作项;恢复只是重新可见,不会续跑交付。",
+    "scope": "只列已删除的需求;恢复只是重新可见,不会续跑交付。",
     "id": "ID",
     "previousStatus": "删除前状态",
     "deletedAt": "删除时间",
@@ -199,7 +199,7 @@
     "empty": "回收站为空",
     "noMatches": "回收站里没有匹配「{{keyword}}」的条目",
     "restore": "恢复",
-    "restoreCommand": "恢复工作项",
+    "restoreCommand": "恢复需求",
     "restoreConfirmTitle": "把「{{title}}」恢复回来?",
     "restoreConfirmDescription": "恢复后将回到删除前状态，历史产物自动可见；仅恢复可见性，不会自动恢复执行，需重新指派。"
   },
@@ -210,19 +210,19 @@
   "kanban": {
     "notProvided": "未提供",
     "notReturned": "未返回",
-    "externalWorkitem": "外部工作项",
+    "externalWorkitem": "外部需求",
     "sourceReporter": "来源提出人:{{name}}",
     "creator": "创建者: {{name}}",
     "assignee": "当前负责人:{{name}}",
     "status": "状态: {{name}}",
     "source": "来自 {{provider}}",
-    "empty": "暂无工作项",
-    "emptyDecision": "暂无需要您决策的工作项",
+    "empty": "暂无需求",
+    "emptyDecision": "暂无需要您决策的需求",
     "updating": "正在核对并刷新状态…",
     "decisionSummary": "决策人汇总",
     "loadMore": "再加载一批(已显示 {{shown}}/{{total}})",
     "boardEmptyTitle": "看板还是空的",
-    "boardEmptyDesc": "新建一个工作项,或从禅道同步缺陷,这里会按状态自动分列展示"
+    "boardEmptyDesc": "新建一个需求,或从禅道同步缺陷,这里会按状态自动分列展示"
   },
   "meta": {
     "type": "类型 <value/>",
@@ -242,18 +242,18 @@
   },
   "agentList": {
     "filterCount": "{{label}} {{count}}",
-    "empty": "该员工暂无关联工作项"
+    "empty": "该员工暂无关联需求"
   },
   "messages": {
-    "created": "工作项创建成功",
+    "created": "需求创建成功",
     "executedNow": "已立即执行",
     "scheduledUpdated": "计划执行时间已更新",
     "scheduledCancelled": "已取消定时执行",
     "tagsUpdated": "标签已更新",
-    "contentSaved": "工作项内容已经存好了",
-    "deleted": "工作项已删除",
+    "contentSaved": "需求内容已经存好了",
+    "deleted": "需求已删除",
     "deleteFailed": "删除失败",
-    "restored": "工作项已恢复",
+    "restored": "需求已恢复",
     "restoreFailed": "恢复失败",
     "transitioned": "状态已流转",
     "syncCompleted": "同步完成:新增 {{imported}},更新 {{updated}},评论 {{commentsImported}}",
@@ -275,8 +275,8 @@
   "transition": {
     "updated": "状态已经改成「{{name}}」",
     "updateFailed": "状态没能改成功,请重试",
-    "stale": "工作项已经被更新过,刷新后再拖",
-    "noWorkflow": "这条工作项没配状态流程,拖不动",
+    "stale": "需求已经被更新过,刷新后再拖",
+    "noWorkflow": "这条需求没配状态流程,拖不动",
     "noTarget": "模板里没有能流转到「{{title}}」的节点,请在详情页处理或找管理员改模板",
     "checkFailed": "状态校验没过,请重试",
     "choose": "选择目标状态",
@@ -288,27 +288,27 @@
     "back": "返回",
     "loadFailed": "加载失败",
     "retryLater": "请稍后重试",
-    "otherWorkspaceTitle": "这条工作项属于项目「{{name}}」",
-    "otherWorkspaceHint": "是否切换到该项目并打开工作项？取消将停留在当前项目。",
+    "otherWorkspaceTitle": "这条需求属于项目「{{name}}」",
+    "otherWorkspaceHint": "是否切换到该项目并打开需求？取消将停留在当前项目。",
     "otherWorkspaceSwitch": "切到「{{name}}」并打开",
     "otherWorkspaceSwitchFailed": "项目没切过去,稍后再试一次",
-    "reassignCommand": "重新指派工作项",
-    "startDeliveryCommand": "启动工作项交付",
+    "reassignCommand": "重新指派需求",
+    "startDeliveryCommand": "启动需求交付",
     "clarifyCommand": "发起 AI 需求澄清",
-    "editCommand": "编辑工作项内容",
-    "assignHumanCommand": "把工作项交给真人",
-    "syncCommand": "把工作项同步到外部平台",
+    "editCommand": "编辑需求内容",
+    "assignHumanCommand": "把需求交给真人",
+    "syncCommand": "把需求同步到外部平台",
     "endExecutionCommand": "结束本次执行",
     "resizeClarification": "拖动调整澄清窗口宽度",
     "transitionTitle": "流转状态",
-    "noTemplate": "这条工作项还没绑定状态模板",
+    "noTemplate": "这条需求还没绑定状态模板",
     "noTransitions": "当前模板里还没有可流转的状态节点",
     "transition": "流转",
     "recommended": "推荐流转",
     "notRecommended": "非推荐流转",
     "delete": "删除",
     "cancel": "取消",
-    "deleteDescription": "删除后这条工作项会从列表消失。正在跑或已经连到外部平台的工作项删不掉。",
+    "deleteDescription": "删除后这条需求会从列表消失。正在跑或已经连到外部平台的需求删不掉。",
     "clarificationResult": "澄清材料 (AI 生成)",
     "exitFullscreenHint": "退出全屏(Esc)",
     "exitFullscreen": "退出全屏",
@@ -322,12 +322,12 @@
     "startDelivery": "启动交付",
     "reconcile": "立即对账",
     "document": "需求/设计文档",
-    "externallyMaintained": "由外部工作项维护",
+    "externallyMaintained": "由外部需求维护",
     "save": "保存",
     "edit": "编辑",
-    "titleField": "工作项标题",
-    "bodyField": "工作项正文",
-    "backToList": "返回工作项列表",
+    "titleField": "需求标题",
+    "bodyField": "需求正文",
+    "backToList": "返回需求列表",
     "transitionTo": "流转到{{name}}",
     "origin": "来自 7×24 Task <name/> / Run #{{id}}"
   },
@@ -358,12 +358,12 @@
     "send": "发送",
     "add": "添加评论",
     "deliveryClosedTitle": "评论未发送：交付已关闭",
-    "deliveryClosedHint": "该工作项的交付已经关闭,@ 起的 AI 成员不会再启动。想让它接手就先撤掉 AI 成员 @ 改发普通评论;若确实要继续,请重新打开交付后再发一次。",
+    "deliveryClosedHint": "该需求的交付已经关闭,@ 起的 AI 成员不会再启动。想让它接手就先撤掉 AI 成员 @ 改发普通评论;若确实要继续,请重新打开交付后再发一次。",
     "sendFailed": "评论发送失败，请重试",
     "attachFiles": "添加文件或图片",
     "removeAttachment": "摘掉附件 {{name}}",
     "attachmentHint": "任意类型文件都能传,可拖拽、也可粘贴截图;单个不超过 5 MB。",
-    "attachmentStorageHint": "发送时会存进工作项的需求与设计附件区,额度为最多 10 个、合计 20 MB;传完会保留,可在附件区自行删掉。",
+    "attachmentStorageHint": "发送时会存进需求的需求与设计附件区,额度为最多 10 个、合计 20 MB;传完会保留,可在附件区自行删掉。",
     "uploadingAttachments": "正在上传附件…"
   },
   "interaction": {
@@ -401,13 +401,13 @@
   },
   "collaboration": {
     "title": "外部协作",
-    "source": "来源工作项",
+    "source": "来源需求",
     "reporter": "需求提出者",
     "owner": "外部业务负责人",
     "syncStatus": "同步状态",
-    "actionRequired": "外部工作项待同步处理",
+    "actionRequired": "外部需求待同步处理",
     "notProvided": "未提供",
-    "open": "前往{{provider}}工作项",
+    "open": "前往{{provider}}需求",
     "healthy": "同步正常",
     "delayed": "同步延迟",
     "needsAttention": "需要处理",
@@ -436,7 +436,7 @@
     "copied": "已复制",
     "label": "分享",
     "copiedHint": "链接已复制到剪贴板",
-    "copyHint": "复制工作项链接"
+    "copyHint": "复制需求链接"
   },
   "members": {
     "title": "成员",
@@ -701,10 +701,10 @@
   },
   "intervention": {
     "awaitingAnswer": "待回答",
-    "agentDescription": "AI 成员在等人工答复,进工作项把问题答了或把请求确认掉,它才能接着往下跑。",
-    "tooltip": "这条工作项已经指给真人,得人工介入处理。",
-    "description": "当前工作项已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。",
-    "externalDescription": "当前工作项尚未指派本地负责人，请指派真人接手，或指派AI 成员继续交付。",
+    "agentDescription": "AI 成员在等人工答复,进需求把问题答了或把请求确认掉,它才能接着往下跑。",
+    "tooltip": "这条需求已经指给真人,得人工介入处理。",
+    "description": "当前需求已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。",
+    "externalDescription": "当前需求尚未指派本地负责人，请指派真人接手，或指派AI 成员继续交付。",
     "unclaimed": "待认领",
     "user": "用户 {{id}}",
     "badge": "需要人工",
@@ -782,7 +782,7 @@
     "deliveryClosed": "交付已关闭",
     "closeHint": "关闭交付会停掉所有未结束执行,并阻止新执行开始。",
     "reopenHint": "重新开启只恢复调度入口,不会自动开始任务。",
-    "closeConfirmBody": "关闭交付?将停止所有未结束执行并阻止新执行。工作项、历史与产物保留。重新开启前需所有执行进入终态。",
+    "closeConfirmBody": "关闭交付?将停止所有未结束执行并阻止新执行。需求、历史与产物保留。重新开启前需所有执行进入终态。",
     "reopenConfirmBody": "重新开启交付?仅恢复调度入口,不会自动开始任务。",
     "cancelPending": "请先结束未完成的取消操作",
     "allowAgents": "允许 AI 成员执行",
@@ -925,11 +925,11 @@
   },
   "schedule": {
     "futureRequired": "计划执行时间必须是将来的时间点",
-    "editCommand": "改这条工作项的计划执行时间",
+    "editCommand": "改这条需求的计划执行时间",
     "edit": "修改",
-    "executeCommand": "立即执行工作项",
+    "executeCommand": "立即执行需求",
     "executeNow": "立即执行",
-    "cancelCommand": "取消工作项定时执行",
+    "cancelCommand": "取消需求定时执行",
     "cancel": "取消定时",
     "editTitle": "修改计划执行时间",
     "save": "保存",
@@ -943,8 +943,8 @@
     "plannedStart": "计划启动:{{time}}"
   },
   "start": {
-    "reassignCommand": "重新指派工作项",
-    "deliveryCommand": "启动工作项交付",
+    "reassignCommand": "重新指派需求",
+    "deliveryCommand": "启动需求交付",
     "reassignedScheduled": "已重新指派，将在计划时间重启交付",
     "reassigned": "已重新指派，正在重启交付",
     "started": "已启动交付",
@@ -1061,7 +1061,7 @@
       "analyzing": "分析需求…",
       "organizingThoughts": "整理思路…",
       "composing": "组织语言…",
-      "reviewingWorkitem": "查阅工作项资料…",
+      "reviewingWorkitem": "查阅需求资料…",
       "checkingAcceptance": "核对验收标准…",
       "generatingQuestions": "生成澄清问题…",
       "considering": "思考中…"
@@ -1110,7 +1110,7 @@
     "attachmentLoadFailed": "附件没读到,重试",
     "attachmentDownloadFailed": "附件下载失败，请重试",
     "attachmentDeleteFailed": "附件删除失败,重试",
-    "bootstrapPrompt": "请通过平台 MCP 读工作项 #{{workitemId}},与我做需求澄清。",
+    "bootstrapPrompt": "请通过平台 MCP 读需求 #{{workitemId}},与我做需求澄清。",
     "conversationNumber": "会话 #{{id}}",
     "lastActive": "最近 {{date}}",
     "createdAt": "创建 {{date}}",
@@ -1170,7 +1170,7 @@
     },
     "event": {
       "create": {
-        "label": "工作项已创建",
+        "label": "需求已创建",
         "both": "已创建: {{from}} → {{to}}",
         "to": "已创建: {{to}}"
       },
@@ -1196,7 +1196,7 @@
         "to": "内容:{{to}}"
       },
       "delete": {
-        "label": "工作项已删除",
+        "label": "需求已删除",
         "both": "已删除:{{from}} → {{to}}",
         "to": "已删除:{{to}}"
       },
@@ -1211,7 +1211,7 @@
         "to": "评论:{{to}}"
       },
       "external_import": {
-        "label": "已从外部工作项导入",
+        "label": "已从外部需求导入",
         "both": "外部导入:{{from}} → {{to}}",
         "to": "外部导入:{{to}}"
       },
@@ -1292,8 +1292,8 @@
     "human": "真人",
     "close": "关闭",
     "failedHandoff": "失败后交接",
-    "deleteExternal": "外部连接的工作项不可删除",
-    "deleteRunning": "工作项正在执行中，请等待完成或结束后再删除",
+    "deleteExternal": "外部连接的需求不可删除",
+    "deleteRunning": "需求正在执行中，请等待完成或结束后再删除",
     "externalName": {
       "other": "{{provider}} 用户(ID: {{id}})"
     }

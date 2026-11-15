@@ -22,7 +22,7 @@ describe('WorkitemContent copy entry', () => {
 
   it('copies the workitem body markdown from the header entry', async () => {
     const md = '# 背景\n\n正文内容';
-    render(<WorkitemContent title="示例工作项" contentMd={md} />);
+    render(<WorkitemContent title="示例需求" contentMd={md} />);
 
     await userEvent.click(screen.getByRole('button', { name: '复制内容' }));
     await userEvent.click(await screen.findByText('复制原始 Markdown'));
@@ -32,7 +32,7 @@ describe('WorkitemContent copy entry', () => {
   });
 
   it('copies readable plain text for the workitem body', async () => {
-    render(<WorkitemContent title="示例工作项" contentMd={'# 背景\n- 一项'} />);
+    render(<WorkitemContent title="示例需求" contentMd={'# 背景\n- 一项'} />);
 
     await userEvent.click(screen.getByRole('button', { name: '复制内容' }));
     await userEvent.click(await screen.findByText('复制纯文本'));
@@ -41,7 +41,7 @@ describe('WorkitemContent copy entry', () => {
   });
 
   it('hides the copy entry when the body is empty', () => {
-    render(<WorkitemContent title="示例工作项" contentMd="   " />);
+    render(<WorkitemContent title="示例需求" contentMd="   " />);
 
     expect(screen.queryByRole('button', { name: '复制内容' })).not.toBeInTheDocument();
   });
@@ -49,49 +49,49 @@ describe('WorkitemContent copy entry', () => {
 
 describe('WorkitemContent null body', () => {
   it('renders the section without crashing when contentMd is null', () => {
-    render(<WorkitemContent title="空工作项" contentMd={null} />);
+    render(<WorkitemContent title="空需求" contentMd={null} />);
 
     expect(screen.getByTestId('workitem-content-section')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '复制内容' })).not.toBeInTheDocument();
   });
 
   it('opens the editor with an empty body when contentMd is null', async () => {
-    render(<WorkitemContent title="空工作项" contentMd={null} />);
+    render(<WorkitemContent title="空需求" contentMd={null} />);
 
     await userEvent.click(screen.getByRole('button', { name: /编辑/ }));
 
-    expect(screen.getByLabelText('工作项正文')).toHaveValue('');
+    expect(screen.getByLabelText('需求正文')).toHaveValue('');
   });
 
   it('saves an empty-string body when editing a null-body workitem', async () => {
     const onSave = vi.fn();
-    render(<WorkitemContent title="空工作项" contentMd={null} onSave={onSave} />);
+    render(<WorkitemContent title="空需求" contentMd={null} onSave={onSave} />);
 
     await userEvent.click(screen.getByRole('button', { name: /编辑/ }));
-    await userEvent.type(screen.getByLabelText('工作项标题'), '补充标题');
+    await userEvent.type(screen.getByLabelText('需求标题'), '补充标题');
     await userEvent.click(screen.getByRole('button', { name: /保存/ }));
 
-    expect(onSave).toHaveBeenCalledWith({ title: '空工作项补充标题', contentMd: '' });
+    expect(onSave).toHaveBeenCalledWith({ title: '空需求补充标题', contentMd: '' });
   });
 });
 
 describe('WorkitemContent body overflow containment', () => {
   it('renders a long fenced code block in the body as a contained pre', () => {
     const md = [
-      '工作项详情页面中，工作项正文部分情况会超出正文区域到右侧',
+      '需求详情页面中，需求正文部分情况会超出正文区域到右侧',
       '',
       '```',
       "MCP error -32602: Structured content does not match the tool's output schema: data/assigneeName must be string, data/assigneeDisplayName must be string",
       '```',
     ].join('\n');
-    render(<WorkitemContent title="示例工作项" contentMd={md} />);
+    render(<WorkitemContent title="示例需求" contentMd={md} />);
 
     const section = screen.getByTestId('workitem-content-section');
     const pre = section.querySelector('pre');
     expect(pre).not.toBeNull();
     // jsdom 的 computed style 会省略默认值，直接断言内联声明
     expect(pre).toHaveStyle({ overflowX: 'auto', maxWidth: '100%' });
-    expect(section).toHaveTextContent('工作项详情页面中，工作项正文部分情况会超出正文区域到右侧');
+    expect(section).toHaveTextContent('需求详情页面中，需求正文部分情况会超出正文区域到右侧');
     expect(pre).toHaveTextContent('data/assigneeDisplayName must be string');
   });
 });

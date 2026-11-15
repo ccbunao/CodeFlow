@@ -48,7 +48,7 @@ describe('SdlcDetailPage', () => {
     const { container } = renderPage();
     await screen.findByText('审批人配置');
     fireEvent.click(container.querySelector('.ant-table-row .anticon-edit')!.closest('button')!);
-    expect(await screen.findByText('工作项创建人（建单后确定）')).toBeInTheDocument();
+    expect(await screen.findByText('需求创建人（建单后确定）')).toBeInTheDocument();
     fireEvent.mouseDown(screen.getByRole('combobox', { name: '审批人' }));
     fireEvent.click(await screen.findByText('审批成员甲'));
     fireEvent.click(await screen.findByText('身份标签：验收'));

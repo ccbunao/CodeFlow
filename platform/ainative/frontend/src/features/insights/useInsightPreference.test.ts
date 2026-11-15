@@ -102,7 +102,7 @@ it('persists the delivery work type under its own key and falls back for unknown
   const participationKey = 'ainative:insights:v1:1:2:participation.workType';
   expect(renderHook(useInsightDeliveryWorkType).result.current[0]).toBe('ALL');
 
-  // 人机协作的类型偏好不得串到工作项交付统计区，反之亦然。
+  // 人机协作的类型偏好不得串到需求交付统计区，反之亦然。
   localStorage.setItem(participationKey, JSON.stringify('BUG'));
   expect(renderHook(useInsightDeliveryWorkType).result.current[0]).toBe('ALL');
 

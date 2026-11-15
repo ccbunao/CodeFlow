@@ -1,18 +1,20 @@
 import { useTranslation } from 'react-i18next';
+import { TapdIntegrationPanel } from './TapdIntegrationPanel';
 import { ZentaoIntegrationPanel } from './ZentaoIntegrationPanel';
 import { ChannelIntegrationPage } from './channels/ChannelIntegrationPage';
 import { HubPageShell, resolveHubTab, useHubTabParam } from '@/shared/ui/HubPage';
 
-export const INTEGRATIONS_HUB_TAB_KEYS = ['zentao', 'channels'] as const;
+export const INTEGRATIONS_HUB_TAB_KEYS = ['zentao', 'tapd', 'channels'] as const;
 export const DEFAULT_INTEGRATIONS_HUB_TAB = 'zentao';
 
 export function resolveIntegrationsHubTab(tabParam: string | null): string {
   return resolveHubTab(tabParam, INTEGRATIONS_HUB_TAB_KEYS, DEFAULT_INTEGRATIONS_HUB_TAB);
 }
 
-const TAB_DESCRIPTIONS: Record<string, 'channelsDescription' | 'zentaoDescription'> = {
+const TAB_DESCRIPTIONS: Record<string, 'channelsDescription' | 'zentaoDescription' | 'tapdDescription'> = {
   channels: 'channelsDescription',
   zentao: 'zentaoDescription',
+  tapd: 'tapdDescription',
 };
 
 export function IntegrationsHubPage() {
@@ -27,6 +29,7 @@ export function IntegrationsHubPage() {
       onTabChange={setTab}
       items={[
         { key: 'zentao', label: t('zentaoTab'), children: <ZentaoIntegrationPanel /> },
+        { key: 'tapd', label: t('tapdTab'), children: <TapdIntegrationPanel /> },
         { key: 'channels', label: t('channelsTab'), children: <ChannelIntegrationPage /> },
       ]}
     />

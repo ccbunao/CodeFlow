@@ -1,6 +1,6 @@
 {
   "approval": {
-    "creator": "Work item creator (resolved after creation)",
+    "creator": "Requirement creator (resolved after creation)",
     "identityTag": "Identity tag: {{tag}}",
     "required": "Require human approval after completion",
     "description": "Wait for human approval after this step; the wait does not expire.",
@@ -58,7 +58,7 @@
     "name": "Name",
     "templateName": "Workflow name",
     "description": "Description",
-    "workType": "Work item type",
+    "workType": "Requirement type",
     "stepCount": "Steps",
     "squad": "Squad",
     "status": "Status",
@@ -138,7 +138,7 @@
   "placeholder": {
     "name": "e.g. Standard requirement flow",
     "description": "What this pipeline is for",
-    "workType": "Optionally bind a work item type",
+    "workType": "Optionally bind a requirement type",
     "stepName": "e.g. Coding",
     "kind": "Pick a step type",
     "instruction": "Describe the step: inputs/outputs, caveats, done criteria, and how to call platform APIs when handing off."

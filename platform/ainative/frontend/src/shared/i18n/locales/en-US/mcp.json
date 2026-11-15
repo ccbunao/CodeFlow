@@ -56,7 +56,7 @@
   "codexComment": "# ~/.codex/config.toml or project .codex/config.toml",
   "capabilities": {
     "workitem": {
-      "title": "Work item management",
+      "title": "Requirement management",
       "description": "CRUDL, assignment, comments, pause, resume and status transitions."
     },
     "sdlc": {

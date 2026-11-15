@@ -11,8 +11,8 @@ describe('buildWorkitemShareText', () => {
   });
 
   it('keeps a private deployment endpoint as-is', () => {
-    expect(buildWorkitemShareText('http://localhost:7001', 1, '本地工作项'))
-      .toBe('http://localhost:7001/workitems/1 《本地工作项》');
+    expect(buildWorkitemShareText('http://localhost:7001', 1, '本地需求'))
+      .toBe('http://localhost:7001/workitems/1 《本地需求》');
   });
 
   it('accepts a string id from the router without quoting it', () => {

@@ -149,7 +149,7 @@ describe('SpaceDashboardPage', () => {
     await userEvent.click(screen.getByTestId('space-dashboard-work-type-TASK'));
     await waitFor(() => expect(lastParams().get('workTypes')).toBe('BUG'));
     expect(screen.getByTestId('stat-total-credits')).toHaveTextContent('48,213.55');
-    // 成本窗口参数不随工作项类型筛选变化。
+    // 成本窗口参数不随需求类型筛选变化。
     expect(lastParams().get('costStart')).toBe(dayjs().subtract(30, 'day').format('YYYY-MM-DD'));
 
     const settled = requests.length;
@@ -170,7 +170,7 @@ describe('SpaceDashboardPage', () => {
     renderPage();
 
     expect(await screen.findByTestId('stat-per-workitem')).toHaveTextContent('--');
-    expect(screen.getByTestId('stat-per-workitem')).toHaveTextContent('分母：交付窗口内无已完成工作项');
+    expect(screen.getByTestId('stat-per-workitem')).toHaveTextContent('分母：交付窗口内无已完成需求');
   });
 
   it('renders the forbidden state when the caller has no manageable workspace', async () => {

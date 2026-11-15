@@ -43,7 +43,7 @@
   },
   "nodes": {
     "title": "状态节点",
-    "help": "定义工作项的所有可能状态",
+    "help": "定义需求的所有可能状态",
     "add": "加节点",
     "confirmDelete": "删掉这个状态节点?",
     "editLabel": "改状态节点 {{code}}",
@@ -62,7 +62,7 @@
   },
   "transitions": {
     "title": "快捷流转",
-    "help": "定义工作项页面的快捷状态变更按钮",
+    "help": "定义需求页面的快捷状态变更按钮",
     "add": "加快捷流转",
     "editTitle": "改快捷流转",
     "fromColumn": "当前状态",
@@ -70,7 +70,7 @@
     "name": "动作名",
     "actions": "操作",
     "confirmDelete": "删掉这条流转?",
-    "warning": "推荐流转仅定义工作项页面的快捷按钮。用户始终可以手动将工作项切换到任意状态。",
+    "warning": "推荐流转仅定义需求页面的快捷按钮。用户始终可以手动将需求切换到任意状态。",
     "from": "从",
     "fromRequired": "选当前状态",
     "fromPlaceholder": "选当前状态",
@@ -78,7 +78,7 @@
     "toRequired": "选流向状态",
     "toPlaceholder": "选流向状态",
     "nameRequired": "填动作名",
-    "nameHelp": "将显示为工作项页面的快捷按钮文字",
+    "nameHelp": "将显示为需求页面的快捷按钮文字",
     "namePlaceholder": "如 开工"
   },
   "messages": {

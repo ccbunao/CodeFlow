@@ -705,7 +705,7 @@ describe('WorkitemClarificationPanel ACP 交互接线', () => {
     expect(await screen.findByText('还没落库的回复')).toBeInTheDocument();
   });
 
-  // 工作项 53305：回复状态结束但问题卡片还没答时，输入行仍由卡片承载，
+  // 需求 53305：回复状态结束但问题卡片还没答时，输入行仍由卡片承载，
   // 「回复结束就聚焦输入框」不能把焦点抢到卡片上、也不能提前放出输入框。
   it('keeps the card in place and focus off the input when the reply ends unresolved', async () => {
     const pendingCard = {
@@ -736,7 +736,7 @@ describe('WorkitemClarificationPanel ACP 交互接线', () => {
     expect(screen.queryByPlaceholderText('输入消息...')).toBeNull();
   });
 
-  // 工作项 53305：卡片结算、会话回到静默后，重新出现的输入框要直接拿到焦点。
+  // 需求 53305：卡片结算、会话回到静默后，重新出现的输入框要直接拿到焦点。
   it('focuses the input once the card is settled and the conversation goes idle', async () => {
     await renderPanel({ acpInteractionSupported: true });
     await screen.findByPlaceholderText('输入消息...');
@@ -762,8 +762,8 @@ describe('WorkitemClarificationPanel ACP 交互接线', () => {
   });
 });
 
-// 工作项 55851：卡片被系统取消 / 轮次异常结束后的输入恢复与滚动无关性。
-describe('WorkitemClarificationPanel 卡片异常结束与输入恢复（工作项 55851）', () => {
+// 需求 55851：卡片被系统取消 / 轮次异常结束后的输入恢复与滚动无关性。
+describe('WorkitemClarificationPanel 卡片异常结束与输入恢复（需求 55851）', () => {
   beforeEach(() => {
     detailCalls = 0;
     refreshCalls = 0;
@@ -867,8 +867,8 @@ describe('WorkitemClarificationPanel 卡片异常结束与输入恢复（工作�
   });
 });
 
-// 工作项 56330：澄清面板的问题卡片支持一键收起/展开，结算后先淡出再卸载。
-describe('WorkitemClarificationPanel 问题卡片收起/展开（工作项 56330）', () => {
+// 需求 56330：澄清面板的问题卡片支持一键收起/展开，结算后先淡出再卸载。
+describe('WorkitemClarificationPanel 问题卡片收起/展开（需求 56330）', () => {
   beforeEach(() => {
     detailCalls = 0;
     refreshCalls = 0;

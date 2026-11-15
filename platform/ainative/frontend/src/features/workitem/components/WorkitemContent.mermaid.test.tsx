@@ -28,7 +28,7 @@ describe('WorkitemContent mermaid entry', () => {
   });
 
   it('renders mermaid fences in the workitem body', async () => {
-    render(<WorkitemContent title="Mermaid 工作项" contentMd={'## 图形\n\n```mermaid\nflowchart TD\n  A-->B\n```'} />);
+    render(<WorkitemContent title="Mermaid 需求" contentMd={'## 图形\n\n```mermaid\nflowchart TD\n  A-->B\n```'} />);
 
     await waitFor(() => expect(screen.getByTestId('mermaid-diagram')).toHaveAttribute('data-status', 'rendered'));
     expect(mermaidMock.render).toHaveBeenCalledWith(expect.any(String), 'flowchart TD\n  A-->B');

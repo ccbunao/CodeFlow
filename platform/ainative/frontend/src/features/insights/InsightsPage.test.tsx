@@ -40,7 +40,7 @@ beforeEach(() => {
 });
 
 describe('InsightsPage', () => {
-  it('falls back from the retired requirement delivery tab to work item delivery and rewrites the preference', async () => {
+  it('falls back from the retired requirement delivery tab to requirement delivery and rewrites the preference', async () => {
     const legacyRequests: string[] = [];
     server.use(
       http.get('/api/dashboard/realtime', () => HttpResponse.json(ok(realtimeDashboardPayload))),
@@ -61,11 +61,11 @@ describe('InsightsPage', () => {
     const user = userEvent.setup();
     const { container } = renderPage();
 
-    // 首帧即按「工作项交付」渲染，旧偏好在一次 effect 后写回 members
+    // 首帧即按「成员交付」渲染，旧偏好在一次 effect 后写回 members
     expect(await screen.findByText('所选周期统计')).toBeInTheDocument();
     expect(await screen.findByText('成员甲')).toBeInTheDocument();
     const tabBar = container.querySelector('.insights-page .ant-segmented') as HTMLElement;
-    expect(tabBar.querySelector('.ant-segmented-item-selected')?.textContent).toBe('工作项交付');
+    expect(tabBar.querySelector('.ant-segmented-item-selected')?.textContent).toBe('成员交付');
     expect(screen.queryByRole('radio', { name: '需求交付' })).toBeNull();
     await waitFor(() => expect(window.localStorage.getItem('ainative:insights:v1:anonymous:none:tab')).toBe('"members"'));
 
@@ -154,7 +154,7 @@ function realtimeCostPayload(range = 7, agentId = 'all') {
       scope: 'ALL_AGENTS',
       tokens: 82610,
       sources: [
-        { key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 76, tokens: 76000, share: 92 },
+        { key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 76, tokens: 76000, share: 92 },
         { key: 'REQUIREMENT_CLARIFY', name: '需求澄清', credits: 6.61, tokens: 6610, share: 8 },
       ],
     },
@@ -204,7 +204,7 @@ describe('InsightsPage realtime cost', () => {
 
     // 来源构成紧凑条与统计块同屏，图例带绝对值与占比
     expect(within(region).getByTestId('cost-composition-bar')).toBeInTheDocument();
-    expect(within(region).getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('工作项执行');
+    expect(within(region).getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
     expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近7天');
 
     // 实时看板既有 KPI 与成本卡同屏可见
@@ -309,7 +309,7 @@ describe('InsightsPage realtime cost', () => {
 
     // 成本接口失败不影响实时看板其余模块
     expect(await screen.findByText('正在运行')).toBeInTheDocument();
-    expect(screen.getByText('工作项分类')).toBeInTheDocument();
+    expect(screen.getByText('需求分类')).toBeInTheDocument();
     expect(screen.getByRole('region', { name: '流水线健康' })).toBeInTheDocument();
   });
 
@@ -335,7 +335,7 @@ describe('InsightsPage realtime cost', () => {
     const costRequestsBefore = costRequests.length;
     const overviewRequestsBefore = overviewRequests;
 
-    // 工作项概况的手动刷新只刷新自身快照，成本筛选在自身面板内独立取数。
+    // 需求概况的手动刷新只刷新自身快照，成本筛选在自身面板内独立取数。
     // antd 会用「ant-btn」在中文两字间插空格，且图标自带 aria-label，故用正则匹配
     await user.click(screen.getByRole('button', { name: /刷\s*新/ }));
 

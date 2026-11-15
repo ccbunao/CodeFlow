@@ -25,14 +25,14 @@
   "unknownRef": "Unknown type",
   "close": "Close",
   "types": {
-    "WORKITEM_ASSIGNED": "Work item assigned",
+    "WORKITEM_ASSIGNED": "Requirement assigned",
     "COMMENT_MENTION": "Comment mention",
     "WORKSPACE_ACCESS_REQUEST": "Workspace access request",
     "WORKSPACE_ACCESS_REVIEWED": "Workspace access request reviewed",
-    "WATCHED_COMMENT": "New comment on a watched Work item",
-    "WATCHED_ASSIGNED": "Assignment changed on a watched Work item",
-    "WATCHED_STATUS_CHANGED": "Status changed on a watched Work item",
-    "WATCHED_COMPLETED": "Watched Work item completed",
+    "WATCHED_COMMENT": "New comment on a watched Requirement",
+    "WATCHED_ASSIGNED": "Assignment changed on a watched Requirement",
+    "WATCHED_STATUS_CHANGED": "Status changed on a watched Requirement",
+    "WATCHED_COMPLETED": "Watched Requirement completed",
     "EXTERNAL_COMMENT": "External comment",
     "SCHEDULED_TASK_RESUME_DEGRADED": "Scheduled task resume degraded",
     "SCHEDULED_TASK_OWNER_INACTIVE": "Scheduled task owner unavailable",
@@ -53,7 +53,7 @@
     "PASSWORD_RESET_BY_ADMIN": "Password reset by admin"
   },
   "refs": {
-    "WORKITEM": "Work item",
+    "WORKITEM": "Requirement",
     "WORKSPACE_ACCESS_REQUEST": "Workspace access request",
     "SCHEDULED_TASK_RUN": "Scheduled task run"
   },

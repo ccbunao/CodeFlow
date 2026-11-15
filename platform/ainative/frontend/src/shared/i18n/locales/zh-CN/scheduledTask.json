@@ -28,9 +28,9 @@
     "trigger": "触发方式",
     "scheduledAt": "调度时刻",
     "finishedAt": "结束时刻",
-    "workitem": "工作项",
+    "workitem": "需求",
     "phase": "所在阶段",
-    "workitemStatus": "工作项状态",
+    "workitemStatus": "需求状态",
     "plannedAt": "计划时刻"
   },
   "labels": {
@@ -42,7 +42,7 @@
   "list": {
     "awaitingResult": "在跑/待回传",
     "tasksTitle": "定时任务",
-    "workitemsTitle": "定时工作项",
+    "workitemsTitle": "定时需求",
     "summaryAria": "汇总",
     "summaryScope": "按当前条件(含全部创建人)",
     "scopeAria": "范围",
@@ -52,7 +52,7 @@
     "statusFilter": "按状态",
     "successRate": "30 天成功率 <rate>{{rate}}</rate>%(<success>{{success}}</success>/<completed>{{completed}}</completed>)",
     "totalTasks_other": "共 <number>{{total}}</number> 个任务",
-    "totalWorkitems_other": "共 <number>{{total}}</number> 个工作项",
+    "totalWorkitems_other": "共 <number>{{total}}</number> 个需求",
     "totalRows_other": "共 {{total}} 条",
     "runningCount_other": "在跑 <number>{{total}}</number>",
     "todayCount_other": "今日 <number>{{total}}</number> 次",
@@ -97,7 +97,7 @@
     "preview": "预览",
     "search": "搜索",
     "clearTaskSearch": "清空搜索",
-    "clearWorkitemSearch": "清空定时工作项搜索",
+    "clearWorkitemSearch": "清空定时需求搜索",
     "refresh": "刷新"
   },
   "commands": {
@@ -200,13 +200,13 @@
     "disabledReason": "({{reason}})"
   },
   "workitems": {
-    "doneReason": "工作项已完成，无法再调整定时",
+    "doneReason": "需求已完成，无法再调整定时",
     "triggeredReason": "定时已触发,改不了了",
     "editTime": "修改时间",
     "executeNow": "立即启动",
-    "scopeAria": "定时工作项范围",
-    "keywordAria": "工作项标题筛选",
-    "searchPlaceholder": "搜索工作项标题",
+    "scopeAria": "定时需求范围",
+    "keywordAria": "需求标题筛选",
+    "searchPlaceholder": "搜索需求标题",
     "actionAria": "{{action}} #{{id}}"
   },
   "phase": {
@@ -256,8 +256,8 @@
     "timedOut": "超时"
   },
   "derived": {
-    "title": "派生工作项",
-    "empty": "暂无派生工作项"
+    "title": "派生需求",
+    "empty": "暂无派生需求"
   },
   "artifacts": {
     "title": "运行产物",

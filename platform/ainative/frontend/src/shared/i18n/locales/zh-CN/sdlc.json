@@ -1,6 +1,6 @@
 {
   "approval": {
-    "creator": "工作项创建人（建单后确定）",
+    "creator": "需求创建人（建单后确定）",
     "identityTag": "身份标签：{{tag}}",
     "required": "完成后需要人工批准",
     "description": "本步骤完成后等人工批准,批准前不进下一步;等待不过期。",
@@ -58,7 +58,7 @@
     "name": "名称",
     "templateName": "模版名称",
     "description": "描述",
-    "workType": "工作项类型",
+    "workType": "需求类型",
     "stepCount": "步骤数",
     "squad": "所属编队",
     "status": "状态",
@@ -136,7 +136,7 @@
   "placeholder": {
     "name": "如: 标准需求开发流程",
     "description": "这个流程用来做什么",
-    "workType": "可选绑定工作项类型",
+    "workType": "可选绑定需求类型",
     "stepName": "如: 代码开发",
     "kind": "选步骤类型",
     "instruction": "写清本步骤做什么、输入输出、注意事项、完成标准,交接时如何调用平台接口。"
@@ -267,7 +267,7 @@
     "handoffRules": "交接规则",
     "squadLabel": "编队",
     "currentSnapshot": "当前配置快照",
-    "staticNote": "图谱基于编队线上配置生成，展示配置定义的协作关系，不代表工作项的实时执行状态。",
+    "staticNote": "图谱基于编队线上配置生成，展示配置定义的协作关系，不代表需求的实时执行状态。",
     "nodeSteps_other": "流水线 · {{count}} 个步骤",
     "memberCount_other": "{{count}} 位成员",
     "transitionCount_other": "{{count}} 条交接"

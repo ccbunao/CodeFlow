@@ -58,16 +58,16 @@ describe('WorkitemRecycleBinPage', () => {
     server.use(
       http.get('/api/workitems/recycled', () => okJson(pageData([
         recycledWorkitem(),
-        recycledWorkitem({ id: 13, title: '存量已删除工作项', deletedAt: null, statusName: null, creatorDisplayName: null, creatorName: 'zhangsan' }),
-        recycledWorkitem({ id: 14, title: '无归属工作项', deletedAt: null, creatorDisplayName: null, creatorName: null }),
+        recycledWorkitem({ id: 13, title: '存量已删除需求', deletedAt: null, statusName: null, creatorDisplayName: null, creatorName: 'zhangsan' }),
+        recycledWorkitem({ id: 14, title: '无归属需求', deletedAt: null, creatorDisplayName: null, creatorName: null }),
       ]))),
     );
 
     renderPage();
 
     expect(await screen.findByText('误删的需求')).toBeInTheDocument();
-    expect(screen.getByText('存量已删除工作项')).toBeInTheDocument();
-    expect(screen.getByText('无归属工作项')).toBeInTheDocument();
+    expect(screen.getByText('存量已删除需求')).toBeInTheDocument();
+    expect(screen.getByText('无归属需求')).toBeInTheDocument();
     expect(screen.getByText(/2026\/8\/20/)).toBeInTheDocument();
     expect(screen.getAllByText('未知删除时间')).toHaveLength(2);
     expect(screen.getAllByText('开发中').length).toBeGreaterThan(0);
@@ -104,7 +104,7 @@ describe('WorkitemRecycleBinPage', () => {
     renderPage();
 
     expect(await screen.findByText('回收站为空')).toBeInTheDocument();
-    await userEvent.type(screen.getByPlaceholderText('搜索工作项ID或标题'), '巡检{enter}');
+    await userEvent.type(screen.getByPlaceholderText('搜索需求ID或标题'), '巡检{enter}');
     expect(await screen.findByText('回收站里没有匹配「巡检」的条目')).toBeInTheDocument();
     await waitFor(() => expect(requests.at(-1)?.get('keyword')).toBe('巡检'));
   });
@@ -189,7 +189,7 @@ describe('WorkitemRecycleBinPage', () => {
     await userEvent.click(await screen.findByText('缺陷'));
     await waitFor(() => expect(requests.at(-1)?.get('workType')).toBe('BUG'));
 
-    await userEvent.type(screen.getByPlaceholderText('搜索工作项ID或标题'), '误删{enter}');
+    await userEvent.type(screen.getByPlaceholderText('搜索需求ID或标题'), '误删{enter}');
     await waitFor(() => {
       const last = requests.at(-1)!;
       expect(last.get('keyword')).toBe('误删');
@@ -215,7 +215,7 @@ describe('WorkitemRecycleBinPage', () => {
     await userEvent.click(screen.getByTitle('2'));
     await waitFor(() => expect(requests.at(-1)?.get('page')).toBe('2'));
 
-    const search = screen.getByPlaceholderText('搜索工作项ID或标题');
+    const search = screen.getByPlaceholderText('搜索需求ID或标题');
     await userEvent.type(search, '订{enter}');
     await waitFor(() => expect(requests.at(-1)?.get('page')).toBe('1'));
     expect(screen.getByText('共 45 条')).toBeInTheDocument();
@@ -230,6 +230,6 @@ describe('WorkitemRecycleBinPage', () => {
     await screen.findByText('误删的需求');
     expect(screen.getByText('类型筛选')).toBeInTheDocument();
     expect(within(screen.getByRole('table')).getByText('删除前状态')).toBeInTheDocument();
-    expect(screen.getByText('只列已删除的工作项;恢复只是重新可见,不会续跑交付。')).toBeInTheDocument();
+    expect(screen.getByText('只列已删除的需求;恢复只是重新可见,不会续跑交付。')).toBeInTheDocument();
   });
 });

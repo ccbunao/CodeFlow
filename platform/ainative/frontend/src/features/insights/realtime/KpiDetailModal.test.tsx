@@ -92,7 +92,7 @@ describe('KpiDetailModal', () => {
     renderModal('todayCompletedTasks');
 
     await waitFor(() => {
-      expect(screen.getByText('暂无工作项')).toBeInTheDocument();
+      expect(screen.getByText('暂无需求')).toBeInTheDocument();
     });
   });
 });
@@ -104,17 +104,17 @@ it('switches an independent open modal error, retry and running empty state in p
   server.use(http.get('/api/dashboard/running', () => ++requests === 1 ? HttpResponse.json({ success: false, code: '50000', message: '后端错误', data: null, traceId: null }, { status: 500 }) : ok([])));
   const router = createMemoryRouter([{ path: '/', element: <KpiDetailModal kpiKey="runningWorkitems" onClose={() => {}} /> }]);
   render(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}><RouterProvider router={router} /></QueryClientProvider>);
-  await screen.findByText('工作项加载失败');
+  await screen.findByText('需求加载失败');
   const dialog = screen.getByRole('dialog');
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByRole('dialog')).toBe(dialog);
-  expect(screen.getByText('Failed to load work items')).toBeInTheDocument();
+  expect(screen.getByText('Failed to load requirements')).toBeInTheDocument();
   expect(screen.getByText('Running')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
-  expect(await screen.findByText('No running work items')).toBeInTheDocument();
+  expect(await screen.findByText('No running requirements')).toBeInTheDocument();
   expect(requests).toBe(2);
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByText('暂无运行中的工作项')).toBeInTheDocument();
+  expect(screen.getByText('暂无运行中的需求')).toBeInTheDocument();
 });
 
 it('switches loading and completed empty UI while preserving the completed-today query', async () => {
@@ -123,13 +123,13 @@ it('switches loading and completed empty UI while preserving the completed-today
   let requests = 0;
   server.use(http.get('/api/dashboard/completed/today', async () => { requests++; await pending; return ok([]); }));
   renderModal('todayCompletedTasks');
-  expect(screen.getByText('加载工作项…')).toBeInTheDocument();
+  expect(screen.getByText('加载需求…')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByText('Completed today')).toBeInTheDocument();
-  expect(screen.getByText('Loading work items…')).toBeInTheDocument();
+  expect(screen.getByText('Loading requirements…')).toBeInTheDocument();
   release();
-  expect(await screen.findByText('No work items')).toBeInTheDocument();
+  expect(await screen.findByText('No requirements')).toBeInTheDocument();
   expect(requests).toBe(1);
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByText('暂无工作项')).toBeInTheDocument();
+  expect(screen.getByText('暂无需求')).toBeInTheDocument();
 });

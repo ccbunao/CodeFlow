@@ -66,7 +66,7 @@ function mockOverview(generatedAt: unknown) {
         kpi: { cost: { range, agentId: 'all', total: 10, perTask: 5, perDay: 1.43 } },
         costComposition: {
           range, scope: 'ALL_AGENTS', tokens: 10000,
-          sources: [{ key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 10, tokens: 10000, share: 100 }],
+          sources: [{ key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 10, tokens: 10000, share: 100 }],
         },
       });
     }),
@@ -81,7 +81,7 @@ function routed(element: React.ReactNode) {
 }
 
 function overviewRegion() {
-  return within(screen.getByRole('region', { name: '工作项概况' }));
+  return within(screen.getByRole('region', { name: '需求概况' }));
 }
 
 beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('zh-CN'); });
@@ -91,7 +91,7 @@ it('renders the backend instant in the browser local timezone and keeps it acros
   const expected = zoneExpectation();
   mockOverview(FIXED_INSTANT);
   routed(<RealtimeDashboard />);
-  const panel = within(await screen.findByRole('region', { name: '工作项概况' }));
+  const panel = within(await screen.findByRole('region', { name: '需求概况' }));
 
   const stamp = await panel.findByText(/刷新时间/, { selector: '.insight-stamp' });
   await waitFor(() => expect(stamp).toHaveTextContent(`刷新时间 ${expected.fixed}`));

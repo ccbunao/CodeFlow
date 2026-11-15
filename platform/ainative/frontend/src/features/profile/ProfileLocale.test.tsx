@@ -125,7 +125,7 @@ describe('personal account and MCP language boundary', () => {
     const tools = vi.spyOn(mcpApi, 'listMcpTools');
     const { container } = mount(<McpTokenSettingsPanel />); await userEvent.click(screen.getByRole('tab', { name: '工具' }));
     const schema = await screen.findByText('workspaceId'); const calls = tools.mock.calls.length;
-    await language('en-US'); expect(screen.getByText('Work item management')).toBeInTheDocument(); expect(screen.getByText('1 tool')).toBeInTheDocument();
+    await language('en-US'); expect(screen.getByText('Requirement management')).toBeInTheDocument(); expect(screen.getByText('1 tool')).toBeInTheDocument();
     expect(screen.getByText('workspaceId')).toBe(schema); expect(screen.getAllByText('原文<img src=x>')).toHaveLength(2); expect(screen.getByText('raw-schema')).toBeInTheDocument(); expect(container.querySelector('img')).toBeNull();
     await language('zh-CN'); expect(screen.getByText('workspaceId')).toBe(schema); expect(tools).toHaveBeenCalledTimes(calls);
   });

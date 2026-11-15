@@ -905,7 +905,7 @@ describe('clarification replying status and polling fallback', () => {
   });
 });
 
-describe('clarificationQueryRetry（工作项 55411 有界重试）', () => {
+describe('clarificationQueryRetry（需求 55411 有界重试）', () => {
   it('retries transient errors only up to the bounded limit', () => {
     expect(clarificationQueryRetry(0, new Error('network down'))).toBe(true);
     expect(clarificationQueryRetry(1, new Error('network down'))).toBe(true);
@@ -923,7 +923,7 @@ describe('clarificationQueryRetry（工作项 55411 有界重试）', () => {
       ErrorCodes.WORKSPACE_NOT_MEMBER,
       ErrorCodes.WORKSPACE_ACCESS_INSUFFICIENT,
       ErrorCodes.ORG_NOT_FOUND_OR_NO_PERMISSION,
-      '10001', // PARAM_INVALID：会话不存在或不属于当前工作项
+      '10001', // PARAM_INVALID：会话不存在或不属于当前需求
     ];
     for (const code of codes) {
       const error = new ApiError(code, '业务错误', null);

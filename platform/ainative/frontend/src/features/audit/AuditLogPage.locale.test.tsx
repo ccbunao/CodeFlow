@@ -22,7 +22,7 @@ const record: AuditLog = {
   targetType: 'workitem',
   targetId: 42,
   detail: null,
-  detailJson: '{"triggerType":"EVENT","triggerSource":"USER_CLICK","eventType":"workitem.delete","message":"删除工作项 ZENTAO#123"}',
+  detailJson: '{"triggerType":"EVENT","triggerSource":"USER_CLICK","eventType":"workitem.delete","message":"删除需求 ZENTAO#123"}',
   gmtCreate: '2026-07-01T10:11:12',
 };
 
@@ -75,7 +75,7 @@ describe('AuditLogPage v2 locale boundary', () => {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
     }
     expect(screen.getByText('共 23 条')).toBeInTheDocument();
-    expect(screen.getByText('工作项')).toBeInTheDocument();
+    expect(screen.getByText('需求')).toBeInTheDocument();
     expect(screen.getByText('高危')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('搜详情关键词')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('起始日期')).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe('AuditLogPage v2 locale boundary', () => {
     }
     expect(screen.getByText('23 matched')).toBeInTheDocument();
     expect(screen.getByText('23 records')).toBeInTheDocument();
-    expect(screen.getByText('Work item')).toBeInTheDocument();
+    expect(screen.getByText('Requirement')).toBeInTheDocument();
     expect(screen.getByText('High')).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Risk level rubric' })).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search detail keywords')).toBeInTheDocument();

@@ -32,7 +32,7 @@ const mockRepo = {
 };
 
 const mockConclusion = {
-  id: 1, repoId: 1, purpose: '平台主代码仓库', keyBusiness: '工作项系统',
+  id: 1, repoId: 1, purpose: '平台主代码仓库', keyBusiness: '需求系统',
   upstreams: null, downstreams: 'frontend', summaryMd: '# Summary',
   aiSessionId: null, version: 1, gmtCreate: '2026-07-01',
 };

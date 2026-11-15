@@ -235,13 +235,13 @@ describe('DeliveryOverviewPage', () => {
     expect(screen.getByText('时区 Asia/Shanghai')).toBeInTheDocument();
 
     const createdCard = screen.getByTestId('overview-created');
-    expect(within(createdCard).getByText('新增工作项')).toBeInTheDocument();
+    expect(within(createdCard).getByText('新增需求')).toBeInTheDocument();
     expect(within(createdCard).getByText('2')).toBeInTheDocument();
-    expect(within(createdCard).getByText('近 7 天，按日展示新增工作项数。')).toBeInTheDocument();
-    expect(within(createdCard).getByRole('img', { name: '近 7 天每日新增工作项趋势' })).toBeInTheDocument();
+    expect(within(createdCard).getByText('近 7 天，按日展示新增需求数。')).toBeInTheDocument();
+    expect(within(createdCard).getByRole('img', { name: '近 7 天每日新增需求趋势' })).toBeInTheDocument();
 
     const deliveredCard = screen.getByTestId('overview-delivered');
-    expect(within(deliveredCard).getByText('已完成工作项')).toBeInTheDocument();
+    expect(within(deliveredCard).getByText('已完成需求')).toBeInTheDocument();
     expect(within(deliveredCard).getByText('10')).toBeInTheDocument();
     expect(within(deliveredCard).getByText('日均 1.4 单/天')).toBeInTheDocument();
     expect(within(deliveredCard).getByText('环比上期 +25.0%')).toBeInTheDocument();
@@ -250,17 +250,17 @@ describe('DeliveryOverviewPage', () => {
       + `${dayjs(WEEK_START).subtract(1, 'day').format('YYYY-MM-DD')}：已完成 8 个`)).toBeInTheDocument();
 
     const pendingCard = screen.getByTestId('overview-pending');
-    expect(within(pendingCard).getByText('当前用户待处理工作项')).toBeInTheDocument();
+    expect(within(pendingCard).getByText('当前用户待处理需求')).toBeInTheDocument();
     expect(within(pendingCard).getByText('全部待处理')).toBeInTheDocument();
-    expect(within(pendingCard).getByText('不受上方统计范围限制，包含所有未完成且分配给你的工作项。')).toBeInTheDocument();
-    expect(await within(pendingCard).findByText('暂无待处理工作项')).toBeInTheDocument();
+    expect(within(pendingCard).getByText('不受上方统计范围限制，包含所有未完成且分配给你的需求。')).toBeInTheDocument();
+    expect(await within(pendingCard).findByText('暂无待处理需求')).toBeInTheDocument();
     // antd Table 在 total=0 时不渲染分页节点（含 showTotal），空态只断言空文案
 
     const createdListCard = screen.getByTestId('overview-created-list');
-    expect(within(createdListCard).getByText('近一周新增工作项')).toBeInTheDocument();
+    expect(within(createdListCard).getByText('近一周新增需求')).toBeInTheDocument();
     expect(within(createdListCard).getByText('所选统计范围')).toBeInTheDocument();
-    expect(within(createdListCard).getByText('与上方「新增工作项」同口径：所选统计范围内创建的工作项（含已取消），列表条数等于统计卡数值。')).toBeInTheDocument();
-    expect(await within(createdListCard).findByText('所选范围内暂无新增工作项')).toBeInTheDocument();
+    expect(within(createdListCard).getByText('与上方「新增需求」同口径：所选统计范围内创建的需求（含已取消），列表条数等于统计卡数值。')).toBeInTheDocument();
+    expect(await within(createdListCard).findByText('所选范围内暂无新增需求')).toBeInTheDocument();
     expect(createdRequests[0]).toContain(`start_date=${WEEK_START}`);
     expect(createdRequests[0]).toContain(`end_date=${TODAY}`);
     expect(createdRequests[0]).toContain('page=1');
@@ -283,10 +283,10 @@ describe('DeliveryOverviewPage', () => {
 
     await waitFor(() => expect(requests.some((search) => search.includes(`start_date=${MONTH_START}`))).toBe(true));
     expect(screen.getByText(`统计范围 ${MONTH_START} 至 ${TODAY}`)).toBeInTheDocument();
-    expect(await screen.findByText('近 30 天，按日展示新增工作项数。')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: '近 30 天每日新增工作项趋势' })).toBeInTheDocument();
-    // 新增工作项列表跟随统计范围切换标题与取数窗口
-    expect(await screen.findByText('近一个月新增工作项')).toBeInTheDocument();
+    expect(await screen.findByText('近 30 天，按日展示新增需求数。')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: '近 30 天每日新增需求趋势' })).toBeInTheDocument();
+    // 新增需求列表跟随统计范围切换标题与取数窗口
+    expect(await screen.findByText('近一个月新增需求')).toBeInTheDocument();
     await waitFor(() => expect(
       createdRequests.some((search) => search.includes(`start_date=${MONTH_START}`))).toBe(true));
   });
@@ -327,19 +327,19 @@ describe('DeliveryOverviewPage', () => {
     expect(await within(deliveredCard).findByText('环比上期 -33.3%')).toBeInTheDocument();
   });
 
-  it('lists my pending work items with decision highlight, reasons, unknown fallbacks and paging', async () => {
+  it('lists my pending requirements with decision highlight, reasons, unknown fallbacks and paging', async () => {
     const pendingRequests: string[] = [];
     const pageOne: PendingWorkitemPage = {
       list: [
-        { id: 501, title: '待你决策的工作项', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' },
-        { id: 502, title: '进行中的工作项', statusName: null, statusCategory: 'IN_PROGRESS', priority: 2, reason: 'IN_PROGRESS', gmtModified: '2026-01-05T01:00:00Z' },
-        { id: 503, title: '未知原因的工作项', statusName: '处理中', statusCategory: 'NEW', priority: 9, reason: 'SOMETHING_ELSE', gmtModified: '2026-01-04T01:00:00Z' },
+        { id: 501, title: '待你决策的需求', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' },
+        { id: 502, title: '进行中的需求', statusName: null, statusCategory: 'IN_PROGRESS', priority: 2, reason: 'IN_PROGRESS', gmtModified: '2026-01-05T01:00:00Z' },
+        { id: 503, title: '未知原因的需求', statusName: '处理中', statusCategory: 'NEW', priority: 9, reason: 'SOMETHING_ELSE', gmtModified: '2026-01-04T01:00:00Z' },
       ],
       total: 12, pageNum: 1, pageSize: 10,
     };
     const pageTwo: PendingWorkitemPage = {
       list: [
-        { id: 601, title: '第二页工作项', statusName: '待处理', statusCategory: 'NEW', priority: 1, reason: 'AWAITING_HANDLING', gmtModified: '2026-01-03T01:00:00Z' },
+        { id: 601, title: '第二页需求', statusName: '待处理', statusCategory: 'NEW', priority: 1, reason: 'AWAITING_HANDLING', gmtModified: '2026-01-03T01:00:00Z' },
       ],
       total: 12, pageNum: 2, pageSize: 10,
     };
@@ -351,10 +351,10 @@ describe('DeliveryOverviewPage', () => {
 
     const { container } = renderPage();
 
-    expect(await screen.findByText('待你决策的工作项')).toBeInTheDocument();
-    const decisionRow = screen.getByText('待你决策的工作项').closest('tr')!;
+    expect(await screen.findByText('待你决策的需求')).toBeInTheDocument();
+    const decisionRow = screen.getByText('待你决策的需求').closest('tr')!;
     expect(decisionRow).toHaveClass('overview-row-decision');
-    expect(screen.getByText('进行中的工作项').closest('tr')).not.toHaveClass('overview-row-decision');
+    expect(screen.getByText('进行中的需求').closest('tr')).not.toHaveClass('overview-row-decision');
 
     expect(within(decisionRow).getByText('待你决策')).toBeInTheDocument();
     expect(within(decisionRow).getByText('紧急')).toBeInTheDocument();
@@ -363,12 +363,12 @@ describe('DeliveryOverviewPage', () => {
     expect(within(decisionRow).getByText(
       new Intl.DateTimeFormat('zh-CN', DATE_TIME_OPTIONS).format(new Date('2026-01-06T01:00:00Z')))).toBeInTheDocument();
 
-    const inProgressRow = screen.getByText('进行中的工作项').closest('tr')!;
+    const inProgressRow = screen.getByText('进行中的需求').closest('tr')!;
     expect(within(inProgressRow).getByText('进行中')).toBeInTheDocument();
     expect(within(inProgressRow).getByText('中')).toBeInTheDocument();
     expect(within(inProgressRow).getByText('—')).toBeInTheDocument();
 
-    const unknownRow = screen.getByText('未知原因的工作项').closest('tr')!;
+    const unknownRow = screen.getByText('未知原因的需求').closest('tr')!;
     expect(within(unknownRow).getByText('待处理')).toBeInTheDocument();
     expect(within(unknownRow).getByText('未知优先级')).toBeInTheDocument();
     expect(within(unknownRow).getByText('处理中')).toBeInTheDocument();
@@ -378,33 +378,33 @@ describe('DeliveryOverviewPage', () => {
     const nextButton = container.querySelector('.ant-pagination-next button')!;
     await userEvent.click(nextButton);
 
-    expect(await screen.findByText('第二页工作项')).toBeInTheDocument();
+    expect(await screen.findByText('第二页需求')).toBeInTheDocument();
     await waitFor(() => expect(pendingRequests[1]).toContain('page=2'));
     expect(pendingRequests[1]).toContain('size=10');
-    expect(within(screen.getByText('第二页工作项').closest('tr')!).getByText('待你处理')).toBeInTheDocument();
+    expect(within(screen.getByText('第二页需求').closest('tr')!).getByText('待你处理')).toBeInTheDocument();
   });
 
-  it('navigates to the work item detail from a row click', async () => {
+  it('navigates to the requirement detail from a row click', async () => {
     server.use(
       overviewHandler([], overviewPayload),
       pendingHandler([], () => ({
-        list: [{ id: 502, title: '进行中的工作项', statusName: '处理中', statusCategory: 'IN_PROGRESS', priority: 2, reason: 'IN_PROGRESS', gmtModified: '2026-01-05T01:00:00Z' }],
+        list: [{ id: 502, title: '进行中的需求', statusName: '处理中', statusCategory: 'IN_PROGRESS', priority: 2, reason: 'IN_PROGRESS', gmtModified: '2026-01-05T01:00:00Z' }],
         total: 1, pageNum: 1, pageSize: 10,
       })),
       createdHandler([], () => EMPTY_CREATED),
     );
 
     renderPage();
-    await userEvent.click(await screen.findByText('进行中的工作项'));
+    await userEvent.click(await screen.findByText('进行中的需求'));
 
     expect(await screen.findByTestId('location-probe')).toHaveTextContent('/workitems/502');
   });
 
-  it('navigates to the work item detail from the id link without bubbling the row click', async () => {
+  it('navigates to the requirement detail from the id link without bubbling the row click', async () => {
     server.use(
       overviewHandler([], overviewPayload),
       pendingHandler([], () => ({
-        list: [{ id: 501, title: '待你决策的工作项', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' }],
+        list: [{ id: 501, title: '待你决策的需求', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' }],
         total: 1, pageNum: 1, pageSize: 10,
       })),
       createdHandler([], () => EMPTY_CREATED),
@@ -439,7 +439,7 @@ describe('DeliveryOverviewPage', () => {
     // antd 会在恰好两个中文字符的按钮中插入空格（「重试」渲染为「重 试」），用角色+正则匹配
     await userEvent.click(within(alert).getByRole('button', { name: /重\s*试/ }));
 
-    expect(await screen.findByText('近 7 天，按日展示新增工作项数。')).toBeInTheDocument();
+    expect(await screen.findByText('近 7 天，按日展示新增需求数。')).toBeInTheDocument();
     await waitFor(() => expect(screen.queryByText('近期统计加载失败')).toBeNull());
     expect(attempts).toBe(2);
   });
@@ -461,13 +461,13 @@ describe('DeliveryOverviewPage', () => {
     renderPage();
 
     const alert = await screen.findByRole('alert');
-    expect(within(alert).getByText('待处理工作项加载失败')).toBeInTheDocument();
-    expect(await screen.findAllByText('待处理工作项加载失败')).toHaveLength(2);
+    expect(within(alert).getByText('待处理需求加载失败')).toBeInTheDocument();
+    expect(await screen.findAllByText('待处理需求加载失败')).toHaveLength(2);
     // antd 会在恰好两个中文字符的按钮中插入空格（「重试」渲染为「重 试」），用角色+正则匹配
     await userEvent.click(within(alert).getByRole('button', { name: /重\s*试/ }));
 
-    expect(await screen.findByText('暂无待处理工作项')).toBeInTheDocument();
-    await waitFor(() => expect(screen.queryByText('待处理工作项加载失败')).toBeNull());
+    expect(await screen.findByText('暂无待处理需求')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText('待处理需求加载失败')).toBeNull());
   });
 
   it('refreshes both sections together from the toolbar button', async () => {
@@ -481,7 +481,7 @@ describe('DeliveryOverviewPage', () => {
     );
 
     renderPage();
-    await screen.findByText('暂无待处理工作项');
+    await screen.findByText('暂无待处理需求');
 
     await userEvent.click(screen.getByRole('button', { name: '刷新项目总览' }));
 
@@ -490,19 +490,19 @@ describe('DeliveryOverviewPage', () => {
     await waitFor(() => expect(createdRequests).toHaveLength(2));
   });
 
-  it('lists new work items with status colors, priority and independent paging', async () => {
+  it('lists new requirements with status colors, priority and independent paging', async () => {
     const createdRequests: string[] = [];
     const pageOne: CreatedWorkitemPage = {
       list: [
-        { id: 701, title: '已完成的新建工作项', statusName: '已完成', statusCategory: 'DONE', priority: 1, createdAt: '2026-01-06T03:00:00Z' },
-        { id: 702, title: '已取消的新建工作项', statusName: '已取消', statusCategory: 'CANCELED', priority: 2, createdAt: '2026-01-06T02:00:00Z' },
-        { id: 703, title: '进行中的新建工作项', statusName: '进行中', statusCategory: 'IN_PROGRESS', priority: 0, createdAt: '2026-01-06T01:00:00Z' },
+        { id: 701, title: '已完成的新建需求', statusName: '已完成', statusCategory: 'DONE', priority: 1, createdAt: '2026-01-06T03:00:00Z' },
+        { id: 702, title: '已取消的新建需求', statusName: '已取消', statusCategory: 'CANCELED', priority: 2, createdAt: '2026-01-06T02:00:00Z' },
+        { id: 703, title: '进行中的新建需求', statusName: '进行中', statusCategory: 'IN_PROGRESS', priority: 0, createdAt: '2026-01-06T01:00:00Z' },
       ],
       total: 13, pageNum: 1, pageSize: 10,
     };
     const pageTwo: CreatedWorkitemPage = {
       list: [
-        { id: 801, title: '第二页新增工作项', statusName: null, statusCategory: null, priority: 3, createdAt: '2026-01-05T01:00:00Z' },
+        { id: 801, title: '第二页新增需求', statusName: null, statusCategory: null, priority: 3, createdAt: '2026-01-05T01:00:00Z' },
       ],
       total: 13, pageNum: 2, pageSize: 10,
     };
@@ -515,48 +515,48 @@ describe('DeliveryOverviewPage', () => {
     renderPage();
 
     const card = await screen.findByTestId('overview-created-list');
-    expect(await within(card).findByText('已完成的新建工作项')).toBeInTheDocument();
+    expect(await within(card).findByText('已完成的新建需求')).toBeInTheDocument();
     expect(createdRequests[0]).toContain(`start_date=${WEEK_START}`);
     expect(createdRequests[0]).toContain(`end_date=${TODAY}`);
     expect(createdRequests[0]).toContain('page=1');
     expect(createdRequests[0]).toContain('size=10');
     expect(within(card).getByText('共 13 条')).toBeInTheDocument();
 
-    const doneRow = within(card).getByText('已完成的新建工作项').closest('tr')!;
+    const doneRow = within(card).getByText('已完成的新建需求').closest('tr')!;
     expect(within(doneRow).getByText('#701')).toBeInTheDocument();
     expect(within(doneRow).getByText('已完成').closest('.ant-tag')).toHaveClass('ant-tag-success');
     expect(within(doneRow).getByText('高')).toBeInTheDocument();
     expect(within(doneRow).getByText(
       new Intl.DateTimeFormat('zh-CN', DATE_TIME_OPTIONS).format(new Date('2026-01-06T03:00:00Z')))).toBeInTheDocument();
 
-    const canceledRow = within(card).getByText('已取消的新建工作项').closest('tr')!;
+    const canceledRow = within(card).getByText('已取消的新建需求').closest('tr')!;
     expect(within(canceledRow).getByText('已取消').closest('.ant-tag')).toHaveClass('ant-tag-default');
     expect(within(canceledRow).getByText('中')).toBeInTheDocument();
 
-    const inProgressRow = within(card).getByText('进行中的新建工作项').closest('tr')!;
+    const inProgressRow = within(card).getByText('进行中的新建需求').closest('tr')!;
     expect(within(inProgressRow).getByText('进行中').closest('.ant-tag')).toHaveClass('ant-tag-processing');
     expect(within(inProgressRow).getByText('紧急')).toBeInTheDocument();
 
     await userEvent.click(card.querySelector('.ant-pagination-next button')!);
-    expect(await within(card).findByText('第二页新增工作项')).toBeInTheDocument();
+    expect(await within(card).findByText('第二页新增需求')).toBeInTheDocument();
     await waitFor(() => expect(createdRequests[1]).toContain('page=2'));
     expect(createdRequests[1]).toContain('size=10');
     // 状态节点缺失时状态列兜底为短横线
     expect(within(card).getByText('—')).toBeInTheDocument();
   });
 
-  it('navigates to the work item detail from a created list row', async () => {
+  it('navigates to the requirement detail from a created list row', async () => {
     server.use(
       overviewHandler([], overviewPayload),
       pendingHandler([], () => EMPTY_PENDING),
       createdHandler([], () => ({
-        list: [{ id: 704, title: '新增工作项跳转', statusName: '待处理', statusCategory: 'INIT', priority: 2, createdAt: '2026-01-06T01:00:00Z' }],
+        list: [{ id: 704, title: '新增需求跳转', statusName: '待处理', statusCategory: 'INIT', priority: 2, createdAt: '2026-01-06T01:00:00Z' }],
         total: 1, pageNum: 1, pageSize: 10,
       })),
     );
 
     renderPage();
-    await userEvent.click(await screen.findByText('新增工作项跳转'));
+    await userEvent.click(await screen.findByText('新增需求跳转'));
 
     expect(await screen.findByTestId('location-probe')).toHaveTextContent('/workitems/704');
   });
@@ -579,12 +579,12 @@ describe('DeliveryOverviewPage', () => {
 
     const card = await screen.findByTestId('overview-created-list');
     const alert = await within(card).findByRole('alert');
-    expect(within(alert).getByText('新增工作项列表加载失败')).toBeInTheDocument();
+    expect(within(alert).getByText('新增需求列表加载失败')).toBeInTheDocument();
     // antd 会在恰好两个中文字符的按钮中插入空格（「重试」渲染为「重 试」），用角色+正则匹配
     await userEvent.click(within(alert).getByRole('button', { name: /重\s*试/ }));
 
-    expect(await within(card).findByText('所选范围内暂无新增工作项')).toBeInTheDocument();
-    await waitFor(() => expect(within(card).queryByText('新增工作项列表加载失败')).toBeNull());
+    expect(await within(card).findByText('所选范围内暂无新增需求')).toBeInTheDocument();
+    await waitFor(() => expect(within(card).queryByText('新增需求列表加载失败')).toBeNull());
     expect(attempts).toBe(2);
   });
 
@@ -606,7 +606,7 @@ describe('DeliveryOverviewPage', () => {
     server.use(
       overviewHandler([], overviewPayload),
       pendingHandler([], () => ({
-        list: [{ id: 501, title: '待你决策的工作项', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' }],
+        list: [{ id: 501, title: '待你决策的需求', statusName: '待评审', statusCategory: 'PENDING_DECISION', priority: 0, reason: 'AWAITING_DECISION', gmtModified: '2026-01-06T01:00:00Z' }],
         total: 1, pageNum: 1, pageSize: 10,
       })),
       createdHandler([], () => EMPTY_CREATED),
@@ -615,7 +615,7 @@ describe('DeliveryOverviewPage', () => {
     renderPage();
 
     const card = await screen.findByTestId('overview-pending');
-    await within(card).findByText('待你决策的工作项');
+    await within(card).findByText('待你决策的需求');
     // 两列布局下卡片仅剩半栏宽（约 450–575px），全列宽和 876px（110+220+140+96+130+180）必须由卡片内横向滚动兜底，防回归：人工反馈 141866 / QA F2
     expect(card.querySelector('.ant-table-content')).toHaveStyle({ overflowX: 'auto' });
     expect(card.querySelector('table')).toHaveStyle({ width: '876px' });
@@ -629,7 +629,7 @@ describe('DeliveryOverviewPage', () => {
       overviewHandler([], overviewPayload),
       pendingHandler([], () => EMPTY_PENDING),
       createdHandler([], () => ({
-        list: [{ id: 701, title: '已完成的新建工作项', statusName: '已完成', statusCategory: 'DONE', priority: 1, createdAt: '2026-01-06T03:00:00Z' }],
+        list: [{ id: 701, title: '已完成的新建需求', statusName: '已完成', statusCategory: 'DONE', priority: 1, createdAt: '2026-01-06T03:00:00Z' }],
         total: 1, pageNum: 1, pageSize: 10,
       })),
     );
@@ -637,7 +637,7 @@ describe('DeliveryOverviewPage', () => {
     renderPage();
 
     const card = await screen.findByTestId('overview-created-list');
-    await within(card).findByText('已完成的新建工作项');
+    await within(card).findByText('已完成的新建需求');
     // 全列宽和 726px（110+220+120+96+180）在半栏卡片内同样需卡片内横向滚动兜底，防回归：人工反馈 141866 / QA F2
     expect(card.querySelector('.ant-table-content')).toHaveStyle({ overflowX: 'auto' });
     expect(card.querySelector('table')).toHaveStyle({ width: '726px' });

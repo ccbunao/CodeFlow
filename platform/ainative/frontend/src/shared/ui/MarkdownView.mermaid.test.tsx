@@ -38,8 +38,8 @@ describe('MarkdownView mermaid fences', () => {
       'sequenceDiagram\n  A->>B: 查看图形',
       'mindmap\n  root((需求))\n    图形',
       'stateDiagram-v2\n  [*] --> 待修复',
-      'classDiagram\n  class 工作项\n  工作项 : 修复()',
-      'erDiagram\n  工作项 ||--o{ 文档 : 包含',
+      'classDiagram\n  class 需求\n  需求 : 修复()',
+      'erDiagram\n  需求 ||--o{ 文档 : 包含',
     ];
 
     render(<MarkdownView content={sources.map((source) => fence(source)).join('\n\n')} />);

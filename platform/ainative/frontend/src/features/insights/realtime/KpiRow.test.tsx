@@ -25,7 +25,7 @@ describe('KpiRow', () => {
     expect(values).toEqual(['9', '4', '12', '57']);
 
     const hints = Array.from(container.querySelectorAll('.insight-kpi-hint')).map((node) => node.textContent);
-    expect(hints).toEqual(['今日创建工作项', '执行中工作项', '工作项', '工作项']);
+    expect(hints).toEqual(['今日创建需求', '执行中需求', '需求', '需求']);
   });
 
   it('makes only the three drill-down KPIs clickable', () => {

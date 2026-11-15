@@ -34,10 +34,10 @@ describe('parseDetail', () => {
 describe('detailText', () => {
   it('joins known fields in order and skips empty ones', () => {
     const text = detailText(record({
-      detailJson: '{"message":"更新工作项","error":null,"stepName":"编码","path":"","status":200}',
+      detailJson: '{"message":"更新需求","error":null,"stepName":"编码","path":"","status":200}',
     }));
 
-    expect(text).toBe('message: 更新工作项；stepName: 编码；status: 200');
+    expect(text).toBe('message: 更新需求；stepName: 编码；status: 200');
   });
 
   it('falls back to event type, raw payload and finally a dash', () => {

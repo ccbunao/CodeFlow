@@ -43,7 +43,7 @@
   },
   "nodes": {
     "title": "Status nodes",
-    "help": "Define all possible work item statuses",
+    "help": "Define all possible requirement statuses",
     "add": "Add node",
     "confirmDelete": "Delete this status node?",
     "editLabel": "Edit status node {{code}}",
@@ -62,7 +62,7 @@
   },
   "transitions": {
     "title": "Quick transitions",
-    "help": "Define quick status change buttons on the work item page",
+    "help": "Define quick status change buttons on the requirement page",
     "add": "Add quick transition",
     "editTitle": "Edit quick transition",
     "fromColumn": "From status",
@@ -70,7 +70,7 @@
     "name": "Action name",
     "actions": "Actions",
     "confirmDelete": "Delete this transition?",
-    "warning": "Recommended transitions only define quick buttons on the work item page. Users can always manually switch a work item to any status.",
+    "warning": "Recommended transitions only define quick buttons on the requirement page. Users can always manually switch a requirement to any status.",
     "from": "From",
     "fromRequired": "Pick the source status",
     "fromPlaceholder": "Pick source status",
@@ -78,7 +78,7 @@
     "toRequired": "Pick the target status",
     "toPlaceholder": "Pick target status",
     "nameRequired": "Enter the action name",
-    "nameHelp": "Shown as the quick action button text on the work item page",
+    "nameHelp": "Shown as the quick action button text on the requirement page",
     "namePlaceholder": "e.g. Start work"
   },
   "messages": {

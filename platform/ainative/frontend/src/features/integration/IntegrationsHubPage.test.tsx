@@ -12,6 +12,8 @@ import {
 vi.mock('./channels/ChannelIntegrationPage', () => ({ ChannelIntegrationPage: () => <div data-testid="channel-integration-pane" /> }));
 vi.mock('./ZentaoIntegrationPanel', () => ({ ZentaoIntegrationPanel: () => <div data-testid="zentao-integration-pane" /> }));
 
+vi.mock('./TapdIntegrationPanel', () => ({ TapdIntegrationPanel: () => <div data-testid="tapd-integration-pane" /> }));
+
 function LocationProbe() {
   const location = useLocation();
   return <span data-testid="hub-location">{location.pathname}{location.search || '(empty)'}</span>;
@@ -28,7 +30,7 @@ function renderHub(url = '/integrations') {
 
 describe('resolveIntegrationsHubTab', () => {
   it('whitelists the merged hub tabs and falls back to the zentao tab', () => {
-    expect(INTEGRATIONS_HUB_TAB_KEYS).toEqual(['zentao', 'channels']);
+    expect(INTEGRATIONS_HUB_TAB_KEYS).toEqual(['zentao', 'tapd', 'channels']);
     expect(DEFAULT_INTEGRATIONS_HUB_TAB).toBe('zentao');
     expect(resolveIntegrationsHubTab('channels')).toBe('channels');
     expect(resolveIntegrationsHubTab('bogus')).toBe('zentao');
@@ -43,6 +45,11 @@ describe('IntegrationsHubPage', () => {
     expect(screen.getByRole('tab', { name: /禅道/ })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '消息渠道' })).toBeInTheDocument();
     expect(screen.queryByTestId('channel-integration-pane')).not.toBeInTheDocument();
+  });
+
+  it('opens the TAPD pane from the URL', () => {
+    renderHub('/integrations?tab=tapd');
+    expect(screen.getByTestId('tapd-integration-pane')).toBeInTheDocument();
   });
 
   it('opens the channels pane from the url', () => {

@@ -138,7 +138,7 @@ describe('TurnDetailToggle', () => {
    * （见 hooks.ts 的 streamedText），所以详情必须只回放过程，不重复结论。
    */
   it('replays the process without repeating the reply text already in the bubble', async () => {
-    const reply = '没在想什么特别的。当前无待办任务，工作项 #52957 交付已启动。';
+    const reply = '没在想什么特别的。当前无待办任务，需求 #52957 交付已启动。';
     server.use(
       http.get(TURN_EVENTS_URL, () =>
         HttpResponse.json({

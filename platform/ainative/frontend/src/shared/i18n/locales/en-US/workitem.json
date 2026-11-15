@@ -20,7 +20,7 @@
     "approvalDescription": "Approval unblocks the next step. Review the artifacts; the request waits indefinitely.",
     "approvers": "Approvers: {{names}}. Any approval continues.",
     "nameSeparator": ", ",
-    "creator": "Work item creator",
+    "creator": "Requirement creator",
     "userId": "User {{id}}",
     "onlyApprovers": "Only designated approvers can approve or request changes; you can view the content.",
     "artifacts": "View the artifacts and version for this approval",
@@ -78,14 +78,14 @@
     "actions": "Actions"
   },
   "actions": {
-    "create": "Create a work item",
-    "new": "New work item",
-    "delete": "Delete work item",
+    "create": "Create a requirement",
+    "new": "New requirement",
+    "delete": "Delete requirement",
     "transition": "Move status",
     "watch": "Watch",
     "unwatch": "Unwatch",
-    "watchAria": "Watch work item",
-    "unwatchAria": "Unwatch work item"
+    "watchAria": "Watch requirement",
+    "unwatchAria": "Unwatch requirement"
   },
   "tags": {
     "empty": "No tags yet",
@@ -108,14 +108,14 @@
     "tooLong": "A tag is at most {{max}} characters"
   },
   "create": {
-    "back": "Back to work items",
-    "title": "New work item",
+    "back": "Back to requirements",
+    "title": "New requirement",
     "submit": "Create",
     "cancel": "Cancel",
     "titleRequired": "Enter a title.",
     "descriptionRequired": "Enter a description.",
-    "titlePlaceholder": "Enter the work item title",
-    "descriptionPlaceholder": "Describe the work item (Markdown)"
+    "titlePlaceholder": "Enter the requirement title",
+    "descriptionPlaceholder": "Describe the requirement (Markdown)"
   },
   "scope": {
     "all": "All",
@@ -129,22 +129,22 @@
   "list": {
     "clearType": "Clear type filter",
     "clearStatus": "Clear status filter",
-    "clearSearch": "Clear work item search",
+    "clearSearch": "Clear requirement search",
     "clearTag": "Clear tag filter",
     "title": "Requirement intake",
     "total_other": "<number>{{total}}</number> requirements and defects",
     "typeFilter": "Filter by type",
     "statusFilter": "Filter by status",
-    "search": "Search work item ID or title",
+    "search": "Search requirement ID or title",
     "tagFilter": "Filter by tag",
     "kanbanView": "Kanban view",
     "tableView": "Table view",
-    "deleteDescription": "Work items that are running or integrated with an external platform cannot be deleted.",
+    "deleteDescription": "Requirements that are running or integrated with an external platform cannot be deleted.",
     "deleteConfirm": "Delete",
     "cancel": "Cancel",
     "pagination_other": "{{count}} items",
     "missingSourceCreator": "Source creator missing",
-    "total_one": "<number>{{total}}</number> work item",
+    "total_one": "<number>{{total}}</number> requirement",
     "pagination_one": "{{count}} item",
     "advancedFilter": "Advanced filters",
     "createdTimeLabel": "Created time",
@@ -187,12 +187,12 @@
     "statusAll": "All statuses",
     "dayToday": "Today",
     "dayYesterday": "Yesterday",
-    "tableEmpty": "No work items yet",
-    "tableEmptyHint": "Create a work item, or adjust the filters and try again"
+    "tableEmpty": "No requirements yet",
+    "tableEmptyHint": "Create a requirement, or adjust the filters and try again"
   },
   "recycleBin": {
     "title": "Recycle bin",
-    "scope": "Deleted work items only. Restoring makes them visible again; delivery does not resume.",
+    "scope": "Deleted requirements only. Restoring makes them visible again; delivery does not resume.",
     "id": "ID",
     "previousStatus": "Status before deletion",
     "deletedAt": "Deleted at",
@@ -201,9 +201,9 @@
     "empty": "The recycle bin is empty",
     "noMatches": "Nothing in the bin matches “{{keyword}}”",
     "restore": "Restore",
-    "restoreCommand": "Restore work item",
+    "restoreCommand": "Restore requirement",
     "restoreConfirmTitle": "Restore “{{title}}”?",
-    "restoreConfirmDescription": "The work item returns to its pre-deletion status and its existing artifacts become visible again. This only restores visibility; delivery does not resume automatically and must be reassigned."
+    "restoreConfirmDescription": "The requirement returns to its pre-deletion status and its existing artifacts become visible again. This only restores visibility; delivery does not resume automatically and must be reassigned."
   },
   "assignee": {
     "unassigned": "Unassigned",
@@ -212,19 +212,19 @@
   "kanban": {
     "notProvided": "Not provided",
     "notReturned": "Not returned",
-    "externalWorkitem": "External work item",
+    "externalWorkitem": "External requirement",
     "sourceReporter": "Raised by: {{name}}",
     "creator": "Creator: {{name}}",
     "assignee": "Current owner: {{name}}",
     "status": "Status: {{name}}",
     "source": "From {{provider}}",
-    "empty": "No work items",
-    "emptyDecision": "No work items awaiting your decision",
+    "empty": "No requirements",
+    "emptyDecision": "No requirements awaiting your decision",
     "updating": "Checking and refreshing status…",
     "decisionSummary": "Decision maker summary",
     "loadMore": "Load more ({{shown}}/{{total}} shown)",
     "boardEmptyTitle": "The board is empty",
-    "boardEmptyDesc": "Create a work item or sync defects from ZenTao — they will show up here grouped by status"
+    "boardEmptyDesc": "Create a requirement or sync defects from ZenTao — they will show up here grouped by status"
   },
   "meta": {
     "type": "TYPE <value/>",
@@ -244,23 +244,23 @@
   },
   "agentList": {
     "filterCount": "{{label}} {{count}}",
-    "empty": "This agent has no linked work items."
+    "empty": "This agent has no linked requirements."
   },
   "messages": {
-    "created": "Work item created.",
+    "created": "Requirement created.",
     "executedNow": "Execution started immediately.",
     "scheduledUpdated": "Scheduled time updated",
     "scheduledCancelled": "Scheduled execution cancelled.",
     "tagsUpdated": "Tags updated.",
-    "contentSaved": "Work item content saved",
-    "deleted": "Work item deleted.",
-    "deleteFailed": "Could not delete the work item.",
-    "restored": "Work item restored.",
-    "restoreFailed": "Could not restore the work item.",
+    "contentSaved": "Requirement content saved",
+    "deleted": "Requirement deleted.",
+    "deleteFailed": "Could not delete the requirement.",
+    "restored": "Requirement restored.",
+    "restoreFailed": "Could not restore the requirement.",
     "transitioned": "Status changed.",
     "syncCompleted": "Sync done: {{imported}} added, {{updated}} updated, {{commentsImported}} comments",
-    "watched": "Work item watched.",
-    "unwatched": "Work item unwatched.",
+    "watched": "Requirement watched.",
+    "unwatched": "Requirement unwatched.",
     "operationFailed": "The operation failed.",
     "continued": "Recovery execution created.",
     "pauseRequested": "Safe pause requested; the checkpoint is being written",
@@ -277,8 +277,8 @@
   "transition": {
     "updated": "Status is now “{{name}}”",
     "updateFailed": "The status update failed; try again",
-    "stale": "The work item changed; refresh before dragging again",
-    "noWorkflow": "This work item has no status flow, so it cannot be dragged",
+    "stale": "The requirement changed; refresh before dragging again",
+    "noWorkflow": "This requirement has no status flow, so it cannot be dragged",
     "noTarget": "The template has no node to move to “{{title}}”. Handle it on the detail page or ask an admin to adjust the template",
     "checkFailed": "The status check failed; try again",
     "choose": "Choose a target status",
@@ -288,29 +288,29 @@
     "taskInfo": "Task information",
     "invalidId": "Invalid ID",
     "back": "Back",
-    "loadFailed": "Could not load the work item",
+    "loadFailed": "Could not load the requirement",
     "retryLater": "Please try again later.",
-    "otherWorkspaceTitle": "This work item lives in project “{{name}}”",
-    "otherWorkspaceHint": "Switch to that project and open the work item? Cancel keeps you in the current project.",
+    "otherWorkspaceTitle": "This requirement lives in project “{{name}}”",
+    "otherWorkspaceHint": "Switch to that project and open the requirement? Cancel keeps you in the current project.",
     "otherWorkspaceSwitch": "Switch to “{{name}}” and open",
     "otherWorkspaceSwitchFailed": "The project switch failed; try again later",
-    "reassignCommand": "Reassign work item",
-    "startDeliveryCommand": "Start work item delivery",
+    "reassignCommand": "Reassign requirement",
+    "startDeliveryCommand": "Start requirement delivery",
     "clarifyCommand": "Start an AI requirement clarification",
-    "editCommand": "Edit work item content",
-    "assignHumanCommand": "Hand this work item to a person",
-    "syncCommand": "Sync this work item to the external platform",
+    "editCommand": "Edit requirement content",
+    "assignHumanCommand": "Hand this requirement to a person",
+    "syncCommand": "Sync this requirement to the external platform",
     "endExecutionCommand": "End this execution",
     "resizeClarification": "Drag to resize the clarification panel",
     "transitionTitle": "Change status",
-    "noTemplate": "This work item has no status template attached",
+    "noTemplate": "This requirement has no status template attached",
     "noTransitions": "The current template exposes no status nodes to transition to",
     "transition": "Transition",
     "recommended": "Recommended transition",
     "notRecommended": "Other transition",
     "delete": "Delete",
     "cancel": "Cancel",
-    "deleteDescription": "Deleting removes this work item from the list. Items that are running or linked to an external platform cannot be deleted.",
+    "deleteDescription": "Deleting removes this requirement from the list. Items that are running or linked to an external platform cannot be deleted.",
     "clarificationResult": "Clarification materials (AI generated)",
     "exitFullscreenHint": "Leave fullscreen (Esc)",
     "exitFullscreen": "Exit fullscreen",
@@ -324,12 +324,12 @@
     "startDelivery": "Start delivery",
     "reconcile": "Reconcile now",
     "document": "Requirement/design document",
-    "externallyMaintained": "Maintained in the external work item",
+    "externallyMaintained": "Maintained in the external requirement",
     "save": "Save",
     "edit": "Edit",
-    "titleField": "Work item title",
-    "bodyField": "Work item body",
-    "backToList": "Back to work items",
+    "titleField": "Requirement title",
+    "bodyField": "Requirement body",
+    "backToList": "Back to requirements",
     "transitionTo": "Transition to {{name}}",
     "origin": "From 7×24 Task <name/> / Run #{{id}}"
   },
@@ -360,12 +360,12 @@
     "send": "Send",
     "add": "Add comment",
     "deliveryClosedTitle": "Comment not sent: delivery is closed",
-    "deliveryClosedHint": "Delivery on this work item is closed, so an @-mentioned AI member will not start. Remove the AI member mention and post a normal comment instead, or reopen delivery first and resend.",
+    "deliveryClosedHint": "Delivery on this requirement is closed, so an @-mentioned AI member will not start. Remove the AI member mention and post a normal comment instead, or reopen delivery first and resend.",
     "sendFailed": "Failed to send the comment. Try again.",
     "attachFiles": "Add files or images",
     "removeAttachment": "Detach {{name}}",
     "attachmentHint": "Any file type works: drag, drop, or paste a screenshot. 5 MB max per file.",
-    "attachmentStorageHint": "On send the files land in the work item's requirement and design attachments. The pool holds up to 10 files and 20 MB in total; uploaded files stay until you delete them.",
+    "attachmentStorageHint": "On send the files land in the requirement's requirement and design attachments. The pool holds up to 10 files and 20 MB in total; uploaded files stay until you delete them.",
     "uploadingAttachments": "Uploading attachments…"
   },
   "interaction": {
@@ -406,13 +406,13 @@
   },
   "collaboration": {
     "title": "External collaboration",
-    "source": "Source work item",
+    "source": "Source requirement",
     "reporter": "Requirement reporter",
     "owner": "External business owner",
     "syncStatus": "Sync status",
-    "actionRequired": "An external work item still needs handling",
+    "actionRequired": "An external requirement still needs handling",
     "notProvided": "Not provided",
-    "open": "Open the {{provider}} work item",
+    "open": "Open the {{provider}} requirement",
     "healthy": "Sync healthy",
     "delayed": "Sync delayed",
     "needsAttention": "Needs attention",
@@ -441,7 +441,7 @@
     "copied": "Copied",
     "label": "Share",
     "copiedHint": "Link copied to the clipboard",
-    "copyHint": "Copy work item link"
+    "copyHint": "Copy requirement link"
   },
   "members": {
     "title": "Members",
@@ -713,10 +713,10 @@
   },
   "intervention": {
     "awaitingAnswer": "Awaiting an answer",
-    "agentDescription": "An AI member is waiting on a human answer. Open the work item, respond or confirm the request, and the run continues.",
-    "tooltip": "This work item is assigned to a person and needs manual handling.",
-    "description": "This work item is assigned to a person. Handle it, provide decisions, or reassign it to an agent to continue delivery.",
-    "externalDescription": "This work item has no local owner. Assign a person to take over or an agent to continue delivery.",
+    "agentDescription": "An AI member is waiting on a human answer. Open the requirement, respond or confirm the request, and the run continues.",
+    "tooltip": "This requirement is assigned to a person and needs manual handling.",
+    "description": "This requirement is assigned to a person. Handle it, provide decisions, or reassign it to an agent to continue delivery.",
+    "externalDescription": "This requirement has no local owner. Assign a person to take over or an agent to continue delivery.",
     "unclaimed": "Unclaimed",
     "user": "User {{id}}",
     "badge": "Human action",
@@ -944,11 +944,11 @@
   },
   "schedule": {
     "futureRequired": "The scheduled start time must be in the future.",
-    "editCommand": "Change this work item's scheduled time",
+    "editCommand": "Change this requirement's scheduled time",
     "edit": "Edit",
-    "executeCommand": "Execute work item now",
+    "executeCommand": "Execute requirement now",
     "executeNow": "Execute now",
-    "cancelCommand": "Cancel scheduled work item execution",
+    "cancelCommand": "Cancel scheduled requirement execution",
     "cancel": "Cancel schedule",
     "editTitle": "Edit scheduled start time",
     "save": "Save",
@@ -962,8 +962,8 @@
     "plannedStart": "Planned start: {{time}}"
   },
   "start": {
-    "reassignCommand": "Reassign work item",
-    "deliveryCommand": "Start work item delivery",
+    "reassignCommand": "Reassign requirement",
+    "deliveryCommand": "Start requirement delivery",
     "reassignedScheduled": "Reassigned. Delivery will restart at the scheduled time.",
     "reassigned": "Reassigned. Restarting delivery.",
     "started": "Delivery started.",
@@ -1129,7 +1129,7 @@
     "attachmentLoadFailed": "Could not load attachment — retry",
     "attachmentDownloadFailed": "Could not download the attachment. Please try again.",
     "attachmentDeleteFailed": "Delete failed — retry",
-    "bootstrapPrompt": "Read work item #{{workitemId}} via the platform MCP and clarify requirements with me.",
+    "bootstrapPrompt": "Read requirement #{{workitemId}} via the platform MCP and clarify requirements with me.",
     "conversationNumber": "Session #{{id}}",
     "lastActive": "Last {{date}}",
     "createdAt": "Created {{date}}",
@@ -1189,7 +1189,7 @@
     },
     "event": {
       "create": {
-        "label": "Work item created",
+        "label": "Requirement created",
         "both": "Created: {{from}} → {{to}}",
         "to": "Created: {{to}}"
       },
@@ -1215,7 +1215,7 @@
         "to": "Content: {{to}}"
       },
       "delete": {
-        "label": "Work item deleted",
+        "label": "Requirement deleted",
         "both": "Deleted: {{from}} → {{to}}",
         "to": "Deleted: {{to}}"
       },
@@ -1230,7 +1230,7 @@
         "to": "Comment: {{to}}"
       },
       "external_import": {
-        "label": "Imported from external work item",
+        "label": "Imported from external requirement",
         "both": "Imported: {{from}} → {{to}}",
         "to": "Imported: {{to}}"
       },
@@ -1311,8 +1311,8 @@
     "human": "Human",
     "close": "Close",
     "failedHandoff": "Post-failure handoff",
-    "deleteExternal": "External work items cannot be deleted",
-    "deleteRunning": "Work item is running. Wait for completion or stop it before deleting",
+    "deleteExternal": "External requirements cannot be deleted",
+    "deleteRunning": "Requirement is running. Wait for completion or stop it before deleting",
     "externalName": {
       "other": "{{provider}} user (ID: {{id}})"
     }

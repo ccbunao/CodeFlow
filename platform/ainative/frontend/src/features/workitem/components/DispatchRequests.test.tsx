@@ -131,7 +131,7 @@ it('keeps approval distinct from live choices and submits custom answers', async
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['workitems'] });
   expect(screen.getByText('dev')).toBeInTheDocument();
   expect(screen.queryByTestId('elicitation-skip-2')).toBeNull();
-  // 工作项 56330：收起/展开只由澄清面板开启，调度请求确认这处复用不出现收起入口。
+  // 需求 56330：收起/展开只由澄清面板开启，调度请求确认这处复用不出现收起入口。
   expect(screen.queryByTestId('elicitation-toggle-1')).toBeNull();
   expect(screen.queryByTestId('elicitation-collapsed-1')).toBeNull();
   fireEvent.click(screen.getByTestId('elicitation-option-target-other'));

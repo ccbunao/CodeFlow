@@ -88,17 +88,17 @@
 
 .login-screen .lv-value { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--lg-hair); }
 
-/* ── 深色玻璃卡「从需求到交付」(2026-11-11 视觉评审重设计) ──
- * 亮纸底上放一块深色渐变玻璃卡:需求打字 → 光点带渐变线逐站点亮 → 「已交付」徽章。
- * 强对比让价值区成为左栏视觉锚点;所有文字用白色系,强调色唯一(accent)。 */
+/* ── 白色玻璃卡「从需求到交付」(2026-11-15 改为白色卡面) ──
+ * 亮纸底上放一块白卡:需求打字 → 光点带渐变线逐站点亮 → 「已交付」徽章。
+ * 用描边 + 柔和投影与纸底区分;文字走墨色系,强调色唯一(accent)。 */
 .login-screen .lvx-card {
   position: relative;
   margin-top: 16px;
   border-radius: 14px;
   padding: 18px 22px 24px;
-  background: linear-gradient(150deg, #101c30 0%, #0c1424 58%, #101c30 100%);
-  border: 1px solid rgba(255, 255, 255, .08);
-  box-shadow: 0 18px 40px -18px rgba(4, 12, 28, .8), inset 0 1px 0 rgba(255, 255, 255, .06);
+  background: #ffffff;
+  border: 1px solid var(--lg-hair);
+  box-shadow: 0 12px 32px -20px rgba(20, 40, 80, .35), 0 1px 2px rgba(20, 40, 80, .05);
   overflow: hidden;
 }
 .login-screen .lvx-card::before {
@@ -109,18 +109,18 @@
 }
 .login-screen .lvx-label {
   font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(255, 255, 255, .55); margin-bottom: 12px;
+  color: var(--lg-ink2); margin-bottom: 12px;
 }
 .login-screen .lvx-type {
-  font-size: 12.5px; color: #eaf1fa;
-  background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .10);
+  font-size: 12.5px; color: var(--lg-ink);
+  background: #f5f7fa; border: 1px solid var(--lg-hair);
   border-radius: 99px; padding: 5px 14px;
   display: inline-block; max-width: 100%;
   overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
 .login-screen .lvx-cursor {
   display: inline-block; width: 1px; height: 13px;
-  background: #6db3f7; vertical-align: -2px;
+  background: var(--lg-accent); vertical-align: -2px;
   animation: lvxCursorBlink .8s step-end infinite;
 }
 @keyframes lvxCursorBlink { 50% { opacity: 0; } }
@@ -130,23 +130,23 @@
 .login-screen .lvx-track {
   position: absolute; left: 17px; right: 17px; top: 19px;
   height: 3px; border-radius: 99px;
-  background: rgba(255, 255, 255, .12);
+  background: #e6ebf2;
 }
 .login-screen .lvx-fill {
   position: absolute; left: 17px; top: 19px; height: 3px; width: 0;
   background: linear-gradient(90deg, #1b5fb8, #54a2f0);
   border-radius: 99px;
   transition: width .5s cubic-bezier(.45, .05, .55, .95);
-  box-shadow: 0 0 10px rgba(84, 162, 240, .5);
+  box-shadow: 0 0 8px rgba(84, 162, 240, .45);
 }
 .login-screen .lvx-head {
   position: absolute; left: 17px; top: 15px; width: 11px; height: 11px;
-  border-radius: 50%; background: #fff;
-  box-shadow: 0 0 14px rgba(120, 190, 255, .95);
+  border-radius: 50%; background: var(--lg-accent);
+  box-shadow: 0 0 0 4px rgba(35, 131, 226, .16), 0 0 10px rgba(84, 162, 240, .55);
   transition: left .5s cubic-bezier(.45, .05, .55, .95), opacity .3s;
   z-index: 3;
 }
-/* 节点:圆形玻璃环 → done 时 accent 渐变填充 */
+/* 节点:圆形环 → done 时 accent 渐变填充 */
 .login-screen .lvx-nodes {
   position: relative; z-index: 2;
   display: flex; justify-content: space-between;
@@ -158,28 +158,28 @@
 .login-screen .lvx-node-ring {
   width: 36px; height: 36px; border-radius: 50%;
   display: grid; place-items: center;
-  background: rgba(255, 255, 255, .08);
-  border: 1.5px solid rgba(255, 255, 255, .22);
-  color: rgba(255, 255, 255, .75);
+  background: #ffffff;
+  border: 1.5px solid #d6dce6;
+  color: #6b7688;
   transition: all .4s cubic-bezier(.34, 1.4, .64, 1);
 }
 .login-screen .lvx-node-name {
   font-size: 10.5px; font-weight: 550;
-  color: rgba(255, 255, 255, .55);
+  color: var(--lg-ink2);
   white-space: nowrap;
   transition: color .4s;
 }
 .login-screen .lvx-node.done .lvx-node-ring {
   background: linear-gradient(160deg, #2d8ded, #1b5fb8);
-  border-color: rgba(255, 255, 255, .35);
+  border-color: rgba(27, 95, 184, .9);
   color: #fff;
-  box-shadow: 0 4px 14px rgba(45, 141, 237, .45);
+  box-shadow: 0 4px 14px rgba(45, 141, 237, .35);
 }
-.login-screen .lvx-node.done .lvx-node-name { color: #fff; }
+.login-screen .lvx-node.done .lvx-node-name { color: var(--lg-ink); font-weight: 650; }
 .login-screen .lvx-node.end .lvx-node-ring {
   background: linear-gradient(160deg, #0f9d6b, #0c7a54);
-  border-color: rgba(255, 255, 255, .4);
-  box-shadow: 0 4px 18px rgba(15, 157, 107, .5);
+  border-color: rgba(12, 122, 84, .9);
+  box-shadow: 0 4px 18px rgba(15, 157, 107, .4);
 }
 /* done 态勾:覆盖在图标上 */
 .login-screen .lvx-check {
@@ -245,9 +245,11 @@
 .login-screen .row a { color: var(--lg-ink2); text-decoration: none; border-bottom: 1px solid rgba(var(--lg-ink2-rgb), .3); }
 .login-screen .row a:hover { color: var(--lg-accent); border-bottom-color: var(--lg-accent); }
 
-/* 主按钮:平面 accent,8px 圆角,无渐变无位移 */
-.login-screen .lg-btn { display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 14px; border: 1px solid var(--lg-accent); border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; line-height: 1; color: #fff; background: var(--lg-accent); appearance: none; -webkit-appearance: none; cursor: pointer; font-family: inherit; text-align: center; transition: background-color .16s; }
-.login-screen .lg-btn:hover { background: #2e91ef; }
+/* 主按钮:纯色深靛蓝 + 白字(与工作台同一套,无渐变无阴影);
+   登录页调色板自包含(不随主题),故此处固定取值 #1d4ed8。 */
+.login-screen .lg-btn { display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 14px; border: 1px solid #1a4ac0; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; line-height: 1; color: #fff; background: #1d4ed8; appearance: none; -webkit-appearance: none; cursor: pointer; font-family: inherit; text-align: center; transition: background-color .16s; }
+.login-screen .lg-btn:hover { background: #2563eb; }
+.login-screen .lg-btn:active { background: #1e4bbf; }
 .login-screen .lg-btn:disabled { opacity: .55; cursor: default; }
 .login-screen .login-error { color: var(--lg-fail); font-size: 12px; line-height: 1.5; margin: 10px 0 0; }
 @keyframes lgBootFade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }

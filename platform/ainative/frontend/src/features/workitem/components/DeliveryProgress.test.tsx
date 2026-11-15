@@ -191,7 +191,7 @@ describe('DeliveryProgress', () => {
         agentName: 'AW代码评审工程师', executorName: null,
         error: null,
         subSteps: [
-          { name: '读取工作项上下文', status: 'done' },
+          { name: '读取需求上下文', status: 'done' },
           { name: '发布评审评论', status: 'done' },
         ],
         durationMs: 240_000,
@@ -213,7 +213,7 @@ describe('DeliveryProgress', () => {
 
     expect(within(stepCard).getByText(/执行者: AW代码评审工程师/)).toBeInTheDocument();
     expect(within(stepCard).getByText(/第1次: AW代码评审工程师 · 成功 · 4分/)).toBeInTheDocument();
-    expect(within(stepCard).getByText('读取工作项上下文')).toBeInTheDocument();
+    expect(within(stepCard).getByText('读取需求上下文')).toBeInTheDocument();
     expect(within(stepCard).getByText('发布评审评论')).toBeInTheDocument();
   });
 
@@ -265,7 +265,7 @@ describe('DeliveryProgress', () => {
               eventTime: '2026-09-02T10:00:00Z',
               eventType: 'agent.message',
               level: 'INFO',
-              content: '正在分析工作项评论。',
+              content: '正在分析需求评论。',
             },
             {
               eventId: '301:2',
@@ -301,7 +301,7 @@ describe('DeliveryProgress', () => {
 
     const stepCard = screen.getByTestId('delivery-step-11');
     const feed = await within(stepCard).findByTestId('dispatch-activities-301');
-    expect(within(feed).getByText('正在分析工作项评论。')).toBeInTheDocument();
+    expect(within(feed).getByText('正在分析需求评论。')).toBeInTheDocument();
     expect(within(feed).getByText('Runtime 10067 执行失败，正在切换其他在线 Runtime')).toHaveClass('ant-typography-danger');
     expect(requests).toBe(1);
   });

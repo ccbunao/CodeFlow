@@ -242,27 +242,27 @@ describe('UnifiedTimeline operator display', () => {
 });
 
 it('updates cached finite system events and keeps legacy, unknown and authored same-looking content raw', async () => {
-  const base = { type: 'system' as const, authorId: 10, authorName: '工作项已创建', authorType: 'HUMAN', isAgent: false, gmtCreate: '2026-08-07T07:00:00Z' };
+  const base = { type: 'system' as const, authorId: 10, authorName: '需求已创建', authorType: 'HUMAN', isAgent: false, gmtCreate: '2026-08-07T07:00:00Z' };
   const items: TimelineItem[] = [
-    { ...base, id: 1, content: '工作项已创建: <b>raw</b>', eventType: 'CREATE', toValDisplay: '<b>raw</b>' },
-    { ...base, id: 2, content: '工作项已创建', eventType: 'UNKNOWN' },
-    { ...base, id: 3, content: '工作项已创建' },
-    { ...base, id: 4, type: 'comment', content: '工作项已创建' },
+    { ...base, id: 1, content: '需求已创建: <b>raw</b>', eventType: 'CREATE', toValDisplay: '<b>raw</b>' },
+    { ...base, id: 2, content: '需求已创建', eventType: 'UNKNOWN' },
+    { ...base, id: 3, content: '需求已创建' },
+    { ...base, id: 4, type: 'comment', content: '需求已创建' },
   ];
   render(<UnifiedTimeline items={items} />);
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByText('Created: <b>raw</b>')).toBeInTheDocument();
-  expect(screen.getAllByText('工作项已创建').length).toBeGreaterThanOrEqual(3);
+  expect(screen.getAllByText('需求已创建').length).toBeGreaterThanOrEqual(3);
   expect(document.querySelector('b')).toBeNull();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
 });
 
 it('renders external source events and raw operator parameters safely', async () => {
-  const base = { id: 1, type: 'system' as const, authorId: null, authorName: null, authorType: 'SYSTEM', isAgent: false, content: '已从外部工作项导入', gmtCreate: '2026-08-07T07:00:00Z', sourceProvider: 'ZENTAO', sourceExternalWorkitemId: '<b>42</b>', sourceExternalUrl: 'https://zentao.example/42' };
-  render(<UnifiedTimeline items={[{ ...base, eventType: 'EXTERNAL_IMPORT' }, { ...base, id: 2, content: '已从外部工作项 raw legacy' }, { ...base, id: 3, eventType: 'STATUS_CHANGE', fromValDisplay: '工作项已创建', toValDisplay: '<b>raw</b>', operatorDisplayName: '操作人 <b>raw</b>' }]} />);
+  const base = { id: 1, type: 'system' as const, authorId: null, authorName: null, authorType: 'SYSTEM', isAgent: false, content: '已从外部需求导入', gmtCreate: '2026-08-07T07:00:00Z', sourceProvider: 'ZENTAO', sourceExternalWorkitemId: '<b>42</b>', sourceExternalUrl: 'https://zentao.example/42' };
+  render(<UnifiedTimeline items={[{ ...base, eventType: 'EXTERNAL_IMPORT' }, { ...base, id: 2, content: '已从外部需求 raw legacy' }, { ...base, id: 3, eventType: 'STATUS_CHANGE', fromValDisplay: '需求已创建', toValDisplay: '<b>raw</b>', operatorDisplayName: '操作人 <b>raw</b>' }]} />);
   await act(async () => { await i18n.changeLanguage('en-US'); });
-  expect(screen.getByText('Imported from external work item', { exact: false })).toBeInTheDocument();
-  expect(screen.getByText('已从外部工作项 raw legacy')).toBeInTheDocument();
+  expect(screen.getByText('Imported from external requirement', { exact: false })).toBeInTheDocument();
+  expect(screen.getByText('已从外部需求 raw legacy')).toBeInTheDocument();
   expect(screen.getByText(/Status: .*→ .*by/)).toBeInTheDocument();
   expect(document.querySelector('b')).toBeNull();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });

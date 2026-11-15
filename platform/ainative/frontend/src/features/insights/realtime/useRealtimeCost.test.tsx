@@ -17,7 +17,7 @@ function compositionFor(range: number): CostComposition {
     scope: 'ALL_AGENTS',
     total: 100 + range,
     sources: [
-      { key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 100 + range, share: 1 },
+      { key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 100 + range, share: 1 },
     ],
   };
 }
@@ -107,7 +107,7 @@ describe('useRealtimeCost', () => {
     stubCost((range, agentId) => agentId === 'all'
       ? compositionFor(range)
       // 服务端契约保证全员口径；这里故意返回不同数据，验证前端状态层不会覆盖已有构成。
-      : { ...compositionFor(range), total: 9999, sources: [{ key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 9999, share: 1 }] });
+      : { ...compositionFor(range), total: 9999, sources: [{ key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 9999, share: 1 }] });
     const { result } = renderCostHook();
     await waitFor(() => expect(result.current.composition?.total).toBe(107));
 

@@ -31,7 +31,7 @@ describe('WorkspaceRolesPanel', () => {
     const dialog = within(screen.getByRole('dialog'));
     await user.type(dialog.getByRole('textbox', { name: '角色名称' }), '<QA> 验收');
     expect(dialog.queryByText('访问等级')).not.toBeInTheDocument();
-    expect(dialog.getByRole('button', { name: /^交付与工作项协作/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(dialog.getByRole('button', { name: /^交付与需求协作/ })).toHaveAttribute('aria-expanded', 'false');
     await user.click(dialog.getByRole('button', { name: /^流程与项目配置/ }));
     await user.click(within(dialog.getByRole('group', { name: '流水线流程' })).getByRole('radio', { name: '只读' }));
     await user.click(dialog.getByRole('button', { name: /保\s*存/ }));

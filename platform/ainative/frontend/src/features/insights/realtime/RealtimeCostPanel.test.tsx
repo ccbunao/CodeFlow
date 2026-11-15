@@ -21,7 +21,7 @@ const composition: CostComposition = {
   scope: 'ALL_AGENTS',
   tokens: 82610,
   sources: [
-    { key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 76, tokens: 76000, share: 92 },
+    { key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 76, tokens: 76000, share: 92 },
     { key: 'REQUIREMENT_CLARIFY', name: '需求澄清', credits: 6.61, tokens: 6610, share: 8 },
   ],
 };
@@ -220,11 +220,11 @@ describe('RealtimeCostPanel', () => {
     const segments = Array.from(bar.querySelectorAll('i'));
     expect(segments.map(segment => segment.getAttribute('data-source'))).toEqual(['WORKITEM_EXECUTION', 'REQUIREMENT_CLARIFY']);
     expect(segments.map(segment => (segment as HTMLElement).style.width)).toEqual(['92%', '8%']);
-    expect(segments[0]).toHaveAttribute('title', '工作项执行: 76K tokens · 92.0%');
+    expect(segments[0]).toHaveAttribute('title', '需求执行: 76K tokens · 92.0%');
 
     const rows = within(compositionRegion().getByRole('list', { name: 'Token 来源图例' })).getAllByRole('listitem');
     expect(rows).toHaveLength(2);
-    expect(rows[0]).toHaveTextContent('工作项执行');
+    expect(rows[0]).toHaveTextContent('需求执行');
     expect(rows[0]).toHaveTextContent('76K92.0%');
     expect(rows[1]).toHaveTextContent('需求澄清');
     expect(rows[1]).toHaveTextContent('6.6K8.0%');
@@ -249,7 +249,7 @@ describe('RealtimeCostPanel', () => {
     expect(chip).toHaveTextContent('全部AI 成员口径 · 不随上方员工筛选联动');
     expect(chip.querySelector('.anticon-lock')).not.toBeNull();
     // 构成条数据仍是全员口径，不随上方员工筛选变化
-    expect(compositionRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('工作项执行');
+    expect(compositionRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
 
     await user.hover(chip);
     expect(await screen.findByRole('tooltip')).toHaveTextContent('来源构成不区分AI 成员，仅随日期范围变化');
@@ -282,7 +282,7 @@ describe('RealtimeCostPanel', () => {
       range: 7,
       scope: 'ALL_AGENTS',
       tokens: 20000,
-      sources: [{ key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: 20, tokens: 20000, share: 100 }],
+      sources: [{ key: 'WORKITEM_EXECUTION', name: '需求执行', credits: 20, tokens: 20000, share: 100 }],
     };
 
     rerender(<RealtimeCostPanel

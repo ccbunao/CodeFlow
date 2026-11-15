@@ -28,6 +28,6 @@ it('distinguishes slow-tail loading and errors from an empty result', () => {
   vi.mocked(useHumanAgentSlowTail).mockReturnValue({ isError: true, refetch: vi.fn() } as unknown as ReturnType<typeof useHumanAgentSlowTail>);
   rerender(<SlowTailTable startDate="2026-09-01" endDate="2026-09-25" workType="BUG" />);
   expect(useHumanAgentSlowTail).toHaveBeenLastCalledWith('2026-09-01', '2026-09-25', 'BUG');
-  expect(screen.getByText('慢尾工作项加载失败')).toBeInTheDocument();
-  expect(screen.queryByText('无慢尾工作项')).not.toBeInTheDocument();
+  expect(screen.getByText('慢尾需求加载失败')).toBeInTheDocument();
+  expect(screen.queryByText('无慢尾需求')).not.toBeInTheDocument();
 });

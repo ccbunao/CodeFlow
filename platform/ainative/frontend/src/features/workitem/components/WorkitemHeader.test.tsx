@@ -11,7 +11,7 @@ function renderHeader(props: Partial<React.ComponentProps<typeof WorkitemHeader>
   return render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter>
-        <WorkitemHeader title="工作项标题" {...props} />
+        <WorkitemHeader title="需求标题" {...props} />
       </MemoryRouter>
     </QueryClientProvider>,
   );
@@ -19,7 +19,7 @@ function renderHeader(props: Partial<React.ComponentProps<typeof WorkitemHeader>
 
 describe('WorkitemHeader', () => {
   it('shows the full long title in a tooltip on hover', async () => {
-    const title = '这是一个需要自动省略的超长工作项标题'.repeat(20);
+    const title = '这是一个需要自动省略的超长需求标题'.repeat(20);
     renderHeader({ title });
 
     fireEvent.mouseEnter(screen.getByRole('heading', { name: title }));
@@ -30,8 +30,8 @@ describe('WorkitemHeader', () => {
   it('renders the title and back button', () => {
     renderHeader();
 
-    expect(screen.getByRole('heading', { name: '工作项标题' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '返回工作项列表' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '需求标题' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '返回需求列表' })).toBeInTheDocument();
     expect(screen.queryByText('交付任务')).not.toBeInTheDocument();
     expect(screen.queryByText('开发中')).not.toBeInTheDocument();
     expect(screen.queryByText('需求')).not.toBeInTheDocument();

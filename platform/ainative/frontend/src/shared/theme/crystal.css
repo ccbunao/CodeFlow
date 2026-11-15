@@ -9,14 +9,15 @@ body{margin:0;background:var(--cf-bg);color:var(--cf-text)}
 .appearance-option{display:flex;align-items:center;justify-content:space-between;gap:22px;min-width:82px}
 .appearance-option .anticon{color:var(--cf-accent-text)}
 html .appearance-switch{width:36px;padding:0;flex-shrink:0}
-html .ant-btn{font-weight:500;transition:background-color .16s ease,border-color .16s ease,color .16s ease;box-shadow:none;background-image:none}
-html[data-appearance=dark] .ant-btn:not(.ant-btn-text):not(.ant-btn-link){background-image:none;box-shadow:none}
-html[data-appearance=light] .ant-btn{background-image:none;box-shadow:none}
+html .ant-btn{font-weight:500;transition:background-color .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease;box-shadow:none;background-image:none}
+html[data-appearance=dark] .ant-btn:not(.ant-btn-text):not(.ant-btn-link):not(.ant-btn-primary){background-image:none;box-shadow:none}
+html[data-appearance=light] .ant-btn:not(.ant-btn-primary){background-image:none;box-shadow:none}
 html .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):hover{background-color:var(--cf-button-hover);color:var(--cf-text);border-color:var(--cf-muted)}
 html .ant-btn-default:not(:disabled):not(.ant-btn-dangerous):active{background:var(--cf-button-active)}
-html .ant-btn-primary:not(.ant-btn-dangerous){background-color:var(--cf-primary);color:var(--cf-primary-ink);border-color:var(--cf-primary)}
-html .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):hover{background-color:var(--cf-primary-hover);color:var(--cf-primary-ink);border-color:var(--cf-primary-hover)}
-html .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):active{background:var(--cf-primary-active)}
+/* 主按钮:纯色深靛蓝 + 白字(填充色由品牌色派生,见 appearance.ts) */
+html .ant-btn-primary:not(.ant-btn-dangerous){background:var(--cf-btn-fill);color:var(--cf-btn-ink);border-color:var(--cf-btn-border);box-shadow:none}
+html .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):hover{background:var(--cf-btn-hover);color:var(--cf-btn-ink);border-color:var(--cf-btn-border)}
+html .ant-btn-primary:not(:disabled):not(.ant-btn-dangerous):active{background:var(--cf-btn-active);color:var(--cf-btn-ink);box-shadow:none}
 html .ant-btn:disabled,html .ant-btn.ant-btn-loading{box-shadow:none;background-image:none}
 html .ant-btn-primary:disabled{background:var(--cf-raised);border-color:var(--cf-border);color:var(--cf-muted);opacity:.6}
 html :is(button,a,input:not(.ant-input),textarea:not(.ant-input),[role=combobox]):focus-visible{outline:2px solid var(--cf-accent-text);outline-offset:2px}

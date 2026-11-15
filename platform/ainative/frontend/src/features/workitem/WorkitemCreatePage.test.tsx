@@ -16,8 +16,8 @@ function renderPage() {
       <MemoryRouter initialEntries={['/workitems/new']}>
         <Routes>
           <Route path="/workitems/new" element={<WorkitemCreatePage />} />
-          <Route path="/workitems/:id" element={<div>工作项详情</div>} />
-          <Route path="/workitems" element={<div>工作项列表</div>} />
+          <Route path="/workitems/:id" element={<div>需求详情</div>} />
+          <Route path="/workitems" element={<div>需求列表</div>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -33,8 +33,8 @@ describe('WorkitemCreatePage', () => {
 
   it('returns to the workitem list from the title without submitting', async () => {
     renderPage();
-    await userEvent.click(screen.getByRole('button', { name: '返回工作项列表' }));
-    expect(screen.getByText('工作项列表')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '返回需求列表' }));
+    expect(screen.getByText('需求列表')).toBeInTheDocument();
   });
 
   it('does not render deprecated Pipeline field nor the scheduled delivery module', () => {
@@ -80,18 +80,18 @@ describe('WorkitemCreatePage', () => {
     renderPage();
 
     await userEvent.type(screen.getByLabelText('标题'), '删除无效字段');
-    await userEvent.type(screen.getByLabelText('描述'), '只创建工作项');
+    await userEvent.type(screen.getByLabelText('描述'), '只创建需求');
     await userEvent.click(screen.getByRole('button', { name: /创\s*建/ }));
 
     await waitFor(() => {
       expect(requestedBody).toEqual({
         workType: 'REQ',
         title: '删除无效字段',
-        contentMd: '只创建工作项',
+        contentMd: '只创建需求',
         priority: 2,
       });
     });
-    expect(await screen.findByText('工作项详情')).toBeInTheDocument();
+    expect(await screen.findByText('需求详情')).toBeInTheDocument();
   });
 
   it('does not create from the direct route for a read-only member', async () => {
@@ -108,13 +108,13 @@ describe('WorkitemCreatePage', () => {
     );
     renderPage();
 
-    await userEvent.type(screen.getByLabelText('标题'), '只读工作项');
+    await userEvent.type(screen.getByLabelText('标题'), '只读需求');
     await userEvent.type(screen.getByLabelText('描述'), '不能提交');
     await userEvent.click(screen.getByRole('button', { name: /创\s*建/ }));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，创建工作项需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，创建需求需要读写权限');
     expect(createCalls).toBe(0);
-    expect(screen.getByText('新建工作项')).toBeInTheDocument();
+    expect(screen.getByText('新建需求')).toBeInTheDocument();
   });
 
   it('never queries squads nor sends assignment fields when squads exist', async () => {
@@ -141,7 +141,7 @@ describe('WorkitemCreatePage', () => {
         return HttpResponse.json({
           success: true, code: '0', message: '', traceId: null,
           data: {
-            id: 99, workType: 'REQ', title: '普通工作项', contentMd: '无定时配置', priority: 2,
+            id: 99, workType: 'REQ', title: '普通需求', contentMd: '无定时配置', priority: 2,
             assigneeType: 'HUMAN', assigneeRef: 10000, version: 0,
             gmtCreate: '2026-09-08T10:00:00Z', gmtModified: '2026-09-08T10:00:00Z',
           },
@@ -151,7 +151,7 @@ describe('WorkitemCreatePage', () => {
 
     renderPage();
 
-    await userEvent.type(screen.getByLabelText('标题'), '普通工作项');
+    await userEvent.type(screen.getByLabelText('标题'), '普通需求');
     await userEvent.type(screen.getByLabelText('描述'), '无定时配置');
     expect(screen.queryByText('AW交付组')).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText('留空则立即执行')).not.toBeInTheDocument();
@@ -161,12 +161,12 @@ describe('WorkitemCreatePage', () => {
     await waitFor(() => {
       expect(requestedBody).toEqual({
         workType: 'REQ',
-        title: '普通工作项',
+        title: '普通需求',
         contentMd: '无定时配置',
         priority: 2,
       });
     });
-    expect(await screen.findByText('工作项详情')).toBeInTheDocument();
+    expect(await screen.findByText('需求详情')).toBeInTheDocument();
     expect(squadCalls).toBe(0);
     expect(memberCalls).toBe(0);
   });
@@ -185,7 +185,7 @@ describe('WorkitemCreatePage', () => {
 
     renderPage();
 
-    await userEvent.type(screen.getByLabelText('标题'), '失败工作项');
+    await userEvent.type(screen.getByLabelText('标题'), '失败需求');
     await userEvent.type(screen.getByLabelText('描述'), '提交失败');
     await userEvent.click(screen.getByRole('button', { name: /创\s*建/ }));
 
@@ -196,8 +196,8 @@ describe('WorkitemCreatePage', () => {
     });
 
     expect(success).not.toHaveBeenCalled();
-    expect(screen.getByText('新建工作项')).toBeInTheDocument();
-    expect(screen.queryByText('工作项详情')).not.toBeInTheDocument();
+    expect(screen.getByText('新建需求')).toBeInTheDocument();
+    expect(screen.queryByText('需求详情')).not.toBeInTheDocument();
   });
 
   it('returns to the workitem list when cancel is clicked', async () => {
@@ -205,6 +205,6 @@ describe('WorkitemCreatePage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /取\s*消/ }));
 
-    expect(await screen.findByText('工作项列表')).toBeInTheDocument();
+    expect(await screen.findByText('需求列表')).toBeInTheDocument();
   });
 });

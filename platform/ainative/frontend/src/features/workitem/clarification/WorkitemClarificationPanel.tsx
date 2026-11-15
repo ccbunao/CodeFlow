@@ -352,7 +352,7 @@ export function WorkitemClarificationPanel({
     });
   }, [accessCommand, deleteAttachmentMutation, t]);
 
-  // 切换工作项/会话时丢弃草稿附件：它们属于原会话，跨会话发送会串味。
+  // 切换需求/会话时丢弃草稿附件：它们属于原会话，跨会话发送会串味。
   const attachmentScopeRef = useRef({ workitemId, conversationId });
   useEffect(() => {
     const previous = attachmentScopeRef.current;

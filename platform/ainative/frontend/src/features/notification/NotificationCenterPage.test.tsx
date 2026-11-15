@@ -27,7 +27,7 @@ function notification(overrides: Partial<Notification> = {}): Notification {
     id: 1,
     type: 'DISPATCH_ALERT',
     title: '派单失败',
-    content: '工作项 42 的派单执行失败，请检查运行器状态',
+    content: '需求 42 的派单执行失败，请检查运行器状态',
     link: '/workitems/42',
     refType: 'WORKITEM',
     refId: 42,
@@ -209,7 +209,7 @@ describe('NotificationCenterPage', () => {
     expect(await screen.findByText('通知详情')).toBeInTheDocument();
     expect(screen.getByText(longContent)).toBeInTheDocument();
     expect(screen.getByText('DISPATCH_ALERT')).toBeInTheDocument();
-    expect(screen.getByText('工作项 #42')).toBeInTheDocument();
+    expect(screen.getByText('需求 #42')).toBeInTheDocument();
   });
 
   it('shows a dash for the related object when the notification has none', async () => {
@@ -609,11 +609,11 @@ it('keeps both history languages, current page and drawer while translating know
   expect(within(rows(container)[0]).getByText(new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'medium' }).format(new Date('2026-09-01T10:00:00.000Z')))).toBeInTheDocument();
   await userEvent.click(screen.getByTitle('2')); await screen.findByText('Past English title');
   await userEvent.click(rows(container)[0]); await screen.findByText('Notification details');
-  expect(screen.getByText('Scheduled task run failed')).toBeInTheDocument(); expect(screen.getByText('Work item #42')).toBeInTheDocument();
+  expect(screen.getByText('Scheduled task run failed')).toBeInTheDocument(); expect(screen.getByText('Requirement #42')).toBeInTheDocument();
   const body = within(screen.getByRole('dialog')).getByText('Past English body <b>raw</b>'); const calls = listRequests.length;
   expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
   await switchLanguage('zh-CN'); expect(screen.getByRole('button', { name: '关闭' })).toBeInTheDocument();
-  expect(screen.getByText('定时任务运行失败')).toBeInTheDocument(); expect(screen.getByText('工作项 #42')).toBeInTheDocument();
+  expect(screen.getByText('定时任务运行失败')).toBeInTheDocument(); expect(screen.getByText('需求 #42')).toBeInTheDocument();
   expect(within(screen.getByRole('dialog')).getByText('Past English body <b>raw</b>')).toBe(body); expect(within(container).getByTitle('2')).toHaveClass('ant-pagination-item-active');
   expect(listRequests).toHaveLength(calls); expect(readCalls).toEqual([]); expect(document.querySelector('b')).toBeNull();
 });

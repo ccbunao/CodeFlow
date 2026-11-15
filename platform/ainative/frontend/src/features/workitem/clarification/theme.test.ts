@@ -39,7 +39,7 @@ describe('clarification theme', () => {
   });
 
   it('carries no fixed content width token', () => {
-    // 全屏态正文列必须跟着视口铺满（工作项 53035）。
+    // 全屏态正文列必须跟着视口铺满（需求 53035）。
     // 曾经的 contentMaxWidth: 760 是超宽屏横向空出大半空间的唯一来源，删掉后要钉住，
     // 否则下一次“限宽更好看”的改动会把它悄悄加回来。
     expect(CLARIFICATION_THEME).not.toHaveProperty('contentMaxWidth');

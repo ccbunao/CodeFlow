@@ -14,7 +14,7 @@ import { readWorkitemOwningWorkspace } from './otherWorkspace';
 describe('readWorkitemOwningWorkspace', () => {
   it('accepts a 13023 payload and normalizes a numeric-string workspace id', () => {
     const owning = readWorkitemOwningWorkspace(
-      new ApiError('13023', '该工作项属于项目「项目B」', 'trace-1', {
+      new ApiError('13023', '该需求属于项目「项目B」', 'trace-1', {
         workspaceId: '250',
         workspaceName: '项目B',
       }),
@@ -24,7 +24,7 @@ describe('readWorkitemOwningWorkspace', () => {
 
   it('rejects anything that is not a well-formed 13023 owning-workspace payload', () => {
     const cases: Array<[string, unknown]> = [
-      ['other business code', new ApiError('13003', '工作项不存在', null, { workspaceId: 250, workspaceName: '项目B' })],
+      ['other business code', new ApiError('13003', '需求不存在', null, { workspaceId: 250, workspaceName: '项目B' })],
       ['plain error', new Error('boom')],
       ['missing payload', new ApiError('13023', 'switch?', null, null)],
       ['payload not an object', new ApiError('13023', 'switch?', null, '250')],
@@ -43,12 +43,12 @@ describe('readWorkitemOwningWorkspace', () => {
 const OTHER_WORKSPACE_ID = 250;
 const OTHER_WORKSPACE_NAME = '项目B';
 /** 服务端 13023 的诊断文案：取消切换后将作为普通错误态的第二行展示。 */
-const OWNING_DIAGNOSTIC = '该工作项属于项目「项目B」，是否切换到该项目并打开？';
-const PROMPT_TITLE = '这条工作项属于项目「项目B」';
+const OWNING_DIAGNOSTIC = '该需求属于项目「项目B」，是否切换到该项目并打开？';
+const PROMPT_TITLE = '这条需求属于项目「项目B」';
 const SWITCH_BUTTON = '切到「项目B」并打开';
 
 const workitemInOtherWorkspace = {
-  id: '55698', workType: 'REQ', title: '项目B的工作项', contentMd: '# 背景\nB 项目需求',
+  id: '55698', workType: 'REQ', title: '项目B的需求', contentMd: '# 背景\nB 项目需求',
   templateId: '1', statusNodeId: '1', statusName: '开发中', statusCategory: 'IN_PROGRESS',
   assigneeType: 'AGENT', assigneeRef: '100', assigneeName: 'Coder-B', priority: 1, version: 1,
   gmtCreate: '2026-10-01T10:00:00Z', gmtModified: '2026-10-02T12:00:00Z',
@@ -100,7 +100,7 @@ function renderPage(entry: string) {
         <LocationDisplay />
         <Routes>
           <Route path="/workitems/:id" element={<WorkitemDetailPage />} />
-          <Route path="/workitems" element={<div>工作项列表页</div>} />
+          <Route path="/workitems" element={<div>需求列表页</div>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -130,7 +130,7 @@ describe('WorkitemDetailPage across projects', () => {
     });
   }
 
-  it('asks to switch instead of showing a not-found page when the work item lives in another project', async () => {
+  it('asks to switch instead of showing a not-found page when the requirement lives in another project', async () => {
     let switchCalls = 0;
     server.use(
       http.get('/api/workitems/55698', () => owningEnvelope()),
@@ -141,14 +141,14 @@ describe('WorkitemDetailPage across projects', () => {
     renderPage('/workitems/55698?from=notification');
 
     expect(await screen.findByText(PROMPT_TITLE)).toBeInTheDocument();
-    expect(screen.getByText('是否切换到该项目并打开工作项？取消将停留在当前项目。')).toBeInTheDocument();
+    expect(screen.getByText('是否切换到该项目并打开需求？取消将停留在当前项目。')).toBeInTheDocument();
     expect(screen.queryByText('加载失败')).not.toBeInTheDocument();
     expect(switchCalls).toBe(0);
     expect(useAuthStore.getState().currentWorkspace?.id).toBe(100);
     expect(useAuthStore.getState().accessToken).toBe('token-a');
   });
 
-  it('switches the project, keeps the URL untouched and reloads the work item in place', async () => {
+  it('switches the project, keeps the URL untouched and reloads the requirement in place', async () => {
     let switchCalls = 0;
     let visible = false;
     server.use(
@@ -157,7 +157,7 @@ describe('WorkitemDetailPage across projects', () => {
         : owningEnvelope()),
       http.post(`/api/workspaces/${OTHER_WORKSPACE_ID}/switch`, () => {
         switchCalls += 1;
-        // 与服务端一致：切到归属项目后同一工作项 ID 才可见
+        // 与服务端一致：切到归属项目后同一需求 ID 才可见
         visible = true;
         return ok({ accessToken: 'project-b-access', accessLevel: 'READ_WRITE' });
       }),
@@ -168,10 +168,10 @@ describe('WorkitemDetailPage across projects', () => {
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: SWITCH_BUTTON }));
 
-    expect(await screen.findByRole('heading', { name: '项目B的工作项' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '项目B的需求' })).toBeInTheDocument();
     expect(switchCalls).toBe(1);
     expect(screen.queryByText(PROMPT_TITLE)).not.toBeInTheDocument();
-    // 原地重载：不导航，工作项 ID 与定位参数原样保留
+    // 原地重载：不导航，需求 ID 与定位参数原样保留
     expect(screen.getByTestId('location')).toHaveTextContent('/workitems/55698?from=notification');
     const state = useAuthStore.getState();
     expect(state.accessToken).toBe('project-b-access');
@@ -230,14 +230,14 @@ describe('WorkitemDetailPage across projects', () => {
 
   it('falls back to the standard error page for a plain not-found', async () => {
     server.use(
-      http.get('/api/workitems/55698', () => failed('13003', '工作项不存在')),
+      http.get('/api/workitems/55698', () => failed('13003', '需求不存在')),
       ...pageHandlers(),
     );
 
     renderPage('/workitems/55698?from=notification');
 
     expect(await screen.findByText('加载失败')).toBeInTheDocument();
-    expect(screen.getByText('工作项不存在')).toBeInTheDocument();
+    expect(screen.getByText('需求不存在')).toBeInTheDocument();
     expect(screen.queryByText(PROMPT_TITLE)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: SWITCH_BUTTON })).not.toBeInTheDocument();
     // 两个中文字的按钮同样会被 antd 插入空格

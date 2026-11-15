@@ -125,7 +125,7 @@ describe('WorkspaceSelectPage', () => {
         traceId: null,
         data: [
           { id: 1, name: '星云工坊', description: '多 Agent 研发协作空间' },
-          { id: 2, name: '禅道集成平台', description: '连接禅道工作项与运行器集群' },
+          { id: 2, name: '禅道集成平台', description: '连接禅道需求与运行器集群' },
         ],
       })),
     );
@@ -218,7 +218,7 @@ describe('WorkspaceSelectPage', () => {
         traceId: null,
         data: [
           { id: 1, name: '星云工坊', description: '多 Agent 研发协作空间' },
-          { id: 2, name: '禅道集成平台', description: '连接禅道工作项与运行器集群' },
+          { id: 2, name: '禅道集成平台', description: '连接禅道需求与运行器集群' },
         ],
       })),
       http.post('/api/workspaces/2/switch', () => HttpResponse.json({
@@ -230,7 +230,7 @@ describe('WorkspaceSelectPage', () => {
       })),
     );
     const { queryClient } = renderPage();
-    queryClient.setQueryData(['workitems', { page: 1, size: 20 }], { content: [{ id: 101, title: '旧项目工作项' }] });
+    queryClient.setQueryData(['workitems', { page: 1, size: 20 }], { content: [{ id: 101, title: '旧项目需求' }] });
     queryClient.setQueryData(['workitem', '101'], { id: 101, title: '旧项目详情' });
 
     const targetWorkspace = await screen.findByTestId('workspace-card-2');

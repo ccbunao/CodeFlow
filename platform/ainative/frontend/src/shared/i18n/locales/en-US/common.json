@@ -55,8 +55,8 @@
   "workspace": {
     "switched": "Switched to {{name}}",
     "switchFailed": "Could not switch workspace",
-    "notMember": "You are not a member of this work item's workspace",
-    "linkedSwitchFailed": "Could not switch to this work item's workspace",
+    "notMember": "You are not a member of this requirement's workspace",
+    "linkedSwitchFailed": "Could not switch to this requirement's workspace",
     "manage": "Manage workspaces...",
     "unselected": "Not selected"
   },
@@ -67,7 +67,7 @@
     "content": "Page content",
     "tree": "Navigation tree",
     "commandPalette": "Command palette",
-    "commandPaletteSearch": "Search work items, runners, docs…",
+    "commandPaletteSearch": "Search requirements, runners, docs…",
     "paletteEmpty": "No matching destinations",
     "paletteHint": "↑↓ select · ↵ open · esc close",
     "docsHint": "Open docs in a new tab",

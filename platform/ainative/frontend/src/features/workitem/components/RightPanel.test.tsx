@@ -370,7 +370,7 @@ describe('RightPanel clarify fullscreen', () => {
   });
 });
 
-describe('RightPanel refresh restore (工作项 53035)', () => {
+describe('RightPanel refresh restore (需求 53035)', () => {
   beforeEach(() => {
     useAuthStore.getState().clear();
     useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
@@ -504,7 +504,7 @@ describe('RightPanel refresh restore (工作项 53035)', () => {
   });
 });
 
-describe('RightPanel page-driven mode switch (工作项 53315)', () => {
+describe('RightPanel page-driven mode switch (需求 53315)', () => {
   type PanelProps = Parameters<typeof RightPanel>[0];
 
   /** 页面级入口是通过改 URL（initialMode）驱动面板的，所以要能带着同样的 provider 重渲染。 */

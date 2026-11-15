@@ -35,7 +35,7 @@ describe('apiClient', () => {
         return HttpResponse.json({
           success: false,
           code: '13003',
-          message: '工作项不存在',
+          message: '需求不存在',
           data: null,
           traceId: 'trace-2',
         });
@@ -49,7 +49,7 @@ describe('apiClient', () => {
       expect(e).toBeInstanceOf(ApiError);
       const err = e as ApiError;
       expect(err.code).toBe('13003');
-      expect(err.message).toBe('工作项不存在');
+      expect(err.message).toBe('需求不存在');
       expect(err.traceId).toBe('trace-2');
     }
   });
@@ -61,7 +61,7 @@ describe('apiClient', () => {
         return HttpResponse.json({
           success: false,
           code: '13023',
-          message: '该工作项属于项目「项目B」，是否切换到该项目并打开？',
+          message: '该需求属于项目「项目B」，是否切换到该项目并打开？',
           data: { workspaceId: 250, workspaceName: '项目B' },
           traceId: 'trace-owning',
         });
@@ -178,7 +178,7 @@ describe('apiClient', () => {
         return HttpResponse.json({
           success: false,
           code: '10403',
-          message: '当前权限不足，编辑工作项需要读写权限',
+          message: '当前权限不足，编辑需求需要读写权限',
           data: null,
           traceId: 'trace-denied',
         }, { status: 403 });
@@ -197,7 +197,7 @@ describe('apiClient', () => {
 
     await expect(apiClient.put('/api/protected-write', {})).rejects.toMatchObject({
       code: '10403',
-      message: '当前权限不足，编辑工作项需要读写权限',
+      message: '当前权限不足，编辑需求需要读写权限',
       traceId: 'trace-denied',
     });
 
@@ -219,11 +219,11 @@ describe('apiClient', () => {
       http.put('/api/protected-write', () => HttpResponse.json({
         success: false,
         code: '12008',
-        message: '当前为只读权限，编辑工作项需要读写权限',
+        message: '当前为只读权限，编辑需求需要读写权限',
         data: {
           current: 'READ_ONLY',
           required: 'READ_WRITE',
-          action: '编辑工作项',
+          action: '编辑需求',
         },
         traceId: 'trace-access-denied',
       }, { status: 403 })),
@@ -241,7 +241,7 @@ describe('apiClient', () => {
 
     await expect(apiClient.put('/api/protected-write', {})).rejects.toMatchObject({
       code: '12008',
-      message: '当前为只读权限，编辑工作项需要读写权限',
+      message: '当前为只读权限，编辑需求需要读写权限',
       traceId: 'trace-access-denied',
     });
 

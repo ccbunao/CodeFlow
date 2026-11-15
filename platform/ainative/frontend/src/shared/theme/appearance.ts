@@ -4,6 +4,8 @@ export type AppearanceMode = 'dark' | 'light' | 'system';
 export type ResolvedAppearance = Exclude<AppearanceMode, 'system'>;
 export const APPEARANCE_KEY = 'ainative.appearance';
 export const DEFAULT_APPEARANCE = 'light' as const;
+/** 主按钮默认填充色(纯色深靛蓝,配白字 6.6:1)。 */
+const DEFAULT_BTN_FILL = '#1d4ed8';
 export function normalizeAppearance(value: unknown): AppearanceMode {
   return value === 'dark' || value === 'light' || value === 'system' ? value : DEFAULT_APPEARANCE;
 }
@@ -23,6 +25,18 @@ function mix(hex: string, target: string, amount: number) {
   const end = rgb(target);
   return '#' + rgb(hex).map((v, i) => Math.round(v * (1 - amount) + end[i] * amount).toString(16).padStart(2, '0')).join('');
 }
+/**
+ * 把填充色压/提到与指定文字色至少 min 对比度(1:1 ~ 21:1)。
+ * 文字为白时向黑压暗;文字为黑时向白提亮。
+ */
+function ensureContrast(color: string, fg: string, min: number) {
+  const towards = fg === '#ffffff' ? '#000000' : '#ffffff';
+  let out = color;
+  for (let i = 0; i < 30 && contrastRatio(out, fg) < min; i++) {
+    out = mix(out, towards, .06);
+  }
+  return out;
+}
 export function getAppearanceVariables(mode: ResolvedAppearance, color: string): Record<string, string> {
   const dark = mode === 'dark';
   const accent = /^#[\da-f]{6}$/i.test(color) ? color.toLowerCase() : '#2383e2';
@@ -33,10 +47,24 @@ export function getAppearanceVariables(mode: ResolvedAppearance, color: string):
   const away = ink === '#ffffff' ? '#000000' : '#ffffff';
   const primary = accent;
   const accentText = accent;
+
+  // ── 主按钮(与品牌色分开算)────────────────────────────────────────────
+  // 品牌色若太浅,蓝底配深色字会发闷(中蓝 #2383e2 就是典型)。主按钮固定白字 +
+  // 纯色深靛蓝:默认品牌色用 #1d4ed8;客户自定义品牌色则压深到能承载白字。
+  // 品牌色本身不变(--cf-primary/--cf-accent),链接、标签、菜单选中态不受影响。
+  const btnFill = accent === '#2383e2' ? DEFAULT_BTN_FILL : ensureContrast(accent, '#ffffff', 4.5);
+  const btnShadow = 'none';
+
   // aiops-platform 色板(ops.css):dark [data-theme=dark] / light [data-theme=light],逐值对齐
   return {
     '--cf-accent': accent, '--cf-accent-rgb': rgb(accent).join(','), '--cf-accent-text': accentText,
     '--cf-primary': primary, '--cf-primary-hover': mix(primary, away, .07), '--cf-primary-active': mix(primary, away, .14), '--cf-primary-ink': ink,
+    '--cf-btn-fill': btnFill,
+    '--cf-btn-hover': mix(btnFill, '#ffffff', .08),
+    '--cf-btn-active': mix(btnFill, '#000000', .1),
+    '--cf-btn-ink': '#ffffff',
+    '--cf-btn-border': mix(btnFill, '#000000', .14),
+    '--cf-btn-shadow': btnShadow,
     '--cf-bg': dark ? '#0e0f11' : '#f2f2f7',
     '--cf-panel': panel, // dark #1b1d20(=rgba(28,29,32,.72) 合成值,保证对比度可计算)
     '--cf-sidebar': dark ? '#141619' : '#ffffff',

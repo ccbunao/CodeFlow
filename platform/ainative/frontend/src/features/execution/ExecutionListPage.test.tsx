@@ -66,7 +66,7 @@ beforeEach(async () => {
 it('updates the actual cached executions route while retaining filters, page and open detail', async () => {
   const requests: URL[] = [];
   let supportingRequests = 0;
-  const raw = { ...ROW, workitemTitle: '<b>自定义工作项</b>', agentName: '<i>自定义 Agent</i>', executorName: '<em>原始运行器</em>' };
+  const raw = { ...ROW, workitemTitle: '<b>自定义需求</b>', agentName: '<i>自定义 Agent</i>', executorName: '<em>原始运行器</em>' };
   server.use(
     http.get('/api/dispatches', ({ request }) => {
       requests.push(new URL(request.url));
@@ -88,7 +88,7 @@ it('updates the actual cached executions route while retaining filters, page and
   render(<QueryClientProvider client={client}><RouterProvider router={router} /></QueryClientProvider>);
   const user = userEvent.setup();
   const heading = await screen.findByRole('heading', { name: /执行台账|Execution ledger/ });
-  const input = screen.getByPlaceholderText('工作项 ID');
+  const input = screen.getByPlaceholderText('需求 ID');
   await act(async () => { await user.type(input, '312'); });
   await waitFor(() => expect(requests[requests.length - 1]?.searchParams.get('workitem_id')).toBe('312'));
   await act(async () => { await user.click(screen.getByText('7 天内')); });
@@ -112,7 +112,7 @@ it('updates the actual cached executions route while retaining filters, page and
   const supportingRequestCount = supportingRequests;
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByRole('heading', { name: /执行台账|Execution ledger/ })).toBe(heading);
-  expect(screen.getByPlaceholderText('Work item ID')).toBe(input);
+  expect(screen.getByPlaceholderText('Requirement ID')).toBe(input);
   expect(input).toHaveValue('312');
   expect(screen.getByTitle('2')).toHaveClass('ant-pagination-item-active');
   expect(screen.getByText('Last 7d').closest('label')).toHaveClass('ant-segmented-item-selected');
@@ -126,8 +126,8 @@ it('updates the actual cached executions route while retaining filters, page and
   expect(within(dialog).getByText('No artifacts')).toBeInTheDocument();
   expect(within(dialog).getByRole('button', { name: 'View member' })).toBeEnabled();
   expect(within(dialog).getAllByText('Succeeded')).toHaveLength(2);
-  expect(screen.getAllByText('<b>自定义工作项</b>')[0].querySelector('b')).toBeNull();
-  expect(within(dialog).getByText('#312 <b>自定义工作项</b>').querySelector('b')).toBeNull();
+  expect(screen.getAllByText('<b>自定义需求</b>')[0].querySelector('b')).toBeNull();
+  expect(within(dialog).getByText('#312 <b>自定义需求</b>').querySelector('b')).toBeNull();
   expect(within(dialog).getByText('<i>自定义 Agent</i>').querySelector('i')).toBeNull();
   const cell = screen.getByText('<em>原始运行器</em>', { selector: 'td' }).closest('tr')!;
   expect(within(cell).getByText('7/11/2026, 14:22:00')).toBeInTheDocument();

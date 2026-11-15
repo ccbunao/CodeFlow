@@ -56,7 +56,7 @@ function costRealtimePayload(range: number, agentId: string) {
       range,
       scope: 'ALL_AGENTS',
       tokens: ALL_AGENT_COMPOSITION_TOTAL_TOKENS,
-      sources: [{ key: 'WORKITEM_EXECUTION', name: '工作项执行', credits: ALL_AGENT_COMPOSITION_TOTAL, tokens: ALL_AGENT_COMPOSITION_TOTAL_TOKENS, share: 100 }],
+      sources: [{ key: 'WORKITEM_EXECUTION', name: '需求执行', credits: ALL_AGENT_COMPOSITION_TOTAL, tokens: ALL_AGENT_COMPOSITION_TOTAL_TOKENS, share: 100 }],
     },
   };
 }
@@ -87,8 +87,8 @@ function stubDashboard() {
     http.get('/api/dashboard/running', () => {
       counts.running += 1;
       return ok([
-        { workitemId: 7, title: '<strong>工作项</strong>', agentName: '<em>AI 成员</em>', stepName: null, runningMinutes: 1, runningDispatchCount: 1 },
-        { workitemId: 8, title: '原始工作项', agentName: '<em>AI 成员</em>', stepName: '编码', runningMinutes: 2, runningDispatchCount: 2 },
+        { workitemId: 7, title: '<strong>需求</strong>', agentName: '<em>AI 成员</em>', stepName: null, runningMinutes: 1, runningDispatchCount: 1 },
+        { workitemId: 8, title: '原始需求', agentName: '<em>AI 成员</em>', stepName: '编码', runningMinutes: 2, runningDispatchCount: 2 },
       ]);
     }),
     http.get('/api/insights/workers', () => { counts.workers += 1; return ok([{ id: 12, name: '<em>AI 成员</em>' }]); }),
@@ -106,7 +106,7 @@ function costRegion() {
 }
 
 function overviewRegion() {
-  return within(screen.getByRole('region', { name: '工作项概况' }));
+  return within(screen.getByRole('region', { name: '需求概况' }));
 }
 
 function pipelineRegion() {
@@ -121,19 +121,19 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   const user = userEvent.setup();
   const { container } = routed(<RealtimeDashboard />);
 
-  await screen.findByRole('region', { name: '工作项概况' });
+  await screen.findByRole('region', { name: '需求概况' });
   const costSection = screen.getByRole('region', { name: '成本分析' });
   expect(screen.getByRole('region', { name: '流水线健康' })).toBeInTheDocument();
   expect(screen.getByRole('status', { name: '自动刷新' })).toHaveTextContent('30s');
   expect(screen.getByText('固定 30 秒自动刷新，不再提供刷新频率选项')).toBeInTheDocument();
-  expect(screen.getByText('两版块统计口径独立 · 工作项概况 = 实时快照 ／ 流水线健康 = 时间段聚合')).toBeInTheDocument();
+  expect(screen.getByText('两版块统计口径独立 · 需求概况 = 实时快照 ／ 流水线健康 = 时间段聚合')).toBeInTheDocument();
   expect(screen.getByText('上下两区统计口径独立 · 筛选互不影响')).toBeInTheDocument();
   // v3：成本面板头部下不再有「统计口径：…」说明，口径改由来源构成 chip 表达
   expect(within(costSection).queryByText('统计口径：')).not.toBeInTheDocument();
   expect(screen.queryByText('所选AI 成员 × 日期范围')).not.toBeInTheDocument();
   expect(await screen.findByTestId('cost-composition-bar')).toBeInTheDocument();
   expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近7天');
-  expect(costRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('工作项执行');
+  expect(costRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
   expect(screen.getByText('不受上方实时快照影响')).toBeInTheDocument();
   expect(screen.queryByText('10s')).not.toBeInTheDocument();
   expect(screen.queryByText('关闭')).not.toBeInTheDocument();
@@ -159,7 +159,7 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(within(dialog).getByText('1 minute')).toBeInTheDocument();
   expect(within(dialog).getByText('2 minutes')).toBeInTheDocument();
   expect(within(dialog).getByText(/2 running ·/)).toBeInTheDocument();
-  expect(within(dialog).getByText('#7 <strong>工作项</strong>')).toBeInTheDocument();
+  expect(within(dialog).getByText('#7 <strong>需求</strong>')).toBeInTheDocument();
   expect(screen.getByRole('combobox', { name: 'Cost Agent' })).toBe(selector);
   expect(within(selector.closest('.ant-select') as HTMLElement).getByText('<em>AI 成员</em>')).toBeInTheDocument();
   expect(within(costSection).getByRole('radio', { name: 'Last 30 days' })).toBeChecked();
@@ -169,9 +169,9 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(screen.getByText('Task execution')).toBeInTheDocument();
   expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('All agents scope · unaffected by the agent filter above');
   expect(screen.getByText('<b>交付编队</b>')).toBeInTheDocument();
-  expect(screen.getByText('Work item overview')).toBeInTheDocument();
-  expect(screen.getByText('Work item categories')).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: 'Work item status share stack' })).toBeInTheDocument();
+  expect(screen.getByText('Requirement overview')).toBeInTheDocument();
+  expect(screen.getByText('Requirement categories')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Requirement status share stack' })).toBeInTheDocument();
   expect(screen.getByText('Pipeline health')).toBeInTheDocument();
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('1h 30m')).toBeInTheDocument();
@@ -188,7 +188,7 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(screen.getByRole('dialog')).toBe(dialog);
   expect(within(dialog).getByText('1分钟')).toBeInTheDocument();
   expect(screen.getByText('总 Token')).toBeInTheDocument();
-  expect(screen.getByText('工作项概况')).toBeInTheDocument();
+  expect(screen.getByText('需求概况')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /正在运行 2/ })).toBeInTheDocument();
 });
 
@@ -197,7 +197,7 @@ it('keeps the overview refresh, pipeline range and cost filters independent', as
   const user = userEvent.setup();
   routed(<RealtimeDashboard />);
 
-  await screen.findByRole('region', { name: '工作项概况' });
+  await screen.findByRole('region', { name: '需求概况' });
   expect(await screen.findByText('80.0%')).toBeInTheDocument();
   expect(counts).toEqual({ overview: 1, realtime: 1, pipeline: 1, cost: 1, workers: 1, running: 0 });
 
@@ -228,7 +228,7 @@ it('restores the all-agent cost scope from the chip without refetching the snaps
   const { counts, costRequests } = stubDashboard();
   const user = userEvent.setup();
   routed(<RealtimeDashboard />);
-  await screen.findByRole('region', { name: '工作项概况' });
+  await screen.findByRole('region', { name: '需求概况' });
 
   await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
   const options = await screen.findAllByRole('option');
@@ -262,12 +262,12 @@ it('updates the cached panels and accessible charts without resetting keyboard f
   await userEvent.keyboard('{Enter} ');
   expect(clicks).toEqual(['runningWorkitems', 'runningWorkitems']);
 
-  expect(screen.getByText('Work item overview')).toBeInTheDocument();
-  expect(screen.getByText('Work item categories')).toBeInTheDocument();
-  expect(screen.getByText('Work item status')).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: 'Work item status share stack' })).toBeInTheDocument();
+  expect(screen.getByText('Requirement overview')).toBeInTheDocument();
+  expect(screen.getByText('Requirement categories')).toBeInTheDocument();
+  expect(screen.getByText('Requirement status')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Requirement status share stack' })).toBeInTheDocument();
   expect(screen.getByText('Canceled')).toBeInTheDocument();
-  expect(screen.getByText('Requirements')).toBeInTheDocument();
+  expect(screen.getAllByText('Requirements').length).toBeGreaterThan(0);
   expect(screen.getByText('Pipeline health')).toBeInTheDocument();
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('1h 30m')).toBeInTheDocument();
@@ -417,7 +417,7 @@ it('switches loading and empty messages to the current language for all three pa
   );
   routed(<RealtimeDashboard />);
 
-  expect(await screen.findByText('加载工作项概况…')).toBeInTheDocument();
+  expect(await screen.findByText('加载需求概况…')).toBeInTheDocument();
   expect(screen.getByText('加载流水线健康…')).toBeInTheDocument();
   expect(screen.getByText('加载实时看板…')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
@@ -431,7 +431,7 @@ it('switches loading and empty messages to the current language for all three pa
   expect(await screen.findByText('No pipeline health data')).toBeInTheDocument();
   expect(await screen.findByText('No realtime data. Refresh again later.')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
-  expect(screen.getByText('暂无工作项概况数据')).toBeInTheDocument();
+  expect(screen.getByText('暂无需求概况数据')).toBeInTheDocument();
   expect(screen.getByText('暂无流水线健康数据')).toBeInTheDocument();
   expect(screen.getByText('暂无实时数据，请稍后刷新')).toBeInTheDocument();
 

@@ -162,7 +162,7 @@ describe('MarkdownView', () => {
     const { container } = render(
       <MarkdownView
         content={[
-          '工作项详情页面中，工作项正文部分情况会超出正文区域到右侧',
+          '需求详情页面中，需求正文部分情况会超出正文区域到右侧',
           '',
           '```',
           'ainative_get_workitem (ainative MCP Server)',
@@ -174,7 +174,7 @@ describe('MarkdownView', () => {
       />,
     );
 
-    expect(container).toHaveTextContent('工作项详情页面中，工作项正文部分情况会超出正文区域到右侧');
+    expect(container).toHaveTextContent('需求详情页面中，需求正文部分情况会超出正文区域到右侧');
     const pre = container.querySelector('pre');
     expect(pre).not.toBeNull();
     expect(pre).toHaveStyle({ overflowX: 'auto', maxWidth: '100%' });

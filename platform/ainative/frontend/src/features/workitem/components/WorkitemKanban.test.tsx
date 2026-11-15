@@ -57,7 +57,7 @@ describe('WorkitemKanban 待你处理按人分类', () => {
     ];
     renderKanban({ items, pendingDecisionSummary: { name: '张三', count: 52 } });
 
-    // 三个待你处理工作项标题都在
+    // 三个待你处理需求标题都在
     expect(screen.getByText('决策A')).toBeInTheDocument();
     expect(screen.getByText('决策B')).toBeInTheDocument();
     expect(screen.getByText('决策C')).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('WorkitemKanban 待你处理按人分类', () => {
     renderKanban({ items, onlyMine: true, currentUserId: 42, pendingDecisionSummary: { name: '张三', count: 1 } });
     expect(screen.queryByLabelText('决策人汇总')).not.toBeInTheDocument();
 
-    expect(screen.getByText('暂无需要您决策的工作项')).toBeInTheDocument();
+    expect(screen.getByText('暂无需要您决策的需求')).toBeInTheDocument();
     expect(screen.queryByText('别人的决策')).not.toBeInTheDocument();
   });
 
@@ -147,19 +147,19 @@ describe('WorkitemKanban 待你处理按人分类', () => {
 
 describe('WorkitemKanban 优先级与姓名展示', () => {
   it('renders the shared Chinese priority label with its color', () => {
-    renderKanban({ items: [mk({ id: 1, priority: 0, title: '紧急工作项' })] });
+    renderKanban({ items: [mk({ id: 1, priority: 0, title: '紧急需求' })] });
     expect(screen.getByText('紧急')).toHaveClass('wi-priority--p0');
   });
 
   it('shows 未知优先级 for unknown priority values without treating them as low', () => {
-    renderKanban({ items: [mk({ id: 1, priority: 7, title: '未知优先级工作项' })] });
+    renderKanban({ items: [mk({ id: 1, priority: 7, title: '未知优先级需求' })] });
     expect(screen.getByText('未知优先级')).toBeInTheDocument();
   });
 
   it('strips id suffixes from assignee and creator names', () => {
     renderKanban({ items: [mk({
       id: 1,
-      title: '姓名工作项',
+      title: '姓名需求',
       assigneeType: 'AGENT',
       assigneeRef: 40013,
       assigneeName: 'agent-40013',
@@ -193,12 +193,12 @@ describe('WorkitemKanban 优先级与姓名展示', () => {
   });
 
   it('shows 未指派 for unassigned cards', () => {
-    renderKanban({ items: [mk({ id: 1, title: '无人工作项', assigneeName: null, assigneeDisplayName: null })] });
+    renderKanban({ items: [mk({ id: 1, title: '无人需求', assigneeName: null, assigneeDisplayName: null })] });
     expect(screen.getByText('当前负责人:未指派')).toBeInTheDocument();
   });
 
   it('falls back to 未返回 for external cards without a reporter', () => {
-    renderKanban({ items: [mk({ id: 1, title: '无提出人工作项', sourceType: 'EXTERNAL', sourceCreator: undefined })] });
+    renderKanban({ items: [mk({ id: 1, title: '无提出人需求', sourceType: 'EXTERNAL', sourceCreator: undefined })] });
     expect(screen.getByText('来源提出人:未返回')).toBeInTheDocument();
   });
 });
@@ -206,7 +206,7 @@ describe('WorkitemKanban 优先级与姓名展示', () => {
 describe('WorkitemKanban 人工处理与异常标记', () => {
   it('shows the assignee without a duplicate human-intervention tag', () => {
     const items = [
-      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '开发中', assigneeType: 'HUMAN', assigneeRef: 10000, assigneeDisplayName: '蔡何', title: '人工工作项' }),
+      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '开发中', assigneeType: 'HUMAN', assigneeRef: 10000, assigneeDisplayName: '蔡何', title: '人工需求' }),
     ];
     renderKanban({ items });
 
@@ -216,21 +216,21 @@ describe('WorkitemKanban 人工处理与异常标记', () => {
 
   it('does not show 需人工 tag for agent-assigned pending-decision cards', () => {
     const items = [
-      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '开发中', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'Coder-01', title: '机器工作项' }),
+      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '开发中', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'Coder-01', title: '机器需求' }),
     ];
     renderKanban({ items });
 
-    expect(screen.getByText('机器工作项')).toBeInTheDocument();
+    expect(screen.getByText('机器需求')).toBeInTheDocument();
     expect(screen.queryByText(/需人工/)).not.toBeInTheDocument();
   });
 
   it('does not show 需人工 tag when no human is explicitly assigned', () => {
     const items = [
-      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '待处理', assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, title: '未指派工作项' }),
+      mk({ id: 1, statusCategory: 'PENDING_DECISION', statusName: '待处理', assigneeType: 'HUMAN', assigneeRef: null, assigneeName: null, title: '未指派需求' }),
     ];
     renderKanban({ items });
 
-    expect(screen.getByText('未指派工作项')).toBeInTheDocument();
+    expect(screen.getByText('未指派需求')).toBeInTheDocument();
     expect(screen.queryByText(/需人工/)).not.toBeInTheDocument();
   });
 
@@ -256,12 +256,12 @@ describe('WorkitemKanban 人工处理与异常标记', () => {
     const items = [
       mk({
         id: 1, statusCategory: 'NEW', statusName: '待你处理复核', assigneeType: 'HUMAN',
-        assigneeRef: 10000, assigneeDisplayName: '蔡何', title: '新建人工工作项',
+        assigneeRef: 10000, assigneeDisplayName: '蔡何', title: '新建人工需求',
       }),
     ];
     renderKanban({ items });
 
-    expect(screen.getByText('新建人工工作项')).toBeInTheDocument();
+    expect(screen.getByText('新建人工需求')).toBeInTheDocument();
     expect(screen.queryByText(/需人工/)).not.toBeInTheDocument();
   });
 });
@@ -269,20 +269,20 @@ describe('WorkitemKanban 人工处理与异常标记', () => {
 describe('WorkitemKanban 定时执行标识', () => {
   it('shows 定时执行 icon only for scheduled workitems', () => {
     const items = [
-      mk({ id: 1, statusName: '待处理', assigneeType: 'AGENT', assigneeRef: 5, title: '定时工作项', scheduledStartAt: '2026-09-01T02:00:00Z' }),
-      mk({ id: 2, statusName: '待处理', assigneeType: 'HUMAN', assigneeRef: null, title: '普通工作项' }),
+      mk({ id: 1, statusName: '待处理', assigneeType: 'AGENT', assigneeRef: 5, title: '定时需求', scheduledStartAt: '2026-09-01T02:00:00Z' }),
+      mk({ id: 2, statusName: '待处理', assigneeType: 'HUMAN', assigneeRef: null, title: '普通需求' }),
     ];
     renderKanban({ items });
 
-    expect(screen.getByText('定时工作项')).toBeInTheDocument();
-    expect(screen.getByText('普通工作项')).toBeInTheDocument();
+    expect(screen.getByText('定时需求')).toBeInTheDocument();
+    expect(screen.getByText('普通需求')).toBeInTheDocument();
     expect(screen.getByLabelText('定时执行')).toBeInTheDocument();
   });
 
   it('renders no 定时执行 icon when no workitem is scheduled', () => {
-    renderKanban({ items: [mk({ id: 1, statusName: '待处理', title: '普通工作项' })] });
+    renderKanban({ items: [mk({ id: 1, statusName: '待处理', title: '普通需求' })] });
 
-    expect(screen.getByText('普通工作项')).toBeInTheDocument();
+    expect(screen.getByText('普通需求')).toBeInTheDocument();
     expect(screen.queryByLabelText('定时执行')).not.toBeInTheDocument();
   });
 });
@@ -356,14 +356,14 @@ describe('WorkitemKanban 列归属（规格 3.1）', () => {
   });
 
   it('hides CANCELED workitems from the board（优先级 0：看板不展示）', () => {
-    renderKanban({ items: [mk({ id: 1, title: '已取消工作项', statusCategory: 'CANCELED' })] });
-    expect(screen.queryByText('已取消工作项')).not.toBeInTheDocument();
+    renderKanban({ items: [mk({ id: 1, title: '已取消需求', statusCategory: 'CANCELED' })] });
+    expect(screen.queryByText('已取消需求')).not.toBeInTheDocument();
     expect(screen.queryByTestId('workitem-card-1')).not.toBeInTheDocument();
   });
 
   it('renders the CANCELED column only when the filter explicitly selects it', () => {
     renderKanban({
-      items: [mk({ id: 1, title: '已取消工作项', statusCategory: 'CANCELED' })],
+      items: [mk({ id: 1, title: '已取消需求', statusCategory: 'CANCELED' })],
       columnKeys: ['CANCELED'],
       columnTotals: { CANCELED: 1 },
     });

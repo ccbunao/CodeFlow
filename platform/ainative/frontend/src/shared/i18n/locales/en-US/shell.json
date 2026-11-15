@@ -34,7 +34,7 @@
     "docs": "Docs"
   },
   "banner": {
-    "explanation": "The AI Butler platform agent coordinates your project: it accepts and breaks down work items, dispatches agents to deliver together, and builds team memory. Configure an executor and keep it online to automate work item delivery.",
+    "explanation": "The AI Butler platform agent coordinates your project: it accepts and breaks down requirements, dispatches agents to deliver together, and builds team memory. Configure an executor and keep it online to automate requirement delivery.",
     "capabilities": "Platform agent capabilities",
     "notConfigured": "The AI Butler platform agent has no executor configured",
     "offline": "All executors for the AI Butler platform agent are offline",

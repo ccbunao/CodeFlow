@@ -52,7 +52,7 @@ describe('ClarifyReminderModal', () => {
     expect(screen.getByRole('button', { name: CONFIRM_BUTTON })).toBeInTheDocument();
   });
 
-  it('offers an unticked 下次不再提醒 opt-out (工作项 54819)', () => {
+  it('offers an unticked 下次不再提醒 opt-out (需求 54819)', () => {
     renderModal();
 
     // 默认不勾选：降噪是用户主动选的，不能替他决定以后都不提醒

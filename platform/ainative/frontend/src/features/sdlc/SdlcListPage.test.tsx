@@ -110,7 +110,7 @@ describe('SdlcListPage', () => {
     const error = vi.spyOn(message, 'error').mockImplementation(
       () => undefined as unknown as ReturnType<typeof message.error>,
     );
-    const backendMessage = '流程被引用,无法删除: 引用源: 工作项 1 个(#77); AI 成员 1 个(小码(ID:5))。请先解除上述引用后再删除。';
+    const backendMessage = '流程被引用,无法删除: 引用源: 需求 1 个(#77); AI 成员 1 个(小码(ID:5))。请先解除上述引用后再删除。';
     server.use(
       http.get('/api/sdlcs/page', () => sdlcPageResponse({
         success: true, code: '0', message: '', traceId: null,

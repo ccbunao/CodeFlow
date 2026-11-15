@@ -170,19 +170,19 @@ describe('ScheduledTaskListPage', () => {
     renderList('READ_WRITE');
 
     expect(await screen.findByText('凌晨回归')).toBeInTheDocument();
-    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual(['定时任务', '定时工作项']);
+    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual(['定时任务', '定时需求']);
     expect(screen.getByRole('tab', { name: '定时任务' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('button', { name: '立即跑' })).toBeInTheDocument();
     expect(requests).toHaveLength(0);
   });
 
-  it('loads scheduled workitems and remembers the tab when switching to 定时工作项', async () => {
+  it('loads scheduled workitems and remembers the tab when switching to 定时需求', async () => {
     const user = userEvent.setup();
     const requests: string[] = [];
     server.use(...readHandlers(), workitemHandler(requests));
 
     renderList('READ_WRITE');
-    await user.click(await screen.findByRole('tab', { name: '定时工作项' }));
+    await user.click(await screen.findByRole('tab', { name: '定时需求' }));
 
     expect(await screen.findByText('定时需求A')).toBeInTheDocument();
     expect(requests[0]).toContain('scheduledStart=ALL');
@@ -197,7 +197,7 @@ describe('ScheduledTaskListPage', () => {
     renderList('READ_WRITE');
 
     expect(await screen.findByText('定时需求A')).toBeInTheDocument();
-    expect(await screen.findByRole('tab', { name: /定时工作项$/ })).toHaveAttribute('aria-selected', 'true');
+    expect(await screen.findByRole('tab', { name: /定时需求$/ })).toHaveAttribute('aria-selected', 'true');
     expect(requests[0]).toContain('scheduledStart=ALL');
   });
 });
@@ -225,10 +225,10 @@ it('switches cached list and both tabs without resetting filters, page or querie
   expect(screen.getByText('Agent #11')).toBeInTheDocument();
   expect(screen.getByLabelText('Scope')).toHaveTextContent('Created by me');
   expect(requests).toEqual(beforeSwitch);
-  await user.click(screen.getByRole('tab', { name: 'Scheduled work items' }));
+  await user.click(screen.getByRole('tab', { name: 'Scheduled requirements' }));
   await screen.findByText('定时需求A');
   await act(() => i18n.changeLanguage('zh-CN'));
-  expect(await screen.findByRole('tab', { name: /定时工作项$/ })).toHaveAttribute('aria-selected', 'true');
+  expect(await screen.findByRole('tab', { name: /定时需求$/ })).toHaveAttribute('aria-selected', 'true');
   expect(window.localStorage.getItem(TAB_STORAGE_KEY)).toBe('workitems');
 });
 

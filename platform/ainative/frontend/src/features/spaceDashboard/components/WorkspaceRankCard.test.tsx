@@ -14,7 +14,7 @@ function renderCard(props: Partial<Parameters<typeof WorkspaceRankCard>[0]> = {}
   const view = render(
     <WorkspaceRankCard
       testId="rank"
-      title="已完成工作项最多的空间"
+      title="已完成需求最多的空间"
       entries={entries}
       total={entries.length}
       emptyText="暂无数据"

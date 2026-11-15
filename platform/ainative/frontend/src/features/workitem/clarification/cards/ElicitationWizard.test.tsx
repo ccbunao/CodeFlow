@@ -163,7 +163,7 @@ describe('ElicitationWizard', () => {
 });
 
 
-describe('ElicitationWizard 收起/展开（工作项 56330）', () => {
+describe('ElicitationWizard 收起/展开（需求 56330）', () => {
   const toggle = () => screen.getByTestId('elicitation-toggle-r1');
 
   beforeEach(() => { vi.useFakeTimers(); });
