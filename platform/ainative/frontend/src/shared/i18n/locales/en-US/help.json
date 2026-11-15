@@ -33,5 +33,6 @@
   "pdf": {
     "preview": "Open preview",
     "download": "Download PDF"
-  }
+  },
+  "version": "V2.0.1"
 }

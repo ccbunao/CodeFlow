@@ -37,7 +37,7 @@ afterEach(() => {
 
 describe('文档中心静态文档', () => {
   it('公开截图引用与磁盘文件一致，内部身份和凭证截图均不发布', () => {
-    const retained = ['02', '06', '09', '14'];
+    const retained = ['02', '06', '09'];
     for (const [corpus, locale] of [[chapters, 'zh-CN'], [englishChapters, 'en-US']] as const) {
       const references = corpus.flatMap(chapter => [...chapter.markdown.matchAll(/!\[[^\]]*\]\(\/help\/assets\/([^\s)]+\.png)/g)].map(match => match[1]));
       expect(references).toEqual(retained.map(id => `${id}-${locale}.png`));
@@ -45,7 +45,7 @@ describe('文档中心静态文档', () => {
     const assetDirectory = resolve(process.cwd(), 'public/help/assets');
     expect(readdirSync(assetDirectory).filter(file => file.endsWith('.png')).sort()).toEqual(retained.flatMap(id => ['en-US', 'zh-CN'].flatMap(locale => ['dark', 'light'].map(theme => `${id}-${locale}-${theme}.png`))).sort());
     const content = JSON.stringify([chapters, englishChapters]);
-    for (const number of ['01', '03', '04', '05', '07', '08', '10', '11', '12', '13', '15']) {
+    for (const number of ['01', '03', '04', '05', '07', '08', '10', '11', '12', '13', '14', '15']) {
       expect(content).not.toContain(`/help/assets/${number}-`);
       expect(readdirSync(assetDirectory).some(file => file.startsWith(`${number}-`))).toBe(false);
     }
@@ -92,15 +92,15 @@ describe('文档中心静态文档', () => {
   });
 
   it('支持章节直接链接和切换，目录使用真实标题锚点', async () => {
-    renderHelp('/help?chapter=best-practices');
-    await screen.findByRole('heading', { name: '成本优化' });
-    fireEvent.click(screen.getByRole('link', { name: 'IM连接' }));
-    await screen.findByRole('heading', { name: '机器人配置' });
-    expect(screen.queryByRole('heading', { name: '成本优化' })).not.toBeInTheDocument();
-    const links = screen.getAllByRole('link', { name: '个人工号设置' });
-    expect(links[0]).toHaveAttribute('href', '/help?chapter=im-integration#im-integration-1');
+    renderHelp('/help?chapter=practice-cases');
+    await screen.findByRole('heading', { name: '这三次交付沉淀下来的做法' });
+    const links = screen.getAllByRole('link', { name: '教师工作台' });
+    expect(links[0]).toHaveAttribute('href', '/help?chapter=practice-cases#practice-cases-2');
     fireEvent.click(links[0]);
-    expect(screen.getByRole('heading', { name: '个人工号设置' })).toHaveAttribute('id', 'im-integration-1');
+    expect(screen.getByRole('heading', { name: '教师工作台' })).toHaveAttribute('id', 'practice-cases-2');
+    fireEvent.click(screen.getByRole('link', { name: '常见问题' }));
+    await screen.findByRole('heading', { level: 1, name: '常见问题' });
+    expect(screen.queryByRole('heading', { name: '这三次交付沉淀下来的做法' })).not.toBeInTheDocument();
   });
 
   it('每个原文代码块都可以复制全文，包括空行及结尾换行', async () => {
@@ -164,20 +164,19 @@ describe('文档中心静态文档', () => {
       .toEqual(['06', '09']);
   });
 
-  it('IM配置保留公开截图及全部教程章节', async () => {
-    renderHelp('/help?chapter=im-integration');
-    await screen.findByRole('heading', { level: 1, name: 'IM连接' });
-    expect([...document.querySelectorAll('.help-markdown img')].map(img => img.getAttribute('src')?.slice(13, 15))).toEqual(['14']);
-    for (const name of ['机器人配置', '个人工号设置', '项目机器人配置']) {
+  it('实践案例列出三个真实交付产品与沉淀做法', async () => {
+    renderHelp('/help?chapter=practice-cases');
+    await screen.findByRole('heading', { level: 1, name: '实践案例' });
+    for (const name of ['性能测试平台(Web 压测工具)', '电商网站(云选商城)', '教师工作台', '这三次交付沉淀下来的做法']) {
       expect(screen.getByRole('heading', { name })).toBeInTheDocument();
     }
-  });
-
-  it('最佳实践各子模块的有序列表从1开始', async () => {
-    renderHelp('/help?chapter=best-practices');
-    await screen.findByRole('heading', { level: 1, name: '最佳实践' });
-    const lists = [...document.querySelectorAll('.help-markdown ol')];
-    expect(lists).toHaveLength(5);
+    // 三个案例的关键验收数字都是实跑结果
+    const article = document.querySelector('article')!;
+    expect(article).toHaveTextContent('QPS 1975.77');
+    expect(article).toHaveTextContent('NO202611120555218625');
+    expect(article).toHaveTextContent('8812');
+    const lists = [...article.querySelectorAll('ol')];
+    expect(lists).toHaveLength(1);
     expect(lists.every(list => !list.hasAttribute('start') || list.getAttribute('start') === '1')).toBe(true);
   });
 
@@ -245,9 +244,9 @@ describe('help locale lifecycle', () => {
   it('ignores held old-locale resolutions and rejections and aborts on switch and unmount', async () => {
     const pending: { options?: RequestInit; resolve: (response: Response) => void; reject: (reason: Error) => void }[] = [];
     vi.spyOn(globalThis, 'fetch').mockImplementation((_url, options) => new Promise((resolve, reject) => { pending.push({ options, resolve, reject }); }));
-    const router = routed('/help?chapter=im-integration&keep=raw#im-integration-1');
+    const router = routed('/help?chapter=practice-cases&keep=raw#practice-cases-1');
     await act(async () => { pending[0].resolve(new Response(JSON.stringify(chapters))); });
-    await screen.findByRole('heading', { level: 1, name: 'IM连接' });
+    await screen.findByRole('heading', { level: 1, name: '实践案例' });
     await act(() => i18n.changeLanguage('en-US'));
     expect(pending).toHaveLength(2);
     expect(pending[0].options?.signal?.aborted).toBe(true);
@@ -255,12 +254,12 @@ describe('help locale lifecycle', () => {
     expect(pending).toHaveLength(3);
     expect(pending[1].options?.signal?.aborted).toBe(true);
     await act(async () => { pending[2].resolve(new Response(JSON.stringify(chapters))); pending[1].resolve(new Response(JSON.stringify(english))); });
-    expect(screen.getByRole('heading', { level: 1, name: 'IM连接' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: '实践案例' })).toBeInTheDocument();
     await act(() => i18n.changeLanguage('en-US'));
     await act(() => i18n.changeLanguage('zh-CN'));
     await act(async () => { pending[4].resolve(new Response(JSON.stringify(chapters))); pending[3].reject(new Error('old failure')); });
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-    expect(router.state.location.hash).toBe('#im-integration-1');
+    expect(router.state.location.hash).toBe('#practice-cases-1');
     pending.forEach(request => { expect(request.options?.credentials).toBe('omit'); expect(new Headers(request.options?.headers).has('Authorization')).toBe(false); });
     cleanup();
     expect(pending[4].options?.signal?.aborted).toBe(true);
@@ -274,9 +273,9 @@ describe('complete bilingual help corpus', () => {
       [...chapter.markdown.matchAll(/!\[[^\]]*\]\((\/help\/assets\/[^ ]+)/g)].map(match => match[1]));
     const english = imagePaths(englishChapters);
     const chinese = imagePaths(chapters);
-    expect(english).toHaveLength(4);
-    expect(chinese).toHaveLength(4);
-    expect(new Set([...english, ...chinese].flatMap(path => ['light', 'dark'].map(appearance => path.replace(/\.png$/, `-${appearance}.png`)))).size).toBe(16);
+    expect(english).toHaveLength(3);
+    expect(chinese).toHaveLength(3);
+    expect(new Set([...english, ...chinese].flatMap(path => ['light', 'dark'].map(appearance => path.replace(/\.png$/, `-${appearance}.png`)))).size).toBe(12);
     for (const [paths, locale] of [[english, 'en-US'], [chinese, 'zh-CN']] as const) {
       for (const path of paths) {
         expect(path).toMatch(new RegExp(`-${locale}\\.png$`));
@@ -340,7 +339,7 @@ describe('complete bilingual help corpus', () => {
     }
     expect(onboarding).toContain('The frontend repository depends on the backend repository.');
     expect(onboarding).toContain('The backend repository depends on the API and middleware repositories.');
-    expect(englishChapters.find(chapter => chapter.id === 'im-integration')!.markdown).toContain('Project Manager');
+    expect(englishChapters.find(chapter => chapter.id === 'practice-cases')!.markdown).toContain('Cloud Selection Mall');
   });
   it.each(englishChapters)('renders the complete English $id with stable headings, assets and translated code bytes', async chapter => {
     await i18n.changeLanguage('en-US');
@@ -375,10 +374,10 @@ describe('complete bilingual help corpus', () => {
       expect(article).toHaveTextContent('Quick Full-Stack Developer');
       expect(article).toHaveTextContent('Quick Deployment Engineer');
     }
-    if (chapter.id === 'im-integration') {
-      expect([...article.querySelectorAll('img')].map(img => img.getAttribute('src'))).toEqual(['/help/assets/14-en-US-light.png']);
+    if (chapter.id === 'practice-cases') {
+      expect([...article.querySelectorAll('ol')].map(list => list.children.length)).toEqual([6]);
+      expect(article).toHaveTextContent('QPS 1975.77');
     }
-    if (chapter.id === 'best-practices') expect([...article.querySelectorAll('ol')].map(list => list.children.length)).toEqual([4, 3, 1, 2, 3]);
     if (chapter.id === 'faq') {
       const cards = [...article.querySelectorAll('.help-faq')];
       expect(cards).toHaveLength(8);

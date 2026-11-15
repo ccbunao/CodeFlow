@@ -33,5 +33,6 @@
   "pdf": {
     "preview": "在线预览",
     "download": "下载 PDF"
-  }
+  },
+  "version": "V2.0.1"
 }

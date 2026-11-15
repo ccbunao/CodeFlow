@@ -103,7 +103,7 @@ platform/            平台:后端 server-v2(Spring Boot 3.3,JDBC 零 ORM,+ 前�
 └── server-v2/       后端源码(全量重写版,~1.4 万行,零 v1 衍生)
 runtime/             执行器运行时:WebSocket 接单、任务包解压、驱动 Agent CLI、产物回传
 tests/               执行器运行时测试(pytest)
-scripts/             执行器注册、存储桶创建、禅道/TAPD E2E 验证
+scripts/             执行器注册、存储桶创建、禅道 E2E 验证
 docs/                用户手册、集成指南、SDLC 设计、发布清单、平台协议文档
 ```
 
@@ -112,7 +112,7 @@ docs/                用户手册、集成指南、SDLC 设计、发布清单、
 - **协议先行** — WebSocket 帧协议(心跳/派发/结果/重连)、任务包 schema(`ainative.taskPackage.v1`)、MCP 工具契约均有文档(`platform/ainative/docs/`)
 - **可靠投递** — 离线派发落 PENDING 重放、断线自动重连、attempt 递增、同分钟判重防抖
 - **产物完整性** — deliverables 递归回传(含子目录,`__` 编码保留结构),下载带 sha256 校验
-- **多源工单** — 禅道 / TAPD 同骨架接入:自动轮询拉取入库,交付备注按 provider 回写源头
+- **外部工单** — 禅道接入:自动轮询拉取入库,交付备注回写源头
 - **零 ORM** — 后端只用 JdbcTemplate,SQL 全手写可见;数据库 MySQL 8 / OceanBase seekdb 双兼容
 
 ## 🔗 禅道闭环(已真实验证)

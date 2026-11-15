@@ -5,7 +5,7 @@ Agent CLI(Claude Code / Codex / Cursor 等),把产物与执行结论回传平台
 
 - **纯标准库**:运行时零第三方依赖(Python ≥ 3.11)
 - **协议**:`ainative.taskPackage.v1` 任务包;帧协议见平台文档 `platform/ainative/docs/`
-- **多源工单**:支持从禅道 / TAPD 拉取需求,交付备注回写源头
+- **外部工单**:支持从禅道拉取需求,交付备注回写源头
 
 ## 安装
 

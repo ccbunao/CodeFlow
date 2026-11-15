@@ -2730,7 +2730,7 @@
  {
   "file": "src/features/help/HelpCenterPage.tsx",
   "kind": "literal",
-  "text": "CodeFlow-用户操作手册-v1.2.0.pdf",
+  "text": "CodeFlow-用户操作手册-v2.0.1.pdf",
   "reason": "Download filename for the user-manual PDF (proper noun / file name; not translatable UI copy)."
  }
 ]

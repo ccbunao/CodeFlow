@@ -55,7 +55,7 @@ function remarkChapterLayout(chapterId: string) {
       }
       tree.children = groups;
     }
-    if (chapterId === 'project-onboarding' || chapterId === 'im-integration') {
+    if (chapterId === 'project-onboarding') {
       for (let index = 0; index < tree.children.length - 1; index++) {
         const first = tree.children[index];
         const second = tree.children[index + 1];
@@ -274,11 +274,11 @@ export function HelpCenterPage() {
                 if (href === '/help/assets/ainative.zip') {
                   return <Button className="help-download" href={href} download="ainative.zip" icon={<DownloadOutlined aria-hidden="true" />}>{t('download')} {children}</Button>;
                 }
-                if (href === '/help/assets/codeflow-user-manual-v1.2.0.pdf') {
+                if (href === '/help/assets/codeflow-user-manual-v2.0.1.pdf') {
                   return (
                     <span className="help-pdf-actions">
                       <Button className="help-download" href={href} target="_blank" rel="noopener noreferrer" icon={<FileTextOutlined aria-hidden="true" />}>{t('pdf.preview')}</Button>
-                      <Button className="help-download" href={href} download="CodeFlow-用户操作手册-v1.2.0.pdf" icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
+                      <Button className="help-download" href={href} download="CodeFlow-用户操作手册-v2.0.1.pdf" icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
                     </span>
                   );
                 }
