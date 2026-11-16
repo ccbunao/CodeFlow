@@ -52,6 +52,7 @@ public class WorkitemService {
             throw new BizException("10001", "描述不能为空");
         }
         String type = workType == null || workType.isBlank() ? "REQ" : workType;
+        if ("WORKITEM".equalsIgnoreCase(type)) type = "REQ"; // 惯用桶名归一化为需求类型
         Long resolvedFlow = dao.defaultFlowId(ws()).orElse(null);
         if (resolvedFlow == null) {
             // 新工作区(或刚清空模板)没有状态机:先按内置模板开户,再建单。

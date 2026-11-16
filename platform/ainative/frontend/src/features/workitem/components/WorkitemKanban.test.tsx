@@ -175,7 +175,7 @@ describe('WorkitemKanban 优先级与姓名展示', () => {
 
   it('preserves full long metadata in hover titles and renders the assignee as text', () => {
     const creator = '负责前端验收的超长创建者名称';
-    const assignee = '负责前端验收的超长AI 成员名称';
+    const assignee = '负责前端验收的超长数字员工名称';
     const status = '等待人工确认的超长状态名称';
     renderKanban({ items: [mk({ id: 1, creatorDisplayName: creator, assigneeType: 'AGENT', assigneeDisplayName: assignee, statusName: status })] });
     const fields = [screen.getByTitle(`创建者: ${creator}`), screen.getByTitle(`当前负责人:${assignee}`), screen.getByTitle(`状态: ${status}`)];

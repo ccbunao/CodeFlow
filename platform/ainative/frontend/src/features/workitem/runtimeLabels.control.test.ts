@@ -50,7 +50,7 @@ describe('timelineSystemContent execution control', () => {
         action: 'PAUSE', phase: 'REQUESTED', dispatchId: 30, requestedByName: '过载', origin: 'USER',
         agentId: 12, agentName: 'Terraform RD',
       },
-    }))).toContain('AI 成员:Terraform RD(#12)');
+    }))).toContain('数字员工:Terraform RD(#12)');
   });
 
   it('keeps timeout stop as a system event and renders resume targets', async () => {

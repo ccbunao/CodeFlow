@@ -49,6 +49,18 @@
       <artifactId>spring-security-crypto</artifactId>
       <version>6.3.3</version>
     </dependency>
+    <!-- TAPD 集成(同事 Alan Bao 的 v1 模块合入):HTTP 客户端 + 注解处理器 -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.9.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.46</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -59,6 +71,13 @@
         <configuration>
           <release>21</release>
           <parameters>true</parameters>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.46</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>

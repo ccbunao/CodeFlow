@@ -1131,13 +1131,13 @@ describe('WorkitemListPage 表格列与字段展示', () => {
       http.get('/api/workitems', () => HttpResponse.json({
         success: true, code: '0', message: '', traceId: null,
         data: pageData([
-          fieldRow({ id: 42, title: 'AI 成员需求', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'agent-40013', assigneeDisplayName: 'AW全栈开发(40013)' }),
+          fieldRow({ id: 42, title: '数字员工需求', assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'agent-40013', assigneeDisplayName: 'AW全栈开发(40013)' }),
           fieldRow({ id: 43, title: '未指派需求', assigneeRef: null, assigneeName: null, assigneeDisplayName: null }),
         ]),
       })),
     );
 
-    await renderTableView('AI 成员需求');
+    await renderTableView('数字员工需求');
     expect(screen.getByText('AI')).toBeInTheDocument();
     expect(screen.getByText('AW全栈开发')).toBeInTheDocument();
     expect(screen.getByText('未指派')).toBeInTheDocument();

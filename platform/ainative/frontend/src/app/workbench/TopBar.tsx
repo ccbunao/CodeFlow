@@ -34,6 +34,12 @@ export function TopBar({ workspaces, onOpenPalette, onSwitchWorkspace, switching
     NAV_SECTIONS.forEach((section) => section.items.forEach((item) => map.set(item.key, item.label)));
     map.set('/profile/settings', i18n.t('shell:nav.environment'));
     map.set('/workspaces/branding', i18n.t('shell:nav.environment'));
+    // 子路径段本地化:此前显示 new/reviews/map 等原始路由段,与中文界面割裂
+    map.set('/workitems/new', i18n.t('workitem:create.title'));
+    map.set('/agents/new', i18n.t('agent:create.title'));
+    map.set('/agents/reviews', i18n.t('agent:display.reviews'));
+    map.set('/sdlcs/new', i18n.t('sdlc:create.title'));
+    map.set('/repos/map', i18n.t('repo:map.title'));
     return map;
   }, []);
   const pathSegments = useMemo(

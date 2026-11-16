@@ -17,7 +17,7 @@ function renderPage() {
       <MemoryRouter initialEntries={['/agents']}>
         <Routes>
           <Route path="/agents" element={<AgentListPage />} />
-          <Route path="/agents/:id" element={<div>AI 成员详情路由</div>} />
+          <Route path="/agents/:id" element={<div>数字员工详情路由</div>} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -88,9 +88,9 @@ describe('AgentListPage', () => {
     expect(screen.getAllByRole('button', { name: /新建/ })).toHaveLength(1);
     await userEvent.click(screen.getByRole('button', { name: /新建$/ }));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，新建AI 成员需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，新建数字员工需要读写权限');
     await userEvent.hover(screen.getByRole('button', { name: '配置说明' }));
-    expect(await screen.findByText('点击任一AI 成员卡片进入详情与配置。')).toBeInTheDocument();
+    expect(await screen.findByText('点击任一数字员工卡片进入详情与配置。')).toBeInTheDocument();
   });
 
   it('shows configuration guidance and one accessible detail link per card', async () => {
@@ -123,7 +123,7 @@ describe('AgentListPage', () => {
     await screen.findByText('Alpha');
 
     await userEvent.hover(screen.getByRole('button', { name: '配置说明' }));
-    expect(await screen.findByText('点击任一AI 成员卡片进入详情与配置。')).toBeInTheDocument();
+    expect(await screen.findByText('点击任一数字员工卡片进入详情与配置。')).toBeInTheDocument();
     expect(screen.getByText('可维护 SOUL.md、AGENT.md、记忆、仓库权限、流水线 模板及技能/能力配置。')).toBeInTheDocument();
 
     const detailLink = screen.getByRole('link', { name: '看 Alpha 详情' });
@@ -162,7 +162,7 @@ describe('AgentListPage', () => {
 
     await user.click(await screen.findByRole('link', { name: '看 Alpha 详情' }));
 
-    expect(await screen.findByText('AI 成员详情路由')).toBeInTheDocument();
+    expect(await screen.findByText('数字员工详情路由')).toBeInTheDocument();
   });
 
   it('defaults to the standard tab and requests kind=STANDARD', async () => {
@@ -178,7 +178,7 @@ describe('AgentListPage', () => {
       }),
     );
     renderPage();
-    expect(await screen.findByRole('radio', { name: '标准AI 成员' })).toBeInTheDocument();
+    expect(await screen.findByRole('radio', { name: '标准数字员工' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '系统平台智能体' })).toBeInTheDocument();
     await screen.findByText('暂无数字员工');
     expect(kinds).toContain('STANDARD');

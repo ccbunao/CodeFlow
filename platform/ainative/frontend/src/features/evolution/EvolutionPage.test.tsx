@@ -402,7 +402,7 @@ describe('EvolutionPage', () => {
     expect(screen.queryByText(/Gates/)).not.toBeInTheDocument();
 
     await act(async () => { await user.click(screen.getByText('候选收件箱 (2)')); });
-    await act(async () => { await user.click(screen.getByRole('button', { name: /发布AI 成员/ })); });
+    await act(async () => { await user.click(screen.getByRole('button', { name: /发布数字员工/ })); });
 
     await waitFor(() => {
       expect(releaseBody).toMatchObject({ allowRelease: true });

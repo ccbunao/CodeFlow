@@ -70,6 +70,5 @@
     "esbuild@0.25.12": true,
     "fsevents@2.3.3": true,
     "msw@2.3.0": true
-  },
-  "license": "Apache-2.0"
+  }
 }

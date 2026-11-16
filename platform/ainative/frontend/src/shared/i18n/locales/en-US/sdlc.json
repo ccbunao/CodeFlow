@@ -280,5 +280,8 @@
     "nodeSteps_one": "Pipeline · {{count}} step",
     "memberCount_one": "{{count}} member",
     "transitionCount_one": "{{count}} transition"
+  },
+  "create": {
+    "title": "New delivery flow"
   }
 }

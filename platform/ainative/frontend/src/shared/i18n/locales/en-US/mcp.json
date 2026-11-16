@@ -64,8 +64,8 @@
       "description": "Workflows, steps, ordering, activation and status templates."
     },
     "agent": {
-      "title": "AI member capability endpoints",
-      "description": "Endpoints to create, search and read AI member details."
+      "title": "digital worker capability endpoints",
+      "description": "Endpoints to create, search and read digital worker details."
     },
     "executor": {
       "title": "Runner capability endpoints",

@@ -136,7 +136,13 @@ public class WorkitemDao {
     }
 
     public record ListQuery(String keyword, String type, Long stateId, String assigneeType, Long assigneeId,
-                            Integer priority, String tag, boolean recycled, int pageNum, int pageSize) {}
+                            Integer priority, String tag, boolean recycled, int pageNum, int pageSize, String stateCategory) {
+        /** 旧调用点(不含状态类别)兼容构造。 */
+        public ListQuery(String keyword, String type, Long stateId, String assigneeType, Long assigneeId,
+                         Integer priority, String tag, boolean recycled, int pageNum, int pageSize) {
+            this(keyword, type, stateId, assigneeType, assigneeId, priority, tag, recycled, pageNum, pageSize, null);
+        }
+    }
 
     public List<Ticket> list(ListQuery q) {
         List<Object> args = new ArrayList<>();
@@ -163,6 +169,10 @@ public class WorkitemDao {
         if (q.priority() != null) {
             where.append(" AND t.priority = ?");
             args.add(q.priority());
+        }
+        if (q.stateCategory() != null && !q.stateCategory().isBlank()) {
+            where.append(" AND EXISTS (SELECT 1 FROM wi_flow_state sc WHERE sc.id=t.state_id AND sc.category=?)");
+            args.add(q.stateCategory().trim());
         }
         if (q.tag() != null && !q.tag().isBlank()) {
             where.append(" AND EXISTS (SELECT 1 FROM wi_ticket_tag g WHERE g.ticket_id=t.id AND g.tag=?)");
@@ -201,6 +211,10 @@ public class WorkitemDao {
         if (q.priority() != null) {
             where.append(" AND t.priority = ?");
             args.add(q.priority());
+        }
+        if (q.stateCategory() != null && !q.stateCategory().isBlank()) {
+            where.append(" AND EXISTS (SELECT 1 FROM wi_flow_state sc WHERE sc.id=t.state_id AND sc.category=?)");
+            args.add(q.stateCategory().trim());
         }
         if (q.tag() != null && !q.tag().isBlank()) {
             where.append(" AND EXISTS (SELECT 1 FROM wi_ticket_tag g WHERE g.ticket_id=t.id AND g.tag=?)");

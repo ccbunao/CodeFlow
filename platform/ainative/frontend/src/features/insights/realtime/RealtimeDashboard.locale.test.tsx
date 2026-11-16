@@ -87,11 +87,11 @@ function stubDashboard() {
     http.get('/api/dashboard/running', () => {
       counts.running += 1;
       return ok([
-        { workitemId: 7, title: '<strong>需求</strong>', agentName: '<em>AI 成员</em>', stepName: null, runningMinutes: 1, runningDispatchCount: 1 },
-        { workitemId: 8, title: '原始需求', agentName: '<em>AI 成员</em>', stepName: '编码', runningMinutes: 2, runningDispatchCount: 2 },
+        { workitemId: 7, title: '<strong>需求</strong>', agentName: '<em>数字员工</em>', stepName: null, runningMinutes: 1, runningDispatchCount: 1 },
+        { workitemId: 8, title: '原始需求', agentName: '<em>数字员工</em>', stepName: '编码', runningMinutes: 2, runningDispatchCount: 2 },
       ]);
     }),
-    http.get('/api/insights/workers', () => { counts.workers += 1; return ok([{ id: 12, name: '<em>AI 成员</em>' }]); }),
+    http.get('/api/insights/workers', () => { counts.workers += 1; return ok([{ id: 12, name: '<em>数字员工</em>' }]); }),
   );
   return { counts, costRequests, pipelineRequests };
 }
@@ -130,26 +130,26 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(screen.getByText('上下两区统计口径独立 · 筛选互不影响')).toBeInTheDocument();
   // v3：成本面板头部下不再有「统计口径：…」说明，口径改由来源构成 chip 表达
   expect(within(costSection).queryByText('统计口径：')).not.toBeInTheDocument();
-  expect(screen.queryByText('所选AI 成员 × 日期范围')).not.toBeInTheDocument();
+  expect(screen.queryByText('所选数字员工 × 日期范围')).not.toBeInTheDocument();
   expect(await screen.findByTestId('cost-composition-bar')).toBeInTheDocument();
-  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近7天');
+  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体数字员工 · 近7天');
   expect(costRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
   expect(screen.getByText('不受上方实时快照影响')).toBeInTheDocument();
   expect(screen.queryByText('10s')).not.toBeInTheDocument();
   expect(screen.queryByText('关闭')).not.toBeInTheDocument();
 
-  await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
-  const options = await screen.findAllByText('<em>AI 成员</em>');
+  await user.click(costRegion().getByRole('combobox', { name: '成本数字员工' }));
+  const options = await screen.findAllByText('<em>数字员工</em>');
   await user.click(options[options.length - 1]);
   await user.click(costRegion().getByText('近30天'));
   await waitFor(() => expect(costRequests.at(-1)).toBe('?range=30&agentId=12'));
-  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部AI 成员口径 · 不随上方员工筛选联动');
+  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部数字员工口径 · 不随上方员工筛选联动');
 
   await user.click(screen.getByText('正在运行'));
   const dialog = await screen.findByRole('dialog');
   expect(await within(dialog).findByText('1分钟')).toBeInTheDocument();
   expect(within(dialog).getByText(/2 个执行中 ·/)).toBeInTheDocument();
-  const selector = screen.getByRole('combobox', { name: '成本AI 成员' });
+  const selector = screen.getByRole('combobox', { name: '成本数字员工' });
   const requestCount = costRequests.length;
 
   await act(async () => { await i18n.changeLanguage('en-US'); });
@@ -161,7 +161,7 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(within(dialog).getByText(/2 running ·/)).toBeInTheDocument();
   expect(within(dialog).getByText('#7 <strong>需求</strong>')).toBeInTheDocument();
   expect(screen.getByRole('combobox', { name: 'Cost Agent' })).toBe(selector);
-  expect(within(selector.closest('.ant-select') as HTMLElement).getByText('<em>AI 成员</em>')).toBeInTheDocument();
+  expect(within(selector.closest('.ant-select') as HTMLElement).getByText('<em>数字员工</em>')).toBeInTheDocument();
   expect(within(costSection).getByRole('radio', { name: 'Last 30 days' })).toBeChecked();
   expect(screen.getByText('Total Tokens')).toBeInTheDocument();
   expect(screen.getAllByText('82.6K').length).toBeGreaterThan(0);
@@ -214,8 +214,8 @@ it('keeps the overview refresh, pipeline range and cost filters independent', as
   expect(counts.cost).toBe(1);
   const beforeCostFilter = { ...counts };
 
-  await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
-  const options = await screen.findAllByText('<em>AI 成员</em>');
+  await user.click(costRegion().getByRole('combobox', { name: '成本数字员工' }));
+  const options = await screen.findAllByText('<em>数字员工</em>');
   await user.click(options[options.length - 1]);
   await waitFor(() => expect(counts.cost).toBe(2));
   expect(costRequests.at(-1)).toBe('?range=7&agentId=12');
@@ -230,18 +230,18 @@ it('restores the all-agent cost scope from the chip without refetching the snaps
   routed(<RealtimeDashboard />);
   await screen.findByRole('region', { name: '需求概况' });
 
-  await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
+  await user.click(costRegion().getByRole('combobox', { name: '成本数字员工' }));
   const options = await screen.findAllByRole('option');
-  expect(options[0]).toHaveAttribute('aria-label', '全部AI 成员');
-  const workerOptions = await screen.findAllByText('<em>AI 成员</em>');
+  expect(options[0]).toHaveAttribute('aria-label', '全部数字员工');
+  const workerOptions = await screen.findAllByText('<em>数字员工</em>');
   await user.click(workerOptions[workerOptions.length - 1]);
   await waitFor(() => expect(costRequests.at(-1)).toContain('agentId=12'));
-  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部AI 成员口径 · 不随上方员工筛选联动');
+  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部数字员工口径 · 不随上方员工筛选联动');
 
   const snapshotBefore = { ...counts };
   const costCountBefore = costRequests.length;
-  await user.click(screen.getByRole('button', { name: '清除AI 成员筛选' }));
-  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近7天');
+  await user.click(screen.getByRole('button', { name: '清除数字员工筛选' }));
+  expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体数字员工 · 近7天');
   expect(localStorage.getItem('ainative:insights:v1:anonymous:none:realtime.cost.worker')).toBe('null');
   // 全量口径的结果仍在 5 分钟 staleTime 缓存内，回退不重复请求成本接口。
   expect(costRequests).toHaveLength(costCountBefore);

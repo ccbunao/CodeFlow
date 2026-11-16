@@ -99,7 +99,7 @@ describe('SquadCopyModal', () => {
 
     renderModal();
 
-    expect(await screen.findByText('以下AI 成员没有在线版本，无法复制')).toBeInTheDocument();
+    expect(await screen.findByText('以下数字员工没有在线版本，无法复制')).toBeInTheDocument();
     const list = screen.getByTestId('copy-blocked-list');
     expect(within(list).getByText('后端数字人')).toBeInTheDocument();
     expect(within(list).getByText('前端数字人')).toBeInTheDocument();
@@ -128,7 +128,7 @@ describe('SquadCopyModal', () => {
 
     expect(await screen.findByText('编队存在已失效的关联，无法复制')).toBeInTheDocument();
     const list = screen.getByTestId('copy-blocked-dependencies-list');
-    expect(within(list).getByText('AI 成员 #40474')).toBeInTheDocument();
+    expect(within(list).getByText('数字员工 #40474')).toBeInTheDocument();
     expect(within(list).getByText('能力 #3')).toBeInTheDocument();
     expect(within(list).getByText('插件 legacy-tool')).toBeInTheDocument();
     expect(within(list).getByText('环境变量 #7')).toBeInTheDocument();
@@ -145,9 +145,9 @@ describe('SquadCopyModal', () => {
 
     renderModal();
 
-    expect(await screen.findByText('以下AI 成员没有在线版本，无法复制')).toBeInTheDocument();
+    expect(await screen.findByText('以下数字员工没有在线版本，无法复制')).toBeInTheDocument();
     expect(screen.getByTestId('copy-blocked-list')).toHaveTextContent('后端数字人');
-    expect(screen.getByTestId('copy-blocked-dependencies-list')).toHaveTextContent('AI 成员 #40474');
+    expect(screen.getByTestId('copy-blocked-dependencies-list')).toHaveTextContent('数字员工 #40474');
     expect(screen.queryByRole('button', { name: '确定复制' })).not.toBeInTheDocument();
   });
 
@@ -254,8 +254,8 @@ describe('SquadCopyModal', () => {
     const confirm = await findDialogByTitle('确认复制到项目');
     expect(within(confirm).getByText('源编队：开发编队')).toBeInTheDocument();
     expect(within(confirm).getByText('目标空间A')).toBeInTheDocument();
-    expect(within(confirm).getByText('不复制仓库绑定；目标 AI 成员的仓库权限为空')).toBeInTheDocument();
-    expect(within(confirm).getByText('目标 AI 成员直接上线')).toBeInTheDocument();
+    expect(within(confirm).getByText('不复制仓库绑定；目标 数字员工的仓库权限为空')).toBeInTheDocument();
+    expect(within(confirm).getByText('目标 数字员工直接上线')).toBeInTheDocument();
     expect(within(confirm).getByText('运行器以新凭证初始离线，需在目标环境重新启动')).toBeInTheDocument();
 
     await userEvent.click(within(confirm).getByRole('button', { name: /取\s*消/ }));

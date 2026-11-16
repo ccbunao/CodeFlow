@@ -1,8 +1,15 @@
 package com.ainative.v2.dispatch;
 
+import com.ainative.integration.common.ExternalProjectBindingDO;
+import com.ainative.integration.common.ExternalProjectBindingDao;
+import com.ainative.integration.provider.ExternalComment;
+import com.ainative.integration.provider.ExternalPlatformConfig;
+import com.ainative.integration.provider.ExternalPlatformException;
+import com.ainative.integration.tapd.TapdWorkitemProvider;
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.RequestContext;
 import com.ainative.v2.common.BizException;
+import com.ainative.v2.ex.TapdInboundSyncService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +39,17 @@ public class DaemonCommentController {
     private static final String JSON_BODY_SUFFIX = "}";
     private static final Logger log = LoggerFactory.getLogger(DaemonCommentController.class);
     private final JdbcTemplate jdbc;
+    private final ExternalProjectBindingDao bindingDao;
+    private final TapdWorkitemProvider tapdProvider;
+    private final TapdInboundSyncService tapdInbound;
+    private final com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
 
-    public DaemonCommentController(JdbcTemplate jdbc) {
+    public DaemonCommentController(JdbcTemplate jdbc, ExternalProjectBindingDao bindingDao,
+                                    TapdWorkitemProvider tapdProvider, TapdInboundSyncService tapdInbound) {
         this.jdbc = jdbc;
+        this.bindingDao = bindingDao;
+        this.tapdProvider = tapdProvider;
+        this.tapdInbound = tapdInbound;
     }
 
     @PostMapping("/{dispatchId}/comments")
@@ -115,52 +130,116 @@ public class DaemonCommentController {
     }
 
     /**
-     * 多源回写:工单挂在外部绑定(禅道等)上时,把交付备注推送回源平台。
+     * 多源回写:工单挂在外部绑定(禅道/TAPD 等)上时,把交付备注推送回源平台。
      * 走异步线程,失败只记录不阻断回执 —— 与 v1 的 outbox 语义一致(最终一致)。
      */
     private void writebackToExternal(long dispatchId, long ticketId, long workspaceId, String content) {
         Thread.startVirtualThread(() -> {
             try {
                 List<Map<String, Object>> links = jdbc.queryForList(
-                        "SELECT l.binding_id, l.external_id, b.config_json, b.credential_ref"
+                        "SELECT l.binding_id, l.external_id, b.provider, b.project_id, b.config_json, b.credential_ref"
                                 + " FROM ex_item_link l JOIN ex_binding b ON b.id=l.binding_id"
                                 + " WHERE l.ticket_id=? AND l.deleted_at IS NULL", ticketId);
                 if (links.isEmpty()) {
                     return;
                 }
                 Map<String, Object> link = links.get(0);
-                String baseUrl = "";
-                try {
-                    baseUrl = new com.fasterxml.jackson.databind.ObjectMapper()
-                            .readTree(String.valueOf(link.get("config_json"))).path("baseUrl").asText("");
-                } catch (Exception ignored) {
+                String provider = String.valueOf(link.get("provider"));
+                String externalId = String.valueOf(link.get("external_id"));
+                long bindingId = ((Number) link.get("binding_id")).longValue();
+                String outcome;
+                if ("TAPD".equalsIgnoreCase(provider)) {
+                    // TAPD:走同事的 provider(createComment → form 提交,entry_type=bug|stories)
+                    // marker 形态必须与他的正则一致:<!-- an-op:<24位hex> -->(括号是分组语法,非字面量)
+                    String marker = "<!-- an-op:" + UUID.randomUUID().toString().replace("-", "").substring(0, 24) + " -->";
+                    String body = "[CodeFlow 交付备注] " + content + " " + marker;
+                    outcome = pushTapd(bindingId, externalId, body, marker, workspaceId, ticketId);
+                } else {
+                    outcome = pushZentao(link, externalId, "[CodeFlow 交付备注] " + content);
                 }
-                if (baseUrl.isBlank()) {
-                    return;
-                }
-                // 外部回写约定:POST {baseUrl}/api.php/v1/bugs/{id}/comments,Token 头,JSON 体。
-                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder(URI.create(
-                                baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs/"
-                                        + link.get("external_id") + "/comments"))
-                        .timeout(Duration.ofSeconds(10))
-                        .header("Content-Type", "application/json")
-                        .header("Token", String.valueOf(link.get("credential_ref")))
-                        .POST(java.net.http.HttpRequest.BodyPublishers.ofString(
-                                JSON_BODY_PREFIX + new com.fasterxml.jackson.databind.ObjectMapper()
-                                        .writeValueAsString("[CodeFlow 交付备注] " + content) + JSON_BODY_SUFFIX))
-                        .build();
-                var resp = java.net.http.HttpClient.newHttpClient()
-                        .send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
-                boolean ok = resp.statusCode() / 100 == 2;
                 // ex_comment_link 无 binding_id 列:绑定与外部单号并入 external_comment_id 留痕
                 jdbc.update("INSERT INTO ex_comment_link (workspace_id, ticket_id, note_id, external_comment_id) VALUES (?,?,?,?)",
-                        workspaceId, ticketId, 0, "BIND-" + link.get("binding_id") + "|EXT-" + link.get("external_id")
-                                + "|" + (ok ? "PUSHED-" + resp.statusCode() : "FAILED-" + resp.statusCode()));
-                log.info("external writeback dispatch={} ticket={} status={}", dispatchId, ticketId, resp.statusCode());
+                        workspaceId, ticketId, 0, "BIND-" + bindingId + "|EXT-" + externalId + "|" + outcome);
+                log.info("external writeback dispatch={} ticket={} provider={} outcome={}",
+                        dispatchId, ticketId, provider, outcome);
             } catch (Exception e) {
                 log.warn("external writeback failed ticket={} error={}", ticketId, e.getMessage());
             }
         });
+    }
+
+    /**
+     * TAPD 回写:同事的 provider 负责 form 提交与 Comment id 校验;
+     * 结果未知(5xx)时落 outbox,交给他的 TapdCommentReadback 读回确认。
+     */
+    private String pushTapd(long bindingId, String externalId, String body, String marker,
+                            long workspaceId, long ticketId) {
+        try {
+            ExternalProjectBindingDO binding = bindingDao.findById(bindingId);
+            if (binding == null) {
+                return "FAILED-BINDING";
+            }
+            ExternalPlatformConfig config = tapdInbound.configOf(binding);
+            String author = binding.getWritebackStaffId();
+            ExternalComment comment = tapdProvider.createComment(config, externalId, author, body);
+            return "PUSHED-" + comment.getExternalId();
+        } catch (ExternalPlatformException e) {
+            if (!e.isTerminal()) {
+                // 结果未知:可能已落库,先记 outbox,读回确认后再决定是否补发
+                recordUnknownWriteback(workspaceId, ticketId, bindingId, externalId, marker, e.getMessage());
+                return "UNKNOWN-" + abbreviate(e.getMessage());
+            }
+            return "FAILED-" + abbreviate(e.getMessage());
+        }
+    }
+
+    /** 结果未知的回写落 outbox,等待 TapdCommentReadback 读回确认。 */
+    private void recordUnknownWriteback(long workspaceId, long ticketId, long bindingId,
+                                        String externalId, String marker, String error) {
+        try {
+            String payload = mapper.writeValueAsString(Map.of(
+                    "marker", marker,
+                    "externalWorkitemId", externalId,
+                    "ticketId", String.valueOf(ticketId),
+                    "lastError", error == null ? "" : error));
+            jdbc.update("INSERT INTO rt_outbox (workspace_id, aggregate_type, aggregate_id, event_type,"
+                            + " payload_json, status, retry_count) VALUES (?, 'TAPD_BINDING', ?, 'COMMENT_CREATE', ?, 'PENDING', 0)",
+                    workspaceId, bindingId, payload);
+        } catch (Exception e) {
+            log.warn("record tapd outbox failed ticket={} error={}", ticketId, e.getMessage());
+        }
+    }
+
+    /** 禅道回写:POST {baseUrl}/api.php/v1/bugs/{id}/comments,Token 头,JSON 体。 */
+    private String pushZentao(Map<String, Object> link, String externalId, String body) {
+        String baseUrl = "";
+        try {
+            baseUrl = mapper.readTree(String.valueOf(link.get("config_json"))).path("baseUrl").asText("");
+        } catch (Exception ignored) {
+        }
+        if (baseUrl.isBlank()) {
+            return "SKIPPED-NO-BASEURL";
+        }
+        try {
+            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder(URI.create(
+                            baseUrl.replaceAll("/+$", "") + "/api.php/v1/bugs/" + externalId + "/comments"))
+                    .timeout(Duration.ofSeconds(10))
+                    .header("Content-Type", "application/json")
+                    .header("Token", String.valueOf(link.get("credential_ref")))
+                    .POST(java.net.http.HttpRequest.BodyPublishers.ofString(
+                            JSON_BODY_PREFIX + mapper.writeValueAsString(body) + JSON_BODY_SUFFIX))
+                    .build();
+            var resp = java.net.http.HttpClient.newHttpClient()
+                    .send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+            return resp.statusCode() / 100 == 2 ? "PUSHED-" + resp.statusCode() : "FAILED-" + resp.statusCode();
+        } catch (Exception e) {
+            return "UNKNOWN-" + abbreviate(e.getMessage());
+        }
+    }
+
+    private static String abbreviate(String value) {
+        String text = value == null ? "" : value;
+        return text.length() > 60 ? text.substring(0, 60) : text;
     }
 
     private long workspaceOf(long dispatchId) {

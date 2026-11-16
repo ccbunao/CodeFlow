@@ -243,7 +243,7 @@ describe('WorkitemDetailPage', () => {
     renderPage();
 
     expect(await screen.findByText('等人工介入:蔡何')).toBeInTheDocument();
-    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
+    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给数字员工继续交付。')).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: '批准继续' })).toBeInTheDocument();
   });
 
@@ -1034,7 +1034,7 @@ describe('WorkitemDetailPage', () => {
             userId: '40037',
             name: 'AW代码冲突解决工程师',
             role: 'AGENT',
-            roleName: 'AI 成员',
+            roleName: '数字员工',
             isAgent: true,
             online: true,
           },
@@ -1799,7 +1799,7 @@ describe('WorkitemDetailPage clarify URL persistence (需求 53035)', () => {
     // 会话正文只在恢复落定后才可能渲染（选人屏是早返回），所以它就是落定的信号
     expect(await screen.findByText('刷新前的澄清结论')).toBeInTheDocument();
     expect(screen.queryByTestId('clarification-selection-column')).toBeNull();
-    expect(screen.queryByText('选择编队和AI 成员')).toBeNull();
+    expect(screen.queryByText('选择编队和数字员工')).toBeNull();
 
     // 恢复源没被自己的写回抹掉：URL 仍是同一个需求的同一条澄清会话
     expect(currentSearch()).toContain('agent=2');

@@ -1,7 +1,7 @@
 {
   "allModules": "全部模块",
   "workitem": "需求",
-  "agent": "AI 成员",
+  "agent": "数字员工",
   "skill": "技能",
   "dispatch": "执行",
   "statusTemplate": "状态模板",
@@ -32,7 +32,7 @@
   "summary": "摘要",
   "details": "详情",
   "title": "操作审计",
-  "description": "默认列人工动作;可切到 AI 成员或系统事件,字段细节见单条详情。",
+  "description": "默认列人工动作;可切到 数字员工或系统事件,字段细节见单条详情。",
   "subtitle": "谁在什么时候动了什么,全部留痕",
   "countChip_other": "命中 {{count}} 条",
   "actorSource": "来源",

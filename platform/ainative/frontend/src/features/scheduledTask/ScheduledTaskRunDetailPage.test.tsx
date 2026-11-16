@@ -169,19 +169,19 @@ describe('ScheduledTaskRunDetailPage', () => {
       ...['comments', 'artifacts', 'derived-workitems', 'participants'].map(resource => http.get(`/api/scheduled-task-runs/10482/${resource}`, () => HttpResponse.json({ success: true, code: '0', data: [] }))),
       http.get('/api/scheduled-task-runs/10482/delivery-progress', () => HttpResponse.json({ success: true, code: '0', data: {
         steps: [
-          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, error: null, subSteps: null, durationMs: 3000, attempts: null },
-          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏AI 成员', executorName: null, error: null, subSteps: null, durationMs: 4000, attempts: null },
+          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, error: null, subSteps: null, durationMs: 3000, attempts: null },
+          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏数字员工', executorName: null, error: null, subSteps: null, durationMs: 4000, attempts: null },
         ],
         totalDurationMs: 7000,
         agents: [{
-          agentId: 10033, agentName: '任务蒸馏AI 成员', status: 'failed', durationMs: 7000,
+          agentId: 10033, agentName: '任务蒸馏数字员工', status: 'failed', durationMs: 7000,
           steps: [{
-            stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, error: null, subSteps: null, durationMs: 3000,
-            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', error: null, startedAt: null, durationMs: 7000 }],
+            stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, error: null, subSteps: null, durationMs: 3000,
+            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', error: null, startedAt: null, durationMs: 7000 }],
           }],
         }],
         executions: [{
-          dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', startedAt: '2026-10-16T02:00:00Z', durationMs: 7000,
+          dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', startedAt: '2026-10-16T02:00:00Z', durationMs: 7000,
           error: 'step "10131" gate: checklist not fully checked: "cl_2" remains pending',
           stepTimings: [
             { stepId: 10088, name: '收集需求执行日志', status: 'done', durationMs: 3000 },

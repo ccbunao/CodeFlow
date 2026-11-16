@@ -20,7 +20,7 @@ const metrics: InsightMetrics = {
 
 describe('buildInsightModel', () => {
   it('passes cost metrics through untouched so credits are never seeded or scaled', () => {
-    const model = buildInsightModel(metrics, [], { workerLabel: '开发AI 成员', timeRange: '90d' });
+    const model = buildInsightModel(metrics, [], { workerLabel: '开发数字员工', timeRange: '90d' });
 
     expect(model.adjustedMetrics.cost).toBe(metrics.cost);
   });
@@ -73,7 +73,7 @@ it('keeps original fallback stage positions across every supported date intensit
 });
 it('does not translate authored names identical to fallback labels', async () => {
  await i18n.changeLanguage('en-US');
- for (const worker of ['开发AI 成员', '评审AI 成员']) {
+ for (const worker of ['开发数字员工', '评审数字员工']) {
   const model = buildInsightModel(metrics, [{ timestamp: '', worker, eventType: 'REJECT', detail: '驳回', riskLevel: 'medium' }], { workerLabel: '', timeRange: '30d' });
   expect(model.workerFindings[0].worker).toBe(worker); expect(model.recommendations[0]).toContain(worker);
  }

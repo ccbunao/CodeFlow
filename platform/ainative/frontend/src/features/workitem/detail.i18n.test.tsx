@@ -148,7 +148,7 @@ it('updates attachment accessibility and open delete confirmation without alteri
 it('updates cached mention choices and human/agent tabs while keeping the comment draft and authored roles', async () => {
   const { CommentInput } = await import('./components/CommentInput');
   const { SquadMembers } = await import('./components/SquadMembers');
-  const agent = { ...human, userId: 8, displayId: 'A8', targetType: 'AGENT', role: 'AGENT', roleName: 'AI 成员', isAgent: true, name: '机器人 <Alice>', executorStatus: 'BUSY', status: 'ONLINE' };
+  const agent = { ...human, userId: 8, displayId: 'A8', targetType: 'AGENT', role: 'AGENT', roleName: '数字员工', isAgent: true, name: '机器人 <Alice>', executorStatus: 'BUSY', status: 'ONLINE' };
   const custom = { ...agent, userId: 9, displayId: 'C9', targetType: 'CUSTOM', role: 'CUSTOM', roleName: '自定义角色 <em>role</em>', name: '自定义 <Alice>', executorStatus: 'OFFLINE' };
   server.use(http.get('/api/workitems/42/mention-candidates', () => ok([human, agent])));
   mount(<><CommentInput workitemId="42" participants={[human, agent]} /><SquadMembers participants={[human, agent, custom]} /></>);
@@ -165,7 +165,7 @@ it('updates cached mention choices and human/agent tabs while keeping the commen
   expect(screen.getByText('工号: H7 · 真人')).toBeInTheDocument();
   expect(input).toHaveValue('@'); expect(screen.getByPlaceholderText('输入评论，键入 @ 选择成员...')).toBe(input);
   expect(within(screen.getByRole('menu')).getByText('@机器人 <Alice>')).toBeInTheDocument();
-  await userEvent.click(screen.getByRole('tab', { name: /AI 成员成员/ }));
+  await userEvent.click(screen.getByRole('tab', { name: /数字员工成员/ }));
   expect(screen.getByText('工号: A8 · 开发编队成员')).toBeInTheDocument();
   expect(screen.getByText('工号: C9 · 自定义角色 <em>role</em>')).toBeInTheDocument();
   expect(screen.getByText('自定义 <Alice>').querySelector('em')).toBeNull();

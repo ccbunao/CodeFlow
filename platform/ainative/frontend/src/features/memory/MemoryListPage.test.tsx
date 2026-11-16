@@ -116,7 +116,7 @@ describe('MemoryListPage', () => {
     await screen.findByText('社区发布工程师');
     await userEvent.click(screen.getByRole('tab', { name: '访问授权' }));
     expect(await screen.findByRole('button', { name: '加一条授权' })).toBeInTheDocument();
-    expect(await screen.findByText('AI 成员 · 42')).toBeInTheDocument();
+    expect(await screen.findByText('数字员工 · 42')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('tab', { name: '本地档案' }));
     expect(await screen.findByText('qoder · MEMORY.md')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '暂停' }));

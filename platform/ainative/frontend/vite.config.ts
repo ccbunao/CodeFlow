@@ -1,5 +1,3 @@
-// CodeFlow 前端开发配置:dev 端口 3000,/api 与 /ws 代理到本机 7001 的后端。
-// 部署不需要这个文件——生产构建走 frontend/dist(随 jar 内嵌),详见 platform/deploy.sh。
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';

@@ -20,6 +20,12 @@ ainative:
   #   local         = 运行时已在 PATH,命令只给 connect
   runtime-source: ${AINATIVE_RUNTIME_SOURCE:release}
   runtime-install-prefix: ${AINATIVE_RUNTIME_INSTALL_PREFIX:}
+  # 外部平台凭据加密主密钥(Base64,解码后 32 字节)—— TAPD API 密钥密文存放。
+  # 与 v1 同一约定(v1 也是 AINATIVE_SECRET_MASTER_KEY);不配时平台照常启动,
+  # 只有真正要存取 TAPD 凭据时才报错。
+  security:
+    secret-crypto:
+      master-key: ${AINATIVE_SECRET_MASTER_KEY:}
 logging:
   level:
     com.ainative.v2: INFO

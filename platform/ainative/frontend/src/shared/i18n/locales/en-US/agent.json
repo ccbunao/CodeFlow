@@ -23,11 +23,11 @@
     "mount": "Mount"
   },
   "create": {
-    "success": "AI member created",
+    "success": "digital worker created",
     "draftApplied": "Draft generated — review before creating",
     "invalidDraft": "Generated result malformed — regenerate",
     "title": "Create agent",
-    "describe": "Describe the AI member you need",
+    "describe": "Describe the digital worker you need",
     "draftHint": "Generation lands in an editable draft; confirming fills the advanced form. Only Create actually creates.",
     "advanced": "Advanced form",
     "requiredHint": "Fill required fields before creating."
@@ -264,7 +264,7 @@
     "offline": "Take offline",
     "online": "Bring online",
     "delete": "Delete",
-    "confirmOffline": "Take this AI member offline?",
+    "confirmOffline": "Take this digital worker offline?",
     "confirmOnline": "Bring this agent online again?",
     "onlineButton": "Confirm online",
     "confirmDelete": "Delete this agent? This cannot be undone.",

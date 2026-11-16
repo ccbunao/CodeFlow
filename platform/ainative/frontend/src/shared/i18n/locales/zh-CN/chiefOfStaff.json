@@ -19,7 +19,7 @@
   "emptyHistory": "暂无会话记录",
   "setupTitle": "开始使用你的平台管家",
   "setupDescription": "通过规则化操作补齐配置，启动运行器后即可对话。",
-  "agentConfigured": "AI 管家 AI 成员",
+  "agentConfigured": "AI 管家 数字员工",
   "skillsConfigured": "内置技能与平台 MCP",
   "executorConfigured": "专属运行器",
   "configured": "已配置",
@@ -67,7 +67,7 @@
   "planExpired": "已过期",
   "pages": {
     "workitems": "需求",
-    "agents": "AI 成员",
+    "agents": "数字员工",
     "sdlcs": "流水线流程",
     "repos": "仓库",
     "skills": "技能",
@@ -86,7 +86,7 @@
     "profile": "个人设置",
     "other": "当前页面"
   },
-  "agentConfiguration": "查看 AI 成员配置与草稿",
+  "agentConfiguration": "查看 数字员工配置与草稿",
   "copyMessage": "复制消息",
   "copied": "已复制",
   "copyFailed": "复制失败，请重试",

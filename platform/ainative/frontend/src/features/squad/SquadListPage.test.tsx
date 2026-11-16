@@ -75,7 +75,7 @@ describe('SquadListPage', () => {
     renderPage();
     expect(await screen.findByText('Team Alpha')).toBeInTheDocument();
     expect(screen.getByText('Frontend squad')).toBeInTheDocument();
-    expect(screen.getByText('3 个AI 成员')).toBeInTheDocument();
+    expect(screen.getByText('3 个数字员工')).toBeInTheDocument();
     expect(screen.getByText('2 类角色')).toBeInTheDocument();
     expect(screen.getByText('1/2 在线')).toBeInTheDocument();
     expect(screen.getByText('1 个 流水线')).toBeInTheDocument();
@@ -123,7 +123,7 @@ describe('SquadListPage', () => {
     renderPage();
 
     expect(await screen.findByText('示例项目开发组')).toBeInTheDocument();
-    expect(screen.getByText('0 个AI 成员')).toBeInTheDocument();
+    expect(screen.getByText('0 个数字员工')).toBeInTheDocument();
   });
 
   it('opens a visual squad detail modal with member role and Pipeline details', async () => {
@@ -168,7 +168,7 @@ describe('SquadListPage', () => {
     expect(await screen.findByText('Team Alpha')).toBeInTheDocument();
     await user.click(screen.getByText('详情'));
 
-    expect(await screen.findByText('AI 成员阵容')).toBeInTheDocument();
+    expect(await screen.findByText('数字员工阵容')).toBeInTheDocument();
     expect(screen.getByText('前端 Alpha')).toBeInTheDocument();
     expect(screen.getAllByText('前端开发工程师').length).toBeGreaterThan(0);
     expect(screen.getByText('负责页面实现、组件拆分、接口联调')).toBeInTheDocument();
@@ -462,7 +462,7 @@ describe('SquadListPage', () => {
     await screen.findByText('Team Alpha');
     await user.click(screen.getByText('详情'));
 
-    expect(await screen.findByText('AI 成员阵容')).toBeInTheDocument();
+    expect(await screen.findByText('数字员工阵容')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /为成员配运行器/ })).not.toBeInTheDocument();
   });
 
@@ -525,7 +525,7 @@ describe('SquadListPage', () => {
       await screen.findByText('Team Alpha');
       await user.click(screen.getByText('详情'));
 
-      expect(await screen.findByText('AI 成员阵容')).toBeInTheDocument();
+      expect(await screen.findByText('数字员工阵容')).toBeInTheDocument();
       await user.click(screen.getByRole('button', { name: /为成员配运行器/ }));
 
       const title = await screen.findByText('配齐运行器 · Team Alpha', { selector: '.ant-modal-title' });
@@ -752,7 +752,7 @@ describe('routed squad detail and member localization', () => {
     );
     renderSquadRoute();
     await userEvent.click(await screen.findByRole('button', { name: /成员$/ }));
-    const combo = await screen.findByRole('combobox', { name: '选择AI 成员添加到编队' });
+    const combo = await screen.findByRole('combobox', { name: '选择数字员工添加到编队' });
     await userEvent.click(combo);
     await userEvent.click(await screen.findByText('<img>原始员工', { selector: '.ant-select-item-option-content' }));
     await act(async () => { await i18n.changeLanguage('en-US'); });

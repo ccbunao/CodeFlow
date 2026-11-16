@@ -32,7 +32,7 @@ public class ExternalPullScheduler {
         List<Map<String, Object>> bindings;
         try {
             bindings = jdbc.queryForList(
-                    "SELECT id, config_json FROM ex_binding WHERE provider='ZENTAO' AND status='ACTIVE' AND deleted_at IS NULL");
+                    "SELECT id, config_json FROM ex_binding WHERE provider IN ('ZENTAO','TAPD') AND status='ACTIVE' AND deleted_at IS NULL");
         } catch (Exception e) {
             return;
         }

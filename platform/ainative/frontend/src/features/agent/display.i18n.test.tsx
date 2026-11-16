@@ -235,7 +235,7 @@ it('switches open online/delete confirmations without changing authored data', a
   renderRoute('/agents/1');
   await screen.findByText('<em>员工</em>');
   await user.click(screen.getByRole('button', { name: '上线' }));
-  await screen.findByText('确定重新上线该AI 成员？');
+  await screen.findByText('确定重新上线该数字员工？');
   await language('en-US');
   expect(screen.getByText('Bring this agent online again?')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Confirm online' })).toBeInTheDocument();
@@ -244,7 +244,7 @@ it('switches open online/delete confirmations without changing authored data', a
   expect(await screen.findByText('Delete this agent? This cannot be undone.')).toBeInTheDocument();
   await language('zh-CN');
   expect(screen.getByRole('button', { name: '确定删除' })).toBeInTheDocument();
-  expect(screen.getByText('确定删除该AI 成员？删除后不可恢复。')).toBeInTheDocument();
+  expect(screen.getByText('确定删除该数字员工？删除后不可恢复。')).toBeInTheDocument();
 });
 
 it('switches invalid-id and missing-error fallback UI on cached routes', async () => {

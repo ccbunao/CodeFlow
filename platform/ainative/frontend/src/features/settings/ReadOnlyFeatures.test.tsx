@@ -15,7 +15,7 @@ describe('ReadOnlyFeatures', () => {
   it('keeps all domain groups collapsed by default', () => {
     render(<Editor initial={['SDLC', 'AI', 'AUTH']} />);
     expect(screen.getByRole('button', { name: /^交付与需求协作/ })).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.getByRole('button', { name: /^AI 成员/ })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: /^数字员工/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.getByRole('button', { name: /^流程与项目配置/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.queryByRole('radio', { name: '读写' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: '流水线流程' })).not.toBeInTheDocument();
@@ -25,22 +25,22 @@ describe('ReadOnlyFeatures', () => {
   it('sets a collapsed group at once, then lets one feature differ without changing other groups', async () => {
     const user = userEvent.setup();
     render(<Editor initial={['AUTH', 'AI', 'SDLC']} />);
-    const workers = screen.getByRole('region', { name: 'AI 成员' });
-    const bulkReadOnly = within(workers).getByRole('button', { name: '将AI 成员全部设为只读' });
+    const workers = screen.getByRole('region', { name: '数字员工' });
+    const bulkReadOnly = within(workers).getByRole('button', { name: '将数字员工全部设为只读' });
     expect(bulkReadOnly).toHaveTextContent('全组只读');
     expect(bulkReadOnly).toHaveAttribute('aria-pressed', 'false');
     await user.click(bulkReadOnly);
     expect(bulkReadOnly).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByTestId('value')).toHaveTextContent('["AUTH","AI","SDLC","AGENT","SQUAD","EXECUTOR"]');
-    expect(within(workers).getByRole('button', { name: /^AI 成员/ })).toHaveAttribute('aria-expanded', 'false');
-    await user.click(within(workers).getByRole('button', { name: /^AI 成员/ }));
-    const agent = within(workers).getByRole('group', { name: 'AI 成员 · 员工管理' });
+    expect(within(workers).getByRole('button', { name: /^数字员工/ })).toHaveAttribute('aria-expanded', 'false');
+    await user.click(within(workers).getByRole('button', { name: /^数字员工/ }));
+    const agent = within(workers).getByRole('group', { name: '数字员工 · 员工管理' });
     await user.click(within(agent).getByRole('radio', { name: '读写' }));
     expect(bulkReadOnly).toHaveAttribute('aria-pressed', 'false');
     expect(within(agent).getByRole('radio', { name: '读写' })).toBeChecked();
-    expect(within(workers).getByRole('button', { name: /^AI 成员/ })).toHaveTextContent('2 项只读 · 1 项读写');
+    expect(within(workers).getByRole('button', { name: /^数字员工/ })).toHaveTextContent('2 项只读 · 1 项读写');
     expect(screen.getByTestId('value')).toHaveTextContent('["AUTH","AI","SDLC","SQUAD","EXECUTOR"]');
-    const bulkReadWrite = within(workers).getByRole('button', { name: '将AI 成员全部设为读写' });
+    const bulkReadWrite = within(workers).getByRole('button', { name: '将数字员工全部设为读写' });
     await user.click(bulkReadWrite);
     expect(bulkReadWrite).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByTestId('value')).toHaveTextContent('["AUTH","AI","SDLC"]');
