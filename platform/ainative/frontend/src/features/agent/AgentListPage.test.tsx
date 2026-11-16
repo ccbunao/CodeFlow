@@ -84,7 +84,7 @@ describe('AgentListPage', () => {
     );
     renderPage();
 
-    await screen.findByText('暂无AI 成员');
+    await screen.findByText('暂无数字员工');
     expect(screen.getAllByRole('button', { name: /新建/ })).toHaveLength(1);
     await userEvent.click(screen.getByRole('button', { name: /新建$/ }));
 
@@ -180,7 +180,7 @@ describe('AgentListPage', () => {
     renderPage();
     expect(await screen.findByRole('radio', { name: '标准AI 成员' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '系统平台智能体' })).toBeInTheDocument();
-    await screen.findByText('暂无AI 成员');
+    await screen.findByText('暂无数字员工');
     expect(kinds).toContain('STANDARD');
   });
 

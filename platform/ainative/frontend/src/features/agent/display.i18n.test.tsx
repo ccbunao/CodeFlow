@@ -63,8 +63,8 @@ it('switches cached hub and independent cards, keeps authored names literal and 
   const { container } = renderRoute('/agents');
   await screen.findByText('<em>员工</em>');
   await language('en-US');
-  expect(screen.getByRole('heading', { name: 'AI members' })).toBeInTheDocument();
-  expect(screen.getByRole('tab', { name: 'Agents' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'AI digital workers' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Digital workers' })).toBeInTheDocument();
   expect(screen.getByRole('tab', { name: /Version reviews/ })).toBeInTheDocument();
   expect(screen.getByRole('tab', { name: 'Squads' })).toBeInTheDocument();
   expect(screen.getByText('QA engineer')).toBeInTheDocument();
@@ -73,7 +73,7 @@ it('switches cached hub and independent cards, keeps authored names literal and 
   expect(screen.getByRole('link', { name: 'View <em>员工</em>' })).toHaveAttribute('href', '/agents/1');
   expect(container.querySelector('em')).toBeNull();
   await language('zh-CN');
-  expect(screen.getByRole('heading', { name: 'AI 成员' })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: 'AI 数字员工' })).toBeInTheDocument();
   expect(screen.getByText('测试工程师')).toBeInTheDocument();
   await user.click(screen.getByText('列表'));
   await language('en-US');
@@ -284,7 +284,7 @@ it('retains canonical status filters and translates fresh options while preservi
 it.each([['/list', 'No agents'], ['/reviews', 'No agents awaiting review']])('switches empty route %s', async (path, empty) => {
   server.use(http.get('/api/agents', () => ok([])));
   renderRoute(path);
-  await screen.findByText(path === '/list' ? '暂无AI 成员' : '暂无待审核的AI 成员');
+  await screen.findByText(path === '/list' ? '暂无数字员工' : '暂无待审核的数字员工');
   await language('en-US');
   expect(screen.getByText(empty)).toBeInTheDocument();
   if (path === '/list') {

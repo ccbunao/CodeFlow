@@ -76,7 +76,8 @@
     "kbdPalette": "⌘K",
     "projectIdPrefix": "#",
     "statusProj": "proj: ",
-    "versionPrefix": "v"
+    "versionPrefix": "v",
+    "beijingTime": "Beijing time"
   },
   "duration": {
     "second_one": "{{count}} second",

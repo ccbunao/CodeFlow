@@ -118,11 +118,11 @@ describe('审核角标与待审核列表联动', () => {
 
     const user = userEvent.setup();
     renderApp('/agents?tab=reviews');
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     expect(listCalls).toBe(1);
 
-    await user.click(screen.getByRole('tab', { name: 'AI 成员' }));
-    expect(screen.queryByText(/暂无待审核的AI 成员/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('tab', { name: '数字员工' }));
+    expect(screen.queryByText(/暂无待审核的数字员工/)).not.toBeInTheDocument();
 
     // 后台提交了新版本
     server.use(
@@ -152,7 +152,7 @@ describe('审核角标与待审核列表联动', () => {
     await waitFor(() => expect(sidebarBadgeCount()).toBe(1));
     expect(listCalls).toBe(1);
 
-    await user.click(screen.getByRole('tab', { name: 'AI 成员' }));
+    await user.click(screen.getByRole('tab', { name: '数字员工' }));
 
     // 后台通过审核：服务端此刻 0 条待审核，但角标缓存仍是 1
     server.use(
@@ -162,7 +162,7 @@ describe('审核角标与待审核列表联动', () => {
 
     await user.click(reviewsTab());
 
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     await waitFor(() => expect(sidebarBadgeCount()).toBe(0));
     expect(reviewsTab().textContent).toBe('版本审核');
     await waitFor(() => expect(countCalls).toBe(2));
@@ -190,7 +190,7 @@ describe('审核角标与待审核列表联动', () => {
 
     // 审核成功提示与空列表同时收敛；hint 文案只在常驻 Alert 里出现，避免命中同名 toast
     expect(await screen.findByText(/待审核列表会自动刷新/)).toBeInTheDocument();
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     await waitFor(() => expect(sidebarBadgeCount()).toBe(0));
     expect(reviewsTab().textContent).toBe('版本审核');
     // 通过动作会同时失效多个 key，允许合并为少量重取，但不允许出现持续增长的请求环
@@ -220,7 +220,7 @@ describe('审核角标与待审核列表联动', () => {
     await user.click(within(modal).getByRole('button', { name: '确认驳回' }));
 
     expect(await screen.findByText(/可在修订后重新提交审核/)).toBeInTheDocument();
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     await waitFor(() => expect(sidebarBadgeCount()).toBe(0));
     expect(reviewsTab().textContent).toBe('版本审核');
     expect(countCalls).toBeLessThanOrEqual(6);
@@ -235,7 +235,7 @@ describe('审核角标与待审核列表联动', () => {
     );
 
     const client = renderApp('/agents?tab=reviews');
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     await waitFor(() => expect(sidebarBadgeCount()).toBe(0));
     expect(listCalls).toBe(1);
 
@@ -280,7 +280,7 @@ describe('审核角标与待审核列表联动', () => {
       await client.refetchQueries({ queryKey: PENDING_REVIEW_COUNT_QUERY_KEY });
     });
 
-    expect(await screen.findByText(/暂无待审核的AI 成员/)).toBeInTheDocument();
+    expect(await screen.findByText(/暂无待审核的数字员工/)).toBeInTheDocument();
     await waitFor(() => expect(sidebarBadgeCount()).toBe(0));
     expect(reviewsTab().textContent).toBe('版本审核');
     expect(listCalls).toBe(2);

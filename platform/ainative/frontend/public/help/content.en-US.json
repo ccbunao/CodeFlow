@@ -107,6 +107,6 @@
         "title": "Preview & Download"
       }
     ],
-    "markdown": "## Preview & Download\n\nThe complete product manual is available as a PDF — great for printing, offline reading, or onboarding new team members.\n\n[User Manual — codeflow-user-manual-v2.0.1.pdf](/help/assets/codeflow-user-manual-v2.0.1.pdf)\n\n- **Open preview**: browse it right in the browser;\n- **Download PDF**: save a copy for printing or offline reading.\n\nThe manual ends with a “Support & Contact” section — WeChat QR code (note codeflow) for deployment questions, source access and troubleshooting. The manual matches this documentation center (baseline v2.0.1, 2026-11-15). If anything differs from the actual UI, the running product wins — feedback via Issues is welcome.\n"
+    "markdown": "## Preview & Download\n\nThe complete product manual is available as a PDF — great for printing, offline reading, or onboarding new team members.\n\n[User Manual — codeflow-user-manual-v2.0.2.pdf](/help/assets/codeflow-user-manual-v2.0.2.pdf)\n\n- **Open preview**: browse it right in the browser;\n- **Download PDF**: save a copy for printing or offline reading.\n\nThe manual ends with a “Support & Contact” section — WeChat QR code (note codeflow) for deployment questions, source access and troubleshooting. The manual matches this documentation center (baseline v2.0.2, 2026-11-17). If anything differs from the actual UI, the running product wins — feedback via Issues is welcome.\n"
   }
 ]

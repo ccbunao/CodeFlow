@@ -7,6 +7,7 @@ import { CheckOutlined, LoadingOutlined, SearchOutlined } from '@ant-design/icon
 import { PlatformBrand } from '@/shared/ui/PlatformBrand';
 import { NAV_SECTIONS } from '@/app/Sidebar';
 import { NotificationBell } from '@/shared/ui/NotificationBell';
+import { ClockBeijing } from '@/shared/ui/ClockBeijing';
 import { ThemeStudioSwitch } from '@/shared/theme/AppearanceProvider';
 import { UserMenu } from '@/shared/ui/UserMenu';
 import { EllipsisText } from '@/shared/ui/EllipsisText';
@@ -80,6 +81,7 @@ export function TopBar({ workspaces, onOpenPalette, onSwitchWorkspace, switching
           <span className="wb-prj-name">{currentWorkspace?.name || t('workspace.unselected')}</span>
         </button>
       </Dropdown>
+      <ClockBeijing />
       <NotificationBell fetchUnread />
       <ThemeStudioSwitch />
       <UserMenu />

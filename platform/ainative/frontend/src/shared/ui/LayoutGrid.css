@@ -339,10 +339,15 @@ main .cf-content-frame .ant-tabs {
 }
 main .cf-content-frame .ant-tabs-content-holder,
 main .cf-content-frame .ant-tabs-content,
-main .cf-content-frame .ant-tabs-tabpane {
+main .cf-content-frame .ant-tabs-tabpane:not(.ant-tabs-tabpane-hidden) {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+}
+/* 隐藏面板必须让位:上面的 :not 已经收窄作用域,这里再兜底一次,
+   防止未来有人再加同特异性规则把 inactive 面板重新顶出来(编队页双面板堆叠的根因)。 */
+main .cf-content-frame .ant-tabs-tabpane.ant-tabs-tabpane-hidden {
+  display: none !important;
 }
 main .cf-content-frame .ant-tabs-tabpane > .ant-card:last-child {
   flex: 1 0 auto;
