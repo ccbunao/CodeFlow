@@ -165,7 +165,10 @@ export async function getRealtimeDashboard(): Promise<RealtimeDashboard> {
 
 /** 成本面板按所选范围/员工取 kpi.cost；来源构成由服务端恒定按全员聚合并随响应返回。 */
 export async function getRealtimeCost(range: number, agentId: number | 'all'): Promise<RealtimeDashboard> {
-  const resp = await apiClient.get<RealtimeDashboard>('/api/dashboard/realtime', { params: { range, agentId } });
+  // 「全员」不能当 agentId 传:后端按 Long 解析,'all' 会直接 500(只能是数字或不传)。
+  const resp = await apiClient.get<RealtimeDashboard>('/api/dashboard/realtime', {
+    params: agentId === 'all' ? { range } : { range, agentId },
+  });
   return resp.data;
 }
 

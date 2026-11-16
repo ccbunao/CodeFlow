@@ -98,7 +98,7 @@ describe('InsightsPage execution audit handoff', () => {
     expect(params.get('endTime')).toBe(new Date(`${dayjs().format('YYYY-MM-DD')}T23:59:59.999+08:00`).toISOString());
     expect(params.get('startTime')).toBe(new Date(`${dayjs().subtract(6, 'day').format('YYYY-MM-DD')}T00:00:00+08:00`).toISOString());
     // 重定向优先于默认 tab 渲染，页面不得先渲染洞察内容再跳转。
-    expect(screen.queryByText('效能分析')).toBeNull();
+    expect(screen.queryByText('交付分析')).toBeNull();
   });
 
   it('keeps the page-level audit and metrics summaries running once during the redirect', async () => {
@@ -145,7 +145,7 @@ describe('InsightsPage execution audit handoff', () => {
 
     const router = renderInsights();
 
-    expect(await screen.findByText('效能分析')).toBeInTheDocument();
+    expect(await screen.findByText('交付分析')).toBeInTheDocument();
     expect(screen.queryByText('执行审计')).toBeNull();
     for (const label of ['实时看板', '人机协作', '成员交付', '阶段耗时']) {
       expect(screen.getByRole('radio', { name: label })).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe('InsightsPage execution audit handoff', () => {
 
     const router = renderInsights();
 
-    expect(await screen.findByText('效能分析')).toBeInTheDocument();
+    expect(await screen.findByText('交付分析')).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/insights');
     expect(window.localStorage.getItem('ainative:insights:v1:anonymous:none:audit.worker')).toBe('12');
   });

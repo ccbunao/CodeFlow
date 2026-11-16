@@ -84,7 +84,7 @@ describe('useRealtimeCost', () => {
 
     await waitFor(() => expect(result.current.composition?.range).toBe(7));
 
-    expect(requests).toEqual(['?range=7&agentId=all']);
+    expect(requests).toEqual(['?range=7']);
     expect(result.current.cost).toEqual({ range: 7, agentId: 'all', total: 107, perTask: 1, perDay: 2 });
     expect(result.current.composition?.scope).toBe('ALL_AGENTS');
     expect(result.current.workers).toEqual([{ id: 12, name: '验收AI 成员' }]);
@@ -98,7 +98,7 @@ describe('useRealtimeCost', () => {
     act(() => result.current.setTimeRange('30d'));
 
     await waitFor(() => expect(result.current.composition?.range).toBe(30));
-    expect(requests.at(-1)).toBe('?range=30&agentId=all');
+    expect(requests.at(-1)).toBe('?range=30');
     expect(result.current.cost?.range).toBe(30);
     expect(result.current.cost?.total).toBe(130);
   });

@@ -214,7 +214,7 @@ describe('InsightsPage realtime cost', () => {
     expect(screen.queryByText('稳定')).not.toBeInTheDocument();
     expect(screen.queryByText('安全')).not.toBeInTheDocument();
     // 首屏按近 7 天、全部AI 成员取数
-    expect(costRequests.at(-1)).toBe('?range=7&agentId=all');
+    expect(costRequests.at(-1)).toBe('?range=7');
 
     await user.hover(within(region).getByText('总 Token'));
     await waitPastTooltipDelay();
