@@ -152,6 +152,8 @@ python3 platform/ainative/server-v2/scripts/permission_matrix.py http://localhos
 | [docs/release-checklist.md](docs/release-checklist.md) | 发布检查清单 |
 | [platform/ainative/docs/](platform/ainative/docs/) | 平台协议、部署、运维、恢复、MCP 文档 |
 
+> CodeFlow 的设计取舍、交付实战与踩坑复盘,在公众号「一鸣AI编程」连载。
+
 ## 🤝 参与
 
 欢迎 Issue 与 PR。
@@ -173,3 +175,18 @@ python3 platform/ainative/server-v2/scripts/permission_matrix.py http://localhos
 
 本项目以 **Apache License 2.0** 开源,详见 [LICENSE](LICENSE) 与 [NOTICE](NOTICE)。
 Copyright 2026 The CodeFlow Authors.
+
+---
+
+<div align="center">
+
+## 作者
+
+**一鸣** · 公众号「**一鸣AI编程**」
+
+*CodeFlow 从第一行代码到 AI 数字员工交付平台的完整过程——每一次设计取舍、每一个踩过的坑——都在公众号里连载。*
+
+**公众号「一鸣AI编程」**:AI 编程实战 / 需求交付复盘 / 这个平台的全过程,更新不迷路。
+觉得有用的话,给仓库点个 **Star ⭐**,就是最好的支持。
+
+</div>
