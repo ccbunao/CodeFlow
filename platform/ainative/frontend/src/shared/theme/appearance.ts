@@ -55,7 +55,7 @@ export function getAppearanceVariables(mode: ResolvedAppearance, color: string):
   const btnFill = accent === '#2383e2' ? DEFAULT_BTN_FILL : ensureContrast(accent, '#ffffff', 4.5);
   const btnShadow = 'none';
 
-  // aiops-platform 色板(ops.css):dark [data-theme=dark] / light [data-theme=light],逐值对齐
+  // 色板基准:dark [data-theme=dark] / light [data-theme=light],两套逐值成对
   return {
     '--cf-accent': accent, '--cf-accent-rgb': rgb(accent).join(','), '--cf-accent-text': accentText,
     '--cf-primary': primary, '--cf-primary-hover': mix(primary, away, .07), '--cf-primary-active': mix(primary, away, .14), '--cf-primary-ink': ink,
