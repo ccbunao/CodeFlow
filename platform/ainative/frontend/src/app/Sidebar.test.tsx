@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import { server } from '@/test/mocks/server';
-import { NAV_SECTIONS, NAV_SETTINGS, allNavItems, navItemMatchesPath, resolveSelectedNavKey } from './Sidebar';
+import { NAV_TOP_ITEMS, NAV_SECTIONS, NAV_SETTINGS, allNavItems, navItemMatchesPath, resolveSelectedNavKey } from './Sidebar';
 import { WorkbenchTree } from './workbench/WorkbenchTree';
 import { useAuthStore } from '@/shared/auth/store';
 import { scheduledTaskCapabilityQueryKey } from '@/features/scheduledTask/hooks';
@@ -53,11 +53,17 @@ describe('导航树结构(设计契约 v5)', () => {
   it('需求交付分组只放交付动线,回收站归到项目设置', () => {
     const delivery = NAV_SECTIONS.find((section) => section.key === 'delivery');
     expect(delivery?.items.map((item) => item.key))
-      .toEqual(['/workitems', '/sdlcs', '/overview', '/executions']);
+      .toEqual(['/workitems', '/sdlcs', '/executions']);
     expect(delivery?.items[0]?.label).toBe('需求录入');
     expect(delivery?.items[1]?.label).toBe('交付流程');
-    expect(delivery?.items[2]?.label).toBe('项目总览');
+    expect(delivery?.items[2]?.label).toBe('运行记录');
     expect(resolveSelectedNavKey('/sdlcs')).toBe('/sdlcs');
+  });
+
+  it('项目总览是置顶的顶级独立入口', () => {
+    expect(NAV_TOP_ITEMS.map((item) => item.key)).toEqual(['/overview']);
+    expect(NAV_TOP_ITEMS[0]?.label).toBe('项目总览');
+    expect(resolveSelectedNavKey('/overview')).toBe('/overview');
   });
 
   it('分析/自动化/资产/项目 分组归属正确', () => {

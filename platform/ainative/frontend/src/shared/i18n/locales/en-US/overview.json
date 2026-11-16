@@ -124,5 +124,23 @@
   "separator": "·",
   "page": {
     "description": "Delivery volume, completion and recent activity for this project"
+  },
+  "summary": {
+    "aria": "Period summary",
+    "line": "In the last {{days}} days: {{created}} requirements created, {{delivered}} delivered, {{inProgress}} still in progress.",
+    "chipCreated": "Created",
+    "chipDelivered": "Delivered",
+    "chipPending": "Needs you",
+    "chipFailed": "Failed runs",
+    "gotoIntake": "Go to intake"
+  },
+  "group": {
+    "delivery": "Delivery results",
+    "quality": "Quality metrics",
+    "action": "Needs your attention",
+    "running": "In progress & cost"
+  },
+  "common": {
+    "emptyDash": "No data"
   }
 }

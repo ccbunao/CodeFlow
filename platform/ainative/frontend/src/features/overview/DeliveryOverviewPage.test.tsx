@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { http, HttpResponse } from 'msw';
 import dayjs from 'dayjs';
 import { server } from '@/test/mocks/server';
+import { formatDateTime } from '@/shared/i18n/format';
 import { DeliveryOverviewPage } from './DeliveryOverviewPage';
 import type { CreatedWorkitemPage, DeliveryOverview, PendingWorkitemPage } from './types';
 
@@ -143,7 +144,7 @@ describe('DeliveryOverviewPage', () => {
     );
     renderPage();
 
-    await screen.findByText(`数据截至 ${TODAY}`);
+    await screen.findByText(`数据截至 ${formatDateTime(TODAY, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}`);
     const lead = screen.getByTestId('overview-lead-time');
     expect(lead).toHaveTextContent('4.5 天');
     expect(lead).toHaveTextContent('-10.2%');
@@ -168,7 +169,7 @@ describe('DeliveryOverviewPage', () => {
     );
     renderPage();
 
-    await screen.findByText(`数据截至 ${TODAY}`);
+    await screen.findByText(`数据截至 ${formatDateTime(TODAY, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}`);
     const card = screen.getByTestId('overview-failures');
     expect(within(card).getByText('Agent 未上线')).toBeInTheDocument();
     expect(within(card).getByText('未记录原因')).toBeInTheDocument();
@@ -201,7 +202,7 @@ describe('DeliveryOverviewPage', () => {
     );
     renderPage();
 
-    await screen.findByText(`数据截至 ${TODAY}`);
+    await screen.findByText(`数据截至 ${formatDateTime(TODAY, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}`);
     expect(screen.getByTestId('overview-lead-time')).toHaveTextContent('—');
     expect(screen.getByTestId('overview-first-pass')).toHaveTextContent('—');
     expect(screen.getByTestId('overview-rework')).toHaveTextContent('—');
@@ -225,7 +226,7 @@ describe('DeliveryOverviewPage', () => {
     expect(await screen.findByText('项目总览')).toBeInTheDocument();
     expect(screen.getByText('新进了多少、交付了多少、还压着什么等你拍板。')).toBeInTheDocument();
     // 数据渲染完成后再断言请求参数，确保两侧请求都已被捕获
-    expect(await screen.findByText(`数据截至 ${TODAY}`)).toBeInTheDocument();
+    expect(await screen.findByText(`数据截至 ${formatDateTime(TODAY, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}`)).toBeInTheDocument();
     expect(requests[0]).toContain(`start_date=${WEEK_START}`);
     expect(requests[0]).toContain(`end_date=${TODAY}`);
     expect(pendingRequests[0]).toContain('page=1');

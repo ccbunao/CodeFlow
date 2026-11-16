@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Button, Empty, Segmented, Space, Tag, Tooltip, Typography } from 'antd';
-import { CloseCircleFilled, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CloseCircleFilled, InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Table } from '@/shared/theme/ThemedTable';
@@ -94,6 +94,8 @@ export function DeliveryOverviewPage() {
     void pendingQuery.refetch();
     void createdQuery.refetch();
   };
+  const pendingCount = pendingPage?.total ?? 0;
+  const failedCount = data?.failedDispatches.count ?? 0;
 
   const columns: ColumnsType<PendingWorkitem> = [
     {
@@ -200,11 +202,43 @@ export function DeliveryOverviewPage() {
         />
       } />
 
+      {/* 结论条:先说人话,再给数字;不要让人自己从 8 个方格里总结 */}
+      <section className="overview-summary" aria-label={t('summary.aria')}>
+        <p className="overview-summary__line">{t('summary.line', {
+          days: data?.daysInRange ?? days,
+          created: data ? formatNumber(data.created.count) : '—',
+          delivered: data ? formatNumber(data.delivered.count) : '—',
+          inProgress: data ? formatNumber(data.inProgressCount) : '—',
+        })}</p>
+        <div className="overview-summary__chips">
+          <span className="overview-chip" data-testid="overview-summary-created">
+            <b>{data ? formatNumber(data.created.count) : t('common.emptyDash')}</b>
+            <span>{t('summary.chipCreated')}</span>
+          </span>
+          <span className="overview-chip" data-testid="overview-summary-delivered">
+            <b>{data ? formatNumber(data.delivered.count) : t('common.emptyDash')}</b>
+            <span>{t('summary.chipDelivered')}</span>
+          </span>
+          <span className={`overview-chip${pendingCount > 0 ? ' overview-chip--action' : ''}`} data-testid="overview-summary-pending">
+            <b>{formatNumber(pendingCount)}</b>
+            <span>{t('summary.chipPending')}</span>
+          </span>
+          <span className={`overview-chip${failedCount > 0 ? ' overview-chip--risk' : ''}`} data-testid="overview-summary-failed">
+            <b>{formatNumber(failedCount)}</b>
+            <span>{t('summary.chipFailed')}</span>
+          </span>
+        </div>
+      </section>
+
       <Toolbar
         filters={<>
           <Typography.Text type="secondary">{t('toolbar.rangeSummary', { start, end })}</Typography.Text>
           <Typography.Text type="secondary">{t('toolbar.timezone', { timezone: data?.timezone ?? TIMEZONE })}</Typography.Text>
-          {data && <Typography.Text type="secondary">{t('toolbar.dataThrough', { date: data.dataThrough })}</Typography.Text>}
+          {data && (
+            <Typography.Text type="secondary">
+              {t('toolbar.dataThrough', { date: formatDateTime(data.dataThrough, DATE_TIME_OPTIONS) })}
+            </Typography.Text>
+          )}
         </>}
         actions={<Button
           aria-label={t('toolbar.refreshAria')}
@@ -220,113 +254,137 @@ export function DeliveryOverviewPage() {
         />
       )}
 
-      <div className="cfds-stat-row cfds-stat-row--quad">
-        <div data-testid="overview-created">
-          <StatTile
-            label={t('created.title')}
-            value={data ? formatNumber(data.created.count) : '—'}
-            hint={<div className="overview-stat-detail">
-              <div className="overview-trend">
-                {/* 无数据时不画趋势线:一条孤零零的蓝线是假信息 */}
-                {hasTrend && (
-                  <span className="overview-sparkline" role="img" aria-label={t('created.trendAria', { days: data?.daysInRange ?? days })}>
-                    <Sparkline data={trend} color="var(--cf-accent)" width={120} height={32} />
-                  </span>
-                )}
-                <span>{t('created.caption', { days: data?.daysInRange ?? days })}</span>
-              </div>
-            </div>}
-          />
-        </div>
-        <div data-testid="overview-delivered">
-          <StatTile
-            label={<Space size={6}>{t('delivered.title')}
-              <Tooltip title={t('delivered.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
-                <Button type="text" size="small" aria-label={t('delivered.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
-              </Tooltip>
-            </Space>}
-            value={data ? formatNumber(data.delivered.count) : '—'}
-            hint={data && <>
-              <div><span>{t('delivered.dailyAverage', { value: formatNumber(data.delivered.dailyAverage, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}</span>{t('separator')}<span>{data.delivered.changePercent != null ? t('delivered.change', { value: percent(data.delivered.changePercent) }) : t('delivered.noBase')}</span></div>
-              <div>{t('delivered.previous', { count: data.delivered.previous.count, start: data.delivered.previous.startDate, end: data.delivered.previous.endDate })}</div>
-            </>}
-          />
-        </div>
+      <div className="overview-grid">
+        {/* 左:交付结果 —— 本周期的产出与质量 */}
+        <section className="overview-group">
+          <h2 className="overview-group__title">{t('group.delivery')}</h2>
+          <div className="cfds-stat-row cfds-stat-row--triple">
+            <div data-testid="overview-created">
+              <StatTile
+                label={t('created.title')}
+                value={data ? formatNumber(data.created.count) : '—'}
+                hint={<div className="overview-stat-detail">
+                  <div className="overview-trend">
+                    {/* 无数据时不画趋势线:一条孤零零的蓝线是假信息 */}
+                    {hasTrend && (
+                      <span className="overview-sparkline" role="img" aria-label={t('created.trendAria', { days: data?.daysInRange ?? days })}>
+                        <Sparkline data={trend} color="var(--cf-accent)" width={120} height={32} />
+                      </span>
+                    )}
+                    <span>{t('created.caption', { days: data?.daysInRange ?? days })}</span>
+                  </div>
+                </div>}
+              />
+            </div>
+            <div data-testid="overview-delivered">
+              <StatTile
+                label={<Space size={6}>{t('delivered.title')}
+                  <Tooltip title={t('delivered.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
+                    <Button type="text" size="small" aria-label={t('delivered.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
+                  </Tooltip>
+                </Space>}
+                value={data ? formatNumber(data.delivered.count) : '—'}
+                hint={data && <>
+                  <div><span>{t('delivered.dailyAverage', { value: formatNumber(data.delivered.dailyAverage, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}</span>{t('separator')}<span>{data.delivered.changePercent != null ? t('delivered.change', { value: percent(data.delivered.changePercent) }) : t('delivered.noBase')}</span></div>
+                  <div>{t('delivered.previous', { count: data.delivered.previous.count, start: data.delivered.previous.startDate, end: data.delivered.previous.endDate })}</div>
+                </>}
+              />
+            </div>
+            <div data-testid="overview-lead-time">
+              <StatTile
+                label={<Space size={6}>{t('leadTime.title')}
+                  <Tooltip title={t('leadTime.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
+                    <Button type="text" size="small" aria-label={t('leadTime.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
+                  </Tooltip>
+                </Space>}
+                value={data ? (data.leadTimeDays != null ? t('leadTime.value', { value: formatNumber(data.leadTimeDays, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) }) : '—') : '—'}
+                hint={data && <>
+                  <div>{data.leadTimeChangePercent != null ? t('delivered.change', { value: percent(data.leadTimeChangePercent) }) : t('leadTime.noBase')}</div>
+                  <div>{t('leadTime.caption')}</div>
+                </>}
+              />
+            </div>
+          </div>
+          <h2 className="overview-group__title">{t('group.quality')}</h2>
+          <div className="cfds-stat-row cfds-stat-row--pair">
+            <div data-testid="overview-first-pass">
+              <StatTile
+                label={<Space size={6}>{t('firstPass.title')}
+                  <Tooltip title={t('firstPass.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
+                    <Button type="text" size="small" aria-label={t('firstPass.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
+                  </Tooltip>
+                </Space>}
+                value={data ? (data.firstPassRate != null ? rate(data.firstPassRate) : '—') : '—'}
+                hint={<div className="overview-stat-detail">{data?.firstPassRate == null && data ? t('firstPass.noData') : t('firstPass.caption')}</div>}
+              />
+            </div>
+            <div data-testid="overview-rework">
+              <StatTile
+                label={<Space size={6}>{t('rework.title')}
+                  <Tooltip title={t('rework.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
+                    <Button type="text" size="small" aria-label={t('rework.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
+                  </Tooltip>
+                </Space>}
+                value={data ? (data.reworkRate != null ? rate(data.reworkRate) : '—') : '—'}
+                hint={<div className="overview-stat-detail">{data?.reworkRate == null && data ? t('rework.noData') : t('rework.caption')}</div>}
+              />
+            </div>
+          </div>
 
-        <div data-testid="overview-lead-time">
-          <StatTile
-            label={<Space size={6}>{t('leadTime.title')}
-              <Tooltip title={t('leadTime.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
-                <Button type="text" size="small" aria-label={t('leadTime.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
-              </Tooltip>
-            </Space>}
-            value={data ? (data.leadTimeDays != null ? t('leadTime.value', { value: formatNumber(data.leadTimeDays, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) }) : '—') : '—'}
-            hint={data && <>
-              <div>{data.leadTimeChangePercent != null ? t('delivered.change', { value: percent(data.leadTimeChangePercent) }) : t('leadTime.noBase')}</div>
-              <div>{t('leadTime.caption')}</div>
-            </>}
-          />
-        </div>
-
-        <div data-testid="overview-in-progress">
-          <StatTile
-            label={t('inProgress.title')}
-            value={data ? formatNumber(data.inProgressCount) : '—'}
-            hint={<div className="overview-stat-detail">{t('inProgress.caption')}</div>}
-          />
-        </div>
-
-        <div data-testid="overview-first-pass">
-          <StatTile
-            label={<Space size={6}>{t('firstPass.title')}
-              <Tooltip title={t('firstPass.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
-                <Button type="text" size="small" aria-label={t('firstPass.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
-              </Tooltip>
-            </Space>}
-            value={data ? (data.firstPassRate != null ? rate(data.firstPassRate) : '—') : '—'}
-            hint={<div className="overview-stat-detail">{data?.firstPassRate == null && data ? t('firstPass.noData') : t('firstPass.caption')}</div>}
-          />
-        </div>
-
-        <div data-testid="overview-failed">
-          <StatTile
-            label={t('failed.title')}
-            tone={data && data.failedDispatches.count > 0 ? 'warn' : 'default'}
-            value={data ? formatNumber(data.failedDispatches.count) : '—'}
-            hint={data && <>
-              <div><span>{t('failed.share', { value: formatNumber(data.failedDispatches.sharePercent, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}</span>{t('separator')}<span>{data.failedDispatches.changePercent != null ? t('failed.change', { value: percent(data.failedDispatches.changePercent) }) : t('failed.noBase')}</span></div>
-              <div>{t('failed.previous', { count: data.failedDispatches.previous.count, start: data.failedDispatches.previous.startDate, end: data.failedDispatches.previous.endDate })}</div>
-            </>}
-          />
-        </div>
-
-        <div data-testid="overview-rework">
-          <StatTile
-            label={<Space size={6}>{t('rework.title')}
-              <Tooltip title={t('rework.method')} trigger={['hover', 'focus']} styles={{ root: { maxWidth: 420 } }}>
-                <Button type="text" size="small" aria-label={t('rework.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
-              </Tooltip>
-            </Space>}
-            value={data ? (data.reworkRate != null ? rate(data.reworkRate) : '—') : '—'}
-            hint={<div className="overview-stat-detail">{data?.reworkRate == null && data ? t('rework.noData') : t('rework.caption')}</div>}
-          />
-        </div>
-
-        <div data-testid="overview-tokens">
-          <StatTile
-            label={t('tokens.title')}
-            value={data ? formatNumber(data.tokenUsage.count) : '—'}
-            hint={data && <>
-              <div className="overview-trend">
-                <span className="overview-sparkline" role="img" aria-label={t('tokens.trendAria', { days: data.daysInRange })}>
-                  <Sparkline data={data.tokenUsage.daily.map((day) => day.count)} color="var(--cf-accent)" width={120} height={32} />
-                </span>
-                <span>{data.tokenUsage.changePercent != null ? t('tokens.change', { value: percent(data.tokenUsage.changePercent) }) : t('tokens.noBase')}</span>
-              </div>
-              <div>{t('tokens.previous', { count: data.tokenUsage.previous.count, start: data.tokenUsage.previous.startDate, end: data.tokenUsage.previous.endDate })}</div>
-            </>}
-          />
-        </div>
+        </section>
+        {/* 右:要你动手的 —— 待处理与风险,先看这里 */}
+        <section className="overview-group overview-group--side">
+          <h2 className="overview-group__title">{t('group.action')}</h2>
+          <div className="cfds-stat-row cfds-stat-row--pair">
+            <div data-testid="overview-pending-card">
+              <StatTile
+                tone={pendingCount > 0 ? 'accent' : 'default'}
+                label={t('summary.chipPending')}
+                value={formatNumber(pendingCount)}
+                hint={<div className="overview-stat-detail">
+                  <Button type="link" size="small" className="overview-inline-link"
+                    onClick={() => navigate('/workitems')}>
+                    {t('summary.gotoIntake')}<ArrowRightOutlined aria-hidden="true" />
+                  </Button>
+                </div>}
+              />
+            </div>
+            <div data-testid="overview-failed">
+              <StatTile
+                label={t('failed.title')}
+                tone={failedCount > 0 ? 'warn' : 'default'}
+                value={data ? formatNumber(data.failedDispatches.count) : '—'}
+                hint={data && <>
+                  <div><span>{t('failed.share', { value: formatNumber(data.failedDispatches.sharePercent, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}</span>{t('separator')}<span>{data.failedDispatches.changePercent != null ? t('failed.change', { value: percent(data.failedDispatches.changePercent) }) : t('failed.noBase')}</span></div>
+                </>}
+              />
+            </div>
+          </div>
+          <h2 className="overview-group__title">{t('group.running')}</h2>
+          <div className="cfds-stat-row cfds-stat-row--pair">
+            <div data-testid="overview-in-progress">
+              <StatTile
+                label={t('inProgress.title')}
+                value={data ? formatNumber(data.inProgressCount) : '—'}
+                hint={<div className="overview-stat-detail">{t('inProgress.caption')}</div>}
+              />
+            </div>
+            <div data-testid="overview-tokens">
+              <StatTile
+                label={t('tokens.title')}
+                value={data ? formatNumber(data.tokenUsage.count) : '—'}
+                hint={data && <>
+                  <div className="overview-trend">
+                    <span className="overview-sparkline" role="img" aria-label={t('tokens.trendAria', { days: data.daysInRange })}>
+                      <Sparkline data={data.tokenUsage.daily.map((day) => day.count)} color="var(--cf-accent)" width={120} height={32} />
+                    </span>
+                    <span>{data.tokenUsage.changePercent != null ? t('tokens.change', { value: percent(data.tokenUsage.changePercent) }) : t('tokens.noBase')}</span>
+                  </div>
+                </>}
+              />
+            </div>
+          </div>
+        </section>
       </div>
 
       <div className="overview-lists">

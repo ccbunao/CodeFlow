@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { CompassOutlined } from '@ant-design/icons';
-import { NAV_SECTIONS, NAV_DOCS, NAV_SETTINGS, NAV_ABOUT, navItemMatchesPath, type NavItem } from '@/app/Sidebar';
+import { NAV_TOP_ITEMS, NAV_SECTIONS, NAV_DOCS, NAV_SETTINGS, NAV_ABOUT, navItemMatchesPath, type NavItem } from '@/app/Sidebar';
 import { useAuthStore } from '@/shared/auth/store';
 import { useScheduledTaskCapability } from '@/features/scheduledTask/hooks';
 import { isScheduledTaskCapabilityQueryReady } from '@/features/scheduledTask/ScheduledTaskCapabilityGate';
@@ -72,6 +72,7 @@ export function WorkbenchTree({ badges, onOpenSettings }: WorkbenchTreeProps & {
         <b>{currentWorkspace?.name || t('workspace.unselected')}</b>
         {currentWorkspace && <span>{t('navigation.projectIdPrefix')}{currentWorkspace.id}</span>}
       </div>
+      {NAV_TOP_ITEMS.map(renderItem)}
       {NAV_SECTIONS.map((section) => (
         <div key={section.key}>
           <div className="wb-tree__sec">{section.label}</div>

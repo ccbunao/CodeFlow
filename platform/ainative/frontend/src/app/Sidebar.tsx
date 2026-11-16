@@ -40,6 +40,11 @@ export interface NavSection {
   items: NavItem[];
 }
 
+/** 顶级独立入口(不分组的单页)。项目总览置顶,后续新增同类页面直接往这里加。 */
+export const NAV_TOP_ITEMS: NavItem[] = [
+  { key: '/overview', get label() { return i18n.t('shell:nav.overview'); }, icon: <DashboardOutlined aria-hidden="true" /> },
+];
+
 export const NAV_SECTIONS: NavSection[] = [
   {
     key: 'delivery',
@@ -47,7 +52,6 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { key: '/workitems', get label() { return i18n.t('shell:nav.workitems'); }, icon: <FileTextOutlined aria-hidden="true" /> },
       { key: '/sdlcs', get label() { return i18n.t('shell:nav.sdlc'); }, icon: <ApartmentOutlined aria-hidden="true" /> },
-      { key: '/overview', get label() { return i18n.t('shell:nav.overview'); }, icon: <DashboardOutlined aria-hidden="true" /> },
       { key: '/executions', get label() { return i18n.t('shell:nav.executions'); }, icon: <HistoryOutlined aria-hidden="true" /> },
     ],
   },
@@ -112,7 +116,7 @@ export function navItemMatchesPath(item: NavItem, pathname: string) {
 }
 
 export function resolveSelectedNavKey(pathname: string) {
-  const allItems = NAV_SECTIONS.flatMap((section) => section.items);
+  const allItems = [...NAV_TOP_ITEMS, ...NAV_SECTIONS.flatMap((section) => section.items)];
   return [...allItems]
     .filter((item) => navItemMatchesPath(item, pathname))
     .sort((a, b) => b.key.length - a.key.length)[0]?.key || '';
@@ -120,5 +124,5 @@ export function resolveSelectedNavKey(pathname: string) {
 
 /** 供 ⌘K 命令面板枚举全部跳转目标 */
 export function allNavItems(): NavItem[] {
-  return NAV_SECTIONS.flatMap((section) => section.items.filter((item) => !item.hidden));
+  return [...NAV_TOP_ITEMS, ...NAV_SECTIONS.flatMap((section) => section.items.filter((item) => !item.hidden))];
 }

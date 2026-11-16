@@ -121,5 +121,23 @@
   "separator": "·",
   "page": {
     "description": "本项目的交付量、达成情况与近期动态"
+  },
+  "summary": {
+    "aria": "本期结论",
+    "line": "近 {{days}} 天新增 {{created}} 个需求，已交付 {{delivered}} 个，{{inProgress}} 个还在推进中。",
+    "chipCreated": "新增",
+    "chipDelivered": "已交付",
+    "chipPending": "待你处理",
+    "chipFailed": "失败调度",
+    "gotoIntake": "去需求录入"
+  },
+  "group": {
+    "delivery": "交付结果",
+    "quality": "质量指标",
+    "action": "要你动手的",
+    "running": "进行中与成本"
+  },
+  "common": {
+    "emptyDash": "暂无数据"
   }
 }

@@ -1,4 +1,4 @@
-.delivery-overview-page { display: flex; flex-direction: column; gap: 16px; }
+.delivery-overview-page { display: flex; flex-direction: column; gap: 14px; }
 
 .overview-stat-detail { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; color: var(--cf-muted); font-size: 12px; }
 
@@ -8,6 +8,63 @@
 .overview-sparkline { display: block; line-height: 0; }
 
 .overview-caption { margin: 0 0 12px; color: var(--cf-muted); font-size: 12px; }
+
+/* ── 结论条 ──────────────────────────────────────────────────────
+ * 第一屏先给一句人话结论 + 四个关键数字,不要让人自己从八个方格里总结。
+ * 左缘 3px 主色竖条 + 极浅底色,视觉上像"结论"而不像"又一个卡片"。 */
+.overview-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border: 1px solid var(--cf-border);
+  border-left: 3px solid var(--cf-accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--cf-accent) 4%, var(--cf-panel));
+}
+.overview-summary__line {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--cf-text);
+  font-weight: 500;
+}
+.overview-summary__chips { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.overview-chip { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.overview-chip b {
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--cf-text);
+}
+.overview-chip span { font-size: 12px; color: var(--cf-muted); }
+/* 有待处理 → 主色;有失败 → 警示色。数字自己跳出来,不用人扫。 */
+.overview-chip--action b { color: var(--cf-accent); }
+.overview-chip--risk b { color: var(--cf-warning); }
+
+/* ── 分组栅格:左「交付结果」宽,右「要你动手的」窄 ───────────────── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.overview-group { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.overview-group__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--cf-muted);
+}
+.overview-group .cfds-stat-row--pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* 「去需求录入」这类跳转:文字链 + 箭头,不要做成大按钮抢主按钮的位 */
+.overview-inline-link { padding: 0; height: auto; font-size: 12px; }
+.overview-inline-link .anticon { font-size: 11px; }
 
 .overview-lists { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 14px; align-items: start; }
 
@@ -22,3 +79,8 @@
  * 稀疏卡不塌陷,密集卡自然撑高,同排 grid stretch 对齐。 */
 .cfds-stat-row--quad .cfds-stat { min-height: 132px; }
 .cfds-stat-row--quad .cfds-stat__hint { min-height: 34px; }
+.cfds-stat-row--pair .cfds-stat { min-height: 104px; }
+
+@media (max-width: 1180px) {
+  .overview-grid { grid-template-columns: 1fr; }
+}
