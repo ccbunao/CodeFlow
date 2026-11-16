@@ -88,7 +88,8 @@
     "share": "占全部调度 {{value}}%",
     "change": "环比 {{value}}",
     "noBase": "上期无失败,暂无可比基数",
-    "previous": "上期 {{start}} ~ {{end}}:{{count}} 次"
+    "previous": "上期 {{start}} ~ {{end}}:{{count}} 次",
+    "gotoExecutions": "去运行记录"
   },
   "rework": {
     "title": "返工率",

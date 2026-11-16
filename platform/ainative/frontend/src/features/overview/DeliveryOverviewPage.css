@@ -45,13 +45,8 @@
 .overview-chip--action b { color: var(--cf-accent); }
 .overview-chip--risk b { color: var(--cf-warning); }
 
-/* ── 分组栅格:左「交付结果」宽,右「要你动手的」窄 ───────────────── */
-.overview-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
-  gap: 14px;
-  align-items: start;
-}
+/* ── KPI 分组:统一 4 列,两行严格对齐(不再左右分栏,避免行间列宽不一致) ── */
+.overview-kpis { display: flex; flex-direction: column; gap: 14px; }
 .overview-group { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .overview-group__title {
   margin: 0;
@@ -60,13 +55,18 @@
   letter-spacing: .04em;
   color: var(--cf-muted);
 }
-.overview-group .cfds-stat-row--pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* 固定列数:基础的 auto-fit 会被长文案撑开,列宽参差 —— 这里钉死 4 列 */
+.overview-group .cfds-stat-row--quad { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* 卡片内容允许收缩,长说明换行而不是把列撑宽 */
+.overview-group .cfds-stat { min-width: 0; }
+.overview-group .cfds-stat__hint { overflow-wrap: anywhere; }
 
 /* 「去需求录入」这类跳转:文字链 + 箭头,不要做成大按钮抢主按钮的位 */
 .overview-inline-link { padding: 0; height: auto; font-size: 12px; }
 .overview-inline-link .anticon { font-size: 11px; }
 
-.overview-lists { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 14px; align-items: start; }
+/* 两张表列多(需求/标题/状态/优先级/需处理原因/最近更新),各占满一整行,横向滚动兜底 */
+.overview-lists { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
 
 .overview-row-decision > td { background: color-mix(in srgb, var(--cf-warning) 9%, transparent); }
 
@@ -82,5 +82,31 @@
 .cfds-stat-row--pair .cfds-stat { min-height: 104px; }
 
 @media (max-width: 1180px) {
-  .overview-grid { grid-template-columns: 1fr; }
+  .overview-group .cfds-stat-row--quad { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* ── 风险条:失败/超时调度通栏,数量 > 0 时整条变警示色 ───────────── */
+.overview-risk {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  border: 1px solid var(--cf-border);
+  border-left: 3px solid var(--cf-border);
+  border-radius: 10px;
+  background: var(--cf-panel);
+}
+.overview-risk--alert {
+  border-left-color: var(--cf-warning);
+  background: color-mix(in srgb, var(--cf-warning) 7%, var(--cf-panel));
+}
+.overview-risk__label { font-size: 13px; color: var(--cf-text); font-weight: 500; }
+.overview-risk__value {
+  font-size: 22px;
+  font-weight: 650;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--cf-text);
+}
+.overview-risk--alert .overview-risk__value { color: var(--cf-warning); }
+.overview-risk__detail { font-size: 12px; color: var(--cf-muted); flex: 1; min-width: 0; }

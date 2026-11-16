@@ -254,11 +254,10 @@ export function DeliveryOverviewPage() {
         />
       )}
 
-      <div className="overview-grid">
-        {/* 左:交付结果 —— 本周期的产出与质量 */}
+      <div className="overview-kpis">
         <section className="overview-group">
           <h2 className="overview-group__title">{t('group.delivery')}</h2>
-          <div className="cfds-stat-row cfds-stat-row--triple">
+          <div className="cfds-stat-row cfds-stat-row--quad">
             <div data-testid="overview-created">
               <StatTile
                 label={t('created.title')}
@@ -304,9 +303,6 @@ export function DeliveryOverviewPage() {
                 </>}
               />
             </div>
-          </div>
-          <h2 className="overview-group__title">{t('group.quality')}</h2>
-          <div className="cfds-stat-row cfds-stat-row--pair">
             <div data-testid="overview-first-pass">
               <StatTile
                 label={<Space size={6}>{t('firstPass.title')}
@@ -318,6 +314,12 @@ export function DeliveryOverviewPage() {
                 hint={<div className="overview-stat-detail">{data?.firstPassRate == null && data ? t('firstPass.noData') : t('firstPass.caption')}</div>}
               />
             </div>
+          </div>
+        </section>
+
+        <section className="overview-group">
+          <h2 className="overview-group__title">{t('group.quality')}</h2>
+          <div className="cfds-stat-row cfds-stat-row--quad">
             <div data-testid="overview-rework">
               <StatTile
                 label={<Space size={6}>{t('rework.title')}
@@ -329,39 +331,6 @@ export function DeliveryOverviewPage() {
                 hint={<div className="overview-stat-detail">{data?.reworkRate == null && data ? t('rework.noData') : t('rework.caption')}</div>}
               />
             </div>
-          </div>
-
-        </section>
-        {/* 右:要你动手的 —— 待处理与风险,先看这里 */}
-        <section className="overview-group overview-group--side">
-          <h2 className="overview-group__title">{t('group.action')}</h2>
-          <div className="cfds-stat-row cfds-stat-row--pair">
-            <div data-testid="overview-pending-card">
-              <StatTile
-                tone={pendingCount > 0 ? 'accent' : 'default'}
-                label={t('summary.chipPending')}
-                value={formatNumber(pendingCount)}
-                hint={<div className="overview-stat-detail">
-                  <Button type="link" size="small" className="overview-inline-link"
-                    onClick={() => navigate('/workitems')}>
-                    {t('summary.gotoIntake')}<ArrowRightOutlined aria-hidden="true" />
-                  </Button>
-                </div>}
-              />
-            </div>
-            <div data-testid="overview-failed">
-              <StatTile
-                label={t('failed.title')}
-                tone={failedCount > 0 ? 'warn' : 'default'}
-                value={data ? formatNumber(data.failedDispatches.count) : '—'}
-                hint={data && <>
-                  <div><span>{t('failed.share', { value: formatNumber(data.failedDispatches.sharePercent, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}</span>{t('separator')}<span>{data.failedDispatches.changePercent != null ? t('failed.change', { value: percent(data.failedDispatches.changePercent) }) : t('failed.noBase')}</span></div>
-                </>}
-              />
-            </div>
-          </div>
-          <h2 className="overview-group__title">{t('group.running')}</h2>
-          <div className="cfds-stat-row cfds-stat-row--pair">
             <div data-testid="overview-in-progress">
               <StatTile
                 label={t('inProgress.title')}
@@ -383,9 +352,34 @@ export function DeliveryOverviewPage() {
                 </>}
               />
             </div>
+            <div data-testid="overview-pending-card">
+              <StatTile
+                tone={pendingCount > 0 ? 'accent' : 'default'}
+                label={t('summary.chipPending')}
+                value={formatNumber(pendingCount)}
+                hint={<div className="overview-stat-detail">
+                  <Button type="link" size="small" className="overview-inline-link"
+                    onClick={() => navigate('/workitems')}>
+                    {t('summary.gotoIntake')}<ArrowRightOutlined aria-hidden="true" />
+                  </Button>
+                </div>}
+              />
+            </div>
           </div>
         </section>
       </div>
+
+      {/* 风险:失败/超时调度单独一条通栏,数量异常时一眼可见 */}
+      <section className={`overview-risk${failedCount > 0 ? ' overview-risk--alert' : ''}`} aria-label={t('failed.title')} data-testid="overview-failed">
+        <div className="overview-risk__label">{t('failed.title')}</div>
+        <div className="overview-risk__value">{data ? formatNumber(data.failedDispatches.count) : t('common.emptyDash')}</div>
+        <div className="overview-risk__detail">
+          {data && <span>{t('failed.share', { value: formatNumber(data.failedDispatches.sharePercent, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) })}{t('separator')}{data.failedDispatches.changePercent != null ? t('failed.change', { value: percent(data.failedDispatches.changePercent) }) : t('failed.noBase')}</span>}
+        </div>
+        <Button type="link" size="small" className="overview-inline-link" onClick={() => navigate('/executions')}>
+          {t('failed.gotoExecutions')}<ArrowRightOutlined aria-hidden="true" />
+        </Button>
+      </section>
 
       <div className="overview-lists">
         <SurfaceCard testId="overview-pending" title={<Space size={8}>{t('pending.title')}<Tag>{t('pending.caption')}</Tag></Space>}>
