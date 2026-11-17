@@ -104,10 +104,7 @@ public class InsightsContractService {
         out.put("leadTimeDays", null);
         out.put("leadTimeChangePercent", null);
         out.put("inProgressCount", inProgress);
-        // 一次通过率:区间内 SUCCEEDED 调度中 attempt=1(首轮,未经重试)的占比;无成功调度时为 null
-        long succ = count("SELECT COUNT(*) FROM rt_run WHERE workspace_id=? AND status='SUCCEEDED' AND ended_at>=?", ws(), start.atStartOfDay());
-        Long firstTry = succ == 0 ? null : count("SELECT COUNT(*) FROM rt_run WHERE workspace_id=? AND status='SUCCEEDED' AND attempt=1 AND ended_at>=?", ws(), start.atStartOfDay());
-        out.put("firstPassRate", succ == 0 ? null : Math.round(firstTry * 1000.0 / succ) / 10.0);
+        out.put("firstPassRate", null);
 
         Map<String, Object> failed_ = new LinkedHashMap<>();
         failed_.put("count", failed);

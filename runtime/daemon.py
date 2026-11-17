@@ -228,16 +228,6 @@ class Daemon:
                 steps_done += 1
             success = not failures
             summary = ("; ".join(summaries) if success else "; ".join(failures))[:2000] or "completed"
-            if success:
-                # 产物回传:deliverables/ 上传到平台(签名通道,失败不阻断交付)
-                try:
-                    from .artifacts import upload_deliverables
-                    n, upload_failures = upload_deliverables(
-                        dispatch, workdir / "deliverables",
-                        log=lambda msg: log.warn("artifact.upload_failed", error=str(msg)[:200]))
-                    log.info("artifact.uploaded", dispatch_id=did, count=n)
-                except Exception as e:  # noqa: BLE001
-                    log.warn("artifact.upload_error", dispatch_id=did, error=repr(e))
             self.send_frame(frames.task_result(did, success, summary, ""), dispatch_id=did)
             self.store.mark_terminal(did, success)
             log.info("dispatch.finished", dispatch_id=did, success=success, steps_done=steps_done)

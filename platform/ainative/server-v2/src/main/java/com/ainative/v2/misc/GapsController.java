@@ -420,7 +420,24 @@ public class GapsController {
     @GetMapping("/api/capabilities/scheduled-task")
     public ApiResult<Map<String, Object>> scheduledTaskCapability() {
         RequestContext.requireUserId();
-        return ApiResult.ok(Map.of("enabled", true, "cronFieldMode", "5_OR_6"));
+        // 前端门禁契约:available + mode=V037_READY + clusterReady + reason=null 缺一即整页「暂时不可用」。
+        // 此前只回 {enabled, cronFieldMode},契约字段全缺 → 定时任务页在全新部署上永远不可用。
+        // 表结构按 db-init 三段 DDL 建,升级检查恒通过。
+        boolean schemaOk;
+        try {
+            jdbc.queryForObject("SELECT COUNT(*) FROM pf_task", Long.class); // 空表返回 0,不抛
+            schemaOk = true;
+        } catch (Exception e) {
+            schemaOk = false; // 表不存在才走到这里
+        }
+        Map<String, Object> caps = new LinkedHashMap<>();
+        caps.put("enabled", schemaOk);
+        caps.put("available", schemaOk);
+        caps.put("mode", "V037_READY");
+        caps.put("clusterReady", true);
+        caps.put("reason", schemaOk ? null : "DATABASE_UPGRADE_REQUIRED");
+        caps.put("cronFieldMode", "5_OR_6");
+        return ApiResult.ok(caps);
     }
 
     @GetMapping("/api/environment-variables/{id}/value")

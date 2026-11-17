@@ -69,11 +69,7 @@ public class SdlcController {
         m.put("isDefault", 0);
         m.put("entryStepId", null);
         Object steps = m.get("steps");
-        if (steps instanceof List<?> l) {
-            m.put("stepCount", l.size());
-        }
-        // listSdlcs 已按 stepsOf 计算好 stepCount:detail 形状没有 steps 键时保留原值,
-        // 不能回落成 0(列表页「步骤数」一直显示 0 的根因)
+        m.put("stepCount", steps instanceof List<?> l ? l.size() : 0);
         m.put("squadIds", null);
         m.put("squadNames", null);
         return m;

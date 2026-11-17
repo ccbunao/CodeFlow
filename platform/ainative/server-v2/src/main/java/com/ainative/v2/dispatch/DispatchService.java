@@ -21,9 +21,11 @@ public class DispatchService {
     private static final DateTimeFormatter TS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final DispatchDao dao;
+    private final org.springframework.jdbc.core.JdbcTemplate jdbc;
 
-    public DispatchService(DispatchDao dao) {
+    public DispatchService(DispatchDao dao, org.springframework.jdbc.core.JdbcTemplate jdbc) {
         this.dao = dao;
+        this.jdbc = jdbc;
     }
 
     public Map<String, Object> progress(long ticketId) {
@@ -94,6 +96,15 @@ public class DispatchService {
             m.put("error", r.error());
             m.put("startedAt", r.startedAt() == null ? null : TS.format(r.startedAt()));
             m.put("endedAt", r.endedAt() == null ? null : TS.format(r.endedAt()));
+            // 列表页四列(时间/需求/成员/运行器)此前恒为「—」:补齐关联展示字段
+            m.put("gmtCreate", r.startedAt() == null ? null : TS.format(r.startedAt()));
+            Long tid = r.ticketId();
+            m.put("workitemTitle", tid == null ? null
+                    : jdbc.query("SELECT title FROM wi_ticket WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, tid));
+            m.put("agentName", r.agentId() == null ? null
+                    : jdbc.query("SELECT name FROM ag_agent WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, r.agentId()));
+            m.put("executorName", r.executorId() == null ? null
+                    : jdbc.query("SELECT name FROM ag_executor WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, r.executorId()));
             list.add(m);
         }
         return new PageResult<>(list, dao.countRuns(status), pageNum, pageSize);
@@ -111,6 +122,43 @@ public class DispatchService {
         m.put("error", r.error());
         m.put("startedAt", r.startedAt() == null ? null : TS.format(r.startedAt()));
         m.put("endedAt", r.endedAt() == null ? null : TS.format(r.endedAt()));
+        // 执行档案抽屉:此前这些列恒为「—」(后端没给关联展示字段)
+        Long tid = r.ticketId();
+        m.put("workitemTitle", tid == null ? null
+                : jdbc.query("SELECT title FROM wi_ticket WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, tid));
+        m.put("agentName", r.agentId() == null ? null
+                : jdbc.query("SELECT name FROM ag_agent WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, r.agentId()));
+        m.put("executorName", r.executorId() == null ? null
+                : jdbc.query("SELECT name FROM ag_executor WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, r.executorId()));
+        String lastStep = jdbc.query(
+                "SELECT detail_json FROM rt_event WHERE run_id=? AND event_type='step.completed' ORDER BY seq DESC LIMIT 1",
+                rs -> rs.next() ? rs.getString(1) : null, id);
+        if (lastStep != null) {
+            java.util.regex.Matcher mm = java.util.regex.Pattern
+                    .compile("\"stepName\"\\s*:\\s*\"([^\"]*)\"").matcher(lastStep);
+            if (mm.find()) m.put("sdlcStepId", mm.group(1));
+        }
+        String summaryJson = jdbc.query(
+                "SELECT detail_json FROM rt_event WHERE run_id=? AND event_type='run.succeeded' ORDER BY seq DESC LIMIT 1",
+                rs -> rs.next() ? rs.getString(1) : null, id);
+        if (summaryJson != null) {
+            java.util.regex.Matcher sm = java.util.regex.Pattern
+                    .compile("\"resultSummary\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"").matcher(summaryJson);
+            if (sm.find()) {
+                String raw = sm.group(1).replace("\\n", "\n").replace("\\t", "\t").replace("\\\"", "\"");
+                m.put("resultSummary", raw.length() > 6000 ? raw.substring(0, 6000) + " …" : raw);
+            }
+        }
+        List<Map<String, Object>> arts = new ArrayList<>();
+        for (Map<String, Object> row : jdbc.queryForList(
+                "SELECT name, kind, size_bytes FROM as_artifact WHERE run_id=? ORDER BY id", id)) {
+            Map<String, Object> a = new LinkedHashMap<>();
+            a.put("name", row.get("name"));
+            a.put("kind", row.get("kind"));
+            a.put("sizeBytes", row.get("size_bytes"));
+            arts.add(a);
+        }
+        m.put("artifacts", arts);
         return m;
     }
 
