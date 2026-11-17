@@ -335,7 +335,8 @@
     "bodyField": "Requirement body",
     "backToList": "Back to requirements",
     "transitionTo": "Transition to {{name}}",
-    "origin": "From 7×24 Task <name/> / Run #{{id}}"
+    "origin": "From 7×24 Task <name/> / Run #{{id}}",
+    "reassignHint": "Run another delivery round: pick the squad and AI worker again; earlier attempts and artifacts stay inspectable."
   },
   "assignment": {
     "success": "Assigned to a person.",

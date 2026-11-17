@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Checkbox, Modal, Spin } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { TrustedHtml } from '@/shared/ui/TrustedHtml';
 import { apiClient } from '@/shared/api/client';
 import './OnboardingPage.css';
 
@@ -145,7 +146,7 @@ export function OnboardingPage() {
         {/* ── 1 认识模型 ── */}
         {current === 0 && (
           <>
-            <h1>{t('step1.headingHtml')}</h1>
+            <h1><TrustedHtml html={t('step1.headingHtml')} /></h1>
             <p className="lead">{t('step1.lead')}</p>
 
             <div className="flow">
@@ -166,7 +167,7 @@ export function OnboardingPage() {
 
             <div className="key">
               <div className="kt">{t('step1.keyTag')}</div>
-              <p>{t('step1.keyHtml')}</p>
+              <p><TrustedHtml html={t('step1.keyHtml')} /></p>
             </div>
           </>
         )}

@@ -333,7 +333,8 @@
     "bodyField": "需求正文",
     "backToList": "返回需求列表",
     "transitionTo": "流转到{{name}}",
-    "origin": "来自 7×24 Task <name/> / Run #{{id}}"
+    "origin": "来自 7×24 Task <name/> / Run #{{id}}",
+    "reassignHint": "再交付一轮:重新选择编队与 AI 数字员工,生成新的派发;前几轮执行记录与产物全部保留可查。"
   },
   "assignment": {
     "success": "已交给同事",

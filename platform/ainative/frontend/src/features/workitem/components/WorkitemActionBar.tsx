@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import type { ReactNode } from 'react';
 import { Button, Tooltip } from 'antd';
 import { SwapOutlined, UserSwitchOutlined, CommentOutlined, RocketOutlined, SyncOutlined, DeleteOutlined, UserAddOutlined, StarOutlined, StarFilled } from '@ant-design/icons';
@@ -43,6 +44,7 @@ export function WorkitemActionBar({
     <div data-testid="workitem-action-bar" className="cf-workitem-actions">
       <Button type="primary" icon={hasSdlc ? <UserSwitchOutlined aria-hidden="true" /> : <RocketOutlined aria-hidden="true" />} onClick={onStartDelivery}>
         {hasSdlc ? t('detail.reassign') : t('detail.startDelivery')}
+        {hasSdlc && <InfoTip text={t('detail.reassignHint')} />}
       </Button>
       <Button icon={<UserAddOutlined aria-hidden="true" />} onClick={onAssignHuman}>{t('assignment.title')}</Button>
       <Button icon={<SwapOutlined aria-hidden="true" />} onClick={onTransition}>{t('detail.transitionTitle')}</Button>
