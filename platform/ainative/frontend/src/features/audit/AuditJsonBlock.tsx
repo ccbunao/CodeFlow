@@ -22,7 +22,7 @@ export function AuditJsonBlock({ titleKey, value }: { titleKey: 'fullRecord' | '
         <Typography.Title level={5} style={{ margin: 0 }}>{title}</Typography.Title>
         <Button size="small" icon={<CopyOutlined aria-hidden="true" />} aria-label={t('copyNamed', { title })} onClick={() => void copy()}>{t('copy')}</Button>
       </div>
-      <pre style={{ margin: 0, padding: 16, border: '1px solid var(--cf-border)', borderRadius: 8, background: 'var(--cf-raised)', color: 'var(--cf-text)', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: 13, lineHeight: 1.6 }}>
+      <pre>
         <code>{tokens.map((token, index) => {
           if (index % 2 === 0) return token;
           const color = token.startsWith('"')

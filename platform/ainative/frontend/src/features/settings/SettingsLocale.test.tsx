@@ -273,7 +273,7 @@ it('updates backups without refetching, preserves raw metadata and requests a fr
     mount(<ProjectBackupsPage />);
     await screen.findByText('<b>存储</b>');
     await locale('en-US');
-    expect(screen.getByRole('heading', { name: 'Project configuration backups' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Config backups' })).toBeInTheDocument();
     expect(screen.getByText('Succeeded')).toBeInTheDocument();
     expect(screen.getByText('1,234.5 KiB')).toBeInTheDocument();
     expect(screen.getByText(new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'medium' }).format(new Date('2026-08-06T14:43:07Z')))).toBeInTheDocument();

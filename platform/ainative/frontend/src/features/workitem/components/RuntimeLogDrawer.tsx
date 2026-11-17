@@ -72,14 +72,15 @@ export function RuntimeLogPanel({ dispatchId, terminal = false, enabled = true, 
     </Space>
     {!embedded && <Alert type="info" icon={<InfoCircleFilled aria-hidden="true" />} showIcon message={t(terminal ? 'runtimeLog.terminalHint' : 'runtimeLog.hint')} style={{ marginBottom: 12 }} />}
     {error && <Alert type="error" icon={<CloseCircleFilled aria-hidden="true" />} showIcon message={error.message ?? t('runtimeLog.loadFailed')} style={{ marginBottom: 12 }} />}
-    {terminal ? <><RuntimeTerminal events={events} query={query} height={embedded ? 'clamp(220px, calc(100dvh - 480px), 650px)' : undefined} /><DispatchGuidanceInput key={dispatchId} dispatchId={dispatchId} /></> : <Table dataSource={[...filtered].reverse()} loading={loading && !events.length} size="small"
+    {terminal ? <><RuntimeTerminal events={events} query={query} height={embedded ? 'clamp(220px, calc(100dvh - 480px), 650px)' : undefined} /><DispatchGuidanceInput key={dispatchId} dispatchId={dispatchId} /></> : <Table className="cf-runtime-log" dataSource={[...filtered].reverse()} loading={loading && !events.length} size="small"
       rowKey={event => event.eventId ?? `${event.seq}-${event.eventType}`}
       pagination={{ pageSize, showSizeChanger: true, pageSizeOptions: [20, 50, 100], onChange: (_p, ps) => setPageSize(ps), showTotal: total => t('runtimeLog.total', { count: total }) }}
       columns={[
         { title: t('runtimeLog.sequence'), width: 110, render: (_, event) => event.fragments && event.fragments.length > 1 ? `${event.seq}–${event.endSeq}` : event.seq },
         { title: t('runtimeLog.time'), dataIndex: 'eventTime', width: 190, render: (value: string) => value ? formatDateTime(value) : '—' },
-        { title: t('runtimeLog.event'), dataIndex: 'eventType', width: 190 },
-        { title: t('runtimeLog.content'), align: 'left', render: (_, event) => <div style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', maxHeight: 100, overflow: 'auto' }}>{event.messageText ?? String(event.detail.outputSummary || event.detail.inputSummary || event.detail.contentSummary || event.detail.message || event.eventType)}</div> },
+        { title: t('runtimeLog.event'), dataIndex: 'eventType', width: 190,
+          render: (value: string) => <span className="cf-log-event-type">{value}</span> },
+        { title: t('runtimeLog.content'), align: 'left', render: (_, event) => <div style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', maxHeight: 100, overflow: 'auto' }}>{event.messageText ?? String(event.detail?.outputSummary || event.detail?.inputSummary || event.detail?.contentSummary || event.detail?.message || event.eventType)}</div> },
       ]}
       expandable={{ expandedRowRender: event => <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', maxHeight: '55vh', overflow: 'auto' }}>{JSON.stringify(event.fragments && event.fragments.length > 1 ? { message: event.messageText, fragmentCount: event.fragments.length, events: event.fragments } : event.detail, null, 2)}</pre> }} />}
   </div>;

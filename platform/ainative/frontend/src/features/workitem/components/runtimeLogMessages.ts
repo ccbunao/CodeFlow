@@ -1,17 +1,20 @@
 import type { RuntimeTraceEvent } from '@/shared/types/workitem';
 
+import { detailObject } from './runtimeDetail';
+
 export type RuntimeLogRow = RuntimeTraceEvent & { fragments?: RuntimeTraceEvent[]; messageText?: string; endSeq?: number | null };
 
 function messageText(event: RuntimeTraceEvent): string | null {
   if (event.eventType !== 'agent.message') return null;
-  const d = event.detail;
+  const d = detailObject(event.detail);
   if (d.type !== 'text' && d.providerType !== 'text') return null;
   const value = d.content ?? d.contentSummary;
   return typeof value === 'string' ? value : null;
 }
 
 function streamKey(event: RuntimeTraceEvent): string | null {
-  const values = ['sessionId', 'turnId', 'spanId'].map(key => event.detail[key]);
+  const d = detailObject(event.detail);
+  const values = ['sessionId', 'turnId', 'spanId'].map(key => d[key]);
   return values.every(value => typeof value === 'string' && value.length > 0) ? JSON.stringify(values) : null;
 }
 

@@ -60,15 +60,7 @@ export function SkillDetailModal({
             </div>
             <div>
               <Typography.Text strong>{detailSkill.sourceType === 'OSS_ZIP' ? t('package.info') : t('access.installCommand')}</Typography.Text>
-              <pre style={{
-                marginTop: 8,
-                padding: 12,
-                background: 'var(--cf-raised)',
-                color: 'var(--cf-text)',
-                borderRadius: 8,
-                overflowX: 'auto',
-                whiteSpace: 'pre-wrap',
-              }}>
+              <pre style={{ marginTop: 8 }}>
                 {detailAccessText(detailSkill)}
               </pre>
             </div>

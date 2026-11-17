@@ -69,13 +69,7 @@ export function SkillPackagePreview({
       <MarkdownView content={packageFileContent.content} />
     ) : (
       // pre 的 UA 默认 white-space:pre 会关闭折行，超长行会撑破弹窗，这里强制折行
-      <pre style={{
-        margin: 0,
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'break-word',
-        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
-        fontSize: 12,
-      }}>
+      <pre>
         {packageFileContent.content}
       </pre>
     );

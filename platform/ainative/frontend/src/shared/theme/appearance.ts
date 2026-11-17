@@ -77,6 +77,11 @@ export function getAppearanceVariables(mode: ResolvedAppearance, color: string):
     '--cf-info': 'var(--cf-accent)', '--cf-success': dark ? '#3FB950' : '#0F7B0F',
     '--cf-error': dark ? '#F85149' : '#D3383C', '--cf-warning': dark ? '#f59e0b' : '#b45309',
     '--cf-glass': dark ? 'rgba(20,22,26,.95)' : 'rgba(255,255,255,.96)',
+    // 运行时日志语义色(思考/工具/助手):明暗各一套,日志区不再自带硬编码黑底配色
+    '--cf-runtime-thinking': dark ? '#d2a8ff' : '#7c3aed',
+    '--cf-runtime-tool': dark ? '#79c0ff' : '#1d4ed8',
+    '--cf-runtime-assistant': dark ? '#7ee787' : '#15803d',
+    '--cf-runtime-step': dark ? '#ffa657' : '#b45309',
   };
 }
 export function createAppearanceTheme(mode: ResolvedAppearance, accent: string): ThemeConfig {

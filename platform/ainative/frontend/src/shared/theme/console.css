@@ -536,3 +536,151 @@ body.cf-custom-bg .cf-shell {
 /* 表单在弹层里的呼吸感:最后一项不顶底 */
 .ant-modal .ant-form-item:last-of-type { margin-bottom: 0; }
 .ant-drawer .ant-form-item:last-of-type { margin-bottom: 0; }
+
+/* ─────────────────────────────────────────────────────────────
+   日志 / 代码 / 过程 展示规范(2026-11-17)
+   统一三件事:等宽字体、浅底容器、发丝边;日志内容一律不挤压、可滚动。
+   ───────────────────────────────────────────────────────────── */
+
+/* 裸 <pre>(日志 / JSON / 命令)统一容器:浅底 + 发丝边 + 圆角 + 等宽 */
+pre {
+  font-family: var(--cf-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  background: var(--cf-raised);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius);
+  padding: 12px 14px;
+  color: var(--cf-text);
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+}
+pre::-webkit-scrollbar { width: 8px; height: 8px; }
+pre::-webkit-scrollbar-thumb { background: var(--cf-border); border-radius: 4px; }
+pre::-webkit-scrollbar-track { background: transparent; }
+
+/* 行内代码与 pre 区分:行内保持紧凑 */
+code {
+  font-family: var(--cf-mono);
+  font-size: .84em;
+}
+
+/* 时间线 / 过程条目:等宽序号 + 轻底色块,层级更清楚 */
+.cf-timeline .ant-timeline-item-content { line-height: 1.7; }
+.cf-timeline .ant-timeline-item-tail { border-inline-start-color: var(--cf-border); }
+
+/* 过程步骤(执行链路):步骤名加粗,说明文字次级色 */
+.cf-process-step {
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius);
+  background: var(--cf-panel);
+  padding: 10px 12px;
+}
+.cf-process-step .cf-process-name { font-weight: 700; color: var(--cf-text); }
+.cf-process-step .cf-process-desc { color: var(--cf-muted); font-size: 12.5px; }
+
+/* 日志表格:事件类型用等宽,内容区保持行高呼吸 */
+.cf-runtime-log .ant-table-tbody td { vertical-align: top; }
+.cf-runtime-log .ant-table-cell { font-variant-numeric: tabular-nums; }
+.cf-runtime-log .cf-log-event-type {
+  font-family: var(--cf-mono);
+  font-size: 11.5px;
+  color: var(--cf-accent-text);
+  background: color-mix(in srgb, var(--cf-accent-rgb) 10%, transparent);
+  border-radius: 4px;
+  padding: 1px 6px;
+  display: inline-block;
+}
+
+/* ── 运行时日志终端:跟随主题(明色不再突兀黑块),日志块分层 ── */
+.cf-runtime-terminal {
+  background: var(--cf-field);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius-lg);
+  padding: 18px 20px;
+  font-family: var(--cf-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--cf-text);
+}
+.cf-runtime-terminal .cf-runtime-time {
+  color: var(--cf-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.cf-runtime-terminal .cf-runtime-dim { color: var(--cf-muted); }
+.cf-runtime-terminal .cf-runtime-step {
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.cf-runtime-terminal .cf-runtime-block {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--cf-panel) 70%, transparent);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius);
+  font: inherit;
+  color: var(--cf-text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 320px;
+  overflow: auto;
+}
+.cf-runtime-terminal .cf-runtime-command {
+  border-left: 3px solid var(--cf-accent-text);
+  color: var(--cf-text);
+}
+.cf-runtime-terminal .cf-runtime-json {
+  font-size: 11.5px;
+  color: var(--cf-muted);
+  max-height: 260px;
+}
+.cf-runtime-details { color: var(--cf-muted); font-size: 11px; margin-top: 8px; }
+.cf-runtime-details > summary { cursor: pointer; }
+
+/* ── 时间线系统条目:浅底卡片 + 左缘强调 + 等宽时间,过程层级更清楚 ── */
+.cf-timeline-system {
+  border: 1px solid var(--cf-border);
+  border-left: 3px solid var(--cf-accent-text);
+  border-radius: var(--cf-radius);
+  background: color-mix(in srgb, var(--cf-panel) 82%, transparent);
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  color: var(--cf-muted);
+}
+.cf-timeline-system-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.cf-timeline-system-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  color: var(--cf-accent-text);
+  background: color-mix(in srgb, var(--cf-accent-rgb) 12%, transparent);
+  border-radius: 4px;
+  padding: 1px 7px;
+}
+.cf-timeline-time {
+  font-family: var(--cf-mono);
+  font-size: 11px;
+  color: var(--cf-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cf-timeline-system-body { line-height: 1.7; }
+
+.cf-runtime-progress-note {
+  color: var(--cf-muted);
+  font-size: 11.5px;
+  border: 1px dashed var(--cf-border);
+  border-radius: var(--cf-radius-sm);
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+}

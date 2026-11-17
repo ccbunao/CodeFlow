@@ -604,7 +604,7 @@ function StepOverviewTooltip({ step }: { step: SdlcStep }) {
   );
 }
 
-const previewStyle: CSSProperties = { maxWidth: 360, whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 };
+const previewStyle: CSSProperties = { maxWidth: 360, wordBreak: 'break-all' };
 
 function ChecklistPreview({ raw }: { raw: string }) {
   const { t } = useTranslation('sdlc');

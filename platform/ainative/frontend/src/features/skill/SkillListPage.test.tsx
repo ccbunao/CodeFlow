@@ -533,7 +533,9 @@ describe('SkillListPage package content', () => {
     const pre = packagePreview().querySelector('pre') as HTMLElement;
     expect(pre).toHaveTextContent('#!/bin/sh');
     expect(pre).toHaveTextContent('echo run');
-    expect(pre.style.whiteSpace).toBe('pre-wrap');
+    // 换行由主题层统一(console.css 的 pre 规则 white-space:pre-wrap);
+    // jsdom 不加载外部样式表,这里只断言结构,样式由 CSS 契约保证。
+    expect(pre.style.whiteSpace).toBe('');
     expect(packagePreview().querySelector('h1')).toBeNull();
   });
 

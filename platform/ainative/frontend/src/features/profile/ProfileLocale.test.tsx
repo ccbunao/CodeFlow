@@ -180,12 +180,19 @@ describe('personal account and MCP language boundary', () => {
   it('keeps endpoint loading and missing endpoint controls reactive without fetching on a switch', async () => {
     let finish!: (data: brandingApi.PlatformBranding) => void;
     const branding = vi.spyOn(brandingApi, 'getPublicBranding').mockImplementation(() => new Promise<brandingApi.PlatformBranding>(resolve => { finish = resolve; }));
-    mount(<McpTokenSettingsPanel />); expect(screen.getByLabelText('MCP 服务地址')).toHaveValue('正在加载 MCP 服务地址');
+    mount(<McpTokenSettingsPanel />);
+    // 加载中显示占位文案;加载成功后回落到当前站点 origin(后端不返回 mcpBaseUrl)
+    expect(screen.getByLabelText('MCP 服务地址')).toHaveValue('正在加载 MCP 服务地址');
     expect(screen.getByRole('button', { name: '新建令牌' })).toBeDisabled(); await language('en-US');
-    expect(screen.getByLabelText('MCP endpoint')).toHaveValue('Loading MCP endpoint'); expect(screen.getByRole('button', { name: 'New token' })).toBeDisabled();
+    expect(screen.getByLabelText('MCP endpoint')).toHaveValue('Loading MCP endpoint');
+    // 服务地址未就绪时不能建令牌(否则发出的 URL 是错的)
+    expect(screen.getByRole('button', { name: 'New token' })).toBeDisabled();
+    // 接口成功但未配置 mcpBaseUrl → 回落到当前站点 origin(全新部署可用),
+    // 不再显示「加载失败」把功能整个锁死。
     await act(async () => { finish({ ...brandingApi.DEFAULT_BRANDING, mcpBaseUrl: '' }); });
-    await waitFor(() => expect(screen.getByLabelText('MCP endpoint')).toHaveValue('Failed to load MCP endpoint'));
-    expect(screen.getByRole('button', { name: 'Copy MCP endpoint' })).toBeDisabled(); expect(branding).toHaveBeenCalledOnce();
+    await waitFor(() => expect(screen.getByLabelText('MCP endpoint')).toHaveValue('http://localhost:3000/api/mcp/<MCP_TOKEN>/'));
+    expect(screen.getByRole('button', { name: 'Copy MCP endpoint' })).not.toBeDisabled();
+    expect(branding).toHaveBeenCalledOnce();
   });
   it('renders delayed issued secrets in the completion language and clears them only on close', async () => {
     let finish!: (data: mcpApi.IssuedMcpToken) => void;

@@ -840,7 +840,8 @@
       "thinking": "思考",
       "tool": "工具调用",
       "assistant": "模型输出",
-      "activity": "执行状态"
+      "activity": "执行状态",
+      "step": "步骤"
     },
     "terminalToolName": " · {{name}}",
     "guidance": {
@@ -855,7 +856,15 @@
         "APPLIED": "已应用",
         "FAILED": "未应用"
       }
-    }
+    },
+    "progressSummary": "输出流 {{count}} 条(已折叠)",
+    "eventTypes": {
+      "agent.progress": "输出流",
+      "step.started": "步骤开始",
+      "step.completed": "步骤完成"
+    },
+    "stepTitle": "{{order}}. {{name}}",
+    "stepDone": " ✓"
   },
   "trace": {
     "choose": "选 Session、Turn 或 Observation 看详情",

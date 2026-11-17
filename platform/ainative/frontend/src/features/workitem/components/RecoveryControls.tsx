@@ -84,15 +84,15 @@ export function RecoveryControls({ workitemId, renderActions, variant = 'header'
   const showRestartAlert = latestRestart && latestRestart.status !== 'STARTED';
   const collapseItems = [] as { key: string; label: string; children: ReactNode }[];
   const executionRows = executions.map(e => {
-    const reason = e.error || e.recovery.reason;
+    const reason = e.error || e.recovery?.reason;
     const userForceUnconfirmed = e.control?.origin === 'USER'
-      && !!e.recovery.forced && !!e.recovery.stop_pending;
-    const retrying = !!e.recovery.retry_count && !terminal.has(e.status);
+      && !!e.recovery?.forced && !!e.recovery?.stop_pending;
+    const retrying = !!e.recovery?.retry_count && !terminal.has(e.status);
     if (!reason && !userForceUnconfirmed && !retrying) return null;
     return <div key={e.dispatchId} style={{ margin: '12px 0' }}>
       {userForceUnconfirmed ? <Alert type="warning" message={t('recovery.forceWarning')} /> : null}
       {reason && <div style={{ overflowWrap: 'anywhere' }}><Typography.Text type="secondary">{reasons[reason] || reason}</Typography.Text></div>}
-      {retrying && <div>{e.recovery.next_retry_at ? t('recovery.retryScheduled', { number: e.recovery.retry_count, maximum: e.recovery.max_retries ?? 3, time: formatDateTime(e.recovery.next_retry_at) }) : t('recovery.retryCount', { number: e.recovery.retry_count, maximum: e.recovery.max_retries ?? 3 })}</div>}
+      {retrying && <div>{e.recovery?.next_retry_at ? t('recovery.retryScheduled', { number: e.recovery?.retry_count ?? 0, maximum: e.recovery?.max_retries ?? 3, time: formatDateTime(e.recovery.next_retry_at) }) : t('recovery.retryCount', { number: e.recovery?.retry_count ?? 0, maximum: e.recovery?.max_retries ?? 3 })}</div>}
     </div>;
   });
   if (variant === 'history' && restarts.length > 0) collapseItems.push({

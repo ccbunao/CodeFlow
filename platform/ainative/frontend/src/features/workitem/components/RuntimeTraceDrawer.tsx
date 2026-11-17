@@ -1,4 +1,5 @@
 import { DispatchDiagnostics } from './DispatchDiagnostics';
+import { detailObject } from './runtimeDetail';
 import { graphAgentName } from '../runtimeLabels';
 import { CloseOutlined, CloseCircleFilled } from '@ant-design/icons';
 import { i18n } from '@/shared/i18n';
@@ -107,7 +108,8 @@ function TraceTimeline({ trace, onSelect }: { trace: RuntimeTrace; onSelect: (se
     {!!runtimeEvents.length && <div style={{ marginBottom: 14 }}>
       <Text strong style={{ fontSize: 12 }}>{t('trace.runtime')}</Text>
       {runtimeEvents.map((event, index) => {
-        const failureReason = FAILURE_EVENT_TYPES.has(event.eventType) && typeof event.detail?.reason === 'string' ? event.detail.reason : null;
+        const detail = detailObject(event.detail);
+        const failureReason = FAILURE_EVENT_TYPES.has(event.eventType) && typeof detail.reason === 'string' ? detail.reason : null;
         return <button key={event.eventId || index} type="button" onClick={() => onSelect({ kind: 'boundary', boundary: { eventId: event.eventId, kind: event.eventType, label: event.eventType, eventTime: event.eventTime, detail: event.detail } })} style={{ display: 'block', width: '100%', padding: '6px 8px', border: 0, background: 'transparent', cursor: 'pointer', color: 'var(--cf-text)', textAlign: 'left' }}>
           <Text code style={{ fontSize: 11 }}>{event.eventType}</Text>
           {failureReason && <Text type="danger" style={{ marginLeft: 8, fontSize: 11 }}>{failureReason}</Text>}

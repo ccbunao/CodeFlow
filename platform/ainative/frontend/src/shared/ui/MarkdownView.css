@@ -12,3 +12,76 @@
 .cf-markdown ul.contains-task-list { list-style: none; padding-left: 1.4em; }
 .cf-markdown li.task-list-item { list-style: none; }
 .cf-markdown li.task-list-item > input { margin-right: .4em; }
+
+/* ── Markdown 正文精致度(2026-11-17):交付报告/结论摘要的主要展示面 ── */
+.cf-markdown { line-height: 1.75; }
+.cf-markdown > *:first-child { margin-top: 0; }
+.cf-markdown > *:last-child { margin-bottom: 0; }
+.cf-markdown h1, .cf-markdown h2, .cf-markdown h3, .cf-markdown h4 {
+  font-weight: 700;
+  color: var(--cf-text);
+  letter-spacing: .2px;
+  margin: 18px 0 8px;
+  line-height: 1.4;
+}
+.cf-markdown h1 { font-size: 19px; }
+.cf-markdown h2 {
+  font-size: 16px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--cf-border);
+}
+.cf-markdown h3 { font-size: 14.5px; }
+.cf-markdown h4 { font-size: 13.5px; color: var(--cf-muted); }
+.cf-markdown p { margin: 8px 0; }
+.cf-markdown ul, .cf-markdown ol { margin: 8px 0; padding-left: 22px; }
+.cf-markdown li { margin: 3px 0; }
+.cf-markdown li::marker { color: var(--cf-accent-text); }
+.cf-markdown hr { border: none; border-top: 1px solid var(--cf-border); margin: 16px 0; }
+/* 表格:与平台表格同一套语言(橙色表头 + 发丝边 + 斑马纹) */
+.cf-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.cf-markdown th {
+  background: color-mix(in srgb, var(--cf-accent-rgb) 10%, var(--cf-raised));
+  color: var(--cf-accent-text);
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid var(--cf-border);
+  padding: 7px 10px;
+}
+.cf-markdown td { border-bottom: 1px solid var(--cf-border); padding: 7px 10px; vertical-align: top; }
+.cf-markdown tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--cf-panel) 55%, transparent); }
+/* 行内代码:主题色 chip,和 pre 的等宽块区分 */
+.cf-markdown code {
+  font-family: var(--cf-mono);
+  font-size: .85em;
+  background: color-mix(in srgb, var(--cf-accent-rgb) 9%, transparent);
+  color: var(--cf-accent-text);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.cf-markdown pre {
+  background: var(--cf-field);
+  border: 1px solid var(--cf-border);
+  border-radius: var(--cf-radius);
+  padding: 12px 14px;
+  font-family: var(--cf-mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  overflow: auto;
+}
+.cf-markdown pre code { background: transparent; color: var(--cf-text); padding: 0; }
+.cf-markdown blockquote {
+  margin: 10px 0;
+  padding: 8px 14px;
+  background: color-mix(in srgb, var(--cf-accent-rgb) 6%, transparent);
+  border-left: 3px solid var(--cf-accent-text);
+  border-radius: 0 var(--cf-radius) var(--cf-radius) 0;
+  color: var(--cf-muted);
+}
+.cf-markdown blockquote p { margin: 3px 0; }
+.cf-markdown strong { color: var(--cf-text); font-weight: 700; }
+.cf-markdown a { color: var(--cf-accent-text); }

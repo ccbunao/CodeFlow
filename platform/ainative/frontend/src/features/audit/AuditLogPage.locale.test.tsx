@@ -69,7 +69,7 @@ describe('AuditLogPage v2 locale boundary', () => {
     renderPage();
 
     expect(await screen.findByText('命中 23 条')).toBeInTheDocument();
-    expect(screen.getByText('操作日志')).toBeInTheDocument();
+    expect(screen.getByText('操作审计')).toBeInTheDocument();
     expect(screen.getByText('谁在什么时候动了什么,全部留痕')).toBeInTheDocument();
     for (const name of ['时间', '谁', '模块 / 动作', '风险', '对象', '触发 / 事件', '摘要']) {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);
@@ -90,7 +90,7 @@ describe('AuditLogPage v2 locale boundary', () => {
 
     await language('en-US');
 
-    expect(screen.getByText('Audit logs')).toBeInTheDocument();
+    expect(screen.getByText('Audit log')).toBeInTheDocument();
     expect(screen.getByText('Who changed what, and when — all on record.')).toBeInTheDocument();
     for (const name of ['Time', 'Who', 'Module / action', 'Risk', 'Target', 'Trigger / event', 'Summary']) {
       expect(screen.getAllByText(name).length).toBeGreaterThan(0);

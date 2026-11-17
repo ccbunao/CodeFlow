@@ -857,7 +857,8 @@
       "thinking": "Thinking",
       "tool": "Tool call",
       "assistant": "Model output",
-      "activity": "Execution status"
+      "activity": "Execution status",
+      "step": "Step"
     },
     "terminalToolName": " · {{name}}",
     "guidance": {
@@ -872,7 +873,15 @@
         "APPLIED": "Applied",
         "FAILED": "Not applied"
       }
-    }
+    },
+    "progressSummary": "{{count}} output chunks (collapsed)",
+    "eventTypes": {
+      "agent.progress": "Output stream",
+      "step.started": "Step started",
+      "step.completed": "Step completed"
+    },
+    "stepTitle": "{{order}}. {{name}}",
+    "stepDone": " ✓"
   },
   "trace": {
     "choose": "Pick a Session, Turn or Observation",

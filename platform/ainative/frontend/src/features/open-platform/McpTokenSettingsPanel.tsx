@@ -228,10 +228,15 @@ export function McpTokenSettingsPanel() {
     queryKey: BRANDING_QUERY_KEY,
     queryFn: getPublicBranding,
   });
-  // 服务地址缺省回落到当前站点 origin:后端品牌配置本就不存 mcpBaseUrl,
-  // 之前回落成 null 会让整页「加载失败」且新建令牌被禁用(全新部署必现)。
-  const mcpEndpoint = brandingQuery.data?.mcpBaseUrl?.trim()
-    || (typeof window === 'undefined' ? null : `${window.location.origin}/api/mcp`);
+  // 服务地址优先取品牌配置;后端不返回 mcpBaseUrl 时回落到当前站点 origin
+  // (此前回落成 null,全新部署上整页「加载失败」且新建令牌被禁用)。
+  // 加载中/请求失败仍保留占位语义,不给用户一个可能错误的地址。
+  const brandedEndpoint = brandingQuery.data?.mcpBaseUrl?.trim() ?? '';
+  const fallbackEndpoint = typeof window === 'undefined' ? '' : `${window.location.origin}/api/mcp`;
+  const mcpEndpoint = brandingQuery.isError || brandingQuery.isPending
+    ? ''
+    : (brandedEndpoint || fallbackEndpoint);
+  // 请求失败时 mcpEndpoint 为空 → 显示失败提示,不猜地址。
   const isCommunityEdition = brandingQuery.data?.communityEdition === true;
   useLocalizedValidation(form, tokenModalOpen && !(issuedToken && mcpEndpoint));
 
@@ -375,7 +380,7 @@ export function McpTokenSettingsPanel() {
   const snippetCollapseItem = (client: { key: string; label: string; command: string }) => ({
     key: client.key,
     label: t('clientConfig', { client: client.label }),
-    children: <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: 12 }}>{client.command}</pre>,
+    children: <pre>{client.command}</pre>,
     extra: <Button aria-label={t('copy')} size="small" icon={<CopyOutlined aria-hidden="true" />} onClick={(event) => {
       event.stopPropagation();
       copyText(client.command);
@@ -493,7 +498,7 @@ export function McpTokenSettingsPanel() {
                         title={<Space><RocketOutlined aria-hidden="true" />{client.label}</Space>}
                         extra={<Button aria-label={t('copy')} size="small" icon={<CopyOutlined aria-hidden="true" />} onClick={() => copyText(client.command)}>{t('copy')}</Button>}
                       >
-                        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontSize: 12 }}>{client.command}</pre>
+                        <pre>{client.command}</pre>
                       </Card>
                     </Col>
                   ))}

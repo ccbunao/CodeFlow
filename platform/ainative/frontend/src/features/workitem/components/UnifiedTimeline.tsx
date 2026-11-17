@@ -116,20 +116,12 @@ function renderSystemItem(item: TimelineItem, participants: Participant[] = []) 
 const SystemCard = memo(function SystemCard({ item, participants }: { item: TimelineItem; participants?: Participant[] }) {
   const { t } = useTranslation('workitem');
   return (
-    <div
-      style={{
-        borderLeft: '3px solid var(--cf-accent-text)',
-        paddingLeft: 12,
-        marginBottom: 16,
-        fontSize: 12,
-        color: 'var(--cf-muted)',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-        <Text type="secondary" style={{ fontSize: 12 }}>{t('timeline.system')}</Text>
-        <Text type="secondary" style={{ fontSize: 12 }}>{formatTime(item.gmtCreate)}</Text>
+    <div className="cf-timeline-system">
+      <div className="cf-timeline-system-head">
+        <span className="cf-timeline-system-tag">{t('timeline.system')}</span>
+        <time className="cf-timeline-time">{formatTime(item.gmtCreate)}</time>
       </div>
-      <div>{renderSystemItem(item, participants)}</div>
+      <div className="cf-timeline-system-body">{renderSystemItem(item, participants)}</div>
     </div>
   );
 });

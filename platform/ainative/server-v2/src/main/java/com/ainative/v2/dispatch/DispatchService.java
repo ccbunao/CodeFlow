@@ -36,6 +36,11 @@ public class DispatchService {
             m.put("dispatchId", run.id());
             m.put("agentId", run.agentId());
             m.put("executorId", run.executorId());
+            // 前端执行轨迹条目按 agentName 展示;缺失会渲染成「—」(此前整列无名)
+            m.put("agentName", run.agentId() == null ? null
+                    : jdbc.query("SELECT name FROM ag_agent WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, run.agentId()));
+            m.put("executorName", run.executorId() == null ? null
+                    : jdbc.query("SELECT name FROM ag_executor WHERE id=?", rs -> rs.next() ? rs.getString(1) : null, run.executorId()));
             m.put("attempt", run.attempt());
             m.put("status", run.status());
             m.put("error", run.error());
@@ -49,6 +54,16 @@ public class DispatchService {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("executions", executions);
         return out;
+    }
+
+    /** 从事件 detail_json 里取 stepName(轻量正则,不引 JSON 解析依赖)。 */
+    private String stepNameOf(String detailJson) {
+        if (detailJson == null) {
+            return null;
+        }
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("\"stepName\"\\s*:\\s*\"([^\"]*)\"").matcher(detailJson);
+        return m.find() ? m.group(1) : null;
     }
 
     /** 从事件流聚合步骤轨迹(step.started/completed)。 */
@@ -67,6 +82,11 @@ public class DispatchService {
                 m.put("durationMs", null);
                 return m;
             });
+            // 步骤名在事件 detail(stepName)里;此前没取,阶段耗时表的名称列全为 null
+            String stepName = stepNameOf(e.detailJson());
+            if (stepName != null) {
+                step.put("name", stepName);
+            }
             if ("step.started".equals(e.eventType())) {
                 step.put("status", "active");
                 step.put("startedAt", e.ts());
