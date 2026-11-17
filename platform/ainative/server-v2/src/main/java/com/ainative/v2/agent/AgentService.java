@@ -214,6 +214,13 @@ public class AgentService {
         return RUNTIME_VERSION;
     }
 
+    /** 记录「编辑完整命令」的手工覆盖(变更流水,审计可查;运行器心跳拉取 update 时透传)。 */
+    @Transactional
+    public void recordLaunchCommandOverride(long executorId, Integer version, String detailJson) {
+        dao.findExecutor(executorId).orElseThrow(() -> new BizException("17002", "执行器不存在"));
+        dao.insertExecutorUpdate(executorId, detailJson);
+    }
+
     public Map<String, Object> modelPolicy(long executorId) {
         AgentDao.Executor e = dao.findExecutor(executorId).orElseThrow(() -> new BizException("17002", "执行器不存在"));
         Map<String, Object> m = new LinkedHashMap<>();

@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/executors")
 public class ExecutorOpsController {
-    public record LaunchConfigRequest(Integer maxTasks, Integer heartbeatSec, String logLevel, String model) {}
+    public record LaunchConfigRequest(Integer maxTasks, Integer heartbeatSec, String logLevel, String model, String memoryMode) {}
     public record RestartRequest(String reason) {}
 
     private final JdbcTemplate jdbc;
@@ -47,7 +47,7 @@ public class ExecutorOpsController {
         RequestContext.requireUserId();
         require(id);
         List<Map<String, Object>> rows = jdbc.queryForList(
-                "SELECT id, agent_id AS agentId, name, status, model_policy AS modelPolicy FROM ag_executor WHERE id=?", id);
+                "SELECT id, agent_id AS agentId, name, status, model_policy AS modelPolicy, memory_mode AS memoryMode FROM ag_executor WHERE id=?", id);
         Map<String, Object> out = new LinkedHashMap<>(rows.get(0));
         out.put("maxTasks", 1);
         out.put("heartbeatSec", 30);
@@ -61,11 +61,17 @@ public class ExecutorOpsController {
         require(id);
         // v2 启动参数由运行器环境变量驱动,落 ag_executor_update 作为变更流水,
         // 运行器下次心跳拉取(update 轮询端点)后生效。
+        if (req.memoryMode() != null && !req.memoryMode().isBlank()) {
+            jdbc.update("UPDATE ag_executor SET memory_mode=? WHERE id=?", req.memoryMode(), id);
+        }
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("maxTasks", req.maxTasks());
         payload.put("heartbeatSec", req.heartbeatSec());
         payload.put("logLevel", req.logLevel());
         payload.put("model", req.model());
+        if (req.memoryMode() != null) {
+            payload.put("memoryMode", req.memoryMode());
+        }
         jdbc.update("INSERT INTO ag_executor_update (workspace_id, executor_id, detail_json, status) VALUES (?,?,?, 'PENDING')",
                 ws(), id, toJson(payload));
         return launchConfig(id);

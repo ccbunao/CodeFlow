@@ -74,6 +74,71 @@ public class ExecutorController {
         return ApiResult.ok(service.launchCommand(id, token, os, mode));
     }
 
+    /**
+     * 生成启动命令(POST 契约:启动值一律由服务端从数据库读取,前端只传输出格式选项)。
+     * body 可选字段:os(posix/windows) / mode(foreground/nohup/service) / debug / shell。
+     * 生成过程会轮换接入令牌,与 GET 版本语义一致。
+     */
+    public record LaunchCommandRequest(String os, String mode, Boolean debug, String shell) {}
+
+    @PostMapping("/executors/{id}/launch-command")
+    public ApiResult<Map<String, Object>> buildLaunchCommand(@PathVariable long id,
+            @RequestBody(required = false) LaunchCommandRequest req) {
+        RequestContext.requireUserId();
+        String os = req == null || req.os() == null || req.os().isBlank() ? "posix" : req.os();
+        String mode = req == null || req.mode() == null || req.mode().isBlank() ? "foreground" : req.mode();
+        Map<String, Object> out = service.launchCommand(id, null, os, mode);
+        if (req != null) {
+            out.put("os", os);
+            out.put("mode", mode);
+            out.put("debug", Boolean.TRUE.equals(req.debug()));
+            out.put("shell", req.shell());
+        }
+        return ApiResult.ok(out);
+    }
+
+    /**
+     * 保存「编辑完整命令」的手工覆盖:落 ag_executor_update 变更流水(审计可查)。
+     * 覆盖命令在运行器下次心跳拉取 update 时透传;重新生成命令即回到服务端拼装。
+     */
+    public record LaunchCommandOverrideRequest(String command, Integer version) {}
+
+    @PutMapping("/executors/{id}/launch-command")
+    public ApiResult<Map<String, Object>> saveLaunchCommandOverride(@PathVariable long id,
+            @RequestBody LaunchCommandOverrideRequest req) {
+        RequestContext.requireUserId();
+        if (req.command() == null || req.command().isBlank()) {
+            throw new com.ainative.v2.common.BizException("10001", "命令不能为空");
+        }
+        String detail = "{\"kind\":\"LAUNCH_COMMAND_OVERRIDE\",\"command\":" + jsonEscape(req.command()) + "}";
+        // ExecutorOpsController.saveLaunchConfig 同款流水表;workspace 由调用上下文决定
+        service.recordLaunchCommandOverride(id, req.version(), detail);
+        return ApiResult.ok(Map.of("executorId", id, "saved", true));
+    }
+
+    /**
+     * 草稿预览:表单改过未保存时,前端走此端点预览命令。启动值仍取数据库已存配置,
+     * 草稿仅影响前端展示;保存后走 POST 生成端点(dryRun=false 语义相同)。
+     */
+    @PostMapping("/executors/{id}/launch-command/preview")
+    public ApiResult<Map<String, Object>> previewLaunchCommand(@PathVariable long id,
+            @RequestBody(required = false) LaunchCommandRequest req) {
+        RequestContext.requireUserId();
+        String os = req == null || req.os() == null || req.os().isBlank() ? "posix" : req.os();
+        String mode = req == null || req.mode() == null || req.mode().isBlank() ? "foreground" : req.mode();
+        Map<String, Object> out = service.launchCommand(id, null, os, mode);
+        out.put("dryRun", true);
+        return ApiResult.ok(out);
+    }
+
+    private String jsonEscape(String s) {
+        try {
+            return new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(s);
+        } catch (Exception e) {
+            return "\"\u0000\"";
+        }
+    }
+
     @GetMapping("/executors/{id}/model-upgrade-policy")
     public ApiResult<Map<String, Object>> modelPolicy(@PathVariable long id) {
         RequestContext.requireUserId();

@@ -531,6 +531,8 @@ CREATE TABLE IF NOT EXISTS ag_executor (
   client_kind VARCHAR(32),
   token_hash VARCHAR(128),
   status VARCHAR(16) DEFAULT 'OFFLINE',
+  model_policy VARCHAR(64) NOT NULL DEFAULT 'FOLLOW',
+  memory_mode VARCHAR(32) DEFAULT 'platform',
   last_heartbeat DATETIME,
   version INT NOT NULL DEFAULT 0,
   gmt_create DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

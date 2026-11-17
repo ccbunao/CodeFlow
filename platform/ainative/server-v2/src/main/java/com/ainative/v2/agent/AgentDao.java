@@ -113,6 +113,13 @@ public class AgentDao {
         jdbc.update("UPDATE ag_executor SET deleted_at=NOW() WHERE id=?", id);
     }
 
+    /** 变更流水:运行器下次心跳拉取 update 时生效(launch-config 覆盖/升级/重启同表)。 */
+    public void insertExecutorUpdate(long executorId, String detailJson) {
+        Long wsId = jdbc.queryForObject("SELECT workspace_id FROM ag_executor WHERE id=?", Long.class, executorId);
+        jdbc.update("INSERT INTO ag_executor_update (workspace_id, executor_id, detail_json, status) VALUES (?,?,?, 'PENDING')",
+                wsId == null ? 10000L : wsId, executorId, detailJson);
+    }
+
     public void updateExecutorToken(long id, String tokenHash) {
         jdbc.update("UPDATE ag_executor SET token_hash=? WHERE id=?", tokenHash, id);
     }
