@@ -14,9 +14,10 @@ interface Props {
   onSetDefault: (id: number) => void;
   onDelete: (id: number) => void;
   workType: WorkType;
+  creating?: boolean;
 }
 
-export function TemplateSelector({ createOpen, onCloseCreate, templates, selectedId, onSelect, onCreate, onSetDefault, onDelete }: Props) {
+export function TemplateSelector({ createOpen, creating = false, onCloseCreate, templates, selectedId, onSelect, onCreate, onSetDefault, onDelete }: Props) {
   const { t } = useTranslation('statemachine');
   const [form] = Form.useForm();
   useLocalizedValidation(form, createOpen);
@@ -24,6 +25,7 @@ export function TemplateSelector({ createOpen, onCloseCreate, templates, selecte
   const selected = templates.find((t) => t.id === selectedId);
 
   const handleCreate = () => {
+    if (creating) return; // 防重复提交:上一次请求未落地前不再触发
     form.validateFields().then(({ name }) => {
       onCreate(name);
       onCloseCreate();
@@ -58,7 +60,7 @@ export function TemplateSelector({ createOpen, onCloseCreate, templates, selecte
         </Popconfirm>
       )}
 
-      <Modal closable={{ 'aria-label': t('common.close') }} title={t('actions.createTemplate')} open={createOpen} onOk={handleCreate} onCancel={() => onCloseCreate()} destroyOnHidden>
+      <Modal closable={{ 'aria-label': t('common.close') }} title={t('actions.createTemplate')} open={createOpen} onOk={handleCreate} onCancel={() => onCloseCreate()} confirmLoading={creating} destroyOnHidden>
         <Form form={form} layout="vertical">
           <Form.Item name="name" label={t('templates.name')} rules={[{ required: true, message: t('templates.nameRequired') }]}>
             <Input placeholder={t('templates.namePlaceholder')} />

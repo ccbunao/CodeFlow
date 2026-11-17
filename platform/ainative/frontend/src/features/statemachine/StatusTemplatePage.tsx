@@ -65,6 +65,7 @@ export function StatusTemplatePage() {
         <>
           <TemplateSelector
             createOpen={createOpen}
+            creating={createTemplateMut.isPending}
             onCloseCreate={() => setCreateOpen(false)}
             templates={templates}
             selectedId={selectedId}

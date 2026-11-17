@@ -205,44 +205,45 @@ figcaption strong { color:var(--accent-deep); }
 <p><strong>排队原因会明说</strong>:运行节点不在线时派发不会空转,而是按指数退避等待,面板直接显示原因(如"等待运行节点上线")与最近一次尝试;运行节点上线后自动唤醒,无需人工重发。</p>
 <p><strong>失败了就地重试</strong>:某次派发失败(模型配额、基础设施中断等)时,面板给出「重试」按钮,原样重发一次并记为新 attempt,前几轮执行记录全部保留可查——下图是一次真实交付:第一轮因轮次上限失败(红标),重发的新执行接续跑完四步并交付:</p>
 <figure><img src="../images/manual/10-dispatch-retry.png" alt="图 2-10"><figcaption>图 2-10　失败派发的重试:历史执行里前一轮失败(红标),重发的新执行跑完全部四步并交付(实拍自需求 #1000001)</figcaption></figure>
+<figure><img src="../images/manual/42-artifacts-8.png" alt="图 2-11"><figcaption>图 2-11　交付产物入库:成功后 8 个文件(过程文档/工具脚本/汇总报告)在面板直接可见、可下载</figcaption></figure>
 <div class="warn">⚠ <strong>人工介入</strong>:若 AI 数字员工卡在需要判断的地方(如评审不通过但环境无法满足某项通过条件),在需求评论区留下澄清意见并说明判定口径,下一轮派发会读到这条意见继续——这是解开僵局的标准动作,不用改配置、不用重建派发。</div>
 <h2 id="8.ai数字员工与编队"><span class="h2-kicker">CHAPTER 08</span><span class="h2-text">AI 数字员工与编队</span></h2>
 <p><strong>本章摘要</strong>:AI 数字员工是绑定客户端与模型的可执行角色;编队是"谁 + 什么角色 + 哪条交付流程"的交付阵型。</p>
 <p>入口:左侧导航 → AI 数字员工(<code>/#/agents</code>)。</p>
-<figure><img src="../images/manual/12-agents.png" alt="图 2-11"><figcaption>图 2-11　AI 数字员工管理(数字员工 / 版本审核 / 编队三个页签)</figcaption></figure>
+<figure><img src="../images/manual/12-agents.png" alt="图 2-12"><figcaption>图 2-12　AI 数字员工管理(数字员工 / 版本审核 / 编队三个页签)</figcaption></figure>
 <ul><li><strong>AI 数字员工</strong>:一个可执行的角色(如"前后端全栈开发"),绑定客户端类型(Claude Code / Codex CLI / Cursor CLI / Gemini CLI / Qoder CLI 等)与模型;</li><li><strong>版本审核</strong>(<code>/agents/reviews</code>):AI 数字员工配置的变更走版本化,提交后在此页审核,通过才进入上线流转——防止未评审的改动直接跑生产;</li><li><strong>编队</strong>:多个 AI 数字员工 + 角色构成 + 关联交付流程组成交付阵型。</li></ul>
-<figure><img src="../images/manual/44-squad-detail.png" alt="图 2-12"><figcaption>图 2-12　编队详情(数字员工阵容 / 角色构成 / 交付流程)</figcaption></figure>
+<figure><img src="../images/manual/44-squad-detail.png" alt="图 2-13"><figcaption>图 2-13　编队详情(数字员工阵容 / 角色构成 / 交付流程)</figcaption></figure>
 <p>编队卡片的「0/3 在线」徽标 = 该编队当前在线的运行节点数 / 运行节点总数。评审不通过时按稳定问题清单返工,是编队的默认协作方式。</p>
-<figure><img src="../images/manual/46-agent-detail.png" alt="图 2-13"><figcaption>图 2-13　AI 数字员工详情</figcaption></figure>
+<figure><img src="../images/manual/46-agent-detail.png" alt="图 2-14"><figcaption>图 2-14　AI 数字员工详情</figcaption></figure>
 <h2 id="9.交付流程流程模板"><span class="h2-kicker">CHAPTER 09</span><span class="h2-text">交付流程(流程模板)</span></h2>
 <p><strong>本章摘要</strong>:每个项目定义自己的交付流程;启动交付时选的流程,决定 AI 按什么路径干活。</p>
 <p>入口:左侧导航 → 交付流程(<code>/#/sdlcs</code>),页面为「流程模板」列表(流程模版 / 模版间 / 编队工作流三个页签)。</p>
-<figure><img src="../images/manual/45-sdlc-detail.png" alt="图 2-14"><figcaption>图 2-14　流程模板列表与步骤详情</figcaption></figure>
+<figure><img src="../images/manual/45-sdlc-detail.png" alt="图 2-15"><figcaption>图 2-15　流程模板列表与步骤详情</figcaption></figure>
 <table><thead><tr><th>元素</th><th>说明</th></tr></thead><tbody><tr><td>流程模版</td><td>一次交付的步骤序列(如:分析与分支准备 → 编码与测试 → 验证与交付 → 交接评审),每步含目标、完成门、要求产物</td></tr><tr><td>模版间</td><td>模板之间的衔接(开发完成后接评审模板)</td></tr><tr><td>编队工作流</td><td>编队视角的流程编排</td></tr><tr><td>新建</td><td>手工按步骤定义建流程</td></tr></tbody></table>
 <p>「详情」里可以逐步查看/编辑步骤定义;需求启动交付时选择的交付流程决定 AI 数字员工按什么路径干活。</p>
 <h2 id="10.运行节点管理"><span class="h2-kicker">CHAPTER 10</span><span class="h2-text">运行节点管理</span></h2>
 <p><strong>本章摘要</strong>:真正干活的是运行节点——装在你自己的机器上,主动连回平台;代码在内网也没关系。</p>
 <p>入口:左侧导航 → 运行节点(<code>/#/executors</code>)。</p>
-<figure><img src="../images/manual/13-executors.png" alt="图 2-15"><figcaption>图 2-15　运行节点管理(按编队分组;在线/忙碌/离线一目了然)</figcaption></figure>
+<figure><img src="../images/manual/13-executors.png" alt="图 2-16"><figcaption>图 2-16　运行节点管理(按编队分组;在线/忙碌/离线一目了然)</figcaption></figure>
 <table><thead><tr><th>元素</th><th>说明</th></tr></thead><tbody><tr><td>新建运行节点</td><td>归属 AI 数字员工 / 客户端类型(六种卡片单选)/ 并发数 / 记忆模式;创建成功弹窗直接给令牌与启动命令</td></tr><tr><td>运行方式三档</td><td><strong>前台运行</strong>(调试,关终端即停)/<strong>后台挂起</strong>(nohup,崩溃不自愈)/<strong>系统服务</strong>(install-service,崩溃自愈 + 开机自启,推荐)</td></tr><tr><td>复制入口×2</td><td>启动命令弹窗与创建成功弹窗都按当前选中的运行方式出命令;复制后贴到运行节点机器执行即可</td></tr><tr><td>卸载系统服务</td><td><code>ymai-codeflow uninstall-service --executor-id &lt;id&gt;</code></td></tr><tr><td>自动升级</td><td>开启后运行节点版本落后自动升级;「一键全量更新」按编队批量升级到平台推荐版本</td></tr><tr><td>分组视图</td><td>按编队 / 按 AI 数字员工分组;按编队筛选后看目标运行节点</td></tr><tr><td>在线状态</td><td>心跳判活 + 最近启动时间;离线的运行节点其排队派发会显示等待原因</td></tr><tr><td>运行节点详情</td><td>抽屉查看主机名/IP/版本/模型/最近启动/重启记录</td></tr></tbody></table>
-<figure><img src="../images/manual/61-executor-startup-modes.png" alt="图 2-16"><figcaption>图 2-16　启动命令弹窗(运行方式切到「系统服务」,命令实时重生成)</figcaption></figure>
+<figure><img src="../images/manual/61-executor-startup-modes.png" alt="图 2-17"><figcaption>图 2-17　启动命令弹窗(运行方式切到「系统服务」,命令实时重生成)</figcaption></figure>
 <div class="warn">⚠ <strong>同一个 executorId+token 同时只允许一个 daemon 实例</strong>——后来者会把先来者顶下线。看到状态反复"在线/离线"抖动,先排查是否两个 daemon 用同一份 env 在跑。</div>
 <p>运行节点侧安装与运行(注册、环境变量、接入任意 Anthropic 兼容模型端点)见仓库根 <code>README.md</code> 的「快速开始 B」;守护化细节见 <code>docs/21-运行节点运维能力.md</code>。</p>
 <h2 id="11.代码仓库与ai技能"><span class="h2-kicker">CHAPTER 11</span><span class="h2-text">代码仓库与 AI 技能</span></h2>
 <p><strong>本章摘要</strong>:仓库是 AI 干活的代码仓,技能是挂到 AI 数字员工上的能力包。</p>
-<figure><img src="../images/manual/14-repos.png" alt="图 2-17"><figcaption>图 2-17　代码仓库管理</figcaption></figure>
+<figure><img src="../images/manual/14-repos.png" alt="图 2-18"><figcaption>图 2-18　代码仓库管理</figcaption></figure>
 <ul><li><strong>代码仓库</strong>:AI 数字员工干活的代码仓库,绑定后交付时代码会检出、修改、提交;</li></ul>
-<figure><img src="../images/manual/58-repos-map.png" alt="图 2-18"><figcaption>图 2-18　仓库关系图(依赖与调用关系可视化)</figcaption></figure>
+<figure><img src="../images/manual/58-repos-map.png" alt="图 2-19"><figcaption>图 2-19　仓库关系图(依赖与调用关系可视化)</figcaption></figure>
 <ul><li><strong>仓库关系图</strong>(<code>/repos/map</code>)可视化仓库之间的依赖与调用关系,滚轮缩放、拖动布局、点击查看详情;</li></ul>
-<figure><img src="../images/manual/15-skills.png" alt="图 2-19"><figcaption>图 2-19　AI 技能管理</figcaption></figure>
+<figure><img src="../images/manual/15-skills.png" alt="图 2-20"><figcaption>图 2-20　AI 技能管理</figcaption></figure>
 <ul><li><strong>AI 技能</strong>:可挂到 AI 数字员工上的能力包(MCP 工具集、提示词、脚本),平台内置技能可直接启用,也支持上传自定义包。</li></ul>
 <h2 id="12.外部连接禅道闭环"><span class="h2-kicker">CHAPTER 12</span><span class="h2-text">外部连接:禅道闭环</span></h2>
 <p><strong>本章摘要</strong>:三步建绑定,之后禅道 Bug/需求自动进平台、交付结论自动回写评论;状态由人在禅道侧确认。</p>
 <p>入口:左侧导航 → 外部连接(<code>/#/integrations</code>)。当前支持 <strong>禅道 ZenTao 18.10+</strong>。</p>
-<figure><img src="../images/manual/17-integrations-zentao.png" alt="图 2-20"><figcaption>图 2-20　禅道连接配置</figcaption></figure>
+<figure><img src="../images/manual/17-integrations-zentao.png" alt="图 2-21"><figcaption>图 2-21　禅道连接配置</figcaption></figure>
 <h3 class="sub" id="12.1建绑定三步">12.1 建绑定(三步)</h3>
 <ol><li><strong>禅道连接</strong>:填禅道地址(如 <code>http://zentao.example.com:8888</code>)、集成账号、集成密码;点「测试连接」验证,通过后「加载产品」拉取产品列表;</li><li><strong>选择产品</strong>:选要接入的禅道产品,设轮询间隔(默认 60 秒),保存绑定;</li><li><strong>自动拉取</strong>:平台按间隔轮询该产品的 Bug 与需求,自动建为本地需求;重复拉取不会产生重复需求。</li></ol>
-<figure><img src="../images/manual/49-zentao-test-connection.png" alt="图 2-21"><figcaption>图 2-21　禅道测试连接(通过后加载产品列表)</figcaption></figure>
+<figure><img src="../images/manual/49-zentao-test-connection.png" alt="图 2-22"><figcaption>图 2-22　禅道测试连接(通过后加载产品列表)</figcaption></figure>
 <h3 class="sub" id="12.2闭环怎么转">12.2 闭环怎么转</h3>
 <pre><code>禅道 Bug/需求 → 平台自动拉取入库 → 指派 AI 数字员工交付 → 交付结论回写禅道</code></pre>
 <ul><li>交付结论经备注通道回写到禅道单据的评论,幂等 marker 防重复;</li><li>⚠ <strong>平台不代改禅道单据状态</strong>:单据的「已解决 / 关闭」由你在禅道侧确认后手工操作。修复是否真正闭环是人的判断,平台只负责把交付结论与证据带过去;</li><li>身份映射:禅道账号在平台内显示为外部用户(带来源标识);</li><li>绑定级状态映射可配(默认:active→待处理、resolved→待验证、closed→已完成),用于把禅道状态同步成平台需求的状态,不反向改写禅道。</li></ul>
@@ -251,10 +252,10 @@ figcaption strong { color:var(--accent-deep); }
 <h2 id="13.外部连接tapd"><span class="h2-kicker">CHAPTER 13</span><span class="h2-text">外部连接:TAPD</span></h2>
 <p><strong>本章摘要</strong>:与禅道同构的四步接入:TAPD 项目绑定 → 自动拉取 → 交付 → 结论写回评论;结果未知时不盲目重发,读回确认。</p>
 <p>入口:左侧导航 → 外部连接(<code>/#/integrations</code>)→ <strong>TAPD</strong> 页签。除禅道外,平台还能从 TAPD 拉取需求与缺陷,并把交付结论写回原单据。</p>
-<figure><img src="../images/manual/66-integrations-tapd.png" alt="图 2-22"><figcaption>图 2-22　TAPD 连接配置</figcaption></figure>
+<figure><img src="../images/manual/66-integrations-tapd.png" alt="图 2-23"><figcaption>图 2-23　TAPD 连接配置</figcaption></figure>
 <h3 class="sub" id="13.1建绑定四步">13.1 建绑定(四步)</h3>
 <ol><li><strong>填连接信息</strong>:TAPD 项目 ID(工作区 ID,纯数字)、API 账号、API 口令、TAPD 评论人账号(交付备注的署名,建议用专用机器人账号);</li><li><strong>测试读取权限</strong>:点「测试读取权限」,平台用该凭据各拉一条需求与一条缺陷,验证鉴权、项目归属与字段格式;</li><li><strong>保存绑定</strong>:保存后平台开始按 60 秒轮询该项目的需求与缺陷,自动建为本地需求;</li><li><strong>随时手动同步</strong>:「已绑定项目」表里点「立即同步」可立刻拉一轮;「暂停」用于临时停止轮询,恢复后接着增量拉。</li></ol>
-<figure><img src="../images/manual/67-tapd-bindings.png" alt="图 2-23"><figcaption>图 2-23　已绑定项目</figcaption></figure>
+<figure><img src="../images/manual/67-tapd-bindings.png" alt="图 2-24"><figcaption>图 2-24　已绑定项目</figcaption></figure>
 <h3 class="sub" id="13.2同步进来的东西长什么样">13.2 同步进来的东西长什么样</h3>
 <ul><li><strong>需求(Story)与缺陷(Bug)一起进</strong>:在需求里类型分别标 <code>REQ</code> 与 <code>BUG</code>,来源标 <code>TAPD</code>,标题下可直达 TAPD 原单据;</li><li><strong>外部 ID 形态</strong> <code>{项目 ID}:{story|bug}:{单据 ID}</code>,例 <code>1:bug:1010201</code>;同一单据重复拉取不会产生重复需求,只会刷新标题、正文、类型与优先级;</li><li><strong>优先级映射</strong>:high / urgent → 1,medium / middle / normal → 2,low → 3;</li><li><strong>时间窗口</strong>:首次拉取最近 7 天内有更新的单据,之后按轮询增量拉取;</li><li><strong>正文以 TAPD 为准</strong>:平台只把 TAPD 的 HTML 描述转成纯文本展示,不反向改写 TAPD 内容。</li></ul>
 <h3 class="sub" id="13.3交付结论怎么回写">13.3 交付结论怎么回写</h3>
@@ -268,38 +269,38 @@ figcaption strong { color:var(--accent-deep); }
 <h2 id="14.消息渠道钉钉飞书"><span class="h2-kicker">CHAPTER 14</span><span class="h2-text">消息渠道(钉钉/飞书)</span></h2>
 <p><strong>本章摘要</strong>:绑定群机器人后,派发进展、交接、评审结论自动推群;平台级选中渠道决定通知设置里显示哪个 IM 列。</p>
 <p>入口:左树「外部连接」,或平台配置 → 协作通知。</p>
-<figure><img src="../images/manual/18-integrations-channels.png" alt="图 2-24"><figcaption>图 2-24　消息渠道(外部连接页)</figcaption></figure>
+<figure><img src="../images/manual/18-integrations-channels.png" alt="图 2-25"><figcaption>图 2-25　消息渠道(外部连接页)</figcaption></figure>
 <ul><li>绑定钉钉/飞书群机器人后,派发进展、交接、评审结论等事件可推送到群;</li><li>支持项目机器人配置;渠道绑定是项目级的;</li><li>平台级选中渠道(平台配置 → 协作通知 → 选择钉钉/飞书)决定「通知设置」里显示哪个 IM 列:选中飞书后,每类事件可独立开关「站内信 / 飞书」;启用飞书需先填入飞书开放平台应用的 appKey/appSecret。</li></ul>
 <h2 id="15.个人设置与mcp令牌"><span class="h2-kicker">CHAPTER 15</span><span class="h2-text">个人设置与 MCP 令牌</span></h2>
 <p><strong>本章摘要</strong>:一枚 MCP 令牌,让 Claude Code / Cursor 在终端里直接操作平台;令牌即身份,泄露即吊销。</p>
 <p>入口:右上角头像 → 个人设置(<code>/#/profile/settings</code>)。页签:基本信息 / IM 工号 / 企业身份 / <strong>MCP 令牌</strong> / 修改密码 / 账号注销。</p>
-<figure><img src="../images/manual/16-mcp-tokens.png" alt="图 2-25"><figcaption>图 2-25　个人设置 → MCP 令牌</figcaption></figure>
+<figure><img src="../images/manual/16-mcp-tokens.png" alt="图 2-26"><figcaption>图 2-26　个人设置 → MCP 令牌</figcaption></figure>
 <table><thead><tr><th>元素</th><th>说明</th></tr></thead><tbody><tr><td>MCP 服务地址</td><td><code>http://&lt;平台&gt;/api/mcp/&lt;MCP_TOKEN&gt;/</code>,建令牌时<strong>完整 URL 只展示一次</strong></td></tr><tr><td>开放工具 / 能力聚合</td><td>当前 MCP 面暴露的工具数与能力数</td></tr><tr><td>访问令牌</td><td>令牌列表:名称 / 前缀 / 创建时间 / 最后使用 / 状态</td></tr></tbody></table>
 <p><strong>怎么用</strong>:把 MCP 地址配到你的 Claude Code / Cursor 等 CLI(<code>claude mcp add --transport http ainative &lt;url&gt;</code>),即可在终端里让 AI 直接操作平台:建需求、查需求、配置编队、启动交付等。令牌权限跟随你在目标项目内的权限。</p>
 <div class="warn">⚠ 令牌即身份,不要提交进代码库;泄露后在列表里吊销即可,平台侧立即失效。</div>
 <h2 id="16.项目设置与平台配置"><span class="h2-kicker">CHAPTER 16</span><span class="h2-text">项目设置与平台配置</span></h2>
 <p><strong>本章摘要</strong>:成员、状态机、环境变量、配置备份在「项目设置」组;品牌与平台级选项在右上「平台配置」;⌘, 打开设置弹窗。</p>
 <table><thead><tr><th>页面</th><th>入口</th><th>说明</th></tr></thead><tbody><tr><td>品牌配置</td><td>右上「平台配置」</td><td>平台名称 / Logo / 主题色 / 消息渠道,变更即时生效于全平台</td></tr><tr><td>成员管理</td><td>左树 → 成员管理</td><td>邀请/移除/只读者/Owner 移交 + 角色管理 + 待审批访问申请</td></tr><tr><td>状态流转</td><td>左树 → 状态流转</td><td>需求状态机模板,定义状态列与合法流转</td></tr><tr><td>环境变量</td><td>左树 → 环境变量</td><td>项目级环境变量,AI 数字员工执行时可读取(值默认脱敏展示)</td></tr><tr><td>配置备份</td><td>左树 → 配置备份</td><td>一键备份当前项目的交付流程、AI 数字员工及版本、编队、仓库关系、AI 记忆、AI 技能等,可恢复</td></tr><tr><td>设置弹窗</td><td>左树底部「设置 ⌘,」</td><td>左类目 + 右内容:AI 配置 / 通知配置 / 系统配置</td></tr></tbody></table>
-<figure><img src="../images/manual/19-branding.png" alt="图 2-26"><figcaption>图 2-26　平台配置(品牌 / 消息渠道)</figcaption></figure>
-<figure><img src="../images/manual/24-env-vars.png" alt="图 2-27"><figcaption>图 2-27　项目环境变量</figcaption></figure>
-<figure><img src="../images/manual/55-members-roles.png" alt="图 2-28"><figcaption>图 2-28　成员管理(成员 / 角色 / 申请)</figcaption></figure>
-<figure><img src="../images/manual/56-backups.png" alt="图 2-29"><figcaption>图 2-29　配置备份(一键备份,可恢复)</figcaption></figure>
+<figure><img src="../images/manual/19-branding.png" alt="图 2-27"><figcaption>图 2-27　平台配置(品牌 / 消息渠道)</figcaption></figure>
+<figure><img src="../images/manual/24-env-vars.png" alt="图 2-28"><figcaption>图 2-28　项目环境变量</figcaption></figure>
+<figure><img src="../images/manual/55-members-roles.png" alt="图 2-29"><figcaption>图 2-29　成员管理(成员 / 角色 / 申请)</figcaption></figure>
+<figure><img src="../images/manual/56-backups.png" alt="图 2-30"><figcaption>图 2-30　配置备份(一键备份,可恢复)</figcaption></figure>
 <h2 id="17.运行记录交付分析与操作审计"><span class="h2-kicker">CHAPTER 17</span><span class="h2-text">运行记录、交付分析与操作审计</span></h2>
 <p><strong>本章摘要</strong>:交付完不是结束:运行记录看每次执行,交付分析找瓶颈,操作审计留证据。</p>
-<figure><img src="../images/manual/52-executions.png" alt="图 2-30"><figcaption>图 2-30　运行记录(全部派发执行历史)</figcaption></figure>
+<figure><img src="../images/manual/52-executions.png" alt="图 2-31"><figcaption>图 2-31　运行记录(全部派发执行历史)</figcaption></figure>
 <ul><li><strong>运行记录</strong>:全部派发的执行历史(状态 / 耗时 / 所属需求),点开看单次执行详情与日志;</li><li><strong>交付分析</strong>(第 4 章的项目总览之外的过程视角):实时看板 / 人机协作 / 工作项交付 / 阶段耗时四个页签;成本分析卡按 Token 维度统计;</li></ul>
-<figure><img src="../images/manual/21-insights.png" alt="图 2-31"><figcaption>图 2-31　交付分析(实时看板:工作项概况 + 分类与状态占比)</figcaption></figure>
-<figure><img src="../images/manual/20-audit.png" alt="图 2-32"><figcaption>图 2-32　操作审计(全部敏感操作留痕)</figcaption></figure>
+<figure><img src="../images/manual/21-insights.png" alt="图 2-32"><figcaption>图 2-32　交付分析(实时看板:工作项概况 + 分类与状态占比)</figcaption></figure>
+<figure><img src="../images/manual/20-audit.png" alt="图 2-33"><figcaption>图 2-33　操作审计(全部敏感操作留痕)</figcaption></figure>
 <ul><li><strong>操作审计</strong>:全部敏感操作留痕(谁、何时、对什么、做了什么),支持按操作类型过滤;</li><li><strong>AI 记忆</strong>:AI 数字员工长期记忆的查看与清理;</li></ul>
-<figure><img src="../images/manual/28-memories.png" alt="图 2-33"><figcaption>图 2-33　AI 记忆管理</figcaption></figure>
+<figure><img src="../images/manual/28-memories.png" alt="图 2-34"><figcaption>图 2-34　AI 记忆管理</figcaption></figure>
 <ul><li><strong>通知</strong>:站内通知中心,配合第 14 章的消息渠道做群播报。</li></ul>
-<figure><img src="../images/manual/27-notifications.png" alt="图 2-34"><figcaption>图 2-34　站内通知中心</figcaption></figure>
+<figure><img src="../images/manual/27-notifications.png" alt="图 2-35"><figcaption>图 2-35　站内通知中心</figcaption></figure>
 <h2 id="18.关于平台与文档中心"><span class="h2-kicker">CHAPTER 18</span><span class="h2-text">关于平台与文档中心</span></h2>
 <p><strong>本章摘要</strong>:「交付 9 号线」地铁图把九段生命周期画成一条地铁线;文档中心内置分步图文。</p>
 <p>入口:左树底部「关于平台」。</p>
-<figure><img src="../images/manual/63-about-metro.png" alt="图 2-35"><figcaption>图 2-35　关于平台——「交付 9 号线」地铁图(主线路串九站,虚线回流)</figcaption></figure>
+<figure><img src="../images/manual/63-about-metro.png" alt="图 2-36"><figcaption>图 2-36　关于平台——「交付 9 号线」地铁图(主线路串九站,虚线回流)</figcaption></figure>
 <ul><li>九段(需求澄清 → 启动 → 开发 → 验证 → 评审 → 部署 → 测试 → 交付 → 运维)化作地铁 9 号线的九个站:主线路串起上 5 下 4 站,小列车沿线路巡航,驶过的站环逐个点亮;</li><li>右上「列车状态」随列车位置播报「即将到达 · 站名(阶段)」,并按阶段着色:进行中=主题蓝、已交付=绿、持续运营=青;</li><li>虚线自「运维」回流「需求澄清」始发站,表达「交付完成自动回流下一班」的闭环;</li><li>票务行展示当前部署版本(取自平台品牌配置);右上「重看首次使用引导」可重放第 3 章的引导页。</li></ul>
-<figure><img src="../images/manual/26-help.png" alt="图 2-36"><figcaption>图 2-36　文档中心</figcaption></figure>
+<figure><img src="../images/manual/26-help.png" alt="图 2-37"><figcaption>图 2-37　文档中心</figcaption></figure>
 <ul><li>左树底部「文档中心」(F1)直达;内容随版本内置,含分步图文与常见操作;</li><li>平台同时内置 <code>ainative</code> MCP 技能包(help/assets),供外部 CLI 客户端加载后获得平台操作指引。</li></ul>
 <h2 id="19.日常怎么用推荐工作流"><span class="h2-kicker">CHAPTER 19</span><span class="h2-text">日常怎么用:推荐工作流</span></h2>
 <p><strong>本章摘要</strong>:三条高频动线:禅道缺陷全自动修复回写、平台内需求交付、外部 CLI 操作平台。</p>
