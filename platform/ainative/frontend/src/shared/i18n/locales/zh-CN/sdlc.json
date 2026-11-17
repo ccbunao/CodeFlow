@@ -192,7 +192,7 @@
     "create": "基于此模版创建",
     "close": "关闭",
     "confirm": "确定创建",
-    "creationInfo": "将自动创建编队、数字员工、流水线 并绑定所有仓库。",
+    "creationInfo": "将自动创建编队、AI 成员、流水线 并绑定所有仓库。",
     "failed": "创建失败",
     "workflow": "协作流程",
     "members": "成员详情",
@@ -272,8 +272,5 @@
     "nodeSteps_other": "流水线 · {{count}} 个步骤",
     "memberCount_other": "{{count}} 位成员",
     "transitionCount_other": "{{count}} 条交接"
-  },
-  "create": {
-    "title": "新建交付流程"
   }
 }

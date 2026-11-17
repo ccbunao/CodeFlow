@@ -65,7 +65,7 @@ function stubCost(compositionForAgent: (range: number, agentId: string) => CostC
       const agentId = url.searchParams.get('agentId') ?? 'all';
       return ok(dashboard(range, agentId, compositionForAgent(range, agentId)));
     }),
-    http.get('/api/insights/workers', () => ok([{ id: 12, name: '验收数字员工' }])),
+    http.get('/api/insights/workers', () => ok([{ id: 12, name: '验收AI 成员' }])),
   );
 }
 
@@ -87,7 +87,7 @@ describe('useRealtimeCost', () => {
     expect(requests).toEqual(['?range=7']);
     expect(result.current.cost).toEqual({ range: 7, agentId: 'all', total: 107, perTask: 1, perDay: 2 });
     expect(result.current.composition?.scope).toBe('ALL_AGENTS');
-    expect(result.current.workers).toEqual([{ id: 12, name: '验收数字员工' }]);
+    expect(result.current.workers).toEqual([{ id: 12, name: '验收AI 成员' }]);
     expect(result.current.isLoading).toBe(false);
   });
 

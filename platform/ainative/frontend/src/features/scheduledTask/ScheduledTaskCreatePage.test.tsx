@@ -48,7 +48,7 @@ async function fillForm(user: ReturnType<typeof userEvent.setup>, container: HTM
   await user.type(screen.getByLabelText('任务指令'), '每天对主干进行回归并汇总结果。');
   await user.click(screen.getByLabelText('编队'));
   await user.click(await screen.findByText('研发编队'));
-  await user.click(screen.getByLabelText('首个数字员工'));
+  await user.click(screen.getByLabelText('首个AI 成员'));
   await user.click(await screen.findByText('回归工程师'));
   await user.click(screen.getByText('每天'));
   if (!documentName) return;
@@ -101,7 +101,7 @@ describe('ScheduledTaskCreatePage', () => {
     await user.type(screen.getByLabelText('任务指令'), '每天对主干进行回归并汇总结果。');
     await user.click(screen.getByLabelText('编队'));
     await user.click(await screen.findByText('研发编队'));
-    await user.click(screen.getByLabelText('首个数字员工'));
+    await user.click(screen.getByLabelText('首个AI 成员'));
     await user.click(await screen.findByText('回归工程师'));
     await user.click(screen.getByText('每天'));
     await user.click(screen.getByRole('button', { name: '建好并启用' }));
@@ -485,12 +485,12 @@ it('updates cached create route errors while preserving drafts, files and select
   await user.type(screen.getByLabelText('任务名'), '<b>自定义任务</b>');
   await user.click(screen.getByLabelText('编队'));
   await user.click(await screen.findByText('研发编队'));
-  await user.click(screen.getByLabelText('首个数字员工'));
+  await user.click(screen.getByLabelText('首个AI 成员'));
   await user.click(await screen.findByText('回归工程师'));
   fireEvent.change(documentInput(container), { target: { files: [new File(['x'], '原文.md', { type: 'text/markdown' })] } });
   await screen.findByText('原文.md');
   await user.click(screen.getByRole('button', { name: '建好并启用' }));
-  await screen.findByText('请描述希望数字员工周期完成的工作');
+  await screen.findByText('请描述希望AI 成员周期完成的工作');
   const originalInput = screen.getByLabelText('任务名');
   await act(() => i18n.changeLanguage('en-US'));
   expect(await screen.findByText('Describe the work the Agent should complete periodically')).toBeInTheDocument();

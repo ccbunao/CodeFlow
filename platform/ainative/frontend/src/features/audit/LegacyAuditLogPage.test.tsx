@@ -32,7 +32,7 @@ describe('LegacyAuditLogPage', () => {
       }),
     );
     renderPage();
-    expect(await screen.findByText('auto-dev (数字员工)')).toBeInTheDocument();
+    expect(await screen.findByText('auto-dev (AI 成员)')).toBeInTheDocument();
     expect(screen.getByText('运行事件')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '详情' }));
     expect(screen.getByText('EVENT / runtime.progress')).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe('LegacyAuditLogPage', () => {
       }),
     );
     renderPage();
-    expect(await screen.findByText('AW测试工程师 (数字员工)')).toBeInTheDocument();
+    expect(await screen.findByText('AW测试工程师 (AI 成员)')).toBeInTheDocument();
     expect(screen.getByText('UPLOAD_CHECKPOINT')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '详情' }));
     expect(screen.getByText('EVENT / DAEMON_CALLBACK')).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe('LegacyAuditLogPage', () => {
     await check('HUMAN');
     await user.click(screen.getByText('全部', { exact: true }));
     await check(null);
-    await user.click(screen.getByText('数字员工', { selector: '.ant-segmented-item-label' }));
+    await user.click(screen.getByText('AI 成员', { selector: '.ant-segmented-item-label' }));
     await check('AGENT');
     await user.click(screen.getByRole('button', { name: /重\s*置/ }));
     expect(screen.getByRole('radio', { name: '人工动作' })).toBeChecked();

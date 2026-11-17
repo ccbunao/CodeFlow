@@ -176,7 +176,7 @@ describe('AI 管家', () => {
     await user.click(screen.getByRole('button', { name: '打开 AI 管家' }));
     await user.click(await screen.findByRole('button', { name: '一键补全配置' }));
     expect(await within(screen.getByRole('dialog')).findByRole('alert')).toHaveTextContent('Draft requires review');
-    expect(screen.getByRole('button', { name: '查看 数字员工配置与草稿' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '查看 AI 成员配置与草稿' })).toBeInTheDocument();
   });
   it('can always reopen a collapsed assistant and saves messages with the current route', async () => {
     const user = userEvent.setup(); mount();

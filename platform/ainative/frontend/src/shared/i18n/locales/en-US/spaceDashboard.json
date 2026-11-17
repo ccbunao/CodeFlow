@@ -6,7 +6,7 @@
     "managedDetail": "Workspaces you own or administer; disabled and recycled workspaces are excluded"
   },
   "section": {
-    "agents": "digital workers",
+    "agents": "AI members",
     "agentsSubtitle": "Current snapshot, not affected by the time window",
     "delivery": "Workitem delivery",
     "cost": "Cost analysis"
@@ -14,9 +14,9 @@
   "agents": {
     "workspaceCount": "Workspaces",
     "workspaceHint": "Disabled and recycled workspaces excluded",
-    "agentCount": "digital workers",
+    "agentCount": "AI members",
     "agentHint": "Platform built-in workers excluded",
-    "agentTooltip": "Standard digital workers only, including draft, in review, online and offline",
+    "agentTooltip": "Standard AI members only, including draft, in review, online and offline",
     "humanCount": "People",
     "humanHint": "Deduplicated across workspaces",
     "humanTooltip": "A person in several workspaces counts once; removed members and deleted accounts are excluded",

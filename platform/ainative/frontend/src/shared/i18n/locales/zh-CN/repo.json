@@ -123,8 +123,7 @@
     "source": "起点:",
     "target": "终点:",
     "type": "类型:",
-    "description": "备注:",
-    "title": "仓库关系图"
+    "description": "备注:"
   },
   "hub": {
     "title": "代码仓库",

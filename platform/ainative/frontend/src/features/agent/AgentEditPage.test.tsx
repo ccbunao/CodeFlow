@@ -527,8 +527,8 @@ describe('AgentEditPage', () => {
     expect(within(card).getByText('API_TOKEN')).toBeInTheDocument();
     expect(within(card).getByText('服务调用凭证')).toBeInTheDocument();
     expect(within(card).queryByText('ONLINE_ONLY')).not.toBeInTheDocument();
-    expect(screen.getByText(/挂载或解绑会进入数字员工草稿，并遵循审核和发布流程/)).toBeInTheDocument();
-    expect(screen.getByText(/变量库中的值更新无需数字员工审核，将在下一次任务调度或对话轮次生效/)).toBeInTheDocument();
+    expect(screen.getByText(/挂载或解绑会进入AI 成员草稿，并遵循审核和发布流程/)).toBeInTheDocument();
+    expect(screen.getByText(/变量库中的值更新无需AI 成员审核，将在下一次任务调度或对话轮次生效/)).toBeInTheDocument();
     expect(screen.queryByText('plaintext-must-not-load')).not.toBeInTheDocument();
     expect(valueRequests).toBe(0);
   });

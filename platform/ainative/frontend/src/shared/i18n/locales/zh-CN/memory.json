@@ -26,7 +26,7 @@
     "noHistory": "还没有改动",
     "acl": "访问授权",
     "imports": "本地档案",
-    "agentImports": "本地档案挂在具体 数字员工的个人记忆下,选一个 数字员工查看。",
+    "agentImports": "本地档案挂在具体 AI 成员的个人记忆下,选一个 AI 成员查看。",
     "deleteConfirm": "连索引引用一起删除这条记忆?",
     "description": "AI 数字员工的长期记忆，可按空间查看与清理"
   },
@@ -42,7 +42,7 @@
   "scope": {
     "ORG": "全组织共享",
     "SQUAD": "编队共享",
-    "AGENT": "数字员工私有"
+    "AGENT": "AI 成员私有"
   },
   "owner": {
     "organization": "组织共享区",
@@ -110,9 +110,9 @@
   "acl": {
     "subjects": {
       "USER": "平台用户",
-      "AGENT": "数字员工",
+      "AGENT": "AI 成员",
       "SQUAD": "编队成员",
-      "ROLE": "全体 数字员工"
+      "ROLE": "全体 AI 成员"
     },
     "permissions": {
       "READ": "查看",
@@ -123,17 +123,17 @@
     "setCommand": "配置访问授权",
     "removeCommand": "撤销访问授权",
     "hint": "授权决定谁能看、谁能改这份记忆。",
-    "help": "组织共享默认供本空间 数字员工读取，编队共享默认供所属成员读取。数字员工仅能自主编辑自己的个人记忆，不能编辑共享记忆，也不能访问其他 数字员工的个人记忆；平台用户的编辑权限可单独授予。",
+    "help": "组织共享默认供本空间 AI 成员读取，编队共享默认供所属成员读取。AI 成员仅能自主编辑自己的个人记忆，不能编辑共享记忆，也不能访问其他 AI 成员的个人记忆；平台用户的编辑权限可单独授予。",
     "add": "加一条授权",
-    "empty": "暂无额外授权;空间管理员始终可管理,数字员工始终可写自己的私有记忆",
+    "empty": "暂无额外授权;空间管理员始终可管理,AI 成员始终可写自己的私有记忆",
     "deleteConfirm": "撤销这条授权?",
     "create": "新建授权",
     "subjectType": "授权对象",
     "subjectRef": "对象编号",
-    "subjectHelp": "填写用户、数字员工或编队的 ID，例如 数字员工 40013；选择全部 数字员工时填 ALL_AGENTS。",
+    "subjectHelp": "填写用户、AI 成员或编队的 ID，例如 AI 成员 40013；选择全部 AI 成员时填 ALL_AGENTS。",
     "subjectPlaceholder": "如 40013",
     "permission": "允许操作",
-    "permissionHelp": "查看=读;编辑=增删改;管理=含编辑权。数字员工实际写入仍仅限私有记忆。"
+    "permissionHelp": "查看=读;编辑=增删改;管理=含编辑权。AI 成员实际写入仍仅限私有记忆。"
   },
   "import": {
     "resume": "恢复",
@@ -154,7 +154,7 @@
     "hint": "本地来源来自 Qoder/QoderCN 旧档案,与上面的存量搬迁是两条通道。",
     "help": "本地文件找不到≠平台记忆丢了:可能还没建、被移走或不是可读文件;已导入的记忆不会因此被删。",
     "empty": "没有可导入的本地档案",
-    "summary": "数字员工 #{{agentId}} · {{imports}} · 上次核对 {{date}}",
+    "summary": "AI 成员 #{{agentId}} · {{imports}} · 上次核对 {{date}}",
     "title": "本地档案导入",
     "successCount_other": "最近成功导入 {{count}} 次",
     "missingCount_other": "本地文件缺失({{count}})"

@@ -440,3 +440,99 @@ body.cf-custom-bg .cf-shell {
 }
 
 /* main 的背景在 AppLayout 内联按 background 有无条件应用(CSS 盖不过内联) */
+
+/* ─────────────────────────────────────────────────────────────
+   弹层精修层(2026-11-17):Modal / Drawer / message / Popconfirm 统一节奏
+   设计语言不变:发丝边 + 平面化;只调 留白 / 分隔 / 阴影 / 关闭钮 / 底部按钮。
+   ───────────────────────────────────────────────────────────── */
+
+/* 遮罩:轻压暗即可,不抢内容 */
+.ant-modal-mask, .ant-image-preview-mask { background: rgba(10, 11, 13, .55) !important; }
+
+/* Modal:内容成型(发丝边 + 深阴影),头部/正文/底部三段节奏 */
+.ant-modal .ant-modal-content {
+  border: 1px solid var(--cf-border) !important;
+  box-shadow: var(--cf-shadow-pop) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.ant-modal .ant-modal-header {
+  padding: 16px 24px 10px;
+  margin-bottom: 0;
+  background: transparent;
+}
+.ant-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  line-height: 1.4;
+}
+.ant-modal .ant-modal-body { padding: 4px 24px 4px; }
+.ant-modal .ant-modal-footer {
+  padding: 14px 24px 16px;
+  margin-top: 6px;
+  border-top: 1px solid var(--cf-border);
+  background: color-mix(in srgb, var(--cf-raised) 55%, transparent);
+}
+.ant-modal .ant-modal-footer .ant-btn { min-width: 72px; }
+.ant-modal .ant-modal-footer .ant-btn + .ant-btn { margin-inline-start: 10px; }
+/* 关闭钮:常驻弱化,悬浮点亮,不再与标题挤在一行 */
+.ant-modal .ant-modal-close {
+  top: 14px;
+  inset-inline-end: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--cf-radius) !important;
+  color: var(--cf-muted);
+  transition: background-color .16s ease, color .16s ease;
+}
+.ant-modal .ant-modal-close:hover {
+  background: var(--cf-button-hover);
+  color: var(--cf-text);
+}
+
+/* Drawer:右侧滑出,头部发丝分隔 + 同款关闭钮 */
+.ant-drawer .ant-drawer-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--cf-border);
+  box-shadow: none !important;
+}
+.ant-drawer .ant-drawer-title { font-size: 16px; font-weight: 700; letter-spacing: .2px; }
+.ant-drawer .ant-drawer-body { padding: 20px 24px; }
+.ant-drawer .ant-drawer-close {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--cf-radius) !important;
+  color: var(--cf-muted);
+}
+.ant-drawer .ant-drawer-close:hover { background: var(--cf-button-hover); color: var(--cf-text); }
+
+/* message 轻提示:随主题面板色 + 发丝边 + 深阴影 */
+.ant-message .ant-message-notice-content {
+  border: 1px solid var(--cf-border) !important;
+  border-radius: var(--cf-radius-lg) !important;
+  background: var(--cf-panel) !important;
+  box-shadow: var(--cf-shadow-pop) !important;
+  padding: 10px 16px;
+}
+.ant-message .ant-message-notice-content .anticon { font-size: 16px; }
+
+/* notification:同 message 一套圆角/边/影 */
+.ant-notification-notice {
+  border: 1px solid var(--cf-border) !important;
+  border-radius: var(--cf-radius-lg) !important;
+  box-shadow: var(--cf-shadow-pop) !important;
+}
+.ant-notification-notice-message { font-weight: 700; }
+
+/* Popconfirm:小圆角 + 收紧留白,确认/取消按钮 32px 高 */
+.ant-popover.ant-popconfirm .ant-popover-inner {
+  border-radius: var(--cf-radius-lg) !important;
+  padding: 12px 14px 8px;
+  box-shadow: var(--cf-shadow-pop) !important;
+}
+.ant-popover.ant-popconfirm .ant-popconfirm-buttons .ant-btn { height: 30px; min-width: 56px; }
+
+/* 表单在弹层里的呼吸感:最后一项不顶底 */
+.ant-modal .ant-form-item:last-of-type { margin-bottom: 0; }
+.ant-drawer .ant-form-item:last-of-type { margin-bottom: 0; }

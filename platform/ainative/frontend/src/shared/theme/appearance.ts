@@ -118,6 +118,9 @@ export function createAppearanceTheme(mode: ResolvedAppearance, accent: string):
       Switch: { colorPrimary: v['--cf-primary'], colorPrimaryHover: v['--cf-primary-hover'], colorTextLightSolid: v['--cf-primary-ink'] },
       Radio: { buttonSolidCheckedBg: v['--cf-primary'], buttonSolidCheckedHoverBg: v['--cf-primary-hover'], buttonSolidCheckedActiveBg: v['--cf-primary-active'], buttonSolidCheckedColor: v['--cf-primary-ink'] },
       Select: { selectorBg: v['--cf-field'], optionSelectedBg: `rgba(${v['--cf-accent-rgb']},.14)` },
+      // ── 弹层体系精修:提示件随主题色 ──
+      Message: { contentBg: v['--cf-panel'] },
+      Tooltip: { fontSize: 12 },
     },
   };
 }

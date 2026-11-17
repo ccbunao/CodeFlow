@@ -117,7 +117,7 @@ describe('AgentDetailPage', () => {
     mockAgent({ status: 'DRAFT' });
     renderPage();
 
-    expect(await screen.findByText('数字员工尚未提交审核')).toBeInTheDocument();
+    expect(await screen.findByText('AI 成员尚未提交审核')).toBeInTheDocument();
     expect(screen.getByText('请先编辑配置，完成 SOUL.md 和 AGENT.md 后提交审核。')).toBeInTheDocument();
   });
 
@@ -126,7 +126,7 @@ describe('AgentDetailPage', () => {
     renderPage();
 
     await screen.findByText('Alpha');
-    expect(screen.queryByText('数字员工尚未提交审核')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI 成员尚未提交审核')).not.toBeInTheDocument();
   });
 
   it('computes stat cards from workitems and memories', async () => {
@@ -244,7 +244,7 @@ describe('AgentDetailPage', () => {
       <QueryClientProvider client={queryClient}>
         <MemoryRouter initialEntries={['/agents/1']}>
           <Routes>
-            <Route path="/agents" element={<div>数字员工列表</div>} />
+            <Route path="/agents" element={<div>AI 成员列表</div>} />
             <Route path="/agents/:id" element={<AgentDetailPage />} />
           </Routes>
         </MemoryRouter>
@@ -253,7 +253,7 @@ describe('AgentDetailPage', () => {
     await screen.findByText('Alpha');
     await userEvent.click(screen.getByRole('button', { name: /删除/ }));
     await userEvent.click(await screen.findByRole('button', { name: /确定删除/ }));
-    expect(await screen.findByText('数字员工列表')).toBeInTheDocument();
+    expect(await screen.findByText('AI 成员列表')).toBeInTheDocument();
     expect(deleteCalls).toHaveLength(1);
   });
 
@@ -266,9 +266,9 @@ describe('AgentDetailPage', () => {
     await userEvent.click(await screen.findByRole('button', { name: /删除/ }));
 
     await waitFor(() => {
-      expect(error).toHaveBeenCalledWith('当前为只读权限，删除数字员工需要读写权限');
+      expect(error).toHaveBeenCalledWith('当前为只读权限，删除AI 成员需要读写权限');
     });
-    expect(screen.queryByText('确定删除该数字员工？删除后不可恢复。')).not.toBeInTheDocument();
+    expect(screen.queryByText('确定删除该AI 成员？删除后不可恢复。')).not.toBeInTheDocument();
   });
 
   it('hides delete and offline actions for platform agents and shows the platform badge', async () => {
@@ -449,7 +449,7 @@ describe('AgentDetailPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('数字员工尚未提交审核')).toBeInTheDocument();
+    expect(await screen.findByText('AI 成员尚未提交审核')).toBeInTheDocument();
     expect(screen.queryByText(/存在未发布的草稿/)).not.toBeInTheDocument();
   });
 });

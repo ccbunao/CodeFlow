@@ -55,7 +55,7 @@ function stubInsights() {
       requests.metrics.push(new URL(request.url).search);
       return ok(metricsPayload);
     }),
-    http.get('/api/insights/workers', () => ok([{ id: 12, name: '验收数字员工' }])),
+    http.get('/api/insights/workers', () => ok([{ id: 12, name: '验收AI 成员' }])),
     http.get('/api/insights/audit', ({ request }) => {
       requests.audit.push(new URL(request.url).search);
       return ok({ items: [], total: 0 });

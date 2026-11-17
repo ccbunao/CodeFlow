@@ -124,10 +124,10 @@ describe('AuditLogPage v2', () => {
     await choose(user, '对象类型', '需求');
     await waitFor(() => expect(lastListParams().get('targetType')).toBe('workitem'));
 
-    await choose(user, '角色类型', '数字员工');
+    await choose(user, '角色类型', 'AI 成员');
     await waitFor(() => expect(lastListParams().get('actorType')).toBe('AGENT'));
 
-    await choose(user, '数字员工', '开发者');
+    await choose(user, 'AI 成员', '开发者');
     await waitFor(() => expect(lastListParams().get('actorId')).toBe('7'));
 
     expect(container.querySelectorAll('.audit-filter.is-active').length).toBeGreaterThan(0);
@@ -138,7 +138,7 @@ describe('AuditLogPage v2', () => {
       expect(lastListParams().get('actorId')).toBeNull();
       expect(countRequests[countRequests.length - 1].searchParams.get('actorType')).toBe('SYSTEM');
     });
-    expect(screen.queryByRole('combobox', { name: '数字员工' })).toBeNull();
+    expect(screen.queryByRole('combobox', { name: 'AI 成员' })).toBeNull();
 
     await choose(user, '角色类型', '全部');
     await waitFor(() => expect(lastListParams().get('actorType')).toBeNull());
@@ -177,7 +177,7 @@ describe('AuditLogPage v2', () => {
     expect(params.get('startTime')).toBe('2026-06-30T16:00:00.000Z');
     expect(params.get('endTime')).toBe('2026-07-02T15:59:59.999Z');
 
-    expect(await screen.findByRole('combobox', { name: '数字员工' })).toBeInTheDocument();
+    expect(await screen.findByRole('combobox', { name: 'AI 成员' })).toBeInTheDocument();
     expect(screen.getAllByText('开发者').length).toBeGreaterThan(0);
   });
 

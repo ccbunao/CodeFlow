@@ -54,7 +54,7 @@ describe('CreditsCostCard', () => {
 
     const breakdown = await openBreakdown();
 
-    expect(breakdown).toHaveTextContent('按数字员工');
+    expect(breakdown).toHaveTextContent('按AI 成员');
     expect(breakdown).toHaveTextContent('DEV80,000');
     expect(breakdown).toHaveTextContent('CR20,000');
     expect(breakdown).not.toHaveTextContent('IDLE');
@@ -100,7 +100,7 @@ describe('CreditsCostCard', () => {
     const breakdown = await openBreakdown();
 
     expect(breakdown).toHaveTextContent('agent-100');
-    expect(breakdown).toHaveTextContent('未知数字员工');
+    expect(breakdown).toHaveTextContent('未知AI 成员');
   });
 
   it('treats missing tokens on a worker row as zero for the hover filter', async () => {
@@ -119,7 +119,7 @@ describe('CreditsCostCard', () => {
     await act(async () => { await i18n.changeLanguage('en-US'); });
 
     expect(screen.getByTestId('insights-credits-breakdown')).toBe(breakdown);
-    expect(breakdown).toHaveTextContent('By digital worker');
+    expect(breakdown).toHaveTextContent('By AI member');
     expect(breakdown).toHaveTextContent('Total100,000');
     expect(breakdown).not.toHaveTextContent('tokens from conversations');
   });

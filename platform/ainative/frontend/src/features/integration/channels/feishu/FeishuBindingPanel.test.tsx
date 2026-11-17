@@ -41,7 +41,7 @@ describe('FeishuBindingPanel', () => {
     expect(await screen.findByText('先拿到群 ID')).toBeInTheDocument();
     expect(screen.getByText('群 ID 是 chat_id(oc_ 开头);先在飞书后台配好事件订阅与权限。')).toBeInTheDocument();
     await user.type(await screen.findByLabelText('群 ID'), 'oc_group');
-    await user.click(screen.getByLabelText('关联数字员工'));
+    await user.click(screen.getByLabelText('关联AI 成员'));
     await user.click(await screen.findByText('Alpha'));
     await user.click(screen.getByRole('button', { name: '保存' }));
     // One save closes the drawer; no second save and no group confirmation step.
@@ -84,7 +84,7 @@ describe('FeishuBindingPanel', () => {
     await screen.findByText('oc_group');
     await user.click(screen.getByRole('button', { name: '新建飞书绑定' }));
     await user.type(await screen.findByLabelText('群 ID'), 'oc_group');
-    await user.click(screen.getByLabelText('关联数字员工'));
+    await user.click(screen.getByLabelText('关联AI 成员'));
     await user.click(await screen.findByText('Alpha', { selector: '.ant-select-item-option-content' }));
     await user.click(screen.getByRole('button', { name: '保存' }));
 

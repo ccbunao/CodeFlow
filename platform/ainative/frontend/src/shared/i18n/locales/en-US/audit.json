@@ -33,7 +33,7 @@
   "summary": "Summary",
   "details": "Details",
   "title": "Audit log",
-  "description": "Human actions by default; switch to digital workers or system events. Field details live in each entry.",
+  "description": "Human actions by default; switch to AI members or system events. Field details live in each entry.",
   "subtitle": "Who changed what, and when — all on record.",
   "countChip_one": "{{count}} record in current filter",
   "countChip_other": "{{count}} matched",

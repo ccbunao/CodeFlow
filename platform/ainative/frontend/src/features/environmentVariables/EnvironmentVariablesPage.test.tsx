@@ -186,7 +186,7 @@ describe('EnvironmentVariablesPage', () => {
     server.use(http.delete('/api/environment-variables/11', () => HttpResponse.json({
       success: false,
       code: '33005',
-      message: '环境变量仍被数字员工引用,无法删除:发布助手(#9) 在线版本 v3。请先解除挂载。',
+      message: '环境变量仍被AI 成员引用,无法删除:发布助手(#9) 在线版本 v3。请先解除挂载。',
       data: null,
     })));
     renderPage();

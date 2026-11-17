@@ -245,7 +245,7 @@ describe('WorkitemClarificationPanel', () => {
     );
 
     renderPanel();
-    expect(screen.getByText('选择编队和数字员工')).toBeInTheDocument();
+    expect(screen.getByText('选择编队和AI 成员')).toBeInTheDocument();
 
     const comboboxes = await screen.findAllByRole('combobox');
     await waitFor(() => expect(comboboxes[0]).not.toBeDisabled());
@@ -261,7 +261,7 @@ describe('WorkitemClarificationPanel', () => {
   it('always offers the squad-member picker for a fresh panel', async () => {
     mockSquads();
     renderPanel();
-    expect(screen.getByText('选择编队和数字员工')).toBeInTheDocument();
+    expect(screen.getByText('选择编队和AI 成员')).toBeInTheDocument();
     // Antd Select renders its placeholder inside a span, not an input attribute;
     // wait for the squad input to become enabled (squads loaded).
     const comboboxes = await screen.findAllByRole('combobox');
@@ -292,7 +292,7 @@ describe('WorkitemClarificationPanel', () => {
     mockSquads();
     renderPanel();
     // The prefilled selection short-circuits the agent-selection screen.
-    expect(screen.queryByText('选择编队和数字员工')).not.toBeInTheDocument();
+    expect(screen.queryByText('选择编队和AI 成员')).not.toBeInTheDocument();
   });
 
   it('shows the selected conversation agent name instead of the generic placeholder', async () => {
@@ -330,7 +330,7 @@ describe('WorkitemClarificationPanel', () => {
     renderPanel();
 
     expect(await screen.findByText('已选择的开发')).toBeInTheDocument();
-    expect(screen.queryByText('数字员工')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI 成员')).not.toBeInTheDocument();
     await waitFor(() => expect(screen.getByPlaceholderText('输入消息...')).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
   });
 
@@ -427,7 +427,7 @@ describe('WorkitemClarificationPanel', () => {
       expect(screen.getByText('你好，我想讨论需求')).toBeInTheDocument();
     });
 
-    // AI 侧带数字员工名字；用户侧不再有「你」标签（Codex 风格）
+    // AI 侧带AI 成员名字；用户侧不再有「你」标签（Codex 风格）
     expect(screen.getAllByText('Agent-X').length).toBeGreaterThan(0);
     expect(screen.queryByText('你')).not.toBeInTheDocument();
     expect(screen.getByText('好的，请说说你的想法')).toBeInTheDocument();
@@ -1237,12 +1237,12 @@ describe('WorkitemClarificationPanel', () => {
 
   it('clears a draft before switching to another squad member', async () => {
     const agentAConversation = {
-      ...makeConversation(201, '数字员工 A 的会话消息'),
+      ...makeConversation(201, 'AI 成员 A 的会话消息'),
       agentId: 42,
       agentName: 'Agent-X',
     };
     const agentBConversation = {
-      ...makeConversation(202, '数字员工 B 的会话消息'),
+      ...makeConversation(202, 'AI 成员 B 的会话消息'),
       agentId: 77,
       agentName: 'Agent-Y',
     };
@@ -1282,10 +1282,10 @@ describe('WorkitemClarificationPanel', () => {
     renderPanel();
 
     await screen.findByPlaceholderText('输入消息...');
-    await screen.findByText('数字员工 A 的会话消息');
-    await typeComposer('只属于数字员工 A 的草稿');
+    await screen.findByText('AI 成员 A 的会话消息');
+    await typeComposer('只属于AI 成员 A 的草稿');
 
-    const switchButton = screen.getByRole('button', { name: '切换数字员工' });
+    const switchButton = screen.getByRole('button', { name: '切换AI 成员' });
     expect(switchButton.querySelector('.anticon-user-switch')).toBeInTheDocument();
     fireEvent.click(switchButton);
 
@@ -1297,7 +1297,7 @@ describe('WorkitemClarificationPanel', () => {
     fireEvent.mouseDown(comboboxes[1]);
     fireEvent.click(await screen.findByText('Agent-Y (ROLE_CR)'));
 
-    expect(await screen.findByText('数字员工 B 的会话消息')).toBeInTheDocument();
+    expect(await screen.findByText('AI 成员 B 的会话消息')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('输入消息...')).toHaveValue('');
   });
 
@@ -1439,7 +1439,7 @@ describe('WorkitemClarificationPanel', () => {
 
     const selector = screen.getByTestId('clarification-conversation-select');
     expect(within(selector).getByRole('combobox')).toBeDisabled();
-    expect(screen.getByRole('button', { name: '切换数字员工' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '切换AI 成员' })).toBeDisabled();
     expect(screen.getByPlaceholderText('输入消息...')).toBeDisabled();
     expect(screen.getByRole('button', { name: '发送消息' })).toBeDisabled();
 
@@ -1492,7 +1492,7 @@ describe('WorkitemClarificationPanel', () => {
     const latest = makeConversation(202, '当前会话消息');
     const historical = {
       ...makeConversation(101, '不会显示的消息'),
-      agentName: '空历史会话数字员工',
+      agentName: '空历史会话AI 成员',
       turns: [],
     };
     server.use(
@@ -1513,7 +1513,7 @@ describe('WorkitemClarificationPanel', () => {
     fireEvent.mouseDown(within(selector).getByRole('combobox'));
     fireEvent.click(await screen.findByText(/会话 #101/));
 
-    await screen.findByText('空历史会话数字员工');
+    await screen.findByText('空历史会话AI 成员');
     await waitFor(() => expect(textarea).toHaveValue('请通过平台 MCP 读需求 #100,与我做需求澄清。'));
   });
 
@@ -1774,14 +1774,14 @@ describe('WorkitemClarificationPanel', () => {
     });
 
     it('fills the viewport with the agent selection screen when fullscreen', async () => {
-      // 选人页在全屏态下真实可达：全屏中点「切换数字员工」会回到这一屏，
+      // 选人页在全屏态下真实可达：全屏中点「切换AI 成员」会回到这一屏，
       // URL 恢复落定前后（身份未确定）也会经过它。早返回若绕过铺满列，
       // 它就成了唯一与对话屏宽度不一致的全屏面。
       mockSquads();
       renderPanel({ fullscreen: true });
 
       const column = screen.getByTestId('clarification-selection-column');
-      expect(column).toContainElement(screen.getByText('选择编队和数字员工'));
+      expect(column).toContainElement(screen.getByText('选择编队和AI 成员'));
       expectFluidColumn(column);
 
       // 等编队加载落定，避免 act 警告
@@ -1794,7 +1794,7 @@ describe('WorkitemClarificationPanel', () => {
       renderPanel();
 
       const column = screen.getByTestId('clarification-selection-column');
-      expect(column).toContainElement(screen.getByText('选择编队和数字员工'));
+      expect(column).toContainElement(screen.getByText('选择编队和AI 成员'));
       expect(column.style.maxWidth).toBe('');
       expect(column.style.margin).toBe('');
       expect(column.style.width).toBe('');
@@ -1901,8 +1901,8 @@ describe('WorkitemClarificationPanel', () => {
         expect(onContextChange).toHaveBeenLastCalledWith({ agentId: 42, conversationId: 101 }),
       );
       expect(await screen.findByText('历史会话消息')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: '切换数字员工' })).toBeInTheDocument();
-      expect(screen.queryByText('选择编队和数字员工')).toBeNull();
+      expect(screen.getByRole('button', { name: '切换AI 成员' })).toBeInTheDocument();
+      expect(screen.queryByText('选择编队和AI 成员')).toBeNull();
 
       // 回流走真实编解码器：恢复源不能在「上报 → 写回 URL」循环里被自己抹掉（CR53035-001）
       const echoedSearch = onContextChange.mock.calls.reduce(
@@ -1922,7 +1922,7 @@ describe('WorkitemClarificationPanel', () => {
     });
 
     it('holds auto-creation until the URL agent identity settles', async () => {
-      // 预填数字员工 42 名下一条会话都没有，URL 记的却是 2 号（2 号也在编队 9 里）。
+      // 预填AI 成员 42 名下一条会话都没有，URL 记的却是 2 号（2 号也在编队 9 里）。
       // 身份落定前若无条件自动建会话，会把预填数字人的会话钉在恢复目标身上（缺陷二）。
       writeClarificationPrefill('100', { squadId: 9, agentId: 42 });
       let releaseSquads: (() => void) | null = null;
@@ -1982,7 +1982,7 @@ describe('WorkitemClarificationPanel', () => {
     });
 
     it('ignores a URL agent that no longer belongs to any squad', async () => {
-      // 数字员工被移出所有编队后，URL 里的旧 id 不该把面板钉在不可选的状态
+      // AI 成员被移出所有编队后，URL 里的旧 id 不该把面板钉在不可选的状态
       mockSquads();
       const requestedAgentIds: string[] = [];
       server.use(
@@ -1994,8 +1994,8 @@ describe('WorkitemClarificationPanel', () => {
 
       renderRestorable({ initialAgentId: 7 });
 
-      expect(await screen.findByText('选择编队和数字员工')).toBeInTheDocument();
-      expect(screen.queryByRole('button', { name: '切换数字员工' })).toBeNull();
+      expect(await screen.findByText('选择编队和AI 成员')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: '切换AI 成员' })).toBeNull();
       expect(requestedAgentIds).not.toContain('7');
     });
 
@@ -2064,7 +2064,7 @@ describe('WorkitemClarificationPanel', () => {
     it('validates the restored conversation only after the restored agent identity settles', async () => {
       writeClarificationPrefill('100', { squadId: 9, agentId: 42 });
       mockSquads();
-      const aConversation = makeConversation(202, '预填数字员工的会话');
+      const aConversation = makeConversation(202, '预填AI 成员的会话');
       const bConversation = {
         ...makeConversation(101, '恢复目标的历史会话'), agentId: 2, agentName: 'Agent-B',
       };
@@ -2097,25 +2097,25 @@ describe('WorkitemClarificationPanel', () => {
       const textarea = await screen.findByPlaceholderText('正在恢复会话，请稍候…');
       expect(textarea).toBeDisabled();
 
-      // 预填数字员工 42 的会话列表（不含 101）先落地，恢复中的 101 不能被判成不存在
+      // 预填AI 成员 42 的会话列表（不含 101）先落地，恢复中的 101 不能被判成不存在
       await waitFor(() => expect(prefillListCalls).toBeGreaterThan(0));
       expect(screen.getByPlaceholderText('正在恢复会话，请稍候…')).toBeDisabled();
 
       await waitFor(() => expect(releaseDetail).not.toBeNull());
       releaseDetail!();
 
-      // 最终停在 URL 记录的 B/101：预填数字员工的 202 从头到尾不该出现
+      // 最终停在 URL 记录的 B/101：预填AI 成员的 202 从头到尾不该出现
       await waitFor(() =>
         expect(screen.getByPlaceholderText('输入消息...')).not.toBeDisabled());
       expect(await screen.findByText('恢复目标的历史会话')).toBeInTheDocument();
-      expect(screen.queryByText('预填数字员工的会话')).toBeNull();
+      expect(screen.queryByText('预填AI 成员的会话')).toBeNull();
       await waitFor(() => expect(onContextChange).toHaveBeenLastCalledWith({
         agentId: 2, conversationId: 101,
       }));
     });
 
     /** 缺陷二优先级：用户手动选择 > URL 恢复。恢复窗口内用户已通过编队选择器
-     *  自己选了数字员工，迟到的 URL 恢复不得再把面板拽到别的数字员工上。
+     *  自己选了AI 成员，迟到的 URL 恢复不得再把面板拽到别的AI 成员上。
      *  URL 恢复的归属查询被扣住，选择器改用缓存数据先渲染，两边互不干扰。 */
     it('lets a manual agent selection win over the URL restore arriving late', async () => {
       const squad9 = { id: 9, name: '交付编队', description: '', memberCount: 2, gmtCreate: '' };
@@ -2187,7 +2187,7 @@ describe('WorkitemClarificationPanel', () => {
       await waitFor(() => expect(releaseSquads).not.toBeNull());
       releaseSquads!();
 
-      await waitFor(() => expect(screen.queryByText('选择编队和数字员工')).toBeNull());
+      await waitFor(() => expect(screen.queryByText('选择编队和AI 成员')).toBeNull());
       expect(createdAgentIds).toEqual([42]);
       expect(requestedAgentIds).not.toContain('2');
       expect(await screen.findByText('手动选择的会话')).toBeInTheDocument();
@@ -2433,7 +2433,7 @@ describe('WorkitemClarificationPanel', () => {
 
       await waitFor(() => expect(onAgentConfirmed).toHaveBeenCalledTimes(1));
 
-      // 模拟数字员工确定之后父组件的连续重渲染
+      // 模拟AI 成员确定之后父组件的连续重渲染
       rerender(tree());
       rerender(tree());
       rerender(tree());
@@ -2443,9 +2443,9 @@ describe('WorkitemClarificationPanel', () => {
       expect(onAgentConfirmed).toHaveBeenCalledTimes(1);
     });
 
-    // 守卫必须在派生值回到 null 时复位：「切换数字员工」正是把选择清回 null，
+    // 守卫必须在派生值回到 null 时复位：「切换AI 成员」正是把选择清回 null，
     // 少了复位分支，用户切换后重新选人就再也不会重新进全屏。
-    it('fires again after 「切换数字员工」 resets the selection and a new agent is picked', async () => {
+    it('fires again after 「切换AI 成员」 resets the selection and a new agent is picked', async () => {
       mockSquads();
       const created = {
         id: 5, agentId: 42, agentName: 'Agent-X', channelConversationId: 'ch-5',
@@ -2486,8 +2486,8 @@ describe('WorkitemClarificationPanel', () => {
       await waitFor(() => expect(onAgentConfirmed).toHaveBeenCalledTimes(1));
 
       // 回到选择页：派生值被清回 null，选人列表重新挂载，元素需重新查询
-      fireEvent.click(screen.getByText('切换数字员工'));
-      expect(await screen.findByText('选择编队和数字员工')).toBeInTheDocument();
+      fireEvent.click(screen.getByText('切换AI 成员'));
+      expect(await screen.findByText('选择编队和AI 成员')).toBeInTheDocument();
       expect(onAgentConfirmed).toHaveBeenCalledTimes(1);
 
       await pickAgent();
@@ -2579,7 +2579,7 @@ describe('WorkitemClarificationPanel', () => {
       const aiBubble = aiBlock.closest('.cf-clarify-msg') as HTMLElement;
       const aiCopy = within(aiBubble).getByTestId('copy-message-button');
 
-      // 正向：按钮和数字员工名字同属那一行。它待在这行 11px 文字里，才是
+      // 正向：按钮和AI 成员名字同属那一行。它待在这行 11px 文字里，才是
       // clarification.css 把按钮压到 18×18 的全部理由。
       expect(aiCopy.closest('div')).toHaveTextContent('Agent-X');
       // 反向：挪进内容块就没有「别撑高名字行」这个约束了，18px 的理由随之作废，

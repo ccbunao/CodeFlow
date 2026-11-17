@@ -123,8 +123,7 @@
     "source": "From:",
     "target": "To:",
     "type": "Type:",
-    "description": "Note:",
-    "title": "Repository map"
+    "description": "Note:"
   },
   "hub": {
     "title": "Code repositories",

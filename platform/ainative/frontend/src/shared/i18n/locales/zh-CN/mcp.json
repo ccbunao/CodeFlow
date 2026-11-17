@@ -64,8 +64,8 @@
       "description": "流程、步骤、排序、启停和状态模板。"
     },
     "agent": {
-      "title": "数字员工能力接口",
-      "description": "数字员工的创建、查询与详情读取接口。"
+      "title": "AI 成员能力接口",
+      "description": "AI 成员的创建、查询与详情读取接口。"
     },
     "executor": {
       "title": "运行器能力接口",

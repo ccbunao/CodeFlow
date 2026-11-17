@@ -6,7 +6,7 @@ import type { SdlcGenResult } from '@/shared/types/ai';
 
 const base: SdlcGenResult = {
   name: '默认流程',
-  description: '单个数字员工内部研发流程',
+  description: '单个AI 成员内部研发流程',
   steps: [
     {
       order: 1,
@@ -35,7 +35,7 @@ describe('SdlcGenRenderer', () => {
   it('renders flow name and steps', () => {
     render(<SdlcGenRenderer value={base} onChange={() => {}} />);
     expect(screen.getByDisplayValue('默认流程')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('单个数字员工内部研发流程')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('单个AI 成员内部研发流程')).toBeInTheDocument();
     expect(screen.getByDisplayValue('需求满足性分析')).toBeInTheDocument();
     expect(screen.getAllByText('分析').length).toBeGreaterThan(0);
     expect(screen.getByDisplayValue(/判断当前上下文是否足够/)).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('SdlcGenRenderer', () => {
     await userEvent.click(screen.getByRole('button', { name: /上移第2步/ }));
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({
       name: '默认流程',
-      description: '单个数字员工内部研发流程',
+      description: '单个AI 成员内部研发流程',
       steps: [
         expect.objectContaining({ order: 1, name: '编码实现' }),
         expect.objectContaining({ order: 2, name: '需求满足性分析' }),

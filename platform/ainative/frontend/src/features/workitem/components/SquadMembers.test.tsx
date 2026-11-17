@@ -73,7 +73,7 @@ describe('SquadMembers', () => {
     render(<SquadMembers participants={participants} />);
 
     expect(screen.getByText('成员')).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: '数字员工成员' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'AI 成员成员' })).toBeInTheDocument();
     expect(screen.getByText('Agent Dev')).toBeInTheDocument();
     expect(screen.queryByText('蔡何')).not.toBeInTheDocument();
     expect(screen.getByText(/Executor: 离线/)).toBeInTheDocument();

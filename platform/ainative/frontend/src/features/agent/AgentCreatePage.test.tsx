@@ -98,8 +98,8 @@ describe('AgentCreatePage', () => {
     await user.type(screen.getByLabelText('角色码'), 'QA');
     await user.click(screen.getByRole('button', { name: /创建/ }));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，创建数字员工需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，创建AI 成员需要读写权限');
     expect(createCalls).toBe(0);
-    expect(screen.getByText('新建数字员工')).toBeInTheDocument();
+    expect(screen.getByText('新建AI 成员')).toBeInTheDocument();
   });
 });

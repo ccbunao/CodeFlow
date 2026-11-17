@@ -6,7 +6,7 @@
     "noWorkspace": "未选项目",
     "denied": "当前为{{current}}，{{action}}需要{{required}}",
     "domain": {
-      "AGENT": "数字员工 · 员工管理",
+      "AGENT": "AI 成员 · 员工管理",
       "AI": "AI 生成与扫描",
       "AIUSAGE": "AI 配额与用量",
       "ARTIFACT": "文档与产物",
@@ -125,7 +125,7 @@
   },
   "robot": "机器人",
   "timeline": {
-    "agent": "数字员工",
+    "agent": "AI 成员",
     "user": "用户",
     "loading": "读取中…",
     "created": "<actor/> 创建了需求",

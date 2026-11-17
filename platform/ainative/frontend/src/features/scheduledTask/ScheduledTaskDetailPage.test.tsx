@@ -67,7 +67,7 @@ describe('ScheduledTaskDetailPage', () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={client}><MemoryRouter initialEntries={['/scheduled-tasks/901']}><Routes><Route path="/scheduled-tasks/:id" element={<ScheduledTaskDetailPage />} /></Routes></MemoryRouter></QueryClientProvider>);
     expect(await screen.findByText('编队 #2')).toBeInTheDocument();
-    expect(screen.getByText('数字员工 #5')).toBeInTheDocument();
+    expect(screen.getByText('AI 成员 #5')).toBeInTheDocument();
   });
 
   it('deletes the task after confirmation and returns to the list', async () => {

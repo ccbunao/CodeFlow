@@ -27,8 +27,8 @@ const composition: CostComposition = {
 };
 
 const workers: InsightWorker[] = [
-  { id: 12, name: '验收数字员工' },
-  { id: 13, name: '备用数字员工' },
+  { id: 12, name: '验收AI 成员' },
+  { id: 13, name: '备用AI 成员' },
 ];
 
 function renderPanel(overrides: Partial<RealtimeCostPanelProps> = {}) {
@@ -119,7 +119,7 @@ describe('RealtimeCostPanel', () => {
     renderPanel();
 
     expect(screen.queryByText('统计口径：')).not.toBeInTheDocument();
-    expect(screen.queryByText('所选数字员工 × 日期范围')).not.toBeInTheDocument();
+    expect(screen.queryByText('所选AI 成员 × 日期范围')).not.toBeInTheDocument();
     expect(screen.queryByText('该组筛选仅作用于本面板的成本数据，不影响下方实时指标')).not.toBeInTheDocument();
     expect(document.querySelector('.insight-panel--cost .insight-panel-note')).toBeNull();
   });
@@ -128,7 +128,7 @@ describe('RealtimeCostPanel', () => {
     renderPanel({ cost: undefined, composition: null, isLoading: true });
 
     expect(screen.queryByText('总 Token')).not.toBeInTheDocument();
-    expect(costRegion().getByRole('combobox', { name: '成本数字员工' })).toBeInTheDocument();
+    expect(costRegion().getByRole('combobox', { name: '成本AI 成员' })).toBeInTheDocument();
     expect(document.querySelector('.ant-spin')).not.toBeNull();
   });
 
@@ -158,8 +158,8 @@ describe('RealtimeCostPanel', () => {
     const user = userEvent.setup();
     const { props } = renderPanel();
 
-    await user.click(screen.getByRole('combobox', { name: '成本数字员工' }));
-    const workerOptions = await screen.findAllByText('验收数字员工');
+    await user.click(screen.getByRole('combobox', { name: '成本AI 成员' }));
+    const workerOptions = await screen.findAllByText('验收AI 成员');
     await user.click(workerOptions[workerOptions.length - 1]);
     expect(props.onWorkerChange).toHaveBeenCalledWith(12);
 
@@ -171,13 +171,13 @@ describe('RealtimeCostPanel', () => {
     const user = userEvent.setup();
     renderPanel();
 
-    expect(costRegion().getByText('全部数字员工')).toBeInTheDocument();
-    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体数字员工 · 近30天');
-    expect(costRegion().queryByRole('button', { name: '清除数字员工筛选' })).not.toBeInTheDocument();
+    expect(costRegion().getByText('全部AI 成员')).toBeInTheDocument();
+    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近30天');
+    expect(costRegion().queryByRole('button', { name: '清除AI 成员筛选' })).not.toBeInTheDocument();
 
-    await user.click(costRegion().getByRole('combobox', { name: '成本数字员工' }));
+    await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
     const options = await screen.findAllByRole('option');
-    expect(options[0]).toHaveAttribute('aria-label', '全部数字员工');
+    expect(options[0]).toHaveAttribute('aria-label', '全部AI 成员');
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
   });
 
@@ -185,9 +185,9 @@ describe('RealtimeCostPanel', () => {
     const user = userEvent.setup();
     const { props } = renderPanel({ workerId: 12, timeRange: '7d' });
 
-    expect(costRegion().getByText('验收数字员工 · 近7天')).toBeInTheDocument();
-    const clear = costRegion().getByRole('button', { name: '清除数字员工筛选' });
-    expect(clear).toHaveAttribute('title', '清除筛选，回到全部数字员工');
+    expect(costRegion().getByText('验收AI 成员 · 近7天')).toBeInTheDocument();
+    const clear = costRegion().getByRole('button', { name: '清除AI 成员筛选' });
+    expect(clear).toHaveAttribute('title', '清除筛选，回到全部AI 成员');
     await user.click(clear);
 
     expect(props.onWorkerChange).toHaveBeenCalledWith(undefined);
@@ -197,10 +197,10 @@ describe('RealtimeCostPanel', () => {
     const user = userEvent.setup();
     const { props } = renderPanel({ workerId: 12 });
 
-    await user.click(costRegion().getByRole('combobox', { name: '成本数字员工' }));
+    await user.click(costRegion().getByRole('combobox', { name: '成本AI 成员' }));
     const options = await screen.findAllByRole('option');
-    expect(options[0]).toHaveAttribute('aria-label', '全部数字员工');
-    const allAgentLabels = await screen.findAllByText('全部数字员工');
+    expect(options[0]).toHaveAttribute('aria-label', '全部AI 成员');
+    const allAgentLabels = await screen.findAllByText('全部AI 成员');
     await user.click(allAgentLabels[allAgentLabels.length - 1]);
 
     expect(props.onWorkerChange).toHaveBeenCalledWith(undefined);
@@ -235,7 +235,7 @@ describe('RealtimeCostPanel', () => {
     renderPanel();
 
     const chip = screen.getByTestId('cost-composition-chip');
-    expect(chip).toHaveTextContent('全体数字员工 · 近30天');
+    expect(chip).toHaveTextContent('全体AI 成员 · 近30天');
     expect(chip).not.toHaveClass('is-locked');
     expect(chip.querySelector('.anticon-lock')).toBeNull();
   });
@@ -246,13 +246,13 @@ describe('RealtimeCostPanel', () => {
 
     const chip = screen.getByTestId('cost-composition-chip');
     expect(chip).toHaveClass('is-locked');
-    expect(chip).toHaveTextContent('全部数字员工口径 · 不随上方员工筛选联动');
+    expect(chip).toHaveTextContent('全部AI 成员口径 · 不随上方员工筛选联动');
     expect(chip.querySelector('.anticon-lock')).not.toBeNull();
     // 构成条数据仍是全员口径，不随上方员工筛选变化
     expect(compositionRegion().getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
 
     await user.hover(chip);
-    expect(await screen.findByRole('tooltip')).toHaveTextContent('来源构成不区分数字员工，仅随日期范围变化');
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('来源构成不区分AI 成员，仅随日期范围变化');
   });
 
   it('omits the composition strip entirely for legacy payloads without costComposition', () => {
@@ -295,7 +295,7 @@ describe('RealtimeCostPanel', () => {
     expect(statsRegion().getAllByText('20K')[0].closest('.insight-flash')).toHaveClass('is-flash');
     expect(compositionRegion().getAllByText('100.0%')[0].closest('.insight-flash')).toHaveClass('is-flash');
     const chip = screen.getByTestId('cost-composition-chip');
-    expect(chip).toHaveTextContent('全体数字员工 · 近7天');
+    expect(chip).toHaveTextContent('全体AI 成员 · 近7天');
     expect(chip).not.toHaveClass('is-locked');
   });
 
@@ -340,13 +340,13 @@ it('switches the independently cached cost panel without token detail while pres
     />,
   }]);
   render(<RouterProvider router={router} />);
-  const select = screen.getByRole('combobox', { name: '成本数字员工' });
+  const select = screen.getByRole('combobox', { name: '成本AI 成员' });
   await userEvent.hover(screen.getByText('总 Token'));
   await waitPastTooltipDelay();
   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByRole('combobox', { name: 'Cost Agent' })).toBe(select);
-  expect(screen.getByText('验收数字员工')).toBeInTheDocument();
+  expect(screen.getByText('验收AI 成员')).toBeInTheDocument();
   expect(screen.getByText('Failed to load Token cost')).toBeInTheDocument();
   expect(screen.getByText('<b>原始错误</b>')).toBeInTheDocument();
   expect(screen.getByText('Total Tokens')).toBeInTheDocument();

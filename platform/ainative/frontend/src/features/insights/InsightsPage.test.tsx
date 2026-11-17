@@ -25,7 +25,7 @@ function renderPage() {
   );
 }
 
-// 页面默认 realtime tab 会挂载 RealtimeDashboard 并触发快照、流水线、实时与数字员工查询；
+// 页面默认 realtime tab 会挂载 RealtimeDashboard 并触发快照、流水线、实时与AI 成员查询；
 // 各用例按需显式打桩，避免 MSW 严格模式报未处理请求。
 const overviewHandler = http.get('/api/dashboard/overview', () =>
   HttpResponse.json(ok(overviewDashboardPayload)),
@@ -48,7 +48,7 @@ describe('InsightsPage', () => {
       pipelineHealthHandler,
       http.get('/api/insights/metrics', () => HttpResponse.json(ok(metricsPayload()))),
       http.get('/api/insights/audit', () => HttpResponse.json(ok({ items: [], total: 0 }))),
-      http.get('/api/insights/workers', () => HttpResponse.json(ok([{ id: 12, name: '验收数字员工' }]))),
+      http.get('/api/insights/workers', () => HttpResponse.json(ok([{ id: 12, name: '验收AI 成员' }]))),
       http.get('/api/insights/member-delivery', () => HttpResponse.json(ok(memberDeliveryPayload))),
       // 下线后页面（含切换 tab）不得再请求需求交付接口：命中即记录，断言为零。
       http.get('/api/insights/requirement-delivery', ({ request }) => {
@@ -126,7 +126,7 @@ function metricsPayload(cost: unknown = costPayload) {
 }
 
 const insightsWorkersHandler = http.get('/api/insights/workers', () =>
-  HttpResponse.json(ok([{ id: 12, name: '验收数字员工' }])),
+  HttpResponse.json(ok([{ id: 12, name: '验收AI 成员' }])),
 );
 
 // 页面级审计查询与 tab 无关，始终随 InsightsPage 挂载发起，必须一并打桩。
@@ -205,7 +205,7 @@ describe('InsightsPage realtime cost', () => {
     // 来源构成紧凑条与统计块同屏，图例带绝对值与占比
     expect(within(region).getByTestId('cost-composition-bar')).toBeInTheDocument();
     expect(within(region).getByRole('list', { name: 'Token 来源图例' })).toHaveTextContent('需求执行');
-    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体数字员工 · 近7天');
+    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全体AI 成员 · 近7天');
 
     // 实时看板既有 KPI 与成本卡同屏可见
     expect(await screen.findByText('正在运行')).toBeInTheDocument();
@@ -213,7 +213,7 @@ describe('InsightsPage realtime cost', () => {
     expect(screen.queryByText('效率')).not.toBeInTheDocument();
     expect(screen.queryByText('稳定')).not.toBeInTheDocument();
     expect(screen.queryByText('安全')).not.toBeInTheDocument();
-    // 首屏按近 7 天、全部数字员工取数
+    // 首屏按近 7 天、全部AI 成员取数
     expect(costRequests.at(-1)).toBe('?range=7');
 
     await user.hover(within(region).getByText('总 Token'));
@@ -264,14 +264,14 @@ describe('InsightsPage realtime cost', () => {
     renderPage();
 
     const region = await screen.findByRole('region', { name: '成本分析' });
-    await user.click(within(region).getByRole('combobox', { name: '成本数字员工' }));
-    const workerOptions = await screen.findAllByText('验收数字员工');
+    await user.click(within(region).getByRole('combobox', { name: '成本AI 成员' }));
+    const workerOptions = await screen.findAllByText('验收AI 成员');
     await user.click(workerOptions[workerOptions.length - 1]);
     await user.click(within(region).getByText('近30天'));
 
     await waitFor(() => expect(costRequests.at(-1)).toBe('?range=30&agentId=12'));
     // 切员工后构成条锁定为全员口径
-    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部数字员工口径 · 不随上方员工筛选联动');
+    expect(screen.getByTestId('cost-composition-chip')).toHaveTextContent('全部AI 成员口径 · 不随上方员工筛选联动');
 
     // 成本筛选写的是 realtime.cost.*，页面级 audit 查询仍沿用 audit.* 的默认值
     await waitFor(() => {

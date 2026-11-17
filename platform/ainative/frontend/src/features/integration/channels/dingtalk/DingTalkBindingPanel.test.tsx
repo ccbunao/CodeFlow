@@ -159,7 +159,7 @@ describe('DingTalkBindingPanel', () => {
     expect(await screen.findByText('先拿到群 ID')).toBeInTheDocument();
     expect(screen.getByText('② 接着输入「群信息」发送。')).toBeInTheDocument();
     await user.type(await screen.findByLabelText('群 ID'), 'cid_group');
-    await user.click(screen.getByRole('combobox', { name: '关联数字员工' }));
+    await user.click(screen.getByRole('combobox', { name: '关联AI 成员' }));
     await user.click(await screen.findByText('Alpha（评审工程师）'));
     await user.click(screen.getByRole('button', { name: /保\s*存/ }));
 
@@ -182,7 +182,7 @@ describe('DingTalkBindingPanel', () => {
     await user.click(screen.getByRole('button', { name: /保\s*存/ }));
 
     expect(await screen.findByText('填群 ID')).toBeInTheDocument();
-    expect(screen.getByText('请选择关联数字员工')).toBeInTheDocument();
+    expect(screen.getByText('请选择关联AI 成员')).toBeInTheDocument();
     expect(screen.queryByLabelText('appKey')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('robotCode')).not.toBeInTheDocument();
   });
@@ -500,7 +500,7 @@ describe('DingTalkBindingPanel', () => {
     await screen.findByText('cid_group');
     await user.click(screen.getByText('新建绑定'));
     await user.type(await screen.findByLabelText('群 ID'), 'cid_group');
-    await user.click(screen.getByRole('combobox', { name: '关联数字员工' }));
+    await user.click(screen.getByRole('combobox', { name: '关联AI 成员' }));
     await user.click(await screen.findByText('Alpha（评审工程师）', { selector: '.ant-select-item-option-content' }));
     await user.click(screen.getByRole('button', { name: /保\s*存/ }));
 
@@ -524,7 +524,7 @@ it('refreshes memoized binding labels and open drawer role options while preserv
   const { container } = renderPanel();
   await screen.findByText('<em>员工</em>（测试工程师）');
   await userEvent.click(screen.getByRole('button', { name: /新建绑定/ }));
-  await userEvent.click(screen.getByRole('combobox', { name: '关联数字员工' }));
+  await userEvent.click(screen.getByRole('combobox', { name: '关联AI 成员' }));
   await act(async () => { await i18n.changeLanguage('en-US'); });
   try {
     expect(screen.getAllByText('<em>员工</em> (QA engineer)').length).toBeGreaterThanOrEqual(2);

@@ -67,7 +67,7 @@ describe('审核角标与待审核列表的缓存一致性', () => {
     const badge = renderHook(() => useAgentPendingReviewCount(), { wrapper });
     await waitFor(() => expect(badge.result.current.data).toBe(0));
 
-    // 后台新增待审数字员工：列表查得到，角标此刻才返回新值
+    // 后台新增待审AI 成员：列表查得到，角标此刻才返回新值
     let listCalls = 0;
     server.use(
       http.get('/api/agents', () => {
@@ -227,7 +227,7 @@ describe('审核角标与待审核列表的缓存一致性', () => {
     const list = renderHook(() => usePendingReviews(), { wrapper });
     await waitFor(() => expect(list.result.current.data).toEqual([]));
 
-    // 后台新增待审数字员工：角标轮询先看到新值，列表此刻仍是旧缓存
+    // 后台新增待审AI 成员：角标轮询先看到新值，列表此刻仍是旧缓存
     server.use(
       http.get('/api/agents', () => {
         listCalls += 1;

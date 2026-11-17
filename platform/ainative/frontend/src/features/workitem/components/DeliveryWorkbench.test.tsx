@@ -239,15 +239,15 @@ describe('Delivery workbench', () => {
     const progress: Progress = {
       steps: [],
       agents: [{
-        agentId: 10033, agentName: '任务蒸馏数字员工', status: 'failed', durationMs: 10_000,
+        agentId: 10033, agentName: '任务蒸馏AI 成员', status: 'failed', durationMs: 10_000,
         steps: [
-          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: 3000,
-            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', error: failure, startedAt: null, durationMs: 10_000 }] },
-          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: null, attempts: [] },
+          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: 3000,
+            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', error: failure, startedAt: null, durationMs: 10_000 }] },
+          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: null, attempts: [] },
         ],
       }],
       executions: [{
-        dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED',
+        dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED',
         error: failure, startedAt: null, durationMs: 10_000,
         stepTimings: [
           { stepId: 10088, name: '收集需求执行日志', status: 'done', durationMs: 3000 },
@@ -277,22 +277,22 @@ describe('Delivery workbench', () => {
     const progress: Progress = {
       steps: [],
       agents: [{
-        agentId: 10033, agentName: '任务蒸馏数字员工', status: 'active', durationMs: 30_000,
+        agentId: 10033, agentName: '任务蒸馏AI 成员', status: 'active', durationMs: 30_000,
         steps: [
-          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: 3000,
+          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: 3000,
             attempts: [
-              { dispatchId: 12238, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 },
-              { dispatchId: 12255, agentName: '任务蒸馏数字员工', executorName: null, status: 'RUNNING', startedAt: null, durationMs: 20_000, canPause: true },
+              { dispatchId: 12238, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 },
+              { dispatchId: 12255, agentName: '任务蒸馏AI 成员', executorName: null, status: 'RUNNING', startedAt: null, durationMs: 20_000, canPause: true },
             ] },
         ],
       }],
       executions: [
-        { dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', error: 'first run failed on gate', startedAt: null, durationMs: 10_000,
+        { dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', error: 'first run failed on gate', startedAt: null, durationMs: 10_000,
           stepTimings: [
             { stepId: 10088, name: '收集需求执行日志', status: 'done', durationMs: 3000 },
             { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', durationMs: 4000 },
           ] },
-        { dispatchId: 12255, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'RUNNING', startedAt: null, durationMs: 20_000,
+        { dispatchId: 12255, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'RUNNING', startedAt: null, durationMs: 20_000,
           stepTimings: [
             { stepId: 10088, name: '收集需求执行日志', status: 'done', durationMs: 6000 },
             { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'active', durationMs: 20_000 },
@@ -326,14 +326,14 @@ describe('Delivery workbench', () => {
     const progress: Progress = {
       steps: [],
       agents: [{
-        agentId: 10033, agentName: '任务蒸馏数字员工', status: 'failed', durationMs: 10_000,
+        agentId: 10033, agentName: '任务蒸馏AI 成员', status: 'failed', durationMs: 10_000,
         steps: [
-          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: 3000,
-            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 }] },
-          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: null, attempts: [] },
+          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: 3000,
+            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 }] },
+          { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'failed', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: null, attempts: [] },
         ],
       }],
-      executions: [{ dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 }],
+      executions: [{ dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'FAILED', startedAt: null, durationMs: 10_000 }],
     };
     render(<DeliveryProgress progress={progress} />);
     open();
@@ -347,14 +347,14 @@ describe('Delivery workbench', () => {
     const progress: Progress = {
       steps: [],
       agents: [{
-        agentId: 10033, agentName: '任务蒸馏数字员工', status: 'finished', durationMs: 10_000,
+        agentId: 10033, agentName: '任务蒸馏AI 成员', status: 'finished', durationMs: 10_000,
         steps: [
-          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏数字员工', executorName: null, subSteps: null, durationMs: 3000,
-            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏数字员工', executorName: null, status: 'SUCCEEDED', startedAt: null, durationMs: 10_000 }] },
+          { stepId: 10088, name: '收集需求执行日志', status: 'done', agentName: '任务蒸馏AI 成员', executorName: null, subSteps: null, durationMs: 3000,
+            attempts: [{ dispatchId: 12238, agentName: '任务蒸馏AI 成员', executorName: null, status: 'SUCCEEDED', startedAt: null, durationMs: 10_000 }] },
         ],
       }],
       executions: [{
-        dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏数字员工', executorName: null, status: 'SUCCEEDED', startedAt: null, durationMs: 10_000,
+        dispatchId: 12238, agentId: 10033, agentName: '任务蒸馏AI 成员', executorName: null, status: 'SUCCEEDED', startedAt: null, durationMs: 10_000,
         stepTimings: [
           { stepId: 10088, name: '收集需求执行日志', status: 'done', durationMs: 3000 },
           { stepId: 10131, name: '分析日志、总结报告并提交 CR', status: 'interrupted', durationMs: 2000 },

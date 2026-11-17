@@ -11,7 +11,7 @@ import WorkstationWall from './realtime/WorkstationWall';
 import { SlowTailTable } from './components/SlowTailTable';
 import type { RecentTask } from './realtime/api';
 
-const running = { dispatchId: 1, agentId: 2, agentName: '<b>数字员工</b>', workitemId: 3, workitemTitle: '<strong>需求</strong>', stepName: '<em>阶段</em>', runningMinutes: 1 };
+const running = { dispatchId: 1, agentId: 2, agentName: '<b>AI 成员</b>', workitemId: 3, workitemTitle: '<strong>需求</strong>', stepName: '<em>阶段</em>', runningMinutes: 1 };
 const finishedAt = '2026-09-25T12:30:00Z';
 beforeEach(async () => { await i18n.changeLanguage('zh-CN'); });
 afterEach(async () => { cleanup(); await i18n.changeLanguage('zh-CN'); });
@@ -26,12 +26,12 @@ it('updates each cached routed long-duration consumer while retaining expanded t
   const recent: RecentTask[] = [{ dispatchId: 4, agentName: running.agentName, workitemTitle: running.workitemTitle, status: 'SUCCEEDED', durationMinutes: 2, finishedAt },
     { dispatchId: 5, agentName: null, workitemTitle: null, status: 'toString' as RecentTask['status'], durationMinutes: 1, finishedAt: 'invalid-date' }];
   const { container } = routed(<><ActivityFeed running={[running]} recent={recent} /><WorkstationWall workstations={[{ agentId: 2, name: running.agentName!, avatarUrl: null, runningTasks: 1, busy: true }]} /></>);
-  const station = screen.getByRole('button', { name: /数字员工/ });
+  const station = screen.getByRole('button', { name: /AI 成员/ });
   await userEvent.click(station);
   expect(await screen.findByText(/<em>阶段<\/em>/)).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByText('Live activity')).toBeInTheDocument();
-  expect(screen.getByText('digital worker wall')).toBeInTheDocument();
+  expect(screen.getByText('AI member wall')).toBeInTheDocument();
   expect(station).toHaveAttribute('aria-expanded', 'true');
   expect(screen.getAllByText('1 minute').length).toBeGreaterThan(1);
   expect(screen.getByText('2 minutes')).toBeInTheDocument();

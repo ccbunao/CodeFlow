@@ -228,7 +228,10 @@ export function McpTokenSettingsPanel() {
     queryKey: BRANDING_QUERY_KEY,
     queryFn: getPublicBranding,
   });
-  const mcpEndpoint = brandingQuery.data?.mcpBaseUrl?.trim() || null;
+  // 服务地址缺省回落到当前站点 origin:后端品牌配置本就不存 mcpBaseUrl,
+  // 之前回落成 null 会让整页「加载失败」且新建令牌被禁用(全新部署必现)。
+  const mcpEndpoint = brandingQuery.data?.mcpBaseUrl?.trim()
+    || (typeof window === 'undefined' ? null : `${window.location.origin}/api/mcp`);
   const isCommunityEdition = brandingQuery.data?.communityEdition === true;
   useLocalizedValidation(form, tokenModalOpen && !(issuedToken && mcpEndpoint));
 

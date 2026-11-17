@@ -194,7 +194,7 @@ describe('HumanInterventionAlert', () => {
     render(<><HumanInterventionBadge item={item} /><HumanInterventionAlert item={item} /></>);
     expect(screen.getByText('需要人工')).toBeInTheDocument();
     expect(screen.getByText('等人工介入:待认领')).toBeInTheDocument();
-    expect(screen.getByText('当前需求尚未指派本地负责人，请指派真人接手，或指派数字员工继续交付。')).toBeInTheDocument();
+    expect(screen.getByText('当前需求尚未指派本地负责人，请指派真人接手，或指派AI 成员继续交付。')).toBeInTheDocument();
   });
   it('renders the alert with name and guidance for a pending-decision workitem', () => {
     render(<HumanInterventionAlert item={{
@@ -202,7 +202,7 @@ describe('HumanInterventionAlert', () => {
       assigneeType: 'HUMAN', assigneeRef: 10000, assigneeName: 'caihe', assigneeDisplayName: '蔡何',
     }} />);
     expect(screen.getByText('等人工介入:蔡何')).toBeInTheDocument();
-    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给数字员工继续交付。')).toBeInTheDocument();
+    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
   });
 
   it('renders the alert without the employee id when the display name carries one', () => {
@@ -219,7 +219,7 @@ describe('HumanInterventionAlert', () => {
       statusCategory: 'PENDING_DECISION',
       assigneeType: 'AGENT', assigneeRef: 40013, assigneeName: 'Coder-01',
     }} />);
-    expect(screen.getByText(/数字员工在等人工答复/)).toBeInTheDocument();
+    expect(screen.getByText(/AI 成员在等人工答复/)).toBeInTheDocument();
   });
 
   it('renders nothing when assigneeRef is null', () => {

@@ -34,8 +34,8 @@
     "plannedAt": "计划时刻"
   },
   "labels": {
-    "agent": "数字员工",
-    "agentId": "数字员工 #{{id}}",
+    "agent": "AI 成员",
+    "agentId": "AI 成员 #{{id}}",
     "squadId": "编队 #{{id}}",
     "runId": "Run #{{id}}"
   },
@@ -129,8 +129,8 @@
     "instructionPlaceholder": "Markdown。写清目标、输入、完成标准和注意事项。",
     "squad": "编队",
     "squadPlaceholder": "选择执行编队",
-    "initialAgent": "首个数字员工",
-    "agentPlaceholder": "选择该编队中的首个数字员工",
+    "initialAgent": "首个AI 成员",
+    "agentPlaceholder": "选择该编队中的首个AI 成员",
     "timezone": "时区",
     "policySection": "运行策略与会话",
     "documents": "需求文档",
@@ -148,9 +148,9 @@
   },
   "validation": {
     "nameRequired": "任务名必填",
-    "instructionRequired": "请描述希望数字员工周期完成的工作",
+    "instructionRequired": "请描述希望AI 成员周期完成的工作",
     "squadRequired": "请选择编队",
-    "agentRequired": "请选择首个数字员工",
+    "agentRequired": "请选择首个AI 成员",
     "cron": "Cron 须是合法六段表达式",
     "runDate": "选单次执行日期",
     "runTime": "选单次执行时间",
@@ -168,7 +168,7 @@
   "detail": {
     "invalidId": "任务 ID 不对",
     "loadFailed": "任务不存在或没读到",
-    "initialAgent": "初始数字员工",
+    "initialAgent": "初始AI 成员",
     "schedule": "调度",
     "sessionOverlap": "会话 / 并发",
     "health": "30 天健康度",
