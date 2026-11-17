@@ -101,5 +101,10 @@
   "tabs": {
     "mcp": "MCP tokens"
   },
-  "save": "Save"
+  "save": "Save",
+  "terms": {
+    "capabilityHint": "Capability aggregate = total tools/capabilities exposed through this MCP token.",
+    "openToolHint": "Open tools = platform tools exposed to MCP clients.",
+    "prefixHint": "Only the first characters are shown for identification; the full URL appears once at creation and cannot be recovered."
+  }
 }

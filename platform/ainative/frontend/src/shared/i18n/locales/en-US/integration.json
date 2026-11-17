@@ -71,7 +71,7 @@
   "editBinding": "Edit binding",
   "newBinding": "New binding",
   "cancel": "Cancel",
-  "save": "Save",
+  "save": "Save binding",
   "linkedAgent": "Linked Agent",
   "requiredAgent": "Select a linked Agent",
   "agentPlaceholder": "Pick an AI member",
@@ -294,5 +294,9 @@
   },
   "page": {
     "description": "Connect ZenTao / TAPD to pull requirements and defects, configure chat channels, and write results back"
+  },
+  "terms": {
+    "pollHint": "The platform polls the external system every N seconds and imports new items; 60s is recommended.",
+    "loadProductHint": "After the connection test passes, fetch the list of products/projects you can bind."
   }
 }

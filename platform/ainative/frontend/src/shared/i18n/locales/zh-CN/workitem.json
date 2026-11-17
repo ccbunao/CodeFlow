@@ -1378,5 +1378,10 @@
   },
   "workitem": {
     "metrics": "概览"
+  },
+  "terms": {
+    "aiClarifyHint": "开工前 AI 数字员工会先反问一轮:边界、技术栈、验收标准、回滚策略。结论落成 spec.md 与 plan.md 随交付注入。",
+    "dispatchHint": "派发 = 把需求交给 AI 数字员工执行的一次任务;执行记录按 Dispatch 编号留痕,失败可重试。",
+    "myDecisionHint": "待我决策:当前轮到你处理(澄清待回答/验收待确认);待你处理则是按负责人视角的同义口径。"
   }
 }

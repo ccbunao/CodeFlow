@@ -34,8 +34,9 @@ public class DashboardController {
         long ws = RequestContext.workspaceId();
         Map<String, Object> kpi = new LinkedHashMap<>();
         kpi.put("todayCreatedWorkitems", countHelper("SELECT COUNT(*) FROM wi_ticket WHERE workspace_id=? AND DATE(gmt_create)=CURDATE()"));
-        kpi.put("runningWorkitems", countHelper("SELECT COUNT(*) FROM wi_ticket t LEFT JOIN wi_flow_state s ON s.id=t.state_id"
-                + " WHERE t.workspace_id=? AND t.deleted_at IS NULL AND (s.category IS NULL OR s.category NOT IN ('DONE','CANCELED'))"));
+        // 进行中 = 已挂状态机、未完成/未取消且非新建(NEW 归入 init,避免与未开始双计)
+        kpi.put("runningWorkitems", countHelper("SELECT COUNT(*) FROM wi_ticket t JOIN wi_flow_state s ON s.id=t.state_id"
+                + " WHERE t.workspace_id=? AND t.deleted_at IS NULL AND s.category NOT IN ('NEW','DONE','CANCELED')"));
         kpi.put("todayCompletedTasks", countHelper("SELECT COUNT(*) FROM rt_run WHERE workspace_id=? AND status='SUCCEEDED' AND DATE(ended_at)=CURDATE()"));
         kpi.put("weekCompletedTasks", countHelper("SELECT COUNT(*) FROM rt_run WHERE workspace_id=? AND status='SUCCEEDED' AND YEARWEEK(ended_at,1)=YEARWEEK(CURDATE(),1)"));
         Map<String, Object> byLifecycle = new LinkedHashMap<>();

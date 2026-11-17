@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { Alert, Button, Form, Input, InputNumber, message, Select, Table } from 'antd';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalizedValidation } from '@/shared/i18n/useLocalizedValidation';
@@ -95,7 +96,7 @@ export function ZentaoIntegrationPanel() {
             rules={[{ required: true, message: t('zentao.passwordRequired') }]}>
             <Input.Password autoComplete="new-password" />
           </Form.Item>
-          <Form.Item label={t('zentao.pollInterval')} name="pollIntervalSeconds" initialValue={60}>
+          <Form.Item label={<span>{t('zentao.pollInterval')}<InfoTip text={t('terms.pollHint')} /></span>} name="pollIntervalSeconds" initialValue={60}>
             <InputNumber min={15} max={3600} style={{ width: '100%' }} />
           </Form.Item>
           <div style={{ display: 'flex', gap: 8 }}>

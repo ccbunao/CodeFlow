@@ -127,7 +127,7 @@
     "aria": "本期结论",
     "line": "近 {{days}} 天新增 {{created}} 个需求，已交付 {{delivered}} 个，{{inProgress}} 个还在推进中。",
     "chipCreated": "新增",
-    "chipDelivered": "已交付",
+    "chipDelivered": "已完成",
     "chipPending": "待你处理",
     "chipFailed": "失败调度",
     "gotoIntake": "去需求录入"
@@ -140,5 +140,11 @@
   },
   "common": {
     "emptyDash": "暂无数据"
+  },
+  "terms": {
+    "inProgressHint": "进行中 = 已进入交付流程且未完成/未取消的需求;新建但尚未派发的不计在内。",
+    "tokenHint": "当前统计范围内所有交付消耗的 Token 总量(输入+输出),来自运行节点上报。",
+    "pendingHint": "当前需要你做出判断的需求:澄清等待回答、验收等待确认等。点击卡片可跳转处理。",
+    "deliveredVsDone": "本页「已完成」指需求状态进入完成类;顶部结论条的「已交付」是同一口径的口头表述。"
   }
 }

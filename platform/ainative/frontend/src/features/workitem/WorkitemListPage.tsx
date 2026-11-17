@@ -1,5 +1,6 @@
 import { workitemDeleteReason } from './runtimeLabels';
 import { PageHeading } from '@/shared/ui/PageHeading';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { Toolbar } from '@/shared/ui/PageShell';
 import { Trans, useTranslation } from 'react-i18next';
 import { i18n } from '@/shared/i18n';
@@ -405,7 +406,7 @@ export function WorkitemListPage() {
     <Card
       className="cf-content-card cf-workitems"
       title={<PageHeading title={t('list.title')} description={<>
-        <div>{t('list.description')}</div>
+        <div>{t('list.description')}<InfoTip text={t('terms.aiClarifyHint')} /></div>
         <div className="cf-page-heading-count">
           <Trans t={t} i18nKey="list.total" count={total} values={{ total }} components={{ number: <span className="cf-heading-number" /> }} />
         </div>

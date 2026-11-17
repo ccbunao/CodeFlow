@@ -48,5 +48,10 @@
     "FAILED": "失败",
     "TIMEOUT": "超时",
     "CANCELED": "已取消"
+  },
+  "terms": {
+    "attemptHint": "同一次派发的第几轮执行;失败重试后 attempt 递增,前几轮记录保留可查。",
+    "artifactHint": "交付产物(deliverables):过程文档、脚本、报告等文件,可直接下载或预览。",
+    "agentColHint": "执行该派发的 AI 数字员工(名称可能折行,悬停可看全称)。"
   }
 }

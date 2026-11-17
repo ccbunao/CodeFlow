@@ -151,7 +151,7 @@ export function NotificationCenterPage() {
     <Card
       className="cf-content-card" title={<PageHeading title={t('title')} />}
       extra={
-        <Button aria-label={t('markAllRead')} onClick={handleMarkAllRead} loading={markAllRead.isPending}>
+        <Button aria-label={t('markAllRead')} onClick={handleMarkAllRead} loading={markAllRead.isPending} disabled={total === 0}>
           {t('markAllRead')}
         </Button>
       }
@@ -199,6 +199,7 @@ export function NotificationCenterPage() {
               </List.Item>
             )}
           />
+          {total > 0 && (
           <div
             style={{
               display: 'flex',
@@ -218,6 +219,7 @@ export function NotificationCenterPage() {
               onChange={(next) => setPage(next)}
             />
           </div>
+          )}
         </>
       )}
 

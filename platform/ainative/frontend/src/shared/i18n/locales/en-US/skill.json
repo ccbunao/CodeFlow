@@ -234,5 +234,10 @@
   },
   "page": {
     "description": "Reusable capability packages that AI digital workers can load"
+  },
+  "terms": {
+    "runtimeHookHint": "Runtime hooks = lifecycle scripts on runtime nodes (startup/teardown), e.g. environment preparation.",
+    "mcpHint": "MCP services = external tool sets integrated via the MCP protocol; workers can call them during tasks.",
+    "capabilityHint": "Capability pack = prompts + scripts + tools; mount it onto a worker to use in its tasks."
   }
 }

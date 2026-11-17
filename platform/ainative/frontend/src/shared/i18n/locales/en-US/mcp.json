@@ -90,5 +90,10 @@
   },
   "toolCount_one": "{{count}} tool",
   "expandRow": "Expand row",
-  "collapseRow": "Collapse row"
+  "collapseRow": "Collapse row",
+  "terms": {
+    "openToolHint": "Open tools = platform tools exposed to MCP clients.",
+    "capabilityHint": "Capability aggregate = total tools/capabilities exposed through this MCP token.",
+    "prefixHint": "Only the first characters are shown for identification; the full URL appears once at creation and cannot be recovered."
+  }
 }

@@ -50,5 +50,10 @@
     "FAILED": "Failed",
     "TIMEOUT": "Timed out",
     "CANCELED": "Canceled"
+  },
+  "terms": {
+    "attemptHint": "Which attempt of the same dispatch; retries increment it and earlier attempts stay inspectable.",
+    "artifactHint": "Delivery artifacts (deliverables): docs, scripts and reports, downloadable or previewable.",
+    "agentColHint": "The AI worker that ran this dispatch (name may wrap; hover for the full name)."
   }
 }

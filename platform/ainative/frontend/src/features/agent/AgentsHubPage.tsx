@@ -5,6 +5,7 @@ import { AgentReviewPage } from './AgentReviewPage';
 import { useAgentPendingReviewCount } from './hooks';
 import { SquadListPage } from '@/features/squad/SquadListPage';
 import { HubPageShell, resolveHubTab, useHubTabParam } from '@/shared/ui/HubPage';
+import { InfoTip } from '@/shared/ui/InfoTip';
 
 export const AGENTS_HUB_TAB_KEYS = ['list', 'reviews', 'squads'] as const;
 export const DEFAULT_AGENTS_HUB_TAB = 'list';
@@ -36,8 +37,8 @@ export function AgentsHubPage() {
         { key: 'list', label: t('display.agents'), children: <AgentListPage /> },
         // 审核面板只在激活时挂载：Tabs 默认保留已挂载面板，重新激活不会重新挂载，
         // 也就不会触发 usePendingReviews 的 refetchOnMount:'always'，切回 Tab 时会看到旧列表。
-        { key: 'reviews', label: reviewsLabel, children: activeTab === 'reviews' ? <AgentReviewPage /> : null },
-        { key: 'squads', label: t('display.squads'), children: <SquadListPage /> },
+        { key: 'reviews', label: <span>{reviewsLabel}<InfoTip text={t('terms.reviewHint')} /></span>, children: activeTab === 'reviews' ? <AgentReviewPage /> : null },
+        { key: 'squads', label: <span>{t('display.squads')}<InfoTip text={t('terms.squadHint')} /></span>, children: <SquadListPage /> },
       ]}
     />
   );

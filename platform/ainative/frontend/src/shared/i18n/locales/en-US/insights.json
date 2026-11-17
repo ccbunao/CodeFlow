@@ -260,7 +260,7 @@
     "title": "Cost",
     "totalTokens": "Total Tokens",
     "totalCredits": "Total Credits",
-    "perTask": "Per task",
+    "perTask": "Per-task tokens",
     "dailyAverage": "Daily average",
     "breakdownTitle": "By AI member",
     "conversationPortion": "Includes {{amount}} tokens from conversations",
@@ -505,5 +505,10 @@
     "workitemLabel": "#{{id}} {{title}}",
     "id": "#{{id}}",
     "noValue": "—"
+  },
+  "terms": {
+    "tokenPerTaskHint": "Total tokens ÷ completed deliveries; estimates the average cost per delivery.",
+    "scopeHint": "Shares are based on all requirements (including in-progress); completions are attributed by delivery time. The two cards use different scopes by design.",
+    "tokenHint": "Total tokens (input + output) consumed by deliveries in the selected range, reported by runtime nodes."
   }
 }

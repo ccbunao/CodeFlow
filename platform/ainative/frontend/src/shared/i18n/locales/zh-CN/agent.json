@@ -215,7 +215,7 @@
     "agents": "数字员工",
     "reviews": "版本审核",
     "squads": "编队",
-    "standardAgents": "标准AI 成员",
+    "standardAgents": "标准 AI 成员",
     "platformAgents": "系统平台智能体",
     "filterStatus": "按状态筛选",
     "create": "新建",
@@ -342,5 +342,10 @@
   "groupLabel": "{{name}}（{{squads}}）",
   "list": {
     "description": "定义 AI 数字员工的职责、技能与交付流程交接方式"
+  },
+  "terms": {
+    "squadHint": "编队 = 多个 AI 数字员工 + 角色构成 + 交付流程的交付阵型;启动交付时选择的是编队。",
+    "reviewHint": "数字员工配置的变更走版本化,提交后在「版本审核」页审批,通过才生效。",
+    "offlineHint": "运行器离线 = 该编队绑定的运行节点进程未连接;派发会排队等待上线自动唤醒。"
   }
 }

@@ -633,7 +633,7 @@ it('retains an unread snapshot and pending delete while completion feedback uses
 });
 it('resolves zero count during pending loading and singular totals in English', async () => {
   let release!: () => void; server.use(http.get('/api/notifications', async () => { await new Promise<void>(resolve => { release = resolve; }); return ok({ items: [notification({ status: 'READ' })], total: 1 }); }));
-  renderPage(); await waitFor(() => expect(release).toBeDefined()); await switchLanguage('en-US'); expect(screen.getByText('0 notifications')).toBeInTheDocument();
+  renderPage(); await waitFor(() => expect(release).toBeDefined()); await switchLanguage('en-US'); expect(screen.queryByText('0 notifications')).not.toBeInTheDocument(); // 空态隐藏分页/计数行
   await act(async () => { release(); }); expect(await screen.findByText('1 notification')).toBeInTheDocument();
 });
 

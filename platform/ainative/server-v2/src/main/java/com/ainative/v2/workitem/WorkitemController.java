@@ -54,11 +54,12 @@ public class WorkitemController {
             @RequestParam(required = false) Long assigneeRef,
             @RequestParam(required = false) Integer priority,
             @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String statusCategory,
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.list(new WorkitemDao.ListQuery(keyword, workType, statusNodeId,
-                assigneeType, assigneeRef, priority, tag, false, pageNum, pageSize)));
+                assigneeType, assigneeRef, priority, tag, false, pageNum, pageSize, statusCategory)));
     }
 
     @GetMapping("/tag-options")

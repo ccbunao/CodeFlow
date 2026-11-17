@@ -2,6 +2,7 @@ import { i18n } from '@/shared/i18n';
 import { formatNumber } from '@/shared/i18n/format';
 import { useTranslation } from 'react-i18next';
 import { PageHeading } from '@/shared/ui/PageHeading';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { usePageSizePreference } from '@/shared/lib/usePageSizePreference';
 import { Alert, Button, Card, Col, Empty, List, message, Modal, Popconfirm, Row, Spin, Tabs, Typography } from 'antd';
 import { BookOutlined, CommentOutlined, DeleteOutlined, EditOutlined, FolderOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
@@ -69,10 +70,10 @@ export function MemoryListPage() {
     <PageHeading title={t('page.title')} description={t('page.description')}
       extra={<Button type="primary" icon={<PlusOutlined aria-hidden="true" />} disabled={!writable} onClick={() => runWithAccess('READ_WRITE', t('page.create'), () => setEditing(null))}>{t('page.create')}</Button>} />
     {directory?.migration && <Alert style={{ marginBottom: 16 }} showIcon type={directory.migration.pending ? 'warning' : 'info'}
-      message={t('migration.summary', { migrated: t('migration.migrated', { count: directory.migration.migrated }), pending: t('migration.pending', { count: directory.migration.pending }) })}
+      message={<span>{t('migration.summary', { migrated: t('migration.migrated', { count: directory.migration.migrated }), pending: t('migration.pending', { count: directory.migration.pending }) })}<InfoTip text={t('terms.migrationHint')} /></span>}
       description={directory.migration.pending ? t('migration.hint') : undefined} />}
     <Row gutter={16}>
-      <Col xs={24} md={7} lg={6}><Card title={t('page.owners')} styles={{ body: { padding: 8 } }}>
+      <Col xs={24} md={7} lg={6}><Card title={<span>{t('page.owners')}<InfoTip text={t('terms.ownerHint')} /></span>} styles={{ body: { padding: 8 } }}>
         <List dataSource={owners} locale={{ emptyText: t('page.noOwners') }} renderItem={item => <List.Item onClick={() => setSelected(ownerKey(item))}
           style={{ cursor: 'pointer', background: owner && ownerKey(item) === ownerKey(owner) ? 'rgba(var(--cf-accent-rgb), .10)' : undefined, padding: 12 }}>
           <List.Item.Meta title={memoryOwnerName(item)} description={t('owner.description', { squads: item.squadNames?.length ? item.squadNames.join(t('owner.squadSeparator')) + ' · ' : '', scope: Object.prototype.hasOwnProperty.call(scopeLabel, item.scope) ? scopeLabel[item.scope] : item.scope, ownerRef: item.ownerRef ? ' · #' + item.ownerRef : '' })} />

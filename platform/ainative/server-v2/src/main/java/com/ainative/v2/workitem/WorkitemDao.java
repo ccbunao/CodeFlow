@@ -136,7 +136,13 @@ public class WorkitemDao {
     }
 
     public record ListQuery(String keyword, String type, Long stateId, String assigneeType, Long assigneeId,
-                            Integer priority, String tag, boolean recycled, int pageNum, int pageSize) {}
+                            Integer priority, String tag, boolean recycled, int pageNum, int pageSize,
+                            String statusCategory) {
+        public ListQuery(String keyword, String type, Long stateId, String assigneeType, Long assigneeId,
+                         Integer priority, String tag, boolean recycled, int pageNum, int pageSize) {
+            this(keyword, type, stateId, assigneeType, assigneeId, priority, tag, recycled, pageNum, pageSize, null);
+        }
+    }
 
     public List<Ticket> list(ListQuery q) {
         List<Object> args = new ArrayList<>();
@@ -167,6 +173,10 @@ public class WorkitemDao {
         if (q.tag() != null && !q.tag().isBlank()) {
             where.append(" AND EXISTS (SELECT 1 FROM wi_ticket_tag g WHERE g.ticket_id=t.id AND g.tag=?)");
             args.add(q.tag().trim());
+        }
+        if (q.statusCategory() != null && !q.statusCategory().isBlank()) {
+            where.append(" AND EXISTS (SELECT 1 FROM wi_flow_state st WHERE st.id=t.state_id AND st.category=?)");
+            args.add(q.statusCategory().trim());
         }
         int pageSize = Math.max(1, Math.min(q.pageSize(), 100));
         int offset = (Math.max(1, q.pageNum()) - 1) * pageSize;
@@ -205,6 +215,10 @@ public class WorkitemDao {
         if (q.tag() != null && !q.tag().isBlank()) {
             where.append(" AND EXISTS (SELECT 1 FROM wi_ticket_tag g WHERE g.ticket_id=t.id AND g.tag=?)");
             args.add(q.tag().trim());
+        }
+        if (q.statusCategory() != null && !q.statusCategory().isBlank()) {
+            where.append(" AND EXISTS (SELECT 1 FROM wi_flow_state st WHERE st.id=t.state_id AND st.category=?)");
+            args.add(q.statusCategory().trim());
         }
         Long n = jdbc.queryForObject("SELECT COUNT(*) FROM wi_ticket t" + where, Long.class, args.toArray());
         return n == null ? 0 : n;

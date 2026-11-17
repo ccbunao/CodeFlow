@@ -1,6 +1,7 @@
 import { useLocalizedValidation } from '@/shared/i18n/useLocalizedValidation';
 import { formatDateTime } from '@/shared/i18n/format';
 import { useTranslation } from 'react-i18next';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { i18n } from '@/shared/i18n';
 import { useState } from 'react';
 import { Card, Button, Space, Modal, Form, Input, message, Popconfirm } from 'antd';
@@ -148,7 +149,7 @@ export function RepoListPage() {
       className="cf-content-card"
       extra={
         <Space>
-          <Button icon={<ShareAltOutlined aria-hidden="true" />} onClick={switchToMapTab}>{t('actions.map')}</Button>
+          <Button icon={<ShareAltOutlined aria-hidden="true" />} onClick={switchToMapTab}>{t('actions.map')}<InfoTip text={t('terms.graphHint')} /></Button>
           <Button
             type="primary"
             icon={<PlusOutlined aria-hidden="true" />}

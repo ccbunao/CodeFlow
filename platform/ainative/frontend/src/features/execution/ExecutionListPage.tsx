@@ -57,7 +57,7 @@ export function ExecutionListPage() {
           </EllipsisText>
         )
         : '—' },
-    { title: t('list.agent'), dataIndex: 'agentName', width: 120, render: (v: string | null) => v ?? '—' },
+    { title: t('list.agent'), dataIndex: 'agentName', width: 150, ellipsis: { showTitle: true }, render: (v: string | null) => v ?? '—' },
     { title: t('list.executor'), dataIndex: 'executorName', width: 120, render: (v: string | null) => v ?? '—' },
     { title: t('list.status'), dataIndex: 'status', width: 130,
       render: (s: string) => <Tag color={statusMeta(s).color}>{statusMeta(s).label}</Tag> },

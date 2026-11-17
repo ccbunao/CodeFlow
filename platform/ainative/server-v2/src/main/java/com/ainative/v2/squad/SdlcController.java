@@ -69,7 +69,12 @@ public class SdlcController {
         m.put("isDefault", 0);
         m.put("entryStepId", null);
         Object steps = m.get("steps");
-        m.put("stepCount", steps instanceof List<?> l ? l.size() : 0);
+        if (steps instanceof List<?> l) {
+            m.put("stepCount", l.size());
+        } else if (!m.containsKey("stepCount")) {
+            // service 层未带 steps 列表时保留其已算好的 stepCount,不得清零
+            m.put("stepCount", 0);
+        }
         m.put("squadIds", null);
         m.put("squadNames", null);
         return m;

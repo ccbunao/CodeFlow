@@ -124,7 +124,7 @@ describe('AgentListPage', () => {
 
     await userEvent.hover(screen.getByRole('button', { name: '配置说明' }));
     expect(await screen.findByText('点击任一AI 成员卡片进入详情与配置。')).toBeInTheDocument();
-    expect(screen.getByText('可维护 SOUL.md、AGENT.md、记忆、仓库权限、流水线 模板及技能/能力配置。')).toBeInTheDocument();
+    expect(screen.getByText('可维护 SOUL.md、AGENT.md、记忆、仓库权限、交付流程 模版及技能/能力配置。')).toBeInTheDocument();
 
     const detailLink = screen.getByRole('link', { name: '看 Alpha 详情' });
     expect(detailLink).toHaveAttribute('href', '/agents/1');
@@ -178,7 +178,7 @@ describe('AgentListPage', () => {
       }),
     );
     renderPage();
-    expect(await screen.findByRole('radio', { name: '标准AI 成员' })).toBeInTheDocument();
+    expect(await screen.findByRole('radio', { name: '标准 AI 成员' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '系统平台智能体' })).toBeInTheDocument();
     await screen.findByText('暂无数字员工');
     expect(kinds).toContain('STANDARD');

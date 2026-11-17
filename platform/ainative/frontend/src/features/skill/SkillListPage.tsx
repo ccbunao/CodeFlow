@@ -11,6 +11,7 @@ import {
 import { formatNumber } from '@/shared/i18n/format';
 import { i18n } from '@/shared/i18n';
 import { PageHeading } from '@/shared/ui/PageHeading';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { Toolbar } from '@/shared/ui/PageShell';
 import { usePageSizePreference } from '@/shared/lib/usePageSizePreference';
 import { useEffect, useMemo, useState } from 'react';
@@ -423,7 +424,7 @@ export function SkillListPage() {
   return (
     <>
       <Card
-        className="cf-content-card" title={<PageHeading title={t('title')} description={t('page.description')} />}
+        className="cf-content-card" title={<PageHeading title={t('title')} description={<span>{t('page.description')}<InfoTip text={t('terms.capabilityHint')} /></span>} />}
         extra={<Button type="primary" icon={<PlusOutlined aria-hidden="true" />} onClick={skillForm.openCreate}>{t('create')}</Button>}
       >
         <Toolbar filters={<>

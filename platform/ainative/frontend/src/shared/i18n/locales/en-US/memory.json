@@ -171,5 +171,9 @@
     "lines_one": "{{value}} line",
     "lines_other": "{{value}} lines",
     "measurements": "{{lines}} · {{bytes}}"
+  },
+  "terms": {
+    "ownerHint": "Owner = what the memories belong to (a specific AI worker or the space). Select an owner on the left to view its memories.",
+    "migrationHint": "Legacy migration = importing memories from older versions; 「imported / queued」 are migrated and pending counts."
   }
 }

@@ -66,7 +66,7 @@ it('switches cached hub and independent cards, keeps authored names literal and 
   expect(screen.getByRole('heading', { name: 'AI digital workers' })).toBeInTheDocument();
   expect(screen.getByRole('tab', { name: 'Digital workers' })).toBeInTheDocument();
   expect(screen.getByRole('tab', { name: /Version reviews/ })).toBeInTheDocument();
-  expect(screen.getByRole('tab', { name: 'Squads' })).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: /Squads/ })).toBeInTheDocument();
   expect(screen.getByText('QA engineer')).toBeInTheDocument();
   expect(screen.getByText('1/2 online')).toBeInTheDocument();
   expect(screen.getByText(formatDateTime(agent.gmtCreate, { dateStyle: 'medium' }))).toBeInTheDocument();

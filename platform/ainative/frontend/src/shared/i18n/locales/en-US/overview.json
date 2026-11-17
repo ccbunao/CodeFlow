@@ -143,5 +143,11 @@
   },
   "common": {
     "emptyDash": "No data"
+  },
+  "terms": {
+    "inProgressHint": "In progress = requirements that entered the delivery workflow and are not done/canceled; newly created but not dispatched are excluded.",
+    "tokenHint": "Total tokens (input + output) consumed by deliveries in the selected range, reported by runtime nodes.",
+    "pendingHint": "Items currently awaiting your decision: clarification answers, acceptance confirmation, etc. Click the card to handle them.",
+    "deliveredVsDone": "「Done」 on this page means the requirement reached a done-category status; 「delivered」 in the summary bar is the same measure."
   }
 }

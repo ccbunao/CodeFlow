@@ -1,5 +1,6 @@
 import { useLocalizedValidation } from '@/shared/i18n/useLocalizedValidation';
 import { useTranslation } from 'react-i18next';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { i18n } from '@/shared/i18n';
 import { formatDateTime } from '@/shared/i18n/format';
 import { useMemo, useState } from 'react';
@@ -415,8 +416,8 @@ export function McpTokenSettingsPanel() {
               <>
                 <Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
                   <Col xs={24} md={8}><Card size="small"><Statistic title={t('activeTokens')} value={activeTokens} prefix={<KeyOutlined aria-hidden="true" />} /></Card></Col>
-                  <Col xs={24} md={8}><Card size="small"><Statistic title={t('openTools')} value={tools.length} prefix={<ApiOutlined aria-hidden="true" />} /></Card></Col>
-                  <Col xs={24} md={8}><Card size="small"><Statistic title={t('capabilityGroups')} value={toolGroups.length} prefix={<AppstoreOutlined aria-hidden="true" />} /></Card></Col>
+                  <Col xs={24} md={8}><Card size="small"><Statistic title={<span>{t('openTools')}<InfoTip text={t('terms.openToolHint')} /></span>} value={tools.length} prefix={<ApiOutlined aria-hidden="true" />} /></Card></Col>
+                  <Col xs={24} md={8}><Card size="small"><Statistic title={<span>{t('capabilityGroups')}<InfoTip text={t('terms.capabilityHint')} /></span>} value={toolGroups.length} prefix={<AppstoreOutlined aria-hidden="true" />} /></Card></Col>
                 </Row>
                 <Card size="small" title={t('endpoint')} style={{ marginBottom: 12 }}>
                   <Space.Compact style={{ width: '100%' }}>

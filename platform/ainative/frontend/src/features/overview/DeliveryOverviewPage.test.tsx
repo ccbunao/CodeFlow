@@ -203,9 +203,11 @@ describe('DeliveryOverviewPage', () => {
     renderPage();
 
     await screen.findByText(`数据截至 ${formatDateTime(TODAY, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}`);
-    expect(screen.getByTestId('overview-lead-time')).toHaveTextContent('—');
-    expect(screen.getByTestId('overview-first-pass')).toHaveTextContent('—');
-    expect(screen.getByTestId('overview-rework')).toHaveTextContent('—');
+    // 无数据占位为装饰性细杠(span,aria-hidden),不再有文本「—」
+    expect(screen.getByTestId('overview-lead-time').querySelector('.overview-nodash, [aria-hidden]')).not.toBeNull();
+    expect(screen.getByTestId('overview-lead-time')).not.toHaveTextContent('4.');
+    expect(screen.getByTestId('overview-first-pass').querySelector('[aria-hidden]')).not.toBeNull();
+    expect(screen.getByTestId('overview-rework').querySelector('[aria-hidden]')).not.toBeNull();
     expect(screen.getByTestId('overview-failed')).toHaveTextContent('0');
     const card = screen.getByTestId('overview-failures');
     expect(within(card).getByText('区间内没有失败或超时调度')).toBeInTheDocument();

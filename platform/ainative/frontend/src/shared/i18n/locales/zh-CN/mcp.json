@@ -89,5 +89,10 @@
     }
   },
   "expandRow": "展开行",
-  "collapseRow": "收起行"
+  "collapseRow": "收起行",
+  "terms": {
+    "openToolHint": "开放工具 = 平台开放给 MCP 客户端的工具数量。",
+    "capabilityHint": "能力聚合 = 当前 MCP 令牌对外暴露的工具与能力总数,供外部 CLI 调用。",
+    "prefixHint": "仅展示令牌前几位用于辨认;完整 URL 只在创建时展示一次,不可反查。"
+  }
 }

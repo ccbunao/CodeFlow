@@ -344,5 +344,10 @@
   "groupLabel": "{{name}} ({{squads}})",
   "list": {
     "description": "Define each AI digital worker's responsibilities, skills and hand-offs"
+  },
+  "terms": {
+    "squadHint": "A squad = AI workers + role composition + a delivery workflow. You pick a squad when starting delivery.",
+    "reviewHint": "Worker configuration changes are versioned; approve them on the Version review tab before they take effect.",
+    "offlineHint": "Runtime offline = the runtime node process bound to this squad is not connected; dispatches queue until it is back."
   }
 }

@@ -90,7 +90,7 @@ describe('RealtimeCostPanel', () => {
     expect(card).toHaveClass('cost-card');
     const items = Array.from(card!.querySelectorAll('.cost-kpi'));
     expect(items).toHaveLength(3);
-    expect(items.map((item) => item.querySelector('.cost-kpi-label')?.textContent)).toEqual(['总 Token', '均/任务', '日均']);
+    expect(items.map((item) => item.querySelector('.cost-kpi-label')?.textContent)).toEqual(['总 Token', '每任务 Token', '日均']);
     expect(items.map((item) => item.querySelector('.cost-kpi-value')?.textContent)).toEqual(['82.6K', '82.6K', '2.8K']);
   });
 
@@ -100,7 +100,7 @@ describe('RealtimeCostPanel', () => {
     const card = costRegion().getByText('总 Token').closest('.cost-card');
     expect(card).not.toBeNull();
     expect(within(card as HTMLElement).queryByText('成本')).not.toBeInTheDocument();
-    expect(card!.querySelector('svg')).toBeNull();
+    expect(card!.querySelector('svg:not([data-icon=\'question-circle\'])')).toBeNull();
     expect(costRegion().getByRole('heading', { name: '成本分析' })).toBeInTheDocument();
   });
 
@@ -350,7 +350,7 @@ it('switches the independently cached cost panel without token detail while pres
   expect(screen.getByText('Failed to load Token cost')).toBeInTheDocument();
   expect(screen.getByText('<b>原始错误</b>')).toBeInTheDocument();
   expect(screen.getByText('Total Tokens')).toBeInTheDocument();
-  expect(screen.getByText('Per task')).toBeInTheDocument();
+  expect(screen.getByText('Per-task tokens')).toBeInTheDocument();
   expect(screen.getByText('Daily average')).toBeInTheDocument();
   expect(screen.queryByText('Total tokens:')).not.toBeInTheDocument();
   expect(screen.getByRole('radio', { name: 'Last 7 days' })).toBeChecked();

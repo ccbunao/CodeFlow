@@ -262,5 +262,9 @@
   "groupChatNewIdentityTokenHint": "换了应用就必须填新应用的 Verification Token",
   "groupChatIdentityChangeTitle": "即将更换群聊机器人应用身份",
   "groupChatIdentityChangeImpact": "保存后会影响这个渠道下所有共享群绑定,旧应用还没发出的回复会中断;先把新机器人拉进目标群。应用凭据到底能不能用,以保存后的实际连接状态为准。",
-  "platformNamePlaceholder": "CodeFlow"
+  "platformNamePlaceholder": "CodeFlow",
+  "terms": {
+    "deployDomainHint": "部署域名 = 平台对外访问地址;影响 MCP 地址、分享链接与回调地址的生成。",
+    "runtimeCmdHint": "运行器启动命令 = 在你的机器上拉起运行节点的命令;运行节点执行 AI 数字员工的任务。"
+  }
 }

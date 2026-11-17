@@ -279,5 +279,9 @@
     "scheduled": "Scheduled",
     "manual": "Manual",
     "misfire": "Misfire"
+  },
+  "terms": {
+    "watchHint": "Needs attention = schedules whose last run failed or that stopped firing as planned.",
+    "successRateHint": "Last 30 days: successful runs / total runs; shows 0/0 when nothing has run."
   }
 }

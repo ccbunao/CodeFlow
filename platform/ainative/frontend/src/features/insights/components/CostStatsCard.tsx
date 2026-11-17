@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import { formatTokenCount } from '@/shared/lib/tokenFormat';
 import FlashValue from '../realtime/FlashValue';
 
@@ -16,9 +17,9 @@ export interface CostStatsValues {
 export function CostStatsCard({ values }: { values: CostStatsValues }) {
   const { t } = useTranslation('insights');
   const kpis = [
-    { label: t('cost.totalTokens'), value: formatTokenCount(values.tokens ?? 0) },
-    { label: t('cost.perTask'), value: formatTokenCount(Math.round((values.tokens ?? 0) / Math.max(1, values.tasks ?? 1))) },
-    { label: t('cost.dailyAverage'), value: formatTokenCount(Math.round((values.tokens ?? 0) / Math.max(1, values.range ?? 1))) },
+    { label: t('cost.totalTokens'), tip: t('terms.tokenHint'), value: formatTokenCount(values.tokens ?? 0) },
+    { label: t('cost.perTask'), tip: t('terms.tokenPerTaskHint'), value: formatTokenCount(Math.round((values.tokens ?? 0) / Math.max(1, values.tasks ?? 1))) },
+    { label: t('cost.dailyAverage'), tip: undefined, value: formatTokenCount(Math.round((values.tokens ?? 0) / Math.max(1, values.range ?? 1))) },
   ];
 
   return (
@@ -27,7 +28,7 @@ export function CostStatsCard({ values }: { values: CostStatsValues }) {
         {kpis.map(kpi => (
           <div key={kpi.label} className="cost-kpi">
             <span className="cost-kpi-value"><FlashValue value={kpi.value} /></span>
-            <span className="cost-kpi-label">{kpi.label}</span>
+            <span className="cost-kpi-label">{kpi.label}{kpi.tip ? <InfoTip text={kpi.tip} /> : null}</span>
           </div>
         ))}
       </div>

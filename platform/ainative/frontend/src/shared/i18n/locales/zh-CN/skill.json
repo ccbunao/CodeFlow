@@ -225,5 +225,10 @@
   },
   "page": {
     "description": "可复用的能力包，挂载给 AI 数字员工使用"
+  },
+  "terms": {
+    "runtimeHookHint": "Runtime Hook = 运行节点生命周期钩子(启动/收尾时执行的脚本),用于环境准备等。",
+    "mcpHint": "MCP 服务 = 通过 MCP 协议接入的外部工具集;数字员工执行时可调用。",
+    "capabilityHint": "能力包 = 提示词、脚本与工具的集合;挂载到数字员工后即可在该员工的任务中使用。"
   }
 }

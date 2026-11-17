@@ -69,8 +69,8 @@ function ScheduledTasksPanel() {
       <StatTile label={t('list.statTotal')} value={formatNumber(data?.total ?? tasks.length)} hint={t('list.summaryScope')} />
       <StatTile label={t('list.statRunning')} tone="accent" value={summary.running == null ? '—' : formatNumber(summary.running)} />
       <StatTile label={t('list.statToday')} value={summary.today == null ? '—' : formatNumber(summary.today)} />
-      <StatTile label={t('list.statRate')} value={`${formatNumber(successRate)}%`} hint={`${summary.success30d == null ? '—' : formatNumber(summary.success30d)}/${summary.completed30d == null ? '—' : formatNumber(summary.completed30d)}`} />
-      <StatTile label={t('list.statAttention')} tone={summary.attention ? 'warn' : 'default'} value={summary.attention == null ? '—' : formatNumber(summary.attention)} />
+      <StatTile label={t('list.statRate')} value={`${formatNumber(successRate)}%`} hint={`${summary.success30d == null ? '—' : formatNumber(summary.success30d)}/${summary.completed30d == null ? '—' : formatNumber(summary.completed30d)}`} tip={t('terms.successRateHint')} />
+      <StatTile label={t('list.statAttention')} tone={summary.attention ? 'warn' : 'default'} value={summary.attention == null ? '—' : formatNumber(summary.attention)} tip={t('terms.watchHint')} />
     </div>
     <Toolbar filters={<>
       <Segmented aria-label={t('list.scopeAria')} options={[{ value: 'ALL', label: t('scope.all') }, { value: 'CREATED', label: t('scope.created'), disabled: currentUserId == null }]} value={scope} onChange={(value) => { setScope(value); setOffset(0); }} />

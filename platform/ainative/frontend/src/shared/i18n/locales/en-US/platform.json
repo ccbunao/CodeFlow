@@ -262,5 +262,9 @@
   "groupChatNewIdentityTokenHint": "After switching apps, fill in the new app's Verification Token",
   "groupChatIdentityChangeTitle": "The group-chat bot application identity will change",
   "groupChatIdentityChangeImpact": "Saving affects every shared-group binding on this channel, and replies the old app has not sent yet stop; add the new bot to the target groups first. Whether the app credentials really work shows up in the connection status after saving.",
-  "platformNamePlaceholder": "CodeFlow"
+  "platformNamePlaceholder": "CodeFlow",
+  "terms": {
+    "deployDomainHint": "Deployment domain = the public address of the platform; it shapes MCP URLs, share links and callbacks.",
+    "runtimeCmdHint": "Runtime startup command = the command that starts a runtime node on your machine; nodes run AI worker tasks."
+  }
 }

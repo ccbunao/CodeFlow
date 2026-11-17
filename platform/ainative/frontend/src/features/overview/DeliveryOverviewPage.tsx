@@ -12,6 +12,7 @@ import { EllipsisText } from '@/shared/ui/EllipsisText';
 import { formatDateTime, formatNumber } from '@/shared/i18n/format';
 import { getPriorityMeta } from '@/features/workitem/constants';
 import { Sparkline } from '@/features/insights/components/Sparkline';
+import type { ReactNode } from 'react';
 import { useCreatedWorkitems, useDeliveryOverview, usePendingWorkitems } from './hooks';
 import type { CreatedWorkitem, DeliveryOverviewFailureReason, PendingWorkitem } from './types';
 import './DeliveryOverviewPage.css';
@@ -49,6 +50,13 @@ function reasonKey(value: string): (typeof REASON_KEYS)[keyof typeof REASON_KEYS
 function percent(value: number) {
   return `${value > 0 ? '+' : ''}${formatNumber(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
 }
+
+/** 无数据占位:细而浅的横杠,避免与趋势线混淆(视觉审核反馈)。 */
+/** 渲染为细浅横杠 */
+function NoDataDash() {
+  return <span aria-hidden className="overview-nodash" style={{ display: 'inline-block', width: 22, height: 2, background: 'var(--cf-muted, #8a94a4)', opacity: 0.55, borderRadius: 1, verticalAlign: 'middle' }} />;
+}
+const NO_DATA_DASH: ReactNode = <NoDataDash />;
 
 /** 率值展示（不带环比符号），null 由调用方处理为「—」。 */
 function rate(value: number) {
@@ -296,7 +304,7 @@ export function DeliveryOverviewPage() {
                     <Button type="text" size="small" aria-label={t('leadTime.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
                   </Tooltip>
                 </Space>}
-                value={data ? (data.leadTimeDays != null ? t('leadTime.value', { value: formatNumber(data.leadTimeDays, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) }) : '—') : '—'}
+                value={data ? (data.leadTimeDays != null ? t('leadTime.value', { value: formatNumber(data.leadTimeDays, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) }) : NO_DATA_DASH) : '—'}
                 hint={data && <>
                   <div>{data.leadTimeChangePercent != null ? t('delivered.change', { value: percent(data.leadTimeChangePercent) }) : t('leadTime.noBase')}</div>
                   <div>{t('leadTime.caption')}</div>
@@ -310,7 +318,7 @@ export function DeliveryOverviewPage() {
                     <Button type="text" size="small" aria-label={t('firstPass.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
                   </Tooltip>
                 </Space>}
-                value={data ? (data.firstPassRate != null ? rate(data.firstPassRate) : '—') : '—'}
+                value={data ? (data.firstPassRate != null ? rate(data.firstPassRate) : NO_DATA_DASH) : '—'}
                 hint={<div className="overview-stat-detail">{data?.firstPassRate == null && data ? t('firstPass.noData') : t('firstPass.caption')}</div>}
               />
             </div>
@@ -327,7 +335,7 @@ export function DeliveryOverviewPage() {
                     <Button type="text" size="small" aria-label={t('rework.methodAria')} icon={<InfoCircleOutlined aria-hidden="true" />} style={{ color: 'var(--cf-muted)' }} />
                   </Tooltip>
                 </Space>}
-                value={data ? (data.reworkRate != null ? rate(data.reworkRate) : '—') : '—'}
+                value={data ? (data.reworkRate != null ? rate(data.reworkRate) : NO_DATA_DASH) : '—'}
                 hint={<div className="overview-stat-detail">{data?.reworkRate == null && data ? t('rework.noData') : t('rework.caption')}</div>}
               />
             </div>

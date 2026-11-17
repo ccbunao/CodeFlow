@@ -142,5 +142,10 @@
   },
   "list": {
     "description": "Repositories linked to this project and how they depend on each other"
+  },
+  "terms": {
+    "graphHint": "Dependency graph visualizes how repositories depend on and call each other; it appears once relations are defined.",
+    "credentialHint": "Credentials authenticate repository access (tokens/passwords); stored encrypted, write-only.",
+    "branchHint": "Branch authorization limits which branches workers may read or commit to."
   }
 }

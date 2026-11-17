@@ -250,7 +250,7 @@
     "title": "成本",
     "totalTokens": "总 Token",
     "totalCredits": "总 Token 消耗",
-    "perTask": "均/任务",
+    "perTask": "每任务 Token",
     "dailyAverage": "日均",
     "breakdownTitle": "按AI 成员",
     "conversationPortion": "含对话 {{amount}} tokens",
@@ -488,5 +488,10 @@
     "workitemLabel": "#{{id}} {{title}}",
     "id": "#{{id}}",
     "noValue": "—"
+  },
+  "terms": {
+    "tokenPerTaskHint": "总 Token ÷ 已完成交付数;用于估算单次交付的平均成本。",
+    "scopeHint": "占比基于全部需求(含进行中);完成数按交付时间归属到周/月,两卡口径不同属正常。",
+    "tokenHint": "当前统计范围内所有交付消耗的 Token 总量(输入+输出),来自运行节点上报。"
   }
 }

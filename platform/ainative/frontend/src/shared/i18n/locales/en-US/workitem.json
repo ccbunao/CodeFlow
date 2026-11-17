@@ -1397,5 +1397,10 @@
   },
   "workitem": {
     "metrics": "Overview"
+  },
+  "terms": {
+    "aiClarifyHint": "Before work starts, the AI worker asks back about scope, tech stack, acceptance criteria and rollback. Answers become spec.md and plan.md injected into delivery.",
+    "dispatchHint": "A dispatch = one task handed to an AI worker. Executions are traced by Dispatch ID; failures can be retried.",
+    "myDecisionHint": "「Awaiting my decision」 = it is your turn to respond (clarification/acceptance); 「awaiting you」 is the same idea from the assignee view."
   }
 }

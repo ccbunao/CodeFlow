@@ -243,7 +243,7 @@
     "product": "禅道产品",
     "productRequired": "请选择产品",
     "productPlaceholder": "选择要接入的禅道产品",
-    "saveBinding": "存绑定",
+    "saveBinding": "保存绑定",
     "bindingsTitle": "已建绑定",
     "productColumn": "产品",
     "urlColumn": "禅道地址",
@@ -288,5 +288,9 @@
   },
   "page": {
     "description": "接入禅道 / TAPD 拉取需求与缺陷，配置消息渠道；结果回写源头"
+  },
+  "terms": {
+    "pollHint": "平台每隔 N 秒轮询一次外部系统,新单据自动入库;60 秒是推荐值。",
+    "loadProductHint": "测试连接通过后,从外部系统拉取可接入的产品/项目列表供选择。"
   }
 }

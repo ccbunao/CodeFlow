@@ -164,5 +164,9 @@
     "bytes_other": "{{value}} 字节",
     "lines_other": "{{value}} 行",
     "measurements": "{{lines}} · {{bytes}}"
+  },
+  "terms": {
+    "ownerHint": "归属 = 记忆挂载的对象(某个 AI 数字员工或空间);左侧选中归属后,右侧显示其记忆。",
+    "migrationHint": "存量搬迁 = 旧版本记忆数据迁入当前库;「已入库/排队」分别是迁移完成与等待中的条数。"
   }
 }

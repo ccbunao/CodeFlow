@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { InfoTip } from '@/shared/ui/InfoTip';
 import './PageShell.css';
 import './LayoutGrid.css';
 import './ModalTheme.css';
@@ -67,15 +68,16 @@ export function PageShell({
 }
 
 /** 统计小块:一格一个关键数字,用于页面顶部的速览区。 */
-export function StatTile({ label, value, hint, tone }: {
+export function StatTile({ label, value, hint, tone, tip }: {
   label: ReactNode;
   value: ReactNode;
   hint?: ReactNode;
   tone?: 'default' | 'accent' | 'warn';
+  tip?: ReactNode;
 }) {
   return (
     <div className={`cfds-stat${tone && tone !== 'default' ? ` cfds-stat--${tone}` : ''}`}>
-      <div className="cfds-stat__label">{label}</div>
+      <div className="cfds-stat__label">{label}{tip != null && <InfoTip text={tip} />}</div>
       <div className="cfds-stat__value">{value}</div>
       {hint ? <div className="cfds-stat__hint">{hint}</div> : null}
     </div>
