@@ -27,9 +27,6 @@ class Config:
     heartbeat_sec: int = 30
     max_concurrent: int = 1
     log_level: str = "info"
-    powercontext_base_url: str = ""
-    powercontext_timeout_sec: float = 8.0
-    powercontext_remember: bool = True
     extra_env: dict = field(default_factory=dict)
 
     @property
@@ -81,10 +78,6 @@ def load_config(env: dict | None = None) -> Config:
         heartbeat_sec=int(env.get("RUNTIME_HEARTBEAT_SEC", "30")),
         max_concurrent=int(env.get("RUNTIME_MAX_CONCURRENT", "1")),
         log_level=env.get("RUNTIME_LOG_LEVEL", "info"),
-        # PowerContext 记忆外挂(可选):不配 POWERCONTEXT_BASE_URL 即关闭
-        powercontext_base_url=(env.get("POWERCONTEXT_BASE_URL") or "").strip().rstrip("/"),
-        powercontext_timeout_sec=float(env.get("POWERCONTEXT_TIMEOUT_SEC") or "8.0"),
-        powercontext_remember=env.get("POWERCONTEXT_REMEMBER", "1") in ("1", "true", "yes"),
         extra_env={k: v for k, v in env.items()
                   if k.startswith(("ANTHROPIC_", "AINATIVE_AGENT_"))
                   or k in ("AINATIVE_ACCESS_TOKEN", "AINATIVE_REFRESH_TOKEN",

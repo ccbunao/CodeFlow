@@ -130,46 +130,6 @@ class Daemon:
                 log.warn("heartbeat.send_failed", error=str(e))
             self._stop.wait(self.cfg.heartbeat_sec)
 
-    # ---- PowerContext 记忆外挂(可选) ----------------------------------------
-    def _powercontext_recall(self, dispatch: dict, capsule) -> str | None:
-        """拉取跨工单记忆;任何失败都返回 None(绝不阻断)。"""
-        if not self.cfg.powercontext_base_url:
-            return None
-        try:
-            from .powercontext_client import (PowerContextSettings, resolve_scope,
-                                              prepare_context)
-            st = PowerContextSettings(base_url=self.cfg.powercontext_base_url,
-                                      timeout_sec=self.cfg.powercontext_timeout_sec)
-            wid = int(dispatch.get("workspaceId") or self.cfg.executor_id)
-            scope_id = resolve_scope(wid, settings=st)
-            if not scope_id:
-                return None
-            title = str(capsule.workitem_md)[:400]
-            return prepare_context(scope_id, title, settings=st)
-        except Exception as e:  # noqa: BLE001
-            log.warn("powercontext.recall_failed", error=repr(e))
-            return None
-
-    def _powercontext_remember(self, dispatch: dict, capsule, summary: str) -> None:
-        """把本次交付的关键决策写回 PowerContext;任何失败静默。"""
-        if not self.cfg.powercontext_base_url or not self.cfg.powercontext_remember:
-            return
-        try:
-            from .powercontext_client import (PowerContextSettings, resolve_scope, remember)
-            st = PowerContextSettings(base_url=self.cfg.powercontext_base_url,
-                                      timeout_sec=self.cfg.powercontext_timeout_sec)
-            wid = int(dispatch.get("workspaceId") or self.cfg.executor_id)
-            scope_id = resolve_scope(wid, settings=st)
-            if not scope_id:
-                return
-            title = (capsule.workitem_md or "").strip().splitlines()[0][:120]
-            text = f"[{title}] {summary[:600]}"
-            remember(wid, "decision", text, settings=st,
-                     idempotency_key=f"codeflow-dispatch-{dispatch.get('dispatchId')}")
-            log.info("powercontext.remembered", dispatch_id=dispatch.get("dispatchId"))
-        except Exception as e:  # noqa: BLE001
-            log.warn("powercontext.remember_error", error=repr(e))
-
     # ---- dispatch worker ----------------------------------------------------
     def _emit_progress(self, dispatch_id: int, run_event):
         frame = frames.task_progress(
@@ -195,16 +155,6 @@ class Daemon:
 
             workdir = pkg_dir / "workspace"
             self.provider.prepare(capsule, workdir)
-            # PowerContext 记忆外挂(可选):拉取跨工单记忆,落成注入文件供 prompt 装配
-            pc_note = self._powercontext_recall(dispatch, capsule)
-            if pc_note:
-                try:
-                    (workdir / "deliverables").mkdir(parents=True, exist_ok=True)
-                    (workdir / "deliverables" / "powercontext-context.md").write_text(
-                        pc_note, encoding="utf-8")
-                    log.info("powercontext.recalled", dispatch_id=did, bytes=len(pc_note))
-                except OSError as e:
-                    log.warn("powercontext.write_failed", dispatch_id=did, error=repr(e))
             session_ref = self.store.get_session(did)
             artifacts, failures, summaries = [], [], []
             steps_done = 0
@@ -246,11 +196,6 @@ class Daemon:
                     log.info("chain.agent_comment_posted", dispatch_id=did, workitem=dispatch["workitemId"])
                 except Exception as e:  # noqa: BLE001 - 备注失败不影响交付结果
                     log.warn("chain.agent_comment_failed", dispatch_id=did, error=repr(e))
-                # PowerContext 记忆写回:本次交付的关键决策/约束(可选,失败不影响)
-                try:
-                    self._powercontext_remember(dispatch, capsule, summary)
-                except Exception as e:  # noqa: BLE001
-                    log.warn("powercontext.remember_failed", dispatch_id=did, error=repr(e))
                 self._chain_next_role(dispatch, capsule, did)
         except PackageError as e:
             log.error("dispatch.package_failed", dispatch_id=did, error=str(e))
