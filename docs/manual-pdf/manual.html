@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
-<title>CodeFlow 用户操作手册 v2.0.2</title>
+<title>CodeFlow 用户操作手册 v2.0.3</title>
 <meta name="author" content="CodeFlow">
 <meta name="description" content="CodeFlow 从需求到交付一站式 AI 平台用户操作手册:需求交付、禅道闭环、TAPD 集成、运行节点、MCP、主题工作台、平台配置">
 <style>
@@ -9,7 +9,7 @@
   size: A4; margin: 22mm 18mm 20mm 18mm;
   @bottom-center { content: counter(page) " / " counter(pages); font-family:"Hiragino Sans GB",sans-serif; font-size:9pt; color:#6b645c; }
   @bottom-left { content: "CodeFlow · 用户操作手册"; font-family:"Hiragino Sans GB",sans-serif; font-size:8.5pt; color:#a39a8e; }
-  @bottom-right { content: "v2.0.2 · 2026-11-17"; font-family:"Hiragino Sans GB",sans-serif; font-size:8.5pt; color:#a39a8e; }
+  @bottom-right { content: "v2.0.3 · 2026-11-17"; font-family:"Hiragino Sans GB",sans-serif; font-size:8.5pt; color:#a39a8e; }
 }
 @page cover { margin:0; @bottom-center{content:none} @bottom-left{content:none} @bottom-right{content:none} }
 @page part { margin:0; @bottom-center{content:none} @bottom-left{content:none} @bottom-right{content:none} }
@@ -96,7 +96,7 @@ figcaption strong { color:var(--accent-deep); }
   <div class="sub-en">从需求到交付 · 一站式 AI 交付平台</div>
   <div class="summary">需求写了三页、开发理解偏十里;排期等一周、写码只要一天;进度全靠问、交付全靠催;换个人接手、上下文全丢——这些交付痛点,就是 CodeFlow 的用武之地。你把需求说清楚(AI 澄清会帮你问对问题),分析、编码、测试、验证、评审、部署由 AI 数字员工按交付流程自动完成,全程留痕、产物归档,人只做澄清与验收。下面按你的实际动线讲清每一步。</div>
   <div class="meta">
-    <div><div class="k">版本</div><div class="v">v2.0.2</div></div>
+    <div><div class="k">版本</div><div class="v">v2.0.3</div></div>
     <div><div class="k">日期</div><div class="v">2026-11-17</div></div>
     <div><div class="k">适用</div><div class="v">CodeFlow 2.0.0</div></div>
   </div>
@@ -180,7 +180,7 @@ figcaption strong { color:var(--accent-deep); }
 <p>必填:<strong>类型</strong>(需求/缺陷)、<strong>标题</strong>、<strong>需求/设计文档</strong>(Markdown);可选:优先级。 创建后进入需求详情页。需求支持上传需求/设计上下文附件(任意类型,单个 5MB、总共 20MB,可粘贴截图)。</p>
 <h3 class="sub" id="5.3需求详情">5.3 需求详情</h3>
 <figure><img src="../images/manual/08-workitem-detail.png" alt="图 2-4"><figcaption>图 2-4　需求详情(新建需求)</figcaption></figure>
-<table><thead><tr><th>元素</th><th>说明</th></tr></thead><tbody><tr><td>元信息条</td><td>类型 / 状态 / 优先级 / 创建者 / 处理人 / 标签,状态与标签可直接改</td></tr><tr><td>启动交付</td><td>指派 AI 数字员工并按交付流程启动自动交付(见 5.4)</td></tr><tr><td>指派真人 / 流转状态</td><td>人工接棒与状态流转</td></tr><tr><td>需求/设计文档</td><td>Markdown 编辑;外部来源需求只读并显示「由外部需求维护」</td></tr><tr><td>评论 &amp; 时间线</td><td>全部沟通与系统事件(创建/流转/派发/交接/回写)按时间倒序</td></tr><tr><td>右栏</td><td>AI 需求澄清(第 6 章)、任务信息、交付进度跟踪(第 7 章)</td></tr><tr><td>分享</td><td>生成只读分享链接(产物页无需登录可看)</td></tr></tbody></table>
+<table><thead><tr><th>元素</th><th>说明</th></tr></thead><tbody><tr><td>元信息条</td><td>类型 / 状态 / 优先级 / 创建者 / 处理人 / 标签,状态与标签可直接改</td></tr><tr><td>启动交付</td><td>指派 AI 数字员工并按交付流程启动自动交付(见 5.4)</td></tr><tr><td>交给同事处理 / 流转到其他状态</td><td>需求交接给同事人工接棒;状态按模板流转</td></tr><tr><td>需求/设计文档</td><td>Markdown 编辑;外部来源需求只读并显示「由外部需求维护」</td></tr><tr><td>评论 &amp; 时间线</td><td>全部沟通与系统事件(创建/流转/派发/交接/回写)按时间倒序</td></tr><tr><td>右栏</td><td>AI 需求澄清(第 6 章)、任务信息、交付进度跟踪(第 7 章)</td></tr><tr><td>分享</td><td>生成只读分享链接(产物页无需登录可看)</td></tr></tbody></table>
 <p>外部来源需求(禅道拉取)在标题下显示来源标识,删除受保护——<strong>必须回禅道处理,平台侧不可删</strong>。</p>
 <p>下面是一条真实交付中的需求:左侧是需求正文,右栏是实时交付进度(本图与图 2-5 取自同一次真实交付,四步全部通过):</p>
 <figure><img src="../images/manual/40-workitem-detail-real.png" alt="图 2-5"><figcaption>图 2-5　真实交付中的需求(右栏实时交付面板 + 交付产物)</figcaption></figure>
@@ -281,7 +281,7 @@ figcaption strong { color:var(--accent-deep); }
 <div class="warn">⚠ 令牌即身份,不要提交进代码库;泄露后在列表里吊销即可,平台侧立即失效。</div>
 <h2 id="16.项目设置与平台配置"><span class="h2-kicker">CHAPTER 16</span><span class="h2-text">项目设置与平台配置</span></h2>
 <p><strong>本章摘要</strong>:成员、状态机、环境变量、配置备份在「项目设置」组;品牌与平台级选项在右上「平台配置」;⌘, 打开设置弹窗。</p>
-<table><thead><tr><th>页面</th><th>入口</th><th>说明</th></tr></thead><tbody><tr><td>品牌配置</td><td>右上「平台配置」</td><td>平台名称 / Logo / 主题色 / 消息渠道,变更即时生效于全平台</td></tr><tr><td>成员管理</td><td>左树 → 成员管理</td><td>邀请/移除/只读者/Owner 移交 + 角色管理 + 待审批访问申请</td></tr><tr><td>状态流转</td><td>左树 → 状态流转</td><td>需求状态机模板,定义状态列与合法流转</td></tr><tr><td>环境变量</td><td>左树 → 环境变量</td><td>项目级环境变量,AI 数字员工执行时可读取(值默认脱敏展示)</td></tr><tr><td>配置备份</td><td>左树 → 配置备份</td><td>一键备份当前项目的交付流程、AI 数字员工及版本、编队、仓库关系、AI 记忆、AI 技能等,可恢复</td></tr><tr><td>设置弹窗</td><td>左树底部「设置 ⌘,」</td><td>左类目 + 右内容:AI 配置 / 通知配置 / 系统配置</td></tr></tbody></table>
+<table><thead><tr><th>页面</th><th>入口</th><th>说明</th></tr></thead><tbody><tr><td>品牌配置</td><td>右上「平台配置」</td><td>平台名称 / Logo / 主题色 / 消息渠道,变更即时生效于全平台</td></tr><tr><td>成员管理</td><td>左树 → 成员管理</td><td>邀请/移除/只读者/Owner 移交 + 角色管理 + 待审批访问申请</td></tr><tr><td>状态流转</td><td>左树 → 状态流转</td><td>需求状态机模板,按需求类型分域(需求 REQ / 任务 TASK / 缺陷 BUG 各自独立模板),定义状态与合法流转</td></tr><tr><td>环境变量</td><td>左树 → 环境变量</td><td>项目级环境变量,AI 数字员工执行时可读取(值默认脱敏展示)</td></tr><tr><td>配置备份</td><td>左树 → 配置备份</td><td>一键备份当前项目的交付流程、AI 数字员工及版本、编队、仓库关系、AI 记忆、AI 技能等,可恢复</td></tr><tr><td>设置弹窗</td><td>左树底部「设置 ⌘,」</td><td>左类目 + 右内容:AI 配置 / 通知配置 / 系统配置</td></tr></tbody></table>
 <figure><img src="../images/manual/19-branding.png" alt="图 2-28"><figcaption>图 2-28　平台配置(品牌 / 消息渠道)</figcaption></figure>
 <figure><img src="../images/manual/24-env-vars.png" alt="图 2-29"><figcaption>图 2-29　项目环境变量</figcaption></figure>
 <figure><img src="../images/manual/55-members-roles.png" alt="图 2-30"><figcaption>图 2-30　成员管理(成员 / 角色 / 申请)</figcaption></figure>
@@ -340,6 +340,6 @@ figcaption strong { color:var(--accent-deep); }
 <table><thead><tr><th>变量</th><th>说明</th></tr></thead><tbody><tr><td><code>POWERCONTEXT_BASE_URL</code></td><td>PowerContext Server 地址(如 <code>http://127.0.0.1:8077</code>);不配 = 关闭</td></tr><tr><td><code>POWERCONTEXT_TIMEOUT_SEC</code></td><td>HTTP 超时,默认 8s</td></tr><tr><td><code>POWERCONTEXT_REMEMBER</code></td><td>是否写回(默认 1)</td></tr></tbody></table>
 <p><strong>工作方式</strong>:CodeFlow 项目 ID ↔ PowerContext Scope 一次性绑定(<code>bind_workspace</code>)后,每次派发:①<code>/v1/context/prepare</code> 有界召回 → 写入交付目录 <code>powercontext-context.md</code> 随 prompt 注入(内容自带「资料非指令」信任边界声明);②交付成功后摘要写回 Memory(幂等键=dispatch ID)。<strong>所有失败静默降级,绝不阻断交付</strong>。</p>
 <h2 id="24.pdf版本与修订记录"><span class="h2-kicker">CHAPTER 24</span><span class="h2-text">PDF 版本与修订记录</span></h2>
-<p>本手册随库提供排版后的 PDF 版本:<a href="manual-pdf/CodeFlow-用户操作手册-v2.0.2.pdf">docs/manual-pdf/CodeFlow-用户操作手册-v2.0.2.pdf</a>(A4 · 页码/页脚 · 封面版式),HTML 源文件同目录(<code>manual.html</code>)。文案改动后用 <code>node scripts/docs-tools/manual-md2html.mjs</code> 重建 HTML、<code>node scripts/docs-tools/export-manual-pdf.mjs</code> 重新导出 PDF。</p>
-<table><thead><tr><th>版本</th><th>日期</th><th>说明</th></tr></thead><tbody><tr><td>v2.0.2</td><td>2026-11-17</td><td>全册按最新界面实机重写:导航五组(需求交付/分析/执行与自动化/配置资产/项目设置),术语全面对齐(需求录入/交付流程/运行节点/AI 数字员工/交付分析/操作审计/配置备份);改为「认识产品 / 使用指南 / 参考」三部分结构,开篇新增<strong>阅读指引</strong>(按角色给阅读路径);新增<strong>已知边界与使用须知</strong>与<strong>默认参数速查</strong>两章;第 1 章新增数据实证表;配图按「图 部分号-序号」重编,整册 44 张实机重拍;版式升级(签名色主题 + 部分扉页)。同批修复:交付分析成本面板 500(前端 agentId=all 规避)、运行节点 daemon 环境变量覆盖丢失(max_turns 配置不生效)。</td></tr><tr><td>v2.0.1</td><td>2026-11-15</td><td>新增「外部连接:TAPD」整章(绑定四步、需求/缺陷同步、交付结论回写与结果未知时的读回确认、部署主密钥前提);禅道闭环按平台 2.0.0 实际行为订正——<strong>平台只回写交付备注,不代改禅道单据状态</strong>;全篇章节编号重排;清理正文遗留的「v1.3」字样。</td></tr><tr><td>v2.0.0</td><td>2026-11-12</td><td>手册编号对齐平台版本(规则见 00 号文档 §9)。交付验证后增补:「交付 9 号线」地铁图、项目总览 KPI 八卡同构、消息渠道飞书选中态说明。同批交付验证:两个真实产品(性能测试平台/电商网站)经平台全流程开发并部署,记录见 delivery-verification 目录。</td></tr><tr><td>v1.2</td><td>2026-11-11</td><td>大改版全量更新:登录页 editorial 背景 + 生命周期价值链动效;全站墨色横幅设计系统;主题工作台;运行节点启动命令三模式;交付分析成本卡回归暖橙;新增截图 15 张。</td></tr><tr><td>v1.1</td><td>2026-11-04</td><td>全量功能补齐 + 封面重设计:新增交付总览、执行记录、自进化、成员与角色、项目备份、仓库关系图、AI 生成流程、版本审核流程说明。</td></tr><tr><td>v1.0</td><td>2026-11-04</td><td>首版。覆盖当前构建全部 28 个页面与关键交互;发布前完成 UI 全量回归 31/31 通过、0 缺陷。</td></tr></tbody></table>
+<p>本手册随库提供排版后的 PDF 版本:<a href="manual-pdf/CodeFlow-用户操作手册-v2.0.3.pdf">docs/manual-pdf/CodeFlow-用户操作手册-v2.0.3.pdf</a>(A4 · 页码/页脚 · 封面版式),HTML 源文件同目录(<code>manual.html</code>)。文案改动后用 <code>node scripts/docs-tools/manual-md2html.mjs</code> 重建 HTML、<code>node scripts/docs-tools/export-manual-pdf.mjs</code> 重新导出 PDF。</p>
+<table><thead><tr><th>版本</th><th>日期</th><th>说明</th></tr></thead><tbody><tr><td>v2.0.3</td><td>2026-11-17</td><td>客户演示前整改五项:<strong>状态模板按需求类型分域</strong>(需求/任务/缺陷三个页签各自独立模板,此前共用同一套);<strong>「同步外部系统」</strong>(原「立即对账」)补 POST 端点修 500;<strong>按钮文案整改</strong>(指派给真人→交给同事处理、流转状态→流转到其他状态、真人→同事);<strong>消耗口径统一为 Token</strong>(去除 Credits 旧称);<strong>空态友好化</strong>(模版间/建议面板等不再白板)。</td></tr><tr><td>v2.0.2</td><td>2026-11-17</td><td>全册按最新界面实机重写:导航五组(需求交付/分析/执行与自动化/配置资产/项目设置),术语全面对齐(需求录入/交付流程/运行节点/AI 数字员工/交付分析/操作审计/配置备份);改为「认识产品 / 使用指南 / 参考」三部分结构,开篇新增<strong>阅读指引</strong>(按角色给阅读路径);新增<strong>已知边界与使用须知</strong>与<strong>默认参数速查</strong>两章;第 1 章新增数据实证表;配图按「图 部分号-序号」重编,整册 44 张实机重拍;版式升级(签名色主题 + 部分扉页)。同批修复:交付分析成本面板 500(前端 agentId=all 规避)、运行节点 daemon 环境变量覆盖丢失(max_turns 配置不生效)。</td></tr><tr><td>v2.0.1</td><td>2026-11-15</td><td>新增「外部连接:TAPD」整章(绑定四步、需求/缺陷同步、交付结论回写与结果未知时的读回确认、部署主密钥前提);禅道闭环按平台 2.0.0 实际行为订正——<strong>平台只回写交付备注,不代改禅道单据状态</strong>;全篇章节编号重排;清理正文遗留的「v1.3」字样。</td></tr><tr><td>v2.0.0</td><td>2026-11-12</td><td>手册编号对齐平台版本(规则见 00 号文档 §9)。交付验证后增补:「交付 9 号线」地铁图、项目总览 KPI 八卡同构、消息渠道飞书选中态说明。同批交付验证:两个真实产品(性能测试平台/电商网站)经平台全流程开发并部署,记录见 delivery-verification 目录。</td></tr><tr><td>v1.2</td><td>2026-11-11</td><td>大改版全量更新:登录页 editorial 背景 + 生命周期价值链动效;全站墨色横幅设计系统;主题工作台;运行节点启动命令三模式;交付分析成本卡回归暖橙;新增截图 15 张。</td></tr><tr><td>v1.1</td><td>2026-11-04</td><td>全量功能补齐 + 封面重设计:新增交付总览、执行记录、自进化、成员与角色、项目备份、仓库关系图、AI 生成流程、版本审核流程说明。</td></tr><tr><td>v1.0</td><td>2026-11-04</td><td>首版。覆盖当前构建全部 28 个页面与关键交互;发布前完成 UI 全量回归 31/31 通过、0 缺陷。</td></tr></tbody></table>
 </body></html>
