@@ -62,7 +62,7 @@ describe('SquadMembers', () => {
         name: '蔡何',
         displayId: '10000',
         role: 'HUMAN',
-        roleName: '真人',
+        roleName: '同事',
         isAgent: false,
         online: false,
         status: '0',
@@ -79,12 +79,12 @@ describe('SquadMembers', () => {
     expect(screen.getByText(/Executor: 离线/)).toBeInTheDocument();
 
     await act(async () => {
-      await user.click(screen.getByRole('tab', { name: '真人参与者' }));
+      await user.click(screen.getByRole('tab', { name: '同事参与者' }));
     });
 
     expect(await screen.findByText('蔡何')).toBeInTheDocument();
-    expect(screen.getByText('工号: 10000 · 真人')).toBeInTheDocument();
-    expect(screen.getByLabelText('真人参与者头像')).toContainElement(screen.getByLabelText('user'));
+    expect(screen.getByText('工号: 10000 · 同事')).toBeInTheDocument();
+    expect(screen.getByLabelText('同事参与者头像')).toContainElement(screen.getByLabelText('user'));
     expect(screen.queryByText('Agent Dev')).not.toBeInTheDocument();
     expect(screen.queryByText('离线')).not.toBeInTheDocument();
     expect(screen.queryByText(/Executor:/)).not.toBeInTheDocument();
@@ -96,7 +96,7 @@ it('switches coded participant identities and runtime statuses, preserving unkno
   const participants: Participant[] = [
     { userId: 1, name: '<em>员工</em>', role: 'AGENT', roleName: '开发编队成员', isAgent: true, online: false, status: 'PENDING_REVIEW', executorStatus: 'OFFLINE' },
     { userId: 2, name: '<b>自定义</b>', targetType: 'CUSTOM', role: 'CUSTOM', roleName: '<em>我的身份</em>', isAgent: true, online: true, status: 'constructor', executorStatus: 'CUSTOM_STATE' },
-    { userId: 3, name: '用户原名', role: 'HUMAN', roleName: '真人', isAgent: false, online: false },
+    { userId: 3, name: '用户原名', role: 'HUMAN', roleName: '同事', isAgent: false, online: false },
   ];
   const { container } = render(<SquadMembers participants={participants} />);
   await act(async () => { await i18n.changeLanguage('en-US'); });
@@ -111,6 +111,6 @@ it('switches coded participant identities and runtime statuses, preserving unkno
     expect(screen.getByText('用户原名')).toBeInTheDocument();
     expect(container.querySelector('em')).toBeNull();
     await act(async () => { await i18n.changeLanguage('zh-CN'); });
-    expect(screen.getByText('工号: 3 · 真人')).toBeInTheDocument();
+    expect(screen.getByText('工号: 3 · 同事')).toBeInTheDocument();
   } finally { await act(async () => { await i18n.changeLanguage('zh-CN'); }); }
 });

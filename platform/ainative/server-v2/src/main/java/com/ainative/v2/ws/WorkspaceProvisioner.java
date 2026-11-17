@@ -60,7 +60,7 @@ public class WorkspaceProvisioner {
         String name = flow.isEmpty() ? "默认流程" : String.valueOf(flow.get(0).get("name"));
         String description = flow.isEmpty() || flow.get(0).get("description") == null
                 ? null : String.valueOf(flow.get(0).get("description"));
-        jdbc.update("INSERT INTO wi_flow (workspace_id, name, description, is_default, status) VALUES (?,?,?,1,'ACTIVE')",
+        jdbc.update("INSERT INTO wi_flow (workspace_id, name, description, work_type, is_default, status) VALUES (?,?,?,'REQ',1,'ACTIVE')",
                 workspaceId, name, description);
         Long newFlowId = jdbc.queryForObject("SELECT MAX(id) FROM wi_flow WHERE workspace_id=?", Long.class, workspaceId);
 
@@ -91,7 +91,7 @@ public class WorkspaceProvisioner {
 
     /** 没有可复制模板时建内置流程。 */
     private Long createBuiltinFlow(long workspaceId) {
-        jdbc.update("INSERT INTO wi_flow (workspace_id, name, description, is_default, status) VALUES (?,?,?,1,'ACTIVE')",
+        jdbc.update("INSERT INTO wi_flow (workspace_id, name, description, work_type, is_default, status) VALUES (?,?,?,'REQ',1,'ACTIVE')",
                 workspaceId, "默认流程", "内置状态机");
         Long flowId = jdbc.queryForObject("SELECT MAX(id) FROM wi_flow WHERE workspace_id=?", Long.class, workspaceId);
         long[] stateIds = new long[DEFAULT_STATES.length];

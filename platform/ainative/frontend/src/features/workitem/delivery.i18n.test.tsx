@@ -196,7 +196,7 @@ it('resolves category and known enum labels on demand while preserving unknown p
 });
 it('refreshes an already visible usage popover and keeps human-action badges concise', async () => {
   route(<><HumanInterventionBadge item={{ statusCategory: 'PENDING_DECISION', assigneeType: 'HUMAN', assigneeRef: 1, assigneeName: authored }} /><TokenUsageBadge usage={{ model: authored, credits: 1.5 }} /></>);
-  fireEvent.mouseEnter(screen.getByText('1.5 credits'));
+  fireEvent.mouseEnter(screen.getByText('1.5 Token'));
   await screen.findByText('模型:');
   await language('en-US');
   expect(screen.getByText('Model:')).toBeInTheDocument();

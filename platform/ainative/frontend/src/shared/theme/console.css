@@ -684,3 +684,50 @@ code {
   margin-bottom: 10px;
   display: inline-block;
 }
+
+/* ── 空态面板:没有内容时也要有结构(标题 + 说明 + 引导),不留白板 ── */
+.cf-gallery-empty {
+  margin: 16px 0;
+  padding: 40px 28px;
+  text-align: center;
+  border: 1px dashed var(--cf-border);
+  border-radius: var(--cf-radius-lg);
+  background: color-mix(in srgb, var(--cf-panel) 60%, transparent);
+}
+.cf-gallery-empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cf-text);
+  margin-bottom: 6px;
+}
+.cf-gallery-empty-desc {
+  font-size: 13px;
+  color: var(--cf-muted);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── 统一空态(EmptyState 三段式:标题 / 说明 / 引导) ── */
+.cf-empty-state {
+  padding: 36px 24px;
+  text-align: center;
+  border: 1px dashed var(--cf-border);
+  border-radius: var(--cf-radius-lg);
+  background: color-mix(in srgb, var(--cf-panel) 55%, transparent);
+}
+.cf-empty-state--compact { padding: 18px 14px; }
+.cf-empty-state__title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--cf-text);
+  margin-bottom: 5px;
+}
+.cf-empty-state__desc {
+  font-size: 13px;
+  color: var(--cf-muted);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cf-empty-state__action { margin-top: 14px; }

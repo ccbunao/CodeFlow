@@ -42,7 +42,7 @@ describe('WorkitemCreatePage', () => {
 
     expect(screen.queryByLabelText(/流水线流程/)).not.toBeInTheDocument();
     expect(screen.queryByText('定时交付（可选）')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('交付编队')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('编队')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('执行 Agent')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('定时执行时间')).not.toBeInTheDocument();
 

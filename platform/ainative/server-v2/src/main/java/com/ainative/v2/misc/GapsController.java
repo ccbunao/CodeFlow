@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,11 @@ public class GapsController {
     public record DocumentRequest(String title, String contentMd) {}
 
     private final JdbcTemplate jdbc;
+    private final com.ainative.v2.ex.ExPullService exPullService;
 
-    public GapsController(JdbcTemplate jdbc) {
+    public GapsController(JdbcTemplate jdbc, com.ainative.v2.ex.ExPullService exPullService) {
         this.jdbc = jdbc;
+        this.exPullService = exPullService;
     }
 
     private long ws() {
@@ -160,6 +163,32 @@ public class GapsController {
                         + " WHERE u.deleted_at IS NULL"
                         + " UNION ALL SELECT a.id, a.name, a.role_name, 'AGENT' FROM ag_agent a"
                         + " WHERE a.workspace_id=? AND a.deleted_at IS NULL ORDER BY kind, id", ws(), ws()));
+    }
+
+    /**
+     * 外部同步(前端「同步外部系统」按钮):把该需求所属的外部绑定重新拉一遍,
+     * 外部侧新增的条目会入库并建立链接。此前只有 GET(仅查链接),前端发 POST 直接 500。
+     */
+    @PostMapping("/api/workitems/{id}/external-sync")
+    public ApiResult<Map<String, Object>> syncExternal(@PathVariable long id) {
+        RequestContext.requireUserId();
+        List<Map<String, Object>> bindings = jdbc.queryForList(
+                "SELECT DISTINCT l.binding_id AS bindingId FROM ex_item_link l"
+                        + " WHERE l.ticket_id=? AND l.deleted_at IS NULL", id);
+        if (bindings.isEmpty()) {
+            throw new BizException("14005", "这条需求没有关联外部系统,无需同步");
+        }
+        Long bindingId = ((Number) bindings.get(0).get("bindingId")).longValue();
+        Map<String, Object> result = exPullService.pull(bindingId);
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("imported", result.get("imported") instanceof Number n ? n.intValue() : 0);
+        out.put("updated", result.get("updated") instanceof Number n ? n.intValue() : 0);
+        out.put("commentsImported", result.get("commentsImported") instanceof Number n ? n.intValue() : 0);
+        List<Long> ids = new ArrayList<>();
+        jdbc.queryForList("SELECT ticket_id FROM ex_item_link WHERE binding_id=? AND deleted_at IS NULL",
+                bindingId).forEach(r -> ids.add(((Number) r.get("ticket_id")).longValue()));
+        out.put("workitemIds", ids);
+        return ApiResult.ok(out);
     }
 
     @GetMapping("/api/workitems/{id}/external-sync")

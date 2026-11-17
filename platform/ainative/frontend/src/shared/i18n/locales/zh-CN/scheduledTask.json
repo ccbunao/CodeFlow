@@ -193,7 +193,7 @@
   "comment": {
     "label": "点评本次运行",
     "notFrozen": "不在本次运行的冻结快照里,@ 不生效",
-    "human": "真人",
+    "human": "同事",
     "offline": "(离线,稍后送达)",
     "placeholder": "点评本次运行,@ 选成员…",
     "send": "发送",

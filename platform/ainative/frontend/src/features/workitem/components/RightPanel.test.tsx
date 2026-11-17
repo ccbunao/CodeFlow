@@ -223,14 +223,14 @@ describe('RightPanel clarify fullscreen', () => {
     expect(screen.queryByTestId('resize-handle-vertical')).not.toBeInTheDocument();
 
     // 全屏后外层不再渲染独立头行，标题也不再显示：「返回/退出全屏」并入面板头行
-    expect(screen.queryByText('需求澄清')).not.toBeInTheDocument();
+    expect(screen.queryByText('澄清材料')).not.toBeInTheDocument();
     const exitFullscreenButton = screen.getByRole('button', { name: '退出全屏' });
     expect(exitFullscreenButton.parentElement).toBe(screen.getByTestId('clarification-panel-stub'));
     expect(exitFullscreenButton).toHaveTextContent('');
     await userEvent.click(exitFullscreenButton);
     expect(screen.getByTestId('clarify-resize-box')).toHaveStyle('position: relative');
     expect(screen.getByTestId('resize-handle-vertical')).toBeInTheDocument();
-    expect(screen.queryByText('需求澄清')).not.toBeInTheDocument();
+    expect(screen.queryByText('澄清材料')).not.toBeInTheDocument();
   });
 
   it('exits fullscreen with the Escape key', async () => {

@@ -243,7 +243,7 @@ describe('WorkitemDetailPage', () => {
     renderPage();
 
     expect(await screen.findByText('等人工介入:蔡何')).toBeInTheDocument();
-    expect(screen.getByText('当前需求已指派给真人，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
+    expect(screen.getByText('当前需求已指派给同事，请人工处理、补充决策，或重新指派给AI 成员继续交付。')).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: '批准继续' })).toBeInTheDocument();
   });
 
@@ -573,7 +573,7 @@ describe('WorkitemDetailPage', () => {
 
     await userEvent.click(await screen.findByRole('button', { name: '任务信息' }));
     await waitFor(() => expect(screen.getAllByText('成员').length).toBeGreaterThan(0));
-    await userEvent.click(screen.getByRole('tab', { name: '真人参与者' }));
+    await userEvent.click(screen.getByRole('tab', { name: '同事参与者' }));
     expect(await screen.findByText('张三')).toBeInTheDocument();
   });
 
@@ -1202,7 +1202,7 @@ describe('WorkitemDetailPage', () => {
 
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /流转状态/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /流转到其他状态/ }));
     await userEvent.click(await screen.findByRole('button', { name: '流转到验证中' }));
 
     expect(requestedBody).toEqual({ toNodeId: 2 });
@@ -1221,7 +1221,7 @@ describe('WorkitemDetailPage', () => {
 
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /流转状态/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /流转到其他状态/ }));
     await userEvent.click(await screen.findByRole('button', { name: '流转到验证中' }));
 
     expect(await screen.findByText('该流转不在模板推荐范围内')).toBeInTheDocument();
@@ -1242,7 +1242,7 @@ describe('WorkitemDetailPage', () => {
 
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: /立即对账/ }));
+    await userEvent.click(await screen.findByRole('button', { name: /同步外部系统/ }));
 
     expect(syncRequested).toBe(true);
     expect(await screen.findByText('同步完成:新增 0,更新 1,评论 2')).toBeInTheDocument();
@@ -1560,12 +1560,12 @@ describe('WorkitemDetailPage', () => {
     const user = userEvent.setup();
 
     await screen.findByRole('heading', { name: '跨境支付重构' });
-    await user.click(screen.getByRole('button', { name: /指派给真人/ }));
+    await user.click(screen.getByRole('button', { name: /交给同事/ }));
 
-    const select = await screen.findByLabelText('指派给');
+    const select = await screen.findByLabelText('交接给');
     await user.click(select);
     await user.click(await screen.findByTitle('张三'));
-    await user.click(screen.getByRole('button', { name: /^指\s*派$/ }));
+    await user.click(screen.getByRole('button', { name: /^确\s*认交接$/ }));
 
     await waitFor(() => expect(assignBody).toMatchObject({ assigneeType: 'HUMAN', assigneeRef: '200' }));
   });
@@ -2050,7 +2050,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (需求 53315 / 548
     await userEvent.click(await screen.findByRole('button', { name: /启动交付/ }));
 
     // 权限守卫仍在引导之前：只读用户拿到的是既有的拒绝提示，而不是澄清引导
-    expect(await screen.findByText('当前为只读权限，启动需求交付需要读写权限')).toBeInTheDocument();
+    expect(await screen.findByText('当前为只读权限，启动交付需要读写权限')).toBeInTheDocument();
     expect(screen.queryByText('建议先完成需求澄清')).toBeNull();
     expect(screen.queryByText(DELIVERY_MODAL_MARKER)).toBeNull();
   });

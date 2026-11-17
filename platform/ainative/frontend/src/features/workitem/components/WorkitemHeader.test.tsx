@@ -45,7 +45,7 @@ describe('WorkitemHeader', () => {
       },
     });
 
-    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('70.00 Credits');
+    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('70.00 Token');
   });
 
   it('hides the credits badge when the workitem has no usage', () => {

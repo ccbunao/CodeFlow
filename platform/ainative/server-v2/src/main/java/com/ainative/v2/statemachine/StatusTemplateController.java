@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
@@ -27,11 +28,17 @@ public class StatusTemplateController {
         this.jdbc = jdbc;
     }
 
+    /** 状态模板按需求类型分域(REQ/TASK/BUG):前端三个页签各看各的。 */
     @GetMapping
-    public ApiResult<List<Map<String, Object>>> list() {
+    public ApiResult<List<Map<String, Object>>> list(@RequestParam(required = false) String workType) {
         RequestContext.requireUserId();
+        if (workType == null || workType.isBlank()) {
+            return ApiResult.ok(jdbc.queryForList(
+                    "SELECT id, name, work_type AS workType, is_default AS isDefault, status FROM wi_flow WHERE workspace_id=" + ws() + " AND deleted_at IS NULL ORDER BY is_default DESC, id"));
+        }
         return ApiResult.ok(jdbc.queryForList(
-                "SELECT id, name, is_default AS isDefault, status FROM wi_flow WHERE workspace_id=" + ws() + " AND deleted_at IS NULL ORDER BY is_default DESC, id"));
+                "SELECT id, name, work_type AS workType, is_default AS isDefault, status FROM wi_flow WHERE workspace_id=" + ws()
+                        + " AND work_type=? AND deleted_at IS NULL ORDER BY is_default DESC, id", workType.trim().toUpperCase()));
     }
 
     @GetMapping("/{id}")

@@ -167,7 +167,7 @@ describe('RuntimeTraceDrawer usage display', () => {
 
     render(<RuntimeTraceDrawer node={node} processGraph={{ nodes: [], edges: [] }} onClose={() => {}} />);
     const drawer = await screen.findByTestId('runtime-trace-drawer');
-    await waitFor(() => expect(within(drawer).getAllByText(/12\.34 credits/).length).toBeGreaterThan(0));
+    await waitFor(() => expect(within(drawer).getAllByText(/12\.34 Token/).length).toBeGreaterThan(0));
     expect(within(drawer).queryByText(/tokens/)).not.toBeInTheDocument();
     expect(within(drawer).queryByText(/2,100/)).not.toBeInTheDocument();
   });
@@ -380,7 +380,7 @@ describe('dispatchFailureReason', () => {
 
 it('localizes the actual drawer close parent and hides the installed error glyph while keeping raw failure reason', async () => {
   server.use(http.get('/api/dispatches/99/runtime-trace', () => HttpResponse.json({ success: true, code: '0', data: { schemaVersion: 'ainative.runtime-trace.v2', source: 'LIVE', dispatchId: 99, changed: true, tokenUsage: usage, events: [{ eventType: 'step.failed', detail: { reason: 'raw <b>reason</b>' } }], sessions: [] } })));
-  render(<RuntimeTraceDrawer node={{ key: 'dispatch:99', dispatchId: 99, agentName: '真人', agentNameFallback: 'HUMAN', status: 'FAILED', error: 'raw <b>reason</b>' }} processGraph={{ nodes: [], edges: [] }} onClose={() => {}} />);
+  render(<RuntimeTraceDrawer node={{ key: 'dispatch:99', dispatchId: 99, agentName: '同事', agentNameFallback: 'HUMAN', status: 'FAILED', error: 'raw <b>reason</b>' }} processGraph={{ nodes: [], edges: [] }} onClose={() => {}} />);
   await screen.findByTestId('runtime-trace-drawer');
   expect(screen.getByRole('button', { name: '关闭' })).toBeInTheDocument();
   expect(screen.queryByRole('img', { name: 'close-circle' })).not.toBeInTheDocument();

@@ -110,7 +110,7 @@
   },
   "handlerType": {
     "AGENT": "AI 成员",
-    "HUMAN": "真人",
+    "HUMAN": "同事",
     "SYSTEM": "系统"
   },
   "provisionExecutors": "为成员配运行器",

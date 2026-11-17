@@ -29,7 +29,7 @@ function mockCandidates() {
           name: 'zhangsan',
           displayId: '10001',
           role: 'HUMAN',
-          roleName: '真人',
+          roleName: '同事',
           isAgent: false,
           online: false,
         },
@@ -54,7 +54,7 @@ describe('AssignHumanModal', () => {
     renderModal();
 
     const user = userEvent.setup();
-    const select = await screen.findByLabelText('指派给');
+    const select = await screen.findByLabelText('交接给');
     await user.click(select);
 
     expect(await screen.findByText(/zhangsan/)).toBeInTheDocument();
@@ -75,9 +75,9 @@ describe('AssignHumanModal', () => {
     renderModal(10000, onClose);
 
     const user = userEvent.setup();
-    await user.click(await screen.findByLabelText('指派给'));
+    await user.click(await screen.findByLabelText('交接给'));
     await user.click(await screen.findByText(/zhangsan/));
-    await user.click(screen.getByRole('button', { name: /指\s*派/ }));
+    await user.click(screen.getByRole('button', { name: /确\s*认/ }));
 
     await waitFor(() => expect(onClose).toHaveBeenCalled());
     expect(assignBody).toMatchObject({ assigneeType: 'HUMAN', assigneeRef: 10001 });
@@ -89,8 +89,8 @@ describe('AssignHumanModal', () => {
     renderModal();
 
     const user = userEvent.setup();
-    await user.click(await screen.findByRole('button', { name: /指\s*派/ }));
+    await user.click(await screen.findByRole('button', { name: /确\s*认交接/ }));
 
-    expect(await screen.findByText('请选择指派对象')).toBeInTheDocument();
+    expect(await screen.findByText('请选择要交接的同事')).toBeInTheDocument();
   });
 });

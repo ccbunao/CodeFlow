@@ -203,7 +203,9 @@
     "confirmTitle": "基于「{{name}}」创建编队",
     "traceError": "{{message}}（TraceId: {{traceId}}）",
     "sdlcSteps": "流水线 步骤 · {{name}}",
-    "applyCommand": "应用编队模版"
+    "applyCommand": "应用编队模版",
+    "emptyTitle": "模版间还没有可套用的方案",
+    "emptyDesc": "预置模版由平台提供;你也可以在「流程模版」页签自己新建一个流程,或到「AI 数字员工 → 编队」里手动搭阵容。"
   },
   "workflow": {
     "tab": "编队工作流",
@@ -261,7 +263,7 @@
     "panorama": "全景",
     "canvasLabel": "交付流程 / DELIVERY WORKFLOW",
     "legend": "连线图例",
-    "humanIntervention": "真人介入",
+    "humanIntervention": "同事介入",
     "details": "流程详情",
     "nodeDetail": "节点详情 / MEMBER DETAIL",
     "edgeDetail": "交接详情 / HANDOFF DETAIL",

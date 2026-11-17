@@ -70,18 +70,18 @@ it('updates the actual cached detail route, retaining content and comment drafts
 it('updates transition choices and submits unchanged authored status-node identity', async () => {
   let payload: unknown;
   server.use(http.post('/api/workitems/42/transition', async ({ request }) => { payload = await request.json(); return ok(item); }));
-  mount(<WorkitemDetailPage />); await screen.findByRole('heading', { name }); fireEvent.click(screen.getByRole('button', { name: /流转状态/ }));
+  mount(<WorkitemDetailPage />); await screen.findByRole('heading', { name }); fireEvent.click(screen.getByRole('button', { name: /流转到其他状态/ }));
   await screen.findByRole('button', { name: `流转到${name}` }); expect(screen.getByRole('button', { name: '关闭' })).toBeInTheDocument(); await language('en-US'); expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument(); expect(screen.getByText('Recommended transition')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: `Transition to ${name}` })); await waitFor(() => expect(payload).toMatchObject({ toNodeId: 2 }));
 });
 it('refreshes displayed assignment validation in place and preserves HUMAN assignment payload and names', async () => {
   let payload: unknown;
   server.use(http.put('/api/workitems/42/assignee', async ({ request }) => { payload = await request.json(); return ok(item); }));
-  mount(<AssignHumanModal open workitemId={42} onClose={() => {}} />); const select = screen.getByLabelText('指派给');
-  await userEvent.click(screen.getByRole('button', { name: /^指\s*派$/ })); await screen.findByText('请选择指派对象'); await language('en-US');
+  mount(<AssignHumanModal open workitemId={42} onClose={() => {}} />); const select = screen.getByLabelText('交接给');
+  await userEvent.click(screen.getByRole('button', { name: /^确\s*认交接$/ })); await screen.findByText('请选择要交接的同事'); await language('en-US');
   expect(await screen.findByText('Choose an assignee.')).toBeInTheDocument(); expect(screen.getByLabelText('Assign to')).toBe(select);
   await userEvent.click(select); await userEvent.click(await screen.findByText(`${name} (H7)`));
-  await language('zh-CN'); expect(screen.getByLabelText('指派给')).toBe(select); await language('en-US');
+  await language('zh-CN'); expect(screen.getByLabelText('交接给')).toBe(select); await language('en-US');
   await userEvent.click(screen.getByRole('button', { name: 'Assign' })); await waitFor(() => expect(payload).toEqual({ assigneeType: 'HUMAN', assigneeRef: 7 }));
 });
 it('localizes interaction states, duration and fixed runtime events while retaining raw diagnostics', async () => {
@@ -161,8 +161,8 @@ it('updates cached mention choices and human/agent tabs while keeping the commen
   expect(input).toHaveValue('@'); expect(screen.getByPlaceholderText('Write a comment; type @ to choose a member…')).toBe(input);
   await userEvent.click(screen.getByRole('tab', { name: 'Human participants' })); expect(screen.getByLabelText('Human participant avatar')).toBeInTheDocument();
   expect(screen.getByText('ID: H7 · Human')).toBeInTheDocument();
-  expect(screen.getByText(name)).toBeInTheDocument(); await language('zh-CN'); expect(screen.getByRole('tab', { name: /真人参与者/ })).toHaveAttribute('aria-selected', 'true');
-  expect(screen.getByText('工号: H7 · 真人')).toBeInTheDocument();
+  expect(screen.getByText(name)).toBeInTheDocument(); await language('zh-CN'); expect(screen.getByRole('tab', { name: /同事参与者/ })).toHaveAttribute('aria-selected', 'true');
+  expect(screen.getByText('工号: H7 · 同事')).toBeInTheDocument();
   expect(input).toHaveValue('@'); expect(screen.getByPlaceholderText('输入评论，键入 @ 选择成员...')).toBe(input);
   expect(within(screen.getByRole('menu')).getByText('@机器人 <Alice>')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('tab', { name: /AI 成员成员/ }));

@@ -1385,7 +1385,7 @@ describe('DeliveryProgress', () => {
     expect(within(drawer).getByText(/Dispatch #302/)).toBeInTheDocument();
     expect(within(drawer).getByText(/恢复自 #301/)).toBeInTheDocument();
     expect(within(drawer).getByText(/会话 s1/)).toBeInTheDocument();
-    expect(within(drawer).getAllByText(/12\.34 credits/).length).toBeGreaterThan(0);
+    expect(within(drawer).getAllByText(/12\.34 Token/).length).toBeGreaterThan(0);
     expect(within(drawer).queryByText(/tokens/)).not.toBeInTheDocument();
     expect(within(drawer).getByText(/Turn t2/)).toBeInTheDocument();
     expect(within(drawer).getByText(/Runtime 与 流水线/)).toBeInTheDocument();
@@ -1962,7 +1962,7 @@ describe('DeliveryProgress usage display', () => {
     render(<DeliveryProgress progress={progress} artifacts={artifacts} />);
     fireEvent.click(screen.getByRole('button', { name: '查看执行详情' }));
 
-    expect(screen.getAllByText('82.61 credits').length).toBe(2);
+    expect(screen.getAllByText('82.61 Token').length).toBe(2);
     expect(screen.queryByText('1M')).not.toBeInTheDocument();
     expect(screen.queryByText(/tokens/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/💰/)).not.toBeInTheDocument();

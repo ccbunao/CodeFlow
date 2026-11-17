@@ -208,7 +208,9 @@
     "traceError": "{{message}} (TraceId: {{traceId}})",
     "sdlcSteps": "Pipeline steps · {{name}}",
     "squadSize_one": "{{count}}-person squad",
-    "applyCommand": "Apply Squad template"
+    "applyCommand": "Apply Squad template",
+    "emptyTitle": "No gallery templates yet",
+    "emptyDesc": "Gallery templates are provided by the platform. You can also create a flow on the “Flow templates” tab, or assemble a squad manually under “AI digital workers → Squads”."
   },
   "workflow": {
     "tab": "Squad workflow",

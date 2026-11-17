@@ -27,13 +27,13 @@ describe('WorkitemCreditsBadge', () => {
     render(<WorkitemCreditsBadge usage={usage} />);
 
     const badge = screen.getByTestId('workitem-credits-badge');
-    expect(badge).toHaveTextContent('70.00 Credits');
+    expect(badge).toHaveTextContent('70.00 Token');
     expect(badge.querySelector('.anticon-thunderbolt')).not.toBeNull();
   });
 
   it('keeps trailing zeros for whole-number credits', () => {
     render(<WorkitemCreditsBadge usage={{ credits: 20, runs: [] }} />);
-    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('20.00 Credits');
+    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('20.00 Token');
   });
 
   it('lists every run and the total on hover', async () => {
@@ -41,10 +41,10 @@ describe('WorkitemCreditsBadge', () => {
 
     const breakdown = await openBreakdown();
 
-    expect(breakdown.textContent).toContain('DEV run-1: 20 credits');
-    expect(breakdown.textContent).toContain('CR run-1: 20 credits');
-    expect(breakdown.textContent).toContain('DEV run-2: 30 credits');
-    expect(breakdown.textContent).toContain('总计: 70.00 Credits');
+    expect(breakdown.textContent).toContain('DEV run-1: 20 Token');
+    expect(breakdown.textContent).toContain('CR run-1: 20 Token');
+    expect(breakdown.textContent).toContain('DEV run-2: 30 Token');
+    expect(breakdown.textContent).toContain('总计: 70.00 Token');
   });
 
   it('orders runs numerically across agents and keeps ties and unnumbered runs stable', async () => {
@@ -61,12 +61,12 @@ describe('WorkitemCreditsBadge', () => {
     render(<WorkitemCreditsBadge usage={{ credits: 6, runs }} />);
     const breakdown = await openBreakdown();
     expect(Array.from(breakdown.children).slice(0, -1).map(row => row.textContent)).toEqual([
-      'QA run-1: 1 credits',
-      'QA run-2: 1 credits',
-      'DEV run-2: 1 credits',
-      'DEV run-13: 1 credits',
-      'Legacy run: 1 credits',
-      'Other legacy run: 1 credits',
+      'QA run-1: 1 Token',
+      'QA run-2: 1 Token',
+      'DEV run-2: 1 Token',
+      'DEV run-13: 1 Token',
+      'Legacy run: 1 Token',
+      'Other legacy run: 1 Token',
     ]);
     expect(runs).toEqual(original);
   });
@@ -85,8 +85,8 @@ describe('WorkitemCreditsBadge', () => {
 
     const breakdown = await openBreakdown();
 
-    expect(breakdown.textContent).toContain('DEV 第 2 次执行: 12.5 credits');
-    expect(breakdown.textContent).toContain('总计: 12.50 Credits');
+    expect(breakdown.textContent).toContain('DEV 第 2 次执行: 12.5 Token');
+    expect(breakdown.textContent).toContain('总计: 12.50 Token');
   });
 
   it('falls back to the agent id, then to unknown, when no name is available', async () => {
@@ -104,8 +104,8 @@ describe('WorkitemCreditsBadge', () => {
 
     const breakdown = await openBreakdown();
 
-    expect(breakdown.textContent).toContain('agent-77 第 1 次执行: 3 credits');
-    expect(breakdown.textContent).toContain('未知 第 2 次执行: 2 credits');
+    expect(breakdown.textContent).toContain('agent-77 第 1 次执行: 3 Token');
+    expect(breakdown.textContent).toContain('未知 第 2 次执行: 2 Token');
   });
 
   it('skips runs without positive credits but keeps the total', async () => {
@@ -126,8 +126,8 @@ describe('WorkitemCreditsBadge', () => {
 
     expect(breakdown.textContent).not.toContain('DEV run-1');
     expect(breakdown.textContent).not.toContain('DEV run-2');
-    expect(breakdown.textContent).toContain('DEV run-3: 8 credits');
-    expect(breakdown.textContent).toContain('总计: 8.00 Credits');
+    expect(breakdown.textContent).toContain('DEV run-3: 8 Token');
+    expect(breakdown.textContent).toContain('总计: 8.00 Token');
   });
 
   it('shows the total even when the run breakdown is missing', async () => {
@@ -135,7 +135,7 @@ describe('WorkitemCreditsBadge', () => {
 
     const breakdown = await openBreakdown();
 
-    expect(breakdown.textContent).toContain('总计: 3.14 Credits');
+    expect(breakdown.textContent).toContain('总计: 3.14 Token');
   });
 
   it('renders nothing when usage is missing, empty or zero', () => {
@@ -163,9 +163,9 @@ describe('WorkitemCreditsBadge', () => {
     const breakdown = await openBreakdown();
     const rows = Array.from(breakdown.children).map(row => row.textContent);
 
-    expect(rows[0]).toBe('DEV 第 1 次执行: 10 credits');
-    expect(rows[1]).toBe('CR · 需求澄清: 20 credits');
-    expect(rows[2]).toBe('总计: 30.00 Credits');
+    expect(rows[0]).toBe('DEV 第 1 次执行: 10 Token');
+    expect(rows[1]).toBe('CR · 需求澄清: 20 Token');
+    expect(rows[2]).toBe('总计: 30.00 Token');
   });
 
   it('shows a clarification-only workitem badge whose total equals the clarification credits', async () => {
@@ -175,10 +175,10 @@ describe('WorkitemCreditsBadge', () => {
       />,
     );
 
-    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('7.50 Credits');
+    expect(screen.getByTestId('workitem-credits-badge')).toHaveTextContent('7.50 Token');
     const breakdown = await openBreakdown();
-    expect(breakdown).toHaveTextContent('CR · 需求澄清: 7.5 credits');
-    expect(breakdown).toHaveTextContent('总计: 7.50 Credits');
+    expect(breakdown).toHaveTextContent('CR · 需求澄清: 7.5 Token');
+    expect(breakdown).toHaveTextContent('总计: 7.50 Token');
   });
 
   it('falls back to the agent id for clarification rows and translates the label', async () => {
@@ -189,11 +189,11 @@ describe('WorkitemCreditsBadge', () => {
     );
 
     const breakdown = await openBreakdown();
-    expect(breakdown).toHaveTextContent('agent-77 · 需求澄清: 3 credits');
+    expect(breakdown).toHaveTextContent('agent-77 · 需求澄清: 3 Token');
 
     await act(async () => { await i18n.changeLanguage('en-US'); });
     expect(screen.getByTestId('workitem-credits-breakdown')).toBe(breakdown);
-    expect(breakdown).toHaveTextContent('agent-77 · requirement clarification: 3 credits');
+    expect(breakdown).toHaveTextContent('agent-77 · requirement clarification: 3 tokens');
     await act(async () => { await i18n.changeLanguage('zh-CN'); });
   });
 });
@@ -217,6 +217,7 @@ it('renders new owned run labels reactively while retaining raw and unknown labe
  await act(async () => { await i18n.changeLanguage('en-US'); });
  expect(screen.getByTestId('workitem-credits-breakdown')).toBe(popup); expect(screen.getByTestId('workitem-credits-badge')).toBe(badge);
  expect(popup).toHaveTextContent('<b>DEV</b> run 2:'); expect(popup).toHaveTextContent('Unknown run 1:');
+ expect(popup).toHaveTextContent('agent-77 run 1: 1 tokens');
  await act(async () => { await i18n.changeLanguage('zh-CN'); });
  expect(popup).toHaveTextContent('未知 第 1 次执行:'); expect(runs[0].label).toBe('<b>DEV</b> run-2');
 });

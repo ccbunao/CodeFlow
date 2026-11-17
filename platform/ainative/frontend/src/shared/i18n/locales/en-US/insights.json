@@ -343,7 +343,8 @@
     "recommendations": "Recommended actions",
     "updates": "Updates with filters",
     "sdlcIssues": "Pipeline link issues",
-    "issueImpact": "{{issue}}; {{impact}}"
+    "issueImpact": "{{issue}}; {{impact}}",
+    "noRecommendations": "No recommendations right now — delivery rhythm looks healthy."
   },
   "members": {
     "memberIdFallback": "Member #{{id}}",

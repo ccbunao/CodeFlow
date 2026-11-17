@@ -97,7 +97,7 @@ describe('UnifiedTimeline null participant names', () => {
         name: '蔡何',
         displayId: '10000',
         role: 'HUMAN',
-        roleName: '真人',
+        roleName: '同事',
         isAgent: false,
         online: false,
       },

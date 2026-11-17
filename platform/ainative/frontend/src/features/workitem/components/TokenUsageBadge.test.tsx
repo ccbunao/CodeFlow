@@ -15,15 +15,15 @@ describe('TokenUsageBadge', () => {
 
   it('renders credits next to the bolt icon and never renders token counts', () => {
     render(<TokenUsageBadge usage={usage} />);
-    expect(screen.getByText('82.61 credits')).toBeInTheDocument();
+    expect(screen.getByText('82.61 Token')).toBeInTheDocument();
     expect(screen.queryByText('1M')).not.toBeInTheDocument();
     expect(screen.queryByText(/tokens/i)).not.toBeInTheDocument();
   });
 
   it('shows only model and credits on hover, without any token row', async () => {
     render(<TokenUsageBadge usage={usage} />);
-    fireEvent.mouseEnter(screen.getByText('82.61 credits'));
-    expect(await screen.findByText(/Credits:/)).toBeInTheDocument();
+    fireEvent.mouseEnter(screen.getByText('82.61 Token'));
+    expect(await screen.findByText(/Token 消耗:/)).toBeInTheDocument();
     expect(screen.getByText('82.61')).toBeInTheDocument();
     expect(screen.getByText(/模型:/)).toBeInTheDocument();
     expect(screen.queryByText(/Total tokens:/)).not.toBeInTheDocument();
@@ -38,22 +38,22 @@ describe('TokenUsageBadge', () => {
 
   it('hides the model row when showModel is false but keeps credits', async () => {
     render(<TokenUsageBadge usage={usage} showModel={false} />);
-    fireEvent.mouseEnter(screen.getByText('82.61 credits'));
-    expect(await screen.findByText(/Credits:/)).toBeInTheDocument();
+    fireEvent.mouseEnter(screen.getByText('82.61 Token'));
+    expect(await screen.findByText(/Token 消耗:/)).toBeInTheDocument();
     expect(screen.queryByText(/模型:/)).not.toBeInTheDocument();
     expect(screen.queryByText('auto')).not.toBeInTheDocument();
   });
 
   it('hides the model row when the usage carries no model', async () => {
     render(<TokenUsageBadge usage={{ credits: 1.5 }} />);
-    fireEvent.mouseEnter(screen.getByText('1.5 credits'));
-    expect(await screen.findByText(/Credits:/)).toBeInTheDocument();
+    fireEvent.mouseEnter(screen.getByText('1.5 Token'));
+    expect(await screen.findByText(/Token 消耗:/)).toBeInTheDocument();
     expect(screen.queryByText(/模型:/)).not.toBeInTheDocument();
   });
 
   it('renders a readable label for sub-cent credits', () => {
     render(<TokenUsageBadge usage={{ inputTokens: 900, outputTokens: 100, credits: 0.004 }} />);
-    expect(screen.getByText('<0.01 credits')).toBeInTheDocument();
+    expect(screen.getByText('<0.01 Token')).toBeInTheDocument();
   });
 
   it('renders nothing when credits are missing even if tokens exist', () => {
@@ -72,15 +72,15 @@ describe('StepTokenBadge', () => {
 
   it('shows credits instead of the compact token count', () => {
     render(<StepTokenBadge usage={usage} />);
-    expect(screen.getByText('4.3 credits')).toBeInTheDocument();
+    expect(screen.getByText('4.3 Token')).toBeInTheDocument();
     expect(screen.queryByText('43K')).not.toBeInTheDocument();
     expect(screen.queryByText(/tokens/i)).not.toBeInTheDocument();
   });
 
   it('shows readable light credits text inside the dark hover tooltip', async () => {
     render(<StepTokenBadge usage={usage} />);
-    fireEvent.mouseEnter(screen.getByText('4.3 credits'));
-    const label = await screen.findByText(/Credits:/);
+    fireEvent.mouseEnter(screen.getByText('4.3 Token'));
+    const label = await screen.findByText(/Token 消耗:/);
     expect(label).toHaveStyle({ color: 'rgba(255, 255, 255, 0.85)' });
     expect(screen.getByText('4.3')).toBeInTheDocument();
     expect(screen.queryByText(/Input tokens:/)).not.toBeInTheDocument();

@@ -21,6 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/status-templates")
 public class StatusTemplateEditController {
     public record NodeRequest(String name, String category, Integer sortNo) {}
+    public record TemplateRequest(String name, String workType, String description) {}
     public record EdgeRequest(Long fromNodeId, Long toNodeId) {}
 
     private final JdbcTemplate jdbc;
@@ -38,6 +39,32 @@ public class StatusTemplateEditController {
                 flowId, ws()).isEmpty()) {
             throw new BizException("13003", "状态模板不存在");
         }
+    }
+
+    // ---------------------------------------------------------------- 模板
+
+    /** 新建状态模板(按需求类型分域)。前端「新建模板」此前没有对应后端端点。 */
+    @PostMapping
+    public ApiResult<Map<String, Object>> createTemplate(@RequestBody TemplateRequest req) {
+        RequestContext.requireUserId();
+        if (req.name() == null || req.name().isBlank()) {
+            throw new BizException("10001", "模板名称不能为空");
+        }
+        String workType = req.workType() == null || req.workType().isBlank()
+                ? "REQ" : req.workType().trim().toUpperCase();
+        if (!workType.equals("REQ") && !workType.equals("TASK") && !workType.equals("BUG")) {
+            throw new BizException("10001", "需求类型只能是 REQ / TASK / BUG");
+        }
+        jdbc.update("INSERT INTO wi_flow (workspace_id, name, description, work_type, is_default, status) VALUES (?,?,?,?,0,'ACTIVE')",
+                ws(), req.name().trim(), req.description(), workType);
+        Long id = jdbc.queryForObject("SELECT MAX(id) FROM wi_flow WHERE workspace_id=?", Long.class, ws());
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("id", id);
+        out.put("name", req.name().trim());
+        out.put("workType", workType);
+        out.put("isDefault", 0);
+        out.put("status", "ACTIVE");
+        return ApiResult.ok(out);
     }
 
     // ---------------------------------------------------------------- 节点

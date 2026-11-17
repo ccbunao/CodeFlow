@@ -274,7 +274,8 @@
     "documentsUploaded": "Requirement documents uploaded.",
     "documentUploadFailed": "The requirement document could not be uploaded",
     "documentDeleted": "Requirement document deleted.",
-    "documentDeleteFailed": "The requirement document could not be deleted"
+    "documentDeleteFailed": "The requirement document could not be deleted",
+    "syncFailed": "Sync failed: {{message}}"
   },
   "transition": {
     "updated": "Status is now “{{name}}”",
@@ -993,10 +994,10 @@
   },
   "usage": {
     "model": "Model:",
-    "credits": "Credits:",
+    "credits": "Tokens:",
     "total": "Total:",
-    "creditAmount": "{{amount}} credits",
-    "totalAmount": "{{amount}} Credits",
+    "creditAmount": "{{amount}} tokens",
+    "totalAmount": "{{amount}} tokens",
     "agentFallback": "agent-{{id}}",
     "runLabel": "{{name}} run {{number}}",
     "clarificationLabel": "{{name}} · requirement clarification"

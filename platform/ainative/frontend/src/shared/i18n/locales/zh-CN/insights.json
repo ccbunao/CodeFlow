@@ -249,7 +249,7 @@
     "loading": "加载 Token 成本…",
     "title": "成本",
     "totalTokens": "总 Token",
-    "totalCredits": "总 Credits",
+    "totalCredits": "总 Token 消耗",
     "perTask": "均/任务",
     "dailyAverage": "日均",
     "breakdownTitle": "按AI 成员",
@@ -332,7 +332,8 @@
     "recommendations": "建议动作",
     "updates": "随筛选更新",
     "sdlcIssues": "流水线 链路问题",
-    "issueImpact": "{{issue}}，{{impact}}"
+    "issueImpact": "{{issue}}，{{impact}}",
+    "noRecommendations": "暂时没有改进建议:交付节奏正常,没有需要提醒的地方。"
   },
   "members": {
     "memberIdFallback": "成员 #{{id}}",
@@ -377,7 +378,7 @@
     "metricTasks": "{{metric}}（项）",
     "barAria": "{{metric}} {{value}},当前最高 {{max}}",
     "requirements": "需求交付",
-    "method": "按当前真人负责人归属;AI 成员代办的任务记在指派它的操作人名下,归属不明的与已离职成员单列。同一需求按 ID 去重。统计范围是这段时间里新建、有事件或有执行活动的任务。已完成按看板口径,取周期内交付成功的;进行中、未开始、待你处理/待验收沿用看板分类(IN_PROGRESS、NEW、PENDING_DECISION),并剔除周期内已完成的任务,四列互不重叠。任务总数还剔除了已取消的任务,所以可能大于四列之和。需求交付只计 REQ。时间按北京时间。",
+    "method": "按当前同事负责人归属;AI 成员代办的任务记在指派它的操作人名下,归属不明的与已离职成员单列。同一需求按 ID 去重。统计范围是这段时间里新建、有事件或有执行活动的任务。已完成按看板口径,取周期内交付成功的;进行中、未开始、待你处理/待验收沿用看板分类(IN_PROGRESS、NEW、PENDING_DECISION),并剔除周期内已完成的任务,四列互不重叠。任务总数还剔除了已取消的任务,所以可能大于四列之和。需求交付只计 REQ。时间按北京时间。",
     "taskUnit_other": "项",
     "taskCount_other": "{{value}} 项"
   },
