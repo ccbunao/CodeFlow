@@ -274,11 +274,11 @@ export function HelpCenterPage() {
                 if (href === '/help/assets/ainative.zip') {
                   return <Button className="help-download" href={href} download="ainative.zip" icon={<DownloadOutlined aria-hidden="true" />}>{t('download')} {children}</Button>;
                 }
-                if (href === '/help/assets/codeflow-user-manual-v2.0.1.pdf') {
+                if (/^\/help\/assets\/codeflow-user-manual-v[\d.]+\.pdf$/.test(href || '')) {
                   return (
                     <span className="help-pdf-actions">
                       <Button className="help-download" href={href} target="_blank" rel="noopener noreferrer" icon={<FileTextOutlined aria-hidden="true" />}>{t('pdf.preview')}</Button>
-                      <Button className="help-download" href={href} download="CodeFlow-用户操作手册-v2.0.1.pdf" icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
+                      <Button className="help-download" href={href} download="CodeFlow-用户操作手册-v2.1.0.pdf" icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
                     </span>
                   );
                 }
