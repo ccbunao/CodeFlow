@@ -60,7 +60,7 @@
       "description": "CRUDL, assignment, comments, pause, resume and status transitions."
     },
     "sdlc": {
-      "title": "Pipeline management",
+      "title": "Delivery workflow management",
       "description": "Workflows, steps, ordering, activation and status templates."
     },
     "agent": {

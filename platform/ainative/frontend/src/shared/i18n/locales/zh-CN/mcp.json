@@ -60,7 +60,7 @@
       "description": "CRUDL、分配、评论、暂停继续和状态流转。"
     },
     "sdlc": {
-      "title": "流水线 管理",
+      "title": "交付流程 管理",
       "description": "流程、步骤、排序、启停和状态模板。"
     },
     "agent": {

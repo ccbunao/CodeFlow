@@ -73,7 +73,7 @@ body{font-family:var(--sans);color:var(--body);font-size:9.6pt;line-height:1.85;
 .ctitle{font-family:var(--serif);font-size:38pt;font-weight:700;letter-spacing:1px;margin-top:6mm;line-height:1;}
 .ctitle .en{color:var(--orange);}
 .csub{font-family:var(--serif);font-size:16pt;letter-spacing:8pt;color:#D6DEE8;margin-top:4mm;}
-.cdesc{font-size:8.4pt;color:#93A0B2;margin-top:7mm;line-height:2;}
+.cdesc{font-size:8.4pt;color:#E4EAF2;margin-top:7mm;line-height:2;}
 .cslogan{font-family:var(--serif);font-size:10.5pt;color:var(--orange);margin-top:2.4mm;letter-spacing:1.2px;}
 .shot{position:absolute;left:14mm;right:14mm;bottom:34mm;background:#fff;border-radius:2.6mm 2.6mm 0 0;overflow:hidden;}
 .shot .bar2{height:7.4mm;background:#EDF0F4;display:flex;align-items:center;gap:1.6mm;padding:0 3mm;border-bottom:.3pt solid #DFE3E9;}
@@ -587,8 +587,8 @@ figcaption b{color:var(--orange);font-weight:700;}
   </div>
   <div class="toc"><div class="h">本章内容</div><div class="cols"><div class="row"><span class="n">9.1</span><span class="t">流程模版</span><span class="p">42</span></div><div class="row"><span class="n">9.2</span><span class="t">模版间与编队工作流</span><span class="p">42</span></div></div></div>
 </div><div class="chapter" style="page:ch-9"><h2 class="ch-head"><img class="ch-logo" src="../images/manual/codeflow-logo.svg" alt=""><span class="cn">09</span>交付流程(流程模板)</h2>
-  <div class="ch-lead">每个项目定义自己的交付流程;启动交付时选的流程,决定 AI 按什么路径干活。</div><p>入口:左侧导航 → 交付流程(<code>/#/sdlcs</code>),页面为「流程模板」列表(流程模版 / 模版间 / 编队工作流三个页签)。</p>
-<figure><img src="../images/manual/45-sdlc-detail.png" alt="图 9-1"><figcaption><b>图 9-1</b>　流程模板列表与步骤详情</figcaption></figure>
+  <div class="ch-lead">每个项目定义自己的交付流程;启动交付时选的流程,决定 AI 按什么路径干活。</div><p>入口:左侧导航 → 交付流程,页面为「流程模板」列表(流程模版 / 模版间 / 编队工作流三个页签)。</p>
+<figure><img src="../images/manual/45-delivery-flow-detail.png" alt="图 9-1"><figcaption><b>图 9-1</b>　流程模板列表与步骤详情</figcaption></figure>
 <h3 id="sec-9.1流程模版-9"><span class="n">9.1</span>流程模版</h3>
 <p>一次交付的步骤序列(如:分析与分支准备 → 编码与测试 → 验证与交付 → 交接评审),每步含<strong>目标、完成门、要求产物</strong>。「详情」里可以逐步查看 / 编辑步骤定义。</p>
 <h3 id="sec-9.2模版间与编队工作流-9"><span class="n">9.2</span>模版间与编队工作流</h3>
@@ -687,7 +687,7 @@ figcaption b{color:var(--orange);font-weight:700;}
           <div class="d">点「测试读取权限」,平台用该凭据各拉一条需求与一条缺陷,验证鉴权、项目归属与字段格式。</div></div></div><div class="step"><span class="n">3</span><div><div class="t">保存绑定</div>
           <div class="d">保存后平台开始按 60 秒轮询该项目的需求与缺陷,自动建为本地需求。</div></div></div><div class="step"><span class="n">4</span><div><div class="t">随时手动同步</div>
           <div class="d">「已绑定项目」表里点「立即同步」可立刻拉一轮;「暂停」用于临时停止轮询,恢复后接着增量拉取。</div></div></div></div>
-<figure><img src="../images/manual/67-tapd-bindings.png" alt="图 13-2"><figcaption><b>图 13-2</b>　已绑定项目</figcaption></figure>
+<figure><img src="../images/manual/67-tapd-bindings.png" alt="图 13-2"><figcaption><b>图 13-2</b>　已绑定项目(未绑定时的空态;绑定成功后这里列出项目 ID、状态与最近同步时间)</figcaption></figure>
 <h3 id="sec-13.2同步进来的东西长什么样-13"><span class="n">13.2</span>同步进来的东西长什么样</h3>
 <ul><li><strong>需求(Story)与缺陷(Bug)一起进</strong>:在需求里类型分别标 <code>REQ</code> 与 <code>BUG</code>,来源标 <code>TAPD</code>,标题下可直达 TAPD 原单据;</li><li><strong>外部 ID 形态</strong> <code>{项目 ID}:{story|bug}:{单据 ID}</code>,例 <code>1:bug:1010201</code>;同一单据重复拉取不会产生重复需求,只会刷新标题、正文、类型与优先级;</li><li><strong>优先级映射</strong>:high / urgent → 1,medium / middle / normal → 2,low → 3;</li><li><strong>时间窗口</strong>:首次拉取最近 7 天内有更新的单据,之后按轮询增量拉取;</li><li><strong>正文以 TAPD 为准</strong>:平台只把 TAPD 的 HTML 描述转成纯文本展示,不反向改写 TAPD 内容。</li></ul>
 <h3 id="sec-13.3交付结论怎么回写-13"><span class="n">13.3</span>交付结论怎么回写</h3>

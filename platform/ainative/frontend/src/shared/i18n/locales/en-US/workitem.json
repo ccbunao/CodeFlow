@@ -75,7 +75,8 @@
     "created": "Created",
     "myLastCommentAt": "My last participation",
     "updated": "Updated",
-    "actions": "Actions"
+    "actions": "Actions",
+    "sdlc": "Delivery workflow"
   },
   "actions": {
     "create": "Create a requirement",
@@ -234,14 +235,14 @@
     "priority": "PRIORITY <value/>",
     "creator": "CREATOR <value/>",
     "assignee": "ASSIGNEE <value/>",
-    "sdlc": "Pipeline <value/>",
+    "sdlc": "Delivery workflow <value/>",
     "tags": "TAGS <value/>",
     "typeLabel": "TYPE",
     "statusLabel": "STATUS",
     "priorityLabel": "PRIORITY",
     "creatorLabel": "CREATOR",
     "assigneeLabel": "ASSIGNEE",
-    "sdlcLabel": "Pipeline",
+    "sdlcLabel": "Delivery workflow",
     "tagsLabel": "TAGS"
   },
   "agentList": {
@@ -730,7 +731,7 @@
     "runtimeUnknown": "Executor connection status is unavailable; waiting for recovery",
     "contextPrepare": "Context prep",
     "repoPrepare": "Repo prep",
-    "sdlcStep": "Pipeline step",
+    "sdlcStep": "Delivery workflow step",
     "dispatch": "Dispatch",
     "handoff": "Handoff",
     "command": "Command execution",
@@ -908,7 +909,7 @@
     "agentOutput": "AI member output",
     "timeline": "Trace timeline",
     "observations": "Live observations",
-    "runtime": "Runtime & Pipeline",
+    "runtime": "Runtime & Delivery workflow",
     "fork": "Fork",
     "turn": "Turn {{id}}",
     "previous": "Resumed from #{{id}}",
@@ -1361,7 +1362,7 @@
     "historyExecutions": "Run history"
   },
   "stepTiming": {
-    "title": "Pipeline step duration",
+    "title": "Delivery workflow step duration",
     "execution": "This run #{{id}}",
     "total": "Steps total {{duration}}",
     "description": "Counts the time each step of the selected runs took, including model latency, tool calls, and in-step waiting.",

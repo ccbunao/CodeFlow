@@ -26,7 +26,7 @@
     "titleWithId": "Run profile · #{{id}}",
     "error": "Error",
     "workitem": "Requirement",
-    "step": "Pipeline step",
+    "step": "Delivery workflow step",
     "agent": "Member",
     "executor": "Executor",
     "attempt": "Attempt",

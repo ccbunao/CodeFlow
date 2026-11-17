@@ -47,7 +47,7 @@
     "variableName": "变量名",
     "description": "说明",
     "agentName": "员工名称",
-    "sdlc": "流水线 模版",
+    "sdlc": "交付流程 模版",
     "evolution": "自进化模式",
     "allowedBranches": "允许分支",
     "selectVariable": "选择环境变量"
@@ -229,7 +229,7 @@
     "executorRatio": "运行器 {{online}}/{{total}}",
     "configHelp": "配置说明",
     "configHelpOpen": "点击任一AI 成员卡片进入详情与配置。",
-    "configHelpContent": "可维护 SOUL.md、AGENT.md、记忆、仓库权限、流水线 模板及技能/能力配置。",
+    "configHelpContent": "可维护 SOUL.md、AGENT.md、记忆、仓库权限、交付流程 模版及技能/能力配置。",
     "emptyPlatform": "还没有平台智能体",
     "emptyAgents": "暂无数字员工",
     "role": "角色",
@@ -271,7 +271,7 @@
     "deleteButton": "确定删除",
     "editConfig": "编辑配置",
     "versionDescription": "最新 v{{version}} · 创建于 {{date}}",
-    "platformHint": "出厂自带的 AI 管家：不可删除、不可下线，名称与头像锁定，不绑定 流水线、不承接开发任务；AGENT.md/SOUL.md、技能与记忆可维护，变更仍需审核。无需配置平台智能体的仓库配置，其默认拥有平台所有的仓库的读取权限，进行平台智能的管理。",
+    "platformHint": "出厂自带的 AI 管家：不可删除、不可下线，名称与头像锁定，不绑定 交付流程、不承接开发任务；AGENT.md/SOUL.md、技能与记忆可维护，变更仍需审核。无需配置平台智能体的仓库配置，其默认拥有平台所有的仓库的读取权限，进行平台智能的管理。",
     "draftAgent": "AI 成员尚未提交审核",
     "draftAgentHint": "请先编辑配置，完成 SOUL.md 和 AGENT.md 后提交审核。",
     "unpublishedDraft": "有未发布草稿 v{{version}}",
@@ -281,7 +281,7 @@
     "editDraft": "编辑草稿",
     "diffTitle": "生效中 vs 草稿 v{{version}}",
     "identity": "身份配置",
-    "sdlcTag": "流水线:{{name}}",
+    "sdlcTag": "交付流程:{{name}}",
     "evolutionTag": "进化模式:{{mode}}",
     "workitems": "任务列表",
     "repositoryTab": "仓库{{suffix}}",
@@ -310,7 +310,7 @@
     "rejectReason": "请输入驳回原因...",
     "businessBackground": "业务背景",
     "responsibilities": "工作职责",
-    "sdlcId": "流水线 模版 ID",
+    "sdlcId": "交付流程 模版 ID",
     "versionStatus": "版本状态",
     "inProgress": "执行中",
     "pendingDecision": "待你处理",
@@ -341,6 +341,6 @@
   },
   "groupLabel": "{{name}}（{{squads}}）",
   "list": {
-    "description": "定义 AI 数字员工的职责、技能与流水线交接方式"
+    "description": "定义 AI 数字员工的职责、技能与交付流程交接方式"
   }
 }

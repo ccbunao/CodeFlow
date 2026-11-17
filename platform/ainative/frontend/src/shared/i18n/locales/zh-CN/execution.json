@@ -25,7 +25,7 @@
     "titleWithId": "执行档案 · #{{id}}",
     "error": "错误",
     "workitem": "需求",
-    "step": "流水线 步骤",
+    "step": "交付流程 步骤",
     "agent": "成员",
     "executor": "运行器",
     "attempt": "第几次尝试",

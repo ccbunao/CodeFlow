@@ -75,7 +75,8 @@
     "created": "创建时间",
     "myLastCommentAt": "我最近参与时间",
     "updated": "更新时间",
-    "actions": "操作"
+    "actions": "操作",
+    "sdlc": "交付流程"
   },
   "actions": {
     "create": "创建需求",
@@ -232,14 +233,14 @@
     "priority": "优先级 <value/>",
     "creator": "创建者 <value/>",
     "assignee": "处理人 <value/>",
-    "sdlc": "流水线 <value/>",
+    "sdlc": "交付流程 <value/>",
     "tags": "标签 <value/>",
     "typeLabel": "类型",
     "statusLabel": "状态",
     "priorityLabel": "优先级",
     "creatorLabel": "创建者",
     "assigneeLabel": "处理人",
-    "sdlcLabel": "流水线",
+    "sdlcLabel": "交付流程",
     "tagsLabel": "标签"
   },
   "agentList": {
@@ -718,7 +719,7 @@
     "runtimeUnknown": "运行器连接状态暂不可确认，等待恢复",
     "contextPrepare": "上下文准备",
     "repoPrepare": "仓库准备",
-    "sdlcStep": "流水线步骤",
+    "sdlcStep": "交付流程步骤",
     "dispatch": "调度",
     "handoff": "交接",
     "command": "命令执行",
@@ -891,7 +892,7 @@
     "agentOutput": "AI 成员输出",
     "timeline": "Trace 时间线",
     "observations": "实时观测",
-    "runtime": "Runtime 与 流水线",
+    "runtime": "Runtime 与 交付流程",
     "fork": "分支",
     "turn": "Turn {{id}}",
     "previous": "恢复自 #{{id}}",
@@ -1342,7 +1343,7 @@
     "historyExecutions": "历史执行"
   },
   "stepTiming": {
-    "title": "流水线 阶段耗时",
+    "title": "交付流程 阶段耗时",
     "execution": "本次执行 #{{id}}",
     "total": "步骤累计 {{duration}}",
     "description": "只算所选执行里各步骤的耗时,含模型应答、工具调用和步骤内部的等待。",

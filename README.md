@@ -1,192 +1,107 @@
-<div align="center">
-
 # CodeFlow
 
-### 需求进,交付出。
+**AI Native 软件需求交付平台 + 开源执行器运行时。** 需求进、交付出:数字员工按交付流程自动完成分析、开发、测试、验证与交接,人只做需求澄清与验收。
 
-**AI 数字员工小队按 SDLC 流水线自动交付软件——你只负责说清楚需求,和验收成果。**
+仓库:https://github.com/qsumm/CodeFlow
 
-[![License: MIT](https://img.shields.io/badge/platform-MIT-blue.svg)](platform/ainative/LICENSE)
-[![License: Apache-2.0](https://img.shields.io/badge/runtime-Apache--2.0-green.svg)](LICENSE)
-[![Backend](https://img.shields.io/badge/backend-Spring_Boot_3.3_v2-6DB33F.svg)](platform/ainative/server-v2)
-[![Frontend](https://img.shields.io/badge/frontend-React_18-61DAFB.svg)](platform/ainative/frontend)
-[![Runtime](https://img.shields.io/badge/runtime-Python_3.11%2B_stdlib-3776AB.svg)](runtime/)
-[![E2E](https://img.shields.io/badge/E2E-54_cases_green-3fb950.svg)](#-测试)
+## 核心能力
 
-[快速开始](#-快速开始) · [架构](#-架构) · [禅道闭环](#-禅道闭环已真实验证) · [文档](#-文档)
+### 数字员工交付流程
+- **小队 / 数字员工 / 交付流程模板**:分析与分支准备 → 编码与测试 → 验证与交付 → 交接评审,多角色自动接棒;失败留痕、attempt 递增、可重新指派重启
+- **需求澄清对话**:在工单里直接与数字员工对话;数字员工经平台 MCP **实时读取工单**(标题/状态/外部来源)后作答与追问
+- **交付结论回写**:交付报告经备注通道回写源头工单平台,幂等 marker 防重复回写
 
-</div>
+### Agent 客户端(6 种,开箱即用)
+`Claude Code` · `Codex CLI` · `Cursor CLI` · `Gemini CLI` · `Qoder CLI` · `Qoder CLI CN`
 
----
+### 模型接入
+任意 Anthropic 兼容端点:Claude / MiMo / GLM / Kimi / DeepSeek / 私有模型(`ANTHROPIC_BASE_URL` + `ANTHROPIC_AUTH_TOKEN` 即接)
 
-## 为什么是 CodeFlow?
+### 外部工单平台
+- **禅道 ZenTao 18.10+**:绑定产品 → 需求/缺陷自动拉取入库 → 派发数字员工 → 交付备注回写源头。**已真实闭环验证**(建需求 → 开发交付 → 建缺陷 → 修复 → 回写,全程记录见 `docs/18`)
+- Provider 抽象:绑定/映射/回执全 provider 无关,新平台只需实现 `ExternalWorkitemProvider`
 
-直接用 Claude Code 写代码很爽,但**交付一个需求 ≠ 写一段代码**:
+### 平台功能
+工单管理与交付进度跟踪 · 小队/交付流程/仓库/技能配置 · MCP 令牌与工具 · IM 机器人(钉钉/飞书) · 平台品牌主题 · 帮助中心 · 审计与洞察 · 暂停/恢复与执行控制
 
-- 需求散落在禅道/Jira 里,Agent 看不到;
-- 分析、编码、测试、评审各有最佳时机,单会话一次跑不完;
-- 多角色(开发、评审)需要接棒,失败需要重试,过程需要留痕;
-- 交付完,结果还要回到工单平台闭环。
+### 执行器 runtime(本仓库 `runtime/`,纯标准库)
+- 心跳与能力声明、任务包下载(sha256 校验)、交付流程逐步执行、澄清会话(`CONVERSATION_TURN` 协议)、交付备注上报
+- 执行器离线排队走指数退避、上线自动唤醒;同一 executorId 单实例(服务端单会话,后来者顶掉先来者)
 
-CodeFlow 把这些**工程化环节**做成平台:数字员工小队按可编排的 SDLC 流水线自动完成分析、编码、测试与代码评审,多角色自动接棒、失败自动重试;人只在两个点上介入——**需求澄清**与**最终验收**。你的 Agent CLI(Claude Code / Codex / Cursor)依旧是执行者,CodeFlow 是它们的**交付调度台**。
+## 快速开始(克隆到运行)
 
-<div align="center">
-<img src="docs/assets/architecture.svg" alt="CodeFlow 系统架构:禅道 ⇄ CodeFlow 平台 ⇄ 执行器运行时 → 模型端点" width="100%">
-</div>
-
-## ✨ 核心特性
-
-| | 特性 | 说明 |
-|---|---|---|
-| 🔁 | **外部工单闭环** | 禅道 ZenTao 18.10+ 需求/缺陷 ≤60 秒自动拉取入库,交付备注与缺陷 resolved 状态自动回写源头。已真实验证全闭环 |
-| 🧩 | **SDLC 流水线可编排** | 步骤、完成门、产物要求、角色接棒全部可配置;内置「开发 + 代码评审」模板,评审不通过自动返工收敛;支持 AI 对话生成新流程 |
-| 🤖 | **数字员工小队** | 每个数字员工有独立角色设定、系统提示词、技能与仓库权限;小队多角色自动接棒,失败按 attempt 递增重试,全程留痕 |
-| 🔌 | **执行器与平台解耦** | 数字员工由你自己机器上的执行器运行时驱动(Python 标准库零三方依赖);模型端点自选——MiniMax / Claude / GLM / 自部署 |
-| 🛠 | **MCP 全能力开放** | 工单、小队、SDLC、执行器、仓库、记忆全部以 MCP 工具暴露——Claude Code / Codex CLI / Cursor 可直接操作平台 |
-| 🖥 | **结构化交付留痕** | 工单快照、步骤时间线、执行日志、产物清单、评审 findings 全部落库;回收站、审计、洞察、备份齐备 |
-
-<div align="center">
-<img src="docs/assets/pipeline.svg" alt="一次真实交付的生命周期" width="100%">
-</div>
-
-<details>
-<summary><b>📷 平台界面预览</b>(点击展开)</summary>
-
-| 交付大盘 | 工单看板 |
-|---|---|
-| ![交付大盘](docs/assets/screenshot-dashboard.png) | ![工单看板](docs/assets/screenshot-workitems.png) |
-
-| 交付进度跟踪(数字员工执行中) | |
-|---|---|
-| ![交付进度跟踪](docs/assets/screenshot-delivery.png) | 更多实机截图见 [docs/19-用户操作手册.md](docs/19-用户操作手册.md) |
-
-</details>
-
-## 🚀 快速开始
-
-> **前置**:Docker;其余构建工具均在容器内。执行器需要 Python 3.11+。
-
-### ① 启动平台(约 5 分钟,一条命令)
+**A. 平台前后端**(v2:`platform/ainative/server-v2`,数据库统一 seekdb):
 
 ```bash
-git clone https://github.com/qsumm/CodeFlow.git && cd CodeFlow/platform
-./deploy.sh up                # 生成密钥 → 构建 → 起 seekdb + 应用 → 等待就绪
+cd platform
+./deploy.sh up           # 生成密钥 → 构建 → 起 seekdb + 应用 → 等待就绪
+# 打开 http://localhost:7001/register 注册首个用户(建组织即成为管理员)
 ```
 
-`deploy.sh` 是一条命令的部署脚本,会在首次运行时生成 `.env`(JWT 密钥、凭据加密主密钥、
-下载密钥,chmod 600,勿提交),然后构建镜像并等待健康检查通过。其它子命令:
-`down`(停止)/ `restart` / `status` / `logs`。
-可覆盖端口:`APP_PORT=8080 SEEKDB_PORT=2882 ./deploy.sh up`。
+`deploy.sh` 首次运行会生成 `platform/.env`(JWT 密钥、凭据加密主密钥、下载密钥,chmod 600),
+之后 `down` / `restart` / `status` / `logs` 可用;端口可覆盖:`APP_PORT=8080 ./deploy.sh up`。
 
-打开 **http://localhost:7001** — 注册的第一个账号即平台管理员。
+最低配置:单机 4C8G(2G 内存跑不动全栈);纯执行器节点 2C2G 即可。
+密钥说明:两个密钥首次部署时生成并妥善保存。**换环境部署会产生新密钥,旧库加密数据不可迁移**;
+`AINATIVE_SECRET_MASTER_KEY` 用于外部平台(TAPD 等)凭据的加解密,多节点必须一致,更换后需重新保存绑定。
 
-> **架构说明**:后端为 v2 全量重写(Spring Boot 3.3,零 v1 衍生,~1.4 万行),
-> 数据库 schema 自动初始化(docs/seekdb-schema-v1-*.sql),
-> 产物/附件存本地卷 `/app/artifacts`(对象存储可插拔)。
-> 公网部署请把 `PUBLIC_BASE_URL` 设为实际对外地址(MCP 地址与执行器启动命令会随之生成),
-> 并妥善保管 `platform/.env` 里的密钥;`AINATIVE_SECRET_MASTER_KEY` 换掉后已保存的外部平台凭据需重新绑定。
-
-### ② 跑起执行器(必做,全程界面操作)
-
-数字员工由执行器驱动——没有它,派发会停在「等待执行器上线」:
-
-1. 平台「执行器」页 → **新建执行器**(表单即完成,平台签发 Token);
-2. 打开该执行器的 **「启动命令」**——平台把 Token、地址、参数全部生成好,**一键复制**;
-3. 粘贴到目标机器终端执行,守护进程自动连上平台,状态变 **ONLINE**。
-
-> 不需要手动配置环境变量。首次登录还有 4 步引导页带你走完整个流程。
-
-### ③ 交付第一条需求
-
-平台新建工单 → AI 需求澄清 → 启动交付 → 在「交付进度跟踪」看数字员工干活 → 验收发布。
-完整图文说明见 **[docs/19-用户操作手册.md](docs/19-用户操作手册.md)**(附 PDF 版)。
-
-## 🏗 架构
-
-```
-platform/            平台:后端 server-v2(Spring Boot 3.3,JDBC 零 ORM,+ 前端 React 内嵌 SPA)
-└── server-v2/       后端源码(全量重写版,~1.4 万行,零 v1 衍生)
-runtime/             执行器运行时:WebSocket 接单、任务包解压、驱动 Agent CLI、产物回传
-tests/               执行器运行时测试(pytest)
-scripts/             执行器注册、存储桶创建、禅道 E2E 验证
-docs/                用户手册、集成指南、SDLC 设计、发布清单、平台协议文档
-```
-
-设计要点:
-
-- **协议先行** — WebSocket 帧协议(心跳/派发/结果/重连)、任务包 schema(`ainative.taskPackage.v1`)、MCP 工具契约均有文档(`platform/ainative/docs/`)
-- **可靠投递** — 离线派发落 PENDING 重放、断线自动重连、attempt 递增、同分钟判重防抖
-- **产物完整性** — deliverables 递归回传(含子目录,`__` 编码保留结构),下载带 sha256 校验
-- **外部工单** — 禅道接入:自动轮询拉取入库,交付备注回写源头
-- **零 ORM** — 后端只用 JdbcTemplate,SQL 全手写可见;数据库统一使用 seekdb(OceanBase)
-
-## 🔗 禅道闭环(已真实验证)
-
-建需求 → ≤60s 自动拉取 → AI 澄清 → 派发交付 → 交付备注回写 → 建缺陷 → 指派修复 → 回写 `resolved`。
-
-绑定与验证方式见 [docs/zentao-integration.md](docs/zentao-integration.md),配套 E2E 脚本在 [scripts/](scripts/)。
-
-## 🧪 测试
+**B. 执行器 runtime**(连上面任一平台):
 
 ```bash
-# 执行器运行时(pytest,标准库零依赖)
-python -m pytest tests/ -q
+pip install -e .                        # 或直接 python -m runtime.daemon(纯标准库)
 
-# 平台后端 E2E(54 用例,跨全部 10 个域,直达运行中的实例)
-python3 platform/ainative/server-v2/scripts/e2e_smoke.py http://localhost:7001
+# 1. 注册执行器(在平台 Agents 页找到数字员工 ID 与工作空间 ID)
+export AINATIVE_BASE_URL=http://localhost:7001
+export AINATIVE_ADMIN_USER=admin
+export AINATIVE_ADMIN_PASSWORD=...
+python scripts/register_executor.py --agent-id 10001 --workspace-id 10000 --out runtime.env --provider claude
 
-# 权限矩阵(16 用例:匿名/成员/管理员三段式)
-python3 platform/ainative/server-v2/scripts/permission_matrix.py http://localhost:7001
+# 2. 补充模型通道(env 文件追加)
+echo 'AINATIVE_AGENT_CMD=claude' >> runtime.env
+echo 'ANTHROPIC_BASE_URL=https://<anthropic-compatible-endpoint>' >> runtime.env
+echo 'ANTHROPIC_AUTH_TOKEN=<your-token>' >> runtime.env
+echo 'ANTHROPIC_MODEL=<model-id>' >> runtime.env
+
+# 3. 自检 + 常驻
+set -a; . ./runtime.env; set +a
+ainative --check-config && ainative --once-smoke
+ainative                                    # 或 python -m runtime.daemon,常驻等待派发
 ```
 
-当前基线:E2E **54/54** · 权限矩阵 **16/16** · 运行时 **51** · 影子对比(与旧版并行读)6/7 一致 ·
-发布镜像冒烟 **8/8** · 全站交互遍历 45 页。
+约束:**同一个 executorId+token 同时只允许一个 daemon 实例**(服务端单会话,后来者顶掉先来者)。
 
-## 📚 文档
+## 外部工单闭环(禅道)怎么跑
 
-| 文档 | 内容 |
-|---|---|
-| [docs/19-用户操作手册.md](docs/19-用户操作手册.md) | 用户操作手册 — 附 PDF,覆盖全部页面 |
-| [docs/zentao-integration.md](docs/zentao-integration.md) | 禅道绑定、拉取/回写语义、E2E 验证 |
-| [docs/sdlc-driver-design.md](docs/sdlc-driver-design.md) | SDLC 驱动器实现设计 |
-| [docs/release-checklist.md](docs/release-checklist.md) | 发布检查清单 |
-| [platform/ainative/docs/](platform/ainative/docs/) | 平台协议、部署、运维、恢复、MCP 文档 |
+```bash
+# 1) 平台侧:平台集成页签绑定禅道产品(或 REST POST /api/integrations/zentao/bindings)
+# 2) 构造数据 + 观察(执行全部交给平台与数字员工):
+export ZENTAO_ACCOUNT=... ZENTAO_PASSWORD=... ZENTAO_PRODUCT_ID=1
+python scripts/zentao_e2e.py create-story --title "..." --spec "..."   # 禅道建需求
+python scripts/zentao_e2e.py wait-import --external-prefix story-      # 等平台拉取入库
+python scripts/zentao_e2e.py assign --workitem-id <id>                 # 指派数字员工,触发派发
+python scripts/zentao_e2e.py wait-done --workitem-id <id>              # 只读观察交付
+python scripts/zentao_e2e.py verify-writeback --kind story --object-id <id>  # 校验回写
+```
 
-> CodeFlow 的设计取舍、交付实战与踩坑复盘,在公众号「一鸣AI编程」连载。
+完整过程与结论见 [`docs/18-禅道闭环E2E总结报告`](docs/18-禅道闭环E2E总结报告.md)。
 
-## 🤝 参与
+## 架构与兼容性策略
 
-欢迎 Issue 与 PR。
+- **平台源码**:`platform/ainative/` 包含服务端与前端完整实现,MIT `LICENSE` 随分发保留(见 [`UPSTREAM.md`](platform/ainative/UPSTREAM.md));
+- **执行器 runtime**:`runtime/` 是独立进程,只通过 WebSocket 协议帧与平台交互,不引用平台代码;
+- 协议兼容由**单一兼容层**兜住:编解码集中在 `runtime/frames.py` + `runtime/packager.py`,协议字段或任务包 schema 变化只改这两个文件;
+- 升级验收:`pytest` 全量 + 对新服务端 `--once-smoke`;服务端行为变化先实测再改兼容层,严禁凭文档盲改;
+- 契约回归:测试文档 L2/L3 用例即验收清单。
 
-- 平台侧:改动后请跑通对应测试与 `npm run check:i18n`(前端多语言门禁)
-- 执行器侧:保持 stdlib-only(零三方运行时依赖)
-- 缺陷一律登记,根因写到「为什么写错」的层面,禁止修完不回归
+## 状态
 
-## 📄 许可证
+- **已完成**:P0 全链路(docs/09)、执行控制与暂停恢复、禅道接入与闭环 E2E(docs/17/18)、需求澄清会话协议、品牌与命名规范(docs/12 BL-16/17)
+- **进行中/路线**:P1 人工门禁问答、handoff 产物、会话恢复增强、artifact 上传;遗留项见[待办台账](docs/12-待办台账.md)
 
-| 模块 | 许可证 |
-|---|---|
-| [platform/](platform/) 平台源码 | 上游 **MIT**([platform/ainative/LICENSE](platform/ainative/LICENSE)) |
-| [runtime/](runtime/) · [scripts/](scripts/) · [tests/](tests/) | **Apache-2.0** |
+## 文档
 
----
-
-## License / 许可证
-
-本项目以 **Apache License 2.0** 开源,详见 [LICENSE](LICENSE) 与 [NOTICE](NOTICE)。
-Copyright 2026 The CodeFlow Authors.
-
----
-
-<div align="center">
-
-## 作者
-
-**一鸣** · 公众号「**一鸣AI编程**」
-
-*CodeFlow 从第一行代码到 AI 数字员工交付平台的完整过程——每一次设计取舍、每一个踩过的坑——都在公众号里连载。*
-
-**公众号「一鸣AI编程」**:AI 编程实战 / 需求交付复盘 / 这个平台的全过程,更新不迷路。
-觉得有用的话,给仓库点个 **Star ⭐**,就是最好的支持。
-
-</div>
+- **团队规范(长期有效)**:[docs/00-开发规范与流程](docs/00-开发规范与流程.md) · 缺陷必须登记到 [docs/07-缺陷修复记录](docs/07-缺陷修复记录.md)
+- **待办台账**:[docs/12-待办台账](docs/12-待办台账.md)(BL-01 暂停/恢复协议、BL-05 凭据治理、BL-11 MinIO 公网 endpoint…)
+- 工程文档:[docs/01-立项说明](docs/01-立项说明.md) · [02-需求文档](docs/02-需求文档-PRD.md) · [03-设计文档](docs/03-设计文档.md) · [04-概要设计/接口/数据库](docs/04-概要设计与接口-数据库.md) · [05-测试文档](docs/05-测试文档.md) · [06-测试报告](docs/06-测试报告.md)
+- 集成:[17-禅道接入](docs/17-外部工单平台多源支持-禅道.md) · [18-禅道闭环E2E总结](docs/18-禅道闭环E2E总结报告.md)
+- **用户操作手册**:[docs/19-用户操作手册](docs/19-用户操作手册.md)(图文版,面向平台使用者)

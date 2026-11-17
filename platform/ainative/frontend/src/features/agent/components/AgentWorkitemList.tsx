@@ -106,7 +106,7 @@ export function AgentWorkitemList({ agentId }: AgentWorkitemListProps) {
       },
     },
     {
-      title: 'SDLC', dataIndex: 'sdlcName', width: 140, ellipsis: { showTitle: false },
+      title: t('fields.sdlc'), dataIndex: 'sdlcName', width: 140, ellipsis: { showTitle: false },
       render: (n: string | null) => <EllipsisText tooltip={n ?? undefined}>{n || '-'}</EllipsisText>,
     },
     {

@@ -109,7 +109,7 @@
   },
   "create": {
     "title": "新建定时任务",
-    "noWorkflow": "未绑定 流水线（直接接受调度指令）",
+    "noWorkflow": "未绑定 交付流程（直接接受调度指令）",
     "agentWorkflow": "{{agent}} 按 {{workflow}} 执行",
     "uploadFailed": "任务已存为暂停;文档上传失败,去详情重传后再启用。",
     "uploadFailedReason": "任务已存为暂停;文档上传失败:{{reason}}。去详情重传后再启用。",

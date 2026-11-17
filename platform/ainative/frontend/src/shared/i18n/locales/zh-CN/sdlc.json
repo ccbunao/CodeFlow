@@ -13,7 +13,7 @@
   },
   "humanInput": {
     "label": "该步骤事实不清时询问用户",
-    "description": "默认关。开启后可在流水线说明与 Skill 里声明哪些关键事实不清需追问;关闭则不发起临时问答。",
+    "description": "默认关。开启后可在交付流程说明与 Skill 里声明哪些关键事实不清需追问;关闭则不发起临时问答。",
     "help": "询问用户功能说明"
   },
   "status": {
@@ -41,12 +41,12 @@
     "aiAssist": "AI 辅助"
   },
   "commands": {
-    "create": "新建 流水线 模版",
+    "create": "新建 交付流程 模版",
     "enable": "启用流程",
     "disable": "停用流程",
     "delete": "删除流程",
     "aiGenerate": "AI 生成流程",
-    "aiAssist": "AI 辅助设计 流水线",
+    "aiAssist": "AI 辅助设计 交付流程",
     "editInfo": "编辑流程信息",
     "addStep": "加步骤",
     "editStep": "改步骤",
@@ -122,7 +122,7 @@
     "title": "交付流程",
     "templates": "流程模版",
     "gallery": "模版间",
-    "empty": "暂无 流水线 模版",
+    "empty": "暂无 交付流程 模版",
     "emptyHint": "新建一个流程模版,或切换到模版间挑选现成方案",
     "groupCount_other": "{{count}} 个",
     "total_other": "共 {{count}} 条",
@@ -192,7 +192,7 @@
     "create": "基于此模版创建",
     "close": "关闭",
     "confirm": "确定创建",
-    "creationInfo": "将自动创建编队、AI 成员、流水线 并绑定所有仓库。",
+    "creationInfo": "将自动创建编队、AI 成员、交付流程 并绑定所有仓库。",
     "failed": "创建失败",
     "workflow": "协作流程",
     "members": "成员详情",
@@ -202,7 +202,7 @@
     "squadSize_other": "{{count}} 人编队",
     "confirmTitle": "基于「{{name}}」创建编队",
     "traceError": "{{message}}（TraceId: {{traceId}}）",
-    "sdlcSteps": "流水线 步骤 · {{name}}",
+    "sdlcSteps": "交付流程 步骤 · {{name}}",
     "applyCommand": "应用编队模版",
     "emptyTitle": "模版间还没有可套用的方案",
     "emptyDesc": "预置模版由平台提供;你也可以在「流程模版」页签自己新建一个流程,或到「AI 数字员工 → 编队」里手动搭阵容。"
@@ -212,7 +212,7 @@
     "selectSquad": "选择编队",
     "selectHint": "选择一个编队，查看由成员线上配置推导出的协作图。",
     "missingTitle": "尚未生成协作图",
-    "missingHint": "系统将读取成员在线的 AGENT.md、SOUL.md 与绑定的 流水线，分析真实协作关系。",
+    "missingHint": "系统将读取成员在线的 AGENT.md、SOUL.md 与绑定的 交付流程，分析真实协作关系。",
     "generate": "生成协作图",
     "refresh": "刷新",
     "retry": "重试",
@@ -233,7 +233,7 @@
     "node": "节点",
     "edge": "连线",
     "responsibility": "职责",
-    "steps": "绑定的 流水线 步骤",
+    "steps": "绑定的 交付流程 步骤",
     "condition": "流转条件",
     "evidence": "原文证据",
     "references": "关联元素",
@@ -271,7 +271,7 @@
     "squadLabel": "编队",
     "currentSnapshot": "当前配置快照",
     "staticNote": "图谱基于编队线上配置生成，展示配置定义的协作关系，不代表需求的实时执行状态。",
-    "nodeSteps_other": "流水线 · {{count}} 个步骤",
+    "nodeSteps_other": "交付流程 · {{count}} 个步骤",
     "memberCount_other": "{{count}} 位成员",
     "transitionCount_other": "{{count}} 条交接"
   }

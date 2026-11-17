@@ -115,7 +115,7 @@
   },
   "create": {
     "title": "New scheduled task",
-    "noWorkflow": "no Pipeline workflow (uses scheduling instructions directly)",
+    "noWorkflow": "no Delivery workflow (uses scheduling instructions directly)",
     "agentWorkflow": "{{agent}} runs {{workflow}}",
     "uploadFailed": "Saved paused; document upload failed — retry from the detail page before enabling.",
     "uploadFailedReason": "Saved paused; upload failed: {{reason}}. Retry from the detail page.",
