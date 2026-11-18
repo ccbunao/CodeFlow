@@ -2,6 +2,8 @@ package com.ainative.v2.auth;
 
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@Tag(name = "鉴权与用户", description = "注册、登录、令牌与身份")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -26,16 +29,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "创建账号。")
     public ApiResult<Map<String, Object>> register(@RequestBody RegisterRequest req) {
         return ApiResult.ok(auth.register(req.username(), req.password(), req.nickname(), req.email()));
     }
 
     @PostMapping("/login")
+    @Operation(summary = "创建账号。")
     public ApiResult<Map<String, Object>> login(@RequestBody LoginRequest req) {
         return ApiResult.ok(auth.login(req.username(), req.password(), req.workspaceId()));
     }
 
     @GetMapping("/me")
+    @Operation(summary = "列出账号。")
     public ApiResult<Map<String, Object>> me(@RequestHeader(value = "Authorization", required = false) String authorization) {
         Long uid = jwt.verify(bearer(authorization));
         if (uid == null) {

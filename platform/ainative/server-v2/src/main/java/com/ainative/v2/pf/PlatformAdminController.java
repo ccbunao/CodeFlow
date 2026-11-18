@@ -5,6 +5,8 @@ import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.PageResult;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import java.util.Map;
  * <p>与 /api/users/me 的区别:这里是管理员对「全平台账号」的增删改查,
  * 包括启停、重置密码、管理员授权、IM 身份代绑、项目管理。
  */
+@Tag(name = "平台管理", description = "平台用户、角色与 IM 身份管理")
 @RestController
 @RequestMapping("/api/platform")
 public class PlatformAdminController {
@@ -45,6 +48,7 @@ public class PlatformAdminController {
     // ---------------------------------------------------------------- 用户
 
     @GetMapping("/users")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<PageResult<Map<String, Object>>> users(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
@@ -71,6 +75,7 @@ public class PlatformAdminController {
     }
 
     @GetMapping("/users/{id}")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<Map<String, Object>> user(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -85,6 +90,7 @@ public class PlatformAdminController {
     }
 
     @PutMapping("/users/{id}/profile")
+    @Operation(summary = "平台用户·个人资料。")
     public ApiResult<Map<String, Object>> updateProfile(@PathVariable long id, @RequestBody ProfileRequest req) {
         RequestContext.requireUserId();
         if (req.nickname() != null) {
@@ -97,6 +103,7 @@ public class PlatformAdminController {
     }
 
     @PutMapping("/users/{id}/password")
+    @Operation(summary = "平台用户·密码。")
     public ApiResult<Void> resetPassword(@PathVariable long id, @RequestBody PasswordRequest req) {
         RequestContext.requireUserId();
         if (req.newPassword() == null || req.newPassword().length() < 6) {
@@ -108,6 +115,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/users/{id}/delete")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Void> deleteUser(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_user SET deleted_at=NOW(), status='DISABLED' WHERE id=?", id);
@@ -115,6 +123,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/users/{id}/restore")
+    @Operation(summary = "平台用户·恢复。")
     public ApiResult<Void> restoreUser(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_user SET deleted_at=NULL, status='ACTIVE' WHERE id=?", id);
@@ -124,6 +133,7 @@ public class PlatformAdminController {
     // ---------------------------------------------------------------- IM 身份
 
     @GetMapping("/users/{id}/im-identity")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> imIdentity(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -131,6 +141,7 @@ public class PlatformAdminController {
     }
 
     @PutMapping("/users/{id}/im-identity/{provider}")
+    @Operation(summary = "更新平台用户。")
     public ApiResult<Void> bindIm(@PathVariable long id, @PathVariable String provider, @RequestBody ImRequest req) {
         RequestContext.requireUserId();
         List<Map<String, Object>> existing = jdbc.queryForList(
@@ -145,6 +156,7 @@ public class PlatformAdminController {
     }
 
     @DeleteMapping("/users/{id}/im-identity/{provider}")
+    @Operation(summary = "删除平台用户。")
     public ApiResult<Void> unbindIm(@PathVariable long id, @PathVariable String provider) {
         RequestContext.requireUserId();
         jdbc.update("DELETE FROM id_user_im WHERE user_id=? AND channel=?", id, provider);
@@ -152,6 +164,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/users/{id}/im-identity/{provider}/test")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Map<String, Object>> testIm(@PathVariable long id, @PathVariable String provider) {
         RequestContext.requireUserId();
         boolean bound = !jdbc.queryForList(
@@ -167,12 +180,14 @@ public class PlatformAdminController {
     // ---------------------------------------------------------------- 项目归属
 
     @GetMapping("/users/{id}/workspaces")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> workspacesOfUser(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(workspacesOf(id));
     }
 
     @PostMapping("/users/{id}/workspaces")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Void> addToWorkspace(@PathVariable long id, @RequestBody MembershipRequest req) {
         RequestContext.requireUserId();
         if (req.workspaceId() == null) {
@@ -188,6 +203,7 @@ public class PlatformAdminController {
     }
 
     @DeleteMapping("/users/{id}/workspaces/{workspaceId}")
+    @Operation(summary = "删除平台用户。")
     public ApiResult<Void> removeFromWorkspace(@PathVariable long id, @PathVariable long workspaceId) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_org_member SET deleted_at=NOW() WHERE org_id=? AND user_id=?", workspaceId, id);
@@ -204,6 +220,7 @@ public class PlatformAdminController {
     // ---------------------------------------------------------------- 管理员
 
     @GetMapping("/admins")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> admins() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -212,6 +229,7 @@ public class PlatformAdminController {
     }
 
     @GetMapping("/admins/candidates")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> adminCandidates(@RequestParam(required = false) String keyword) {
         RequestContext.requireUserId();
         String like = keyword == null || keyword.isBlank() ? "%" : "%" + keyword.trim() + "%";
@@ -221,6 +239,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/admins/{userId}")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Void> grantAdmin(@PathVariable long userId) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_user SET is_admin=1 WHERE id=?", userId);
@@ -228,6 +247,7 @@ public class PlatformAdminController {
     }
 
     @DeleteMapping("/admins/{userId}")
+    @Operation(summary = "删除平台用户。")
     public ApiResult<Void> revokeAdmin(@PathVariable long userId) {
         long uid = RequestContext.requireUserId();
         if (uid == userId) {
@@ -240,6 +260,7 @@ public class PlatformAdminController {
     // ---------------------------------------------------------------- 联邦身份
 
     @GetMapping("/federation/overview")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<Map<String, Object>> federationOverview() {
         RequestContext.requireUserId();
         List<Map<String, Object>> idpRows = idpList();
@@ -251,6 +272,7 @@ public class PlatformAdminController {
     }
 
     @GetMapping("/federation/idps")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> idps() {
         RequestContext.requireUserId();
         return ApiResult.ok(idpList());
@@ -263,6 +285,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/federation/idps")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Map<String, Object>> createIdp(@RequestBody IdpRequest req) {
         RequestContext.requireUserId();
         if (req.name() == null || req.name().isBlank()) {
@@ -274,6 +297,7 @@ public class PlatformAdminController {
     }
 
     @DeleteMapping("/federation/idps/{id}")
+    @Operation(summary = "删除平台用户。")
     public ApiResult<Void> deleteIdp(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_idp SET deleted_at=NOW() WHERE id=?", id);
@@ -281,6 +305,7 @@ public class PlatformAdminController {
     }
 
     @GetMapping("/federation/connections")
+    @Operation(summary = "列出平台用户。")
     public ApiResult<List<Map<String, Object>>> connections() {
         RequestContext.requireUserId();
         return ApiResult.ok(connectionList());
@@ -294,6 +319,7 @@ public class PlatformAdminController {
     }
 
     @PostMapping("/federation/connections")
+    @Operation(summary = "创建平台用户。")
     public ApiResult<Map<String, Object>> createConnection(@RequestBody ConnectionRequest req) {
         RequestContext.requireUserId();
         if (req.idpId() == null) {
@@ -305,6 +331,7 @@ public class PlatformAdminController {
     }
 
     @DeleteMapping("/federation/connections/{id}")
+    @Operation(summary = "删除平台用户。")
     public ApiResult<Void> deleteConnection(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_idp_connection SET deleted_at=NOW() WHERE id=?", id);

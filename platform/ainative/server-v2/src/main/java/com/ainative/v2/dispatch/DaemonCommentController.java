@@ -11,6 +11,8 @@ import com.ainative.v2.common.RequestContext;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.ex.TapdInboundSyncService;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * 运行器回写交付备注(数字员工结论):执行器令牌鉴权(免 Bearer),
  * 备注落 wi_note,并触发事件供外部平台回写。
  */
+@Tag(name = "运行节点", description = "运行节点回写交付结论")
 @RestController
 @RequestMapping("/api/daemon/dispatches")
 public class DaemonCommentController {
@@ -53,6 +56,7 @@ public class DaemonCommentController {
     }
 
     @PostMapping("/{dispatchId}/comments")
+    @Operation(summary = "交付结论·评论。")
     public ApiResult<Map<String, Object>> comment(@PathVariable long dispatchId,
                                                  @RequestParam(name = "token", required = false) String token,
                                                  @RequestBody Map<String, Object> body) {

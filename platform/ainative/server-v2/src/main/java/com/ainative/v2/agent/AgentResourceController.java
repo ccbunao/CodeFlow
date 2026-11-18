@@ -5,6 +5,8 @@ import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +23,7 @@ import java.util.Map;
  * 智能体子资源:版本 / 技能 / 仓库权限 / 记忆库授权 / 上线离线 / 提交评审。
  * 主资源 CRUD 在 AgentController,这里只挂 /api/agents/{id} 下的从属集合。
  */
+@Tag(name = "执行与自动化", description = "数字员工的资源与产物")
 @RestController
 @RequestMapping("/api/agents")
 public class AgentResourceController {
@@ -49,6 +52,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 版本
 
     @GetMapping("/{id}/versions")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<List<Map<String, Object>>> versions(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -59,6 +63,7 @@ public class AgentResourceController {
     }
 
     @GetMapping("/{id}/versions/{versionId}")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<Map<String, Object>> version(@PathVariable long id, @PathVariable long versionId) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -73,6 +78,7 @@ public class AgentResourceController {
 
     /** 发布新版本:把当前配置快照存档。 */
     @PostMapping("/{id}/submit")
+    @Operation(summary = "发布新版本:把当前配置快照存档。")
     public ApiResult<Map<String, Object>> submit(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -98,6 +104,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/approve")
+    @Operation(summary = "数字员工资源·审批。")
     public ApiResult<Map<String, Object>> approve(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -106,6 +113,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/reject")
+    @Operation(summary = "数字员工资源·驳回。")
     public ApiResult<Map<String, Object>> reject(@PathVariable long id, @RequestBody(required = false) ReviewRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -118,6 +126,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/rollback")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Map<String, Object>> rollback(@PathVariable long id, @RequestBody IdRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -138,6 +147,7 @@ public class AgentResourceController {
     }
 
     @GetMapping("/reviews/count")
+    @Operation(summary = "数字员工资源·计数。")
     public ApiResult<Long> reviewCount() {
         RequestContext.requireUserId();
         Long n = jdbc.queryForObject(
@@ -149,6 +159,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 技能
 
     @GetMapping("/{id}/skills")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<List<Map<String, Object>>> skills(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -159,6 +170,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/skills")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Void> addSkill(@PathVariable long id, @RequestBody IdRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -171,6 +183,7 @@ public class AgentResourceController {
     }
 
     @DeleteMapping("/{id}/skills/{refId}")
+    @Operation(summary = "删除数字员工资源。")
     public ApiResult<Void> removeSkill(@PathVariable long id, @PathVariable long refId) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -181,6 +194,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 仓库
 
     @GetMapping("/{id}/repos")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<List<Map<String, Object>>> repos(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -191,6 +205,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/repos")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Void> addRepo(@PathVariable long id, @RequestBody IdRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -203,6 +218,7 @@ public class AgentResourceController {
     }
 
     @DeleteMapping("/{id}/repos/{refId}")
+    @Operation(summary = "删除数字员工资源。")
     public ApiResult<Void> removeRepo(@PathVariable long id, @PathVariable long refId) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -213,6 +229,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 记忆库
 
     @GetMapping("/{id}/memories")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<List<Map<String, Object>>> memories(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -223,6 +240,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/memories")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Void> addMemory(@PathVariable long id, @RequestBody IdRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -235,6 +253,7 @@ public class AgentResourceController {
     }
 
     @DeleteMapping("/{id}/memories/{refId}")
+    @Operation(summary = "删除数字员工资源。")
     public ApiResult<Void> removeMemory(@PathVariable long id, @PathVariable long refId) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -245,6 +264,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 上下线
 
     @PostMapping("/{id}/online")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Map<String, Object>> online(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -254,6 +274,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/offline")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Map<String, Object>> offline(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -265,6 +286,7 @@ public class AgentResourceController {
     // ---------------------------------------------------------------- 环境变量
 
     @GetMapping("/{id}/environment-variables")
+    @Operation(summary = "列出数字员工资源。")
     public ApiResult<List<Map<String, Object>>> envVars(@PathVariable long id) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -275,6 +297,7 @@ public class AgentResourceController {
     }
 
     @PostMapping("/{id}/environment-variables")
+    @Operation(summary = "创建数字员工资源。")
     public ApiResult<Void> bindEnvVar(@PathVariable long id, @RequestBody IdRequest req) {
         RequestContext.requireUserId();
         requireAgent(id);
@@ -287,6 +310,7 @@ public class AgentResourceController {
     }
 
     @DeleteMapping("/{id}/environment-variables/{refId}")
+    @Operation(summary = "删除数字员工资源。")
     public ApiResult<Void> unbindEnvVar(@PathVariable long id, @PathVariable long refId) {
         RequestContext.requireUserId();
         requireAgent(id);

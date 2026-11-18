@@ -29,3 +29,18 @@ ainative:
 logging:
   level:
     com.ainative.v2: INFO
+
+# ── OpenAPI / Swagger ──────────────────────────────────────────────
+# 文档路径:/swagger-ui.html(界面) · /v3/api-docs(OpenAPI JSON)
+# 内容由 springdoc 自动扫描全部 @RestController 生成,与真实接口同步,不手工维护。
+# 若要对外关闭文档(例如公网部署不希望暴露接口清单),设 AINATIVE_SWAGGER_ENABLED=false。
+springdoc:
+  api-docs:
+    enabled: ${AINATIVE_SWAGGER_ENABLED:true}
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: ${AINATIVE_SWAGGER_ENABLED:true}
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    doc-expansion: none

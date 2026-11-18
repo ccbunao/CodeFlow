@@ -5,6 +5,8 @@ import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,7 @@ import java.util.Map;
  * 个人中心:/api/users/me/*。
  * 资料、密码、个性化设置、IM 身份(钉钉/飞书)、联邦身份、账号注销。
  */
+@Tag(name = "鉴权与用户", description = "个人资料、密码、偏好与账号注销")
 @RestController
 @RequestMapping("/api/users/me")
 public class UserSelfServiceController {
@@ -41,6 +44,7 @@ public class UserSelfServiceController {
     // ---------------------------------------------------------------- 资料
 
     @GetMapping("/profile")
+    @Operation(summary = "个人资料·个人资料。")
     public ApiResult<Map<String, Object>> profile() {
         long uid = RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -53,6 +57,7 @@ public class UserSelfServiceController {
     }
 
     @PutMapping("/profile")
+    @Operation(summary = "个人资料·个人资料。")
     public ApiResult<Map<String, Object>> updateProfile(@RequestBody ProfileRequest req) {
         long uid = RequestContext.requireUserId();
         if (req.nickname() != null) {
@@ -65,6 +70,7 @@ public class UserSelfServiceController {
     }
 
     @PutMapping("/password")
+    @Operation(summary = "个人资料·密码。")
     public ApiResult<Void> changePassword(@RequestBody PasswordRequest req) {
         long uid = RequestContext.requireUserId();
         List<String> hashes = jdbc.queryForList("SELECT password_hash FROM id_user WHERE id=?", String.class, uid);
@@ -81,6 +87,7 @@ public class UserSelfServiceController {
     // ---------------------------------------------------------------- 设置
 
     @GetMapping("/settings")
+    @Operation(summary = "个人资料·设置。")
     public ApiResult<List<Map<String, Object>>> settings() {
         long uid = RequestContext.requireUserId();
         // 前端契约:UserSetting[] = [{key, valueJson}];valueJson 是 JSON 文本
@@ -90,6 +97,7 @@ public class UserSelfServiceController {
     }
 
     @GetMapping("/settings/{key}")
+    @Operation(summary = "个人资料·设置。")
     public ApiResult<Map<String, Object>> setting(@PathVariable String key) {
         long uid = RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -107,6 +115,7 @@ public class UserSelfServiceController {
     }
 
     @PutMapping("/settings/{key}")
+    @Operation(summary = "个人资料·设置。")
     public ApiResult<Map<String, Object>> saveSetting(@PathVariable String key, @RequestBody SettingRequest req) {
         long uid = RequestContext.requireUserId();
         String raw = req.valueJson();
@@ -129,6 +138,7 @@ public class UserSelfServiceController {
     }
 
     @DeleteMapping("/settings/{key}")
+    @Operation(summary = "个人资料·设置。")
     public ApiResult<Void> deleteSetting(@PathVariable String key) {
         long uid = RequestContext.requireUserId();
         jdbc.update("DELETE FROM id_user_setting WHERE user_id=? AND setting_key=?", uid, key);
@@ -152,6 +162,7 @@ public class UserSelfServiceController {
     // ---------------------------------------------------------------- IM 身份
 
     @GetMapping("/im-identities")
+    @Operation(summary = "列出个人资料。")
     public ApiResult<List<Map<String, Object>>> imIdentities() {
         long uid = RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -160,6 +171,7 @@ public class UserSelfServiceController {
     }
 
     @PutMapping("/im-identities/{provider}")
+    @Operation(summary = "更新个人资料。")
     public ApiResult<Map<String, Object>> bindIm(@PathVariable String provider, @RequestBody ImIdentityRequest req) {
         long uid = RequestContext.requireUserId();
         if (req.externalUserId() == null || req.externalUserId().isBlank()) {
@@ -177,6 +189,7 @@ public class UserSelfServiceController {
     }
 
     @DeleteMapping("/im-identities/{provider}")
+    @Operation(summary = "删除个人资料。")
     public ApiResult<Void> unbindIm(@PathVariable String provider) {
         long uid = RequestContext.requireUserId();
         jdbc.update("DELETE FROM id_user_im WHERE user_id=? AND channel=?", uid, provider);
@@ -184,11 +197,13 @@ public class UserSelfServiceController {
     }
 
     @PostMapping("/im-identities/dingtalk/test")
+    @Operation(summary = "创建个人资料。")
     public ApiResult<Map<String, Object>> testDingtalk() {
         return testIm("dingtalk");
     }
 
     @PostMapping("/im-identities/feishu/test")
+    @Operation(summary = "创建个人资料。")
     public ApiResult<Map<String, Object>> testFeishu() {
         return testIm("feishu");
     }
@@ -208,6 +223,7 @@ public class UserSelfServiceController {
     // ---------------------------------------------------------------- 联邦身份
 
     @GetMapping("/federated-identities")
+    @Operation(summary = "列出个人资料。")
     public ApiResult<List<Map<String, Object>>> federatedIdentities() {
         long uid = RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -217,6 +233,7 @@ public class UserSelfServiceController {
     }
 
     @DeleteMapping("/federated-identities/{id}")
+    @Operation(summary = "删除个人资料。")
     public ApiResult<Void> unbindFederated(@PathVariable long id) {
         long uid = RequestContext.requireUserId();
         jdbc.update("DELETE FROM id_fed_identity WHERE id=? AND user_id=?", id, uid);
@@ -224,6 +241,7 @@ public class UserSelfServiceController {
     }
 
     @PostMapping("/federated-identities/bind-start")
+    @Operation(summary = "创建个人资料。")
     public ApiResult<Map<String, Object>> bindStart() {
         RequestContext.requireUserId();
         return ApiResult.ok(Map.of("bindUrl", "", "state", "SSO_NOT_CONFIGURED",
@@ -231,6 +249,7 @@ public class UserSelfServiceController {
     }
 
     @PostMapping("/federated-identities/claim")
+    @Operation(summary = "创建个人资料。")
     public ApiResult<Map<String, Object>> claim(@RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();
         return ApiResult.ok(Map.of("claimed", false, "message", "未配置身份提供商"));
@@ -239,6 +258,7 @@ public class UserSelfServiceController {
     // ---------------------------------------------------------------- 注销
 
     @PostMapping("/deactivation")
+    @Operation(summary = "创建个人资料。")
     public ApiResult<Map<String, Object>> deactivate(@RequestBody(required = false) DeactivationRequest req) {
         long uid = RequestContext.requireUserId();
         jdbc.update("UPDATE id_user SET status='DISABLED', deleted_at=NOW() WHERE id=?", uid);

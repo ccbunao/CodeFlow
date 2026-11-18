@@ -5,6 +5,8 @@ import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.PageResult;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import java.util.Map;
  * 小队跨项目复制:检查可复制性 / 目标项目列表 / 执行复制。
  * 复制 = 在目标项目重建小队与成员(成员即智能体引用,跨项目共享同一套 ag_agent)。
  */
+@Tag(name = "执行与自动化", description = "编队复制")
 @RestController
 public class SquadCopyController {
     private final JdbcTemplate jdbc;
@@ -32,6 +35,7 @@ public class SquadCopyController {
     }
 
     @GetMapping("/api/squads/{id}/copy-check")
+    @Operation(summary = "小队跨项目复制:检查可复制性 / 目标项目列表 / 执行复制。")
     public ApiResult<Map<String, Object>> copyCheck(@PathVariable long id) {
         RequestContext.requireUserId();
         require(id);
@@ -45,6 +49,7 @@ public class SquadCopyController {
     }
 
     @GetMapping("/api/squads/{id}/copy-targets")
+    @Operation(summary = "列出编队。")
     public ApiResult<PageResult<Map<String, Object>>> copyTargets(@PathVariable long id,
                                                                   @RequestParam(required = false) String keyword,
                                                                   @RequestParam(defaultValue = "1") int page,

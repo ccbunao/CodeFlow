@@ -2,6 +2,8 @@ package com.ainative.v2.squad;
 
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.RequestContext;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 流水线接口(/api/sdlcs)。 */
+@Tag(name = "执行与自动化", description = "交付流程模板与步骤")
 @RestController
 @RequestMapping("/api/sdlcs")
 public class SdlcController {
@@ -30,12 +33,14 @@ public class SdlcController {
     }
 
     @PostMapping
+    @Operation(summary = "创建交付流程模板。")
     public ApiResult<Map<String, Object>> create(@RequestBody SdlcRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.createSdlc(req.name(), req.description()));
     }
 
     @GetMapping
+    @Operation(summary = "列出交付流程模板。")
     public ApiResult<List<Map<String, Object>>> list() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.listSdlcs());
@@ -46,6 +51,7 @@ public class SdlcController {
      * 列表契约:SdlcTemplate[stepCount 代替 steps],启用状态映射 ENABLED。
      */
     @GetMapping("/page")
+    @Operation(summary = "分页版流水线列表(前端 listSdlcTemplatesPage 翻页用)。")
     public ApiResult<com.ainative.v2.common.PageResult<Map<String, Object>>> page(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "100") int size) {
@@ -81,18 +87,21 @@ public class SdlcController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "列出交付流程模板。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.sdlcDetail(id));
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "更新交付流程模板。")
     public ApiResult<Map<String, Object>> update(@PathVariable long id, @RequestBody SdlcRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.updateSdlc(id, req.name(), req.description()));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "删除交付流程模板。")
     public ApiResult<Void> delete(@PathVariable long id) {
         RequestContext.requireUserId();
         service.deleteSdlc(id);
@@ -100,6 +109,7 @@ public class SdlcController {
     }
 
     @PostMapping("/{id}/steps")
+    @Operation(summary = "交付流程模板·步骤。")
     public ApiResult<Map<String, Object>> addStep(@PathVariable long id, @RequestBody StepRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.addStep(id, req.seq() == null ? 0 : req.seq(), req.name(), req.kind(),
@@ -107,6 +117,7 @@ public class SdlcController {
     }
 
     @PutMapping("/{id}/steps/{stepId}")
+    @Operation(summary = "交付流程模板·步骤。")
     public ApiResult<Map<String, Object>> updateStep(@PathVariable long id, @PathVariable long stepId,
                                                      @RequestBody StepRequest req) {
         RequestContext.requireUserId();
@@ -115,24 +126,28 @@ public class SdlcController {
     }
 
     @DeleteMapping("/{id}/steps/{stepId}")
+    @Operation(summary = "交付流程模板·步骤。")
     public ApiResult<Map<String, Object>> deleteStep(@PathVariable long id, @PathVariable long stepId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.deleteStep(id, stepId));
     }
 
     @PutMapping("/{id}/steps/reorder")
+    @Operation(summary = "交付流程模板·重排。")
     public ApiResult<Map<String, Object>> reorder(@PathVariable long id, @RequestBody ReorderRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.reorderSteps(id, req.stepIds()));
     }
 
     @PostMapping("/{id}/enable")
+    @Operation(summary = "创建交付流程模板。")
     public ApiResult<Map<String, Object>> enable(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.enableSdlc(id));
     }
 
     @PostMapping("/{id}/disable")
+    @Operation(summary = "创建交付流程模板。")
     public ApiResult<Map<String, Object>> disable(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.disableSdlc(id));

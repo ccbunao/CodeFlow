@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,7 @@ import java.util.Map;
  * <p>传输:POST /api/mcp 与 /api/mcp/rpc 接收 JSON-RPC 2.0;
  * 通知(无 id)返回 202;GET /api/mcp 与 /api/mcp/sse 返回 endpoint 事件。
  */
+@Tag(name = "开放平台", description = "MCP 服务端点")
 @RestController
 @RequestMapping("/api/mcp")
 public class McpServerController {
@@ -47,6 +50,7 @@ public class McpServerController {
     // ---------------------------------------------------------------- 传输入口
 
     @GetMapping(value = {"", "/sse"}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "列出MCP 服务。")
     public void sse(@RequestHeader(value = "Authorization", required = false) String authorization,
                     @RequestParam(value = "token", required = false) String queryToken,
                     HttpServletResponse response) throws Exception {
@@ -61,6 +65,7 @@ public class McpServerController {
 
     @PostMapping(value = {"", "/rpc", "/{pathToken}", "/{pathToken}/rpc"},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_EVENT_STREAM_VALUE})
+@Operation(summary = "创建MCP 服务。")
     public ResponseEntity<?> rpc(@RequestHeader(value = "Authorization", required = false) String authorization,
                                  @PathVariable(value = "pathToken", required = false) String pathToken,
                                  @RequestParam(value = "token", required = false) String queryToken,
@@ -89,6 +94,7 @@ public class McpServerController {
     }
 
     @GetMapping("/tools")
+    @Operation(summary = "MCP 服务·工具清单。")
     public Map<String, Object> listToolsCompat(@RequestHeader(value = "Authorization", required = false) String authorization,
                                                @RequestParam(value = "token", required = false) String token) {
         Principal principal = authenticate(authorization, token);
@@ -96,6 +102,7 @@ public class McpServerController {
     }
 
     @PostMapping("/tools/call")
+    @Operation(summary = "创建MCP 服务。")
     public Map<String, Object> callToolCompat(@RequestHeader(value = "Authorization", required = false) String authorization,
                                               @RequestParam(value = "token", required = false) String token,
                                               @RequestBody Map<String, Object> request) {

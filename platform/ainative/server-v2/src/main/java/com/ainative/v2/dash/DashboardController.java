@@ -2,6 +2,8 @@ package com.ainative.v2.dash;
 
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.RequestContext;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 /** 工作台 + 洞察只读接口。 */
+@Tag(name = "分析度量", description = "项目总览、运行看板与交付健康度")
 @RestController
 public class DashboardController {
     private final DashboardService service;
@@ -29,6 +32,7 @@ public class DashboardController {
 
     // ---------- 工作台 ----------
     @GetMapping("/api/dashboard/overview")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> overview() {
         RequestContext.requireUserId();
         long ws = RequestContext.workspaceId();
@@ -67,6 +71,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/running")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> running() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -79,6 +84,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/realtime")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> realtime(@RequestParam(defaultValue = "7") int range,
                                                    @RequestParam(required = false) Long agentId) {
         RequestContext.requireUserId();
@@ -86,6 +92,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/completed/today")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> completedToday() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -95,6 +102,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/completed/week")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> completedWeek() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -104,6 +112,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/pipeline-health")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> pipelineHealth(@RequestParam(defaultValue = "7d") String range) {
         RequestContext.requireUserId();
         long ws = RequestContext.workspaceId();
@@ -130,6 +139,7 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard/agents/{id}/running")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> agentRunning(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -143,18 +153,21 @@ public class DashboardController {
 
     // ---------- 洞察 ----------
     @GetMapping("/api/insights/delivery-overview")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> deliveryOverview() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.deliveryOverview());
     }
 
     @GetMapping("/api/insights/delivery-overview/created")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Object> createdTrend() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.deliveryOverview().get("created"));
     }
 
     @GetMapping("/api/insights/delivery-overview/pending")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> pendingWorkitems(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size) {
@@ -163,36 +176,42 @@ public class DashboardController {
     }
 
     @GetMapping("/api/insights/stage-duration")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> stageDuration() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.stageDuration());
     }
 
     @GetMapping("/api/insights/member-delivery")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> memberDelivery() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.memberDelivery());
     }
 
     @GetMapping("/api/insights/requirement-delivery")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> requirementDelivery() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.requirementDelivery());
     }
 
     @GetMapping("/api/insights/workers")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<List<Map<String, Object>>> workers() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.workers());
     }
 
     @GetMapping("/api/insights/metrics")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> metrics() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.metrics());
     }
 
     @GetMapping("/api/insights/audit")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> audit(@RequestParam(defaultValue = "1") int page,
                                                 @RequestParam(defaultValue = "20") int size) {
         RequestContext.requireUserId();
@@ -200,18 +219,21 @@ public class DashboardController {
     }
 
     @GetMapping("/api/insights/human-agent-participation")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> participation() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.participation());
     }
 
     @GetMapping("/api/insights/human-agent-participation/refresh")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> refreshParticipation() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.participation());
     }
 
     @GetMapping("/api/insights/human-agent-participation/slowest")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> slowest() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.slowest());
@@ -219,6 +241,7 @@ public class DashboardController {
 
     // ---------- 空间级看板(前端 spaceDashboard/types.ts 契约) ----------
     @GetMapping("/api/space-dashboard/overview")
+    @Operation(summary = "列出总览看板。")
     public ApiResult<Map<String, Object>> spaceDashboard() {
         RequestContext.requireUserId();
         return ApiResult.ok(contract.spaceDashboard());

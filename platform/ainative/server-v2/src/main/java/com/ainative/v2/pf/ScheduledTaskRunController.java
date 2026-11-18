@@ -5,6 +5,8 @@ import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.PageResult;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import java.util.Map;
  * <p>pf_task_run 只存 task_id 与 result_json(内含 ticketId/dispatchId),
  * 详情视图按需 join 出工单、派发、产物与评论,和 v1 的 run 视图字段对齐。
  */
+@Tag(name = "执行与自动化", description = "定时任务运行详情")
 @RestController
 @RequestMapping("/api/scheduled-task-runs")
 public class ScheduledTaskRunController {
@@ -37,6 +40,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping
+    @Operation(summary = "定时任务运行历史。")
     public ApiResult<PageResult<Map<String, Object>>> list(
             @RequestParam(required = false) Long taskId,
             @RequestParam(defaultValue = "1") int page,
@@ -62,6 +66,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "列出定时任务运行。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -92,6 +97,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/artifacts")
+    @Operation(summary = "定时任务运行·产物。")
     public ApiResult<List<Map<String, Object>>> artifacts(@PathVariable long id) {
         RequestContext.requireUserId();
         long ticketId = ticketIdOf(id);
@@ -104,6 +110,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/comments")
+    @Operation(summary = "定时任务运行·评论。")
     public ApiResult<List<Map<String, Object>>> comments(@PathVariable long id) {
         RequestContext.requireUserId();
         long ticketId = ticketIdOf(id);
@@ -116,6 +123,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/events")
+    @Operation(summary = "定时任务运行·事件。")
     public ApiResult<List<Map<String, Object>>> events(@PathVariable long id) {
         RequestContext.requireUserId();
         long dispatchId = dispatchIdOf(id);
@@ -128,6 +136,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/participants")
+    @Operation(summary = "定时任务运行·参与方。")
     public ApiResult<List<Map<String, Object>>> participants(@PathVariable long id) {
         RequestContext.requireUserId();
         long ticketId = ticketIdOf(id);
@@ -143,6 +152,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/derived-workitems")
+    @Operation(summary = "定时任务运行·派生工单。")
     public ApiResult<List<Map<String, Object>>> derivedWorkitems(@PathVariable long id) {
         RequestContext.requireUserId();
         long ticketId = ticketIdOf(id);
@@ -155,6 +165,7 @@ public class ScheduledTaskRunController {
     }
 
     @GetMapping("/{id}/delivery-progress")
+    @Operation(summary = "定时任务运行·交付进度。")
     public ApiResult<Map<String, Object>> deliveryProgress(@PathVariable long id) {
         RequestContext.requireUserId();
         long dispatchId = dispatchIdOf(id);
@@ -167,6 +178,7 @@ public class ScheduledTaskRunController {
     }
 
     @PostMapping("/{id}/cancel")
+    @Operation(summary = "创建定时任务运行。")
     public ApiResult<Map<String, Object>> cancel(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE pf_task_run SET status='CANCELED', ended_at=NOW() WHERE id=? AND workspace_id=?", id, ws());
@@ -182,6 +194,7 @@ public class ScheduledTaskRunController {
     }
 
     @PostMapping("/{id}/pause")
+    @Operation(summary = "创建定时任务运行。")
     public ApiResult<Map<String, Object>> pause(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE pf_task_run SET status='PAUSED' WHERE id=? AND workspace_id=?", id, ws());

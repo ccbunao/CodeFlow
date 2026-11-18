@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 状态机模板只读接口(挂载在 wi_flow* 上);编辑能力随平台运维域补齐。 */
+@Tag(name = "配置资产", description = "状态模板与状态机")
 @RestController
 @RequestMapping("/api/status-templates")
 public class StatusTemplateController {
@@ -30,6 +33,7 @@ public class StatusTemplateController {
 
     /** 状态模板按需求类型分域(REQ/TASK/BUG):前端三个页签各看各的。 */
     @GetMapping
+    @Operation(summary = "状态模板按需求类型分域(REQ/TASK/BUG):前端三个页签各看各的。")
     public ApiResult<List<Map<String, Object>>> list(@RequestParam(required = false) String workType) {
         RequestContext.requireUserId();
         if (workType == null || workType.isBlank()) {
@@ -42,6 +46,7 @@ public class StatusTemplateController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "列出状态模板。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> flows = jdbc.queryForList(

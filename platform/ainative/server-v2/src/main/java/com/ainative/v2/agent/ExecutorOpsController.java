@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import java.util.Map;
  * 执行器运维扩展:启动配置 / 重启策略 / 令牌重发 / 运行时升级。
  * 与 ExecutorController 的差别:这里聚焦「运维操作」而非「生命周期 CRUD」。
  */
+@Tag(name = "执行与自动化", description = "运行节点启动参数、重启与升级")
 @RestController
 @RequestMapping("/api/executors")
 public class ExecutorOpsController {
@@ -43,6 +46,7 @@ public class ExecutorOpsController {
     }
 
     @GetMapping("/{id}/launch-config")
+    @Operation(summary = "运行节点·启动参数。")
     public ApiResult<Map<String, Object>> launchConfig(@PathVariable long id) {
         RequestContext.requireUserId();
         require(id);
@@ -56,6 +60,7 @@ public class ExecutorOpsController {
     }
 
     @PutMapping("/{id}/launch-config")
+    @Operation(summary = "运行节点·启动参数。")
     public ApiResult<Map<String, Object>> saveLaunchConfig(@PathVariable long id, @RequestBody LaunchConfigRequest req) {
         RequestContext.requireUserId();
         require(id);
@@ -79,6 +84,7 @@ public class ExecutorOpsController {
 
     /** 重启:标记重启意图,运行器收到后自杀重启(WS 会话断开重连)。 */
     @PostMapping("/{id}/restart")
+    @Operation(summary = "重启:标记重启意图,运行器收到后自杀重启(WS 会话断开重连)。")
     public ApiResult<Map<String, Object>> restart(@PathVariable long id, @RequestBody(required = false) RestartRequest req) {
         RequestContext.requireUserId();
         require(id);
@@ -93,6 +99,7 @@ public class ExecutorOpsController {
 
     /** 重发令牌:与 rotate 不同 —— 不轮换,仅把现令牌哈希对应的启动命令重新下发。 */
     @GetMapping("/{id}/token")
+    @Operation(summary = "重发令牌:与 rotate 不同 —— 不轮换,仅把现令牌哈希对应的启动命令重新下发。")
     public ApiResult<Map<String, Object>> token(@PathVariable long id) {
         RequestContext.requireUserId();
         require(id);
@@ -104,6 +111,7 @@ public class ExecutorOpsController {
     }
 
     @PostMapping("/{id}/update")
+    @Operation(summary = "重发令牌:与 rotate 不同 —— 不轮换,仅把现令牌哈希对应的启动命令重新下发。")
     public ApiResult<Map<String, Object>> requestUpdate(@PathVariable long id,
                                                         @RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();

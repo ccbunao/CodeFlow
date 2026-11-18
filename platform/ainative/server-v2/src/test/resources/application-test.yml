@@ -1,0 +1,11 @@
+# 接口集成测试(test profile):数据源由 IntegrationTestBase 的 Testcontainers 动态注入。
+# 此文件只做降噪与真实行为对齐,不覆盖任何业务开关。
+logging:
+  level:
+    root: WARN
+    com.ainative: INFO
+    org.testcontainers: INFO
+    com.zaxxer.hikari: WARN
+spring:
+  main:
+    lazy-initialization: false

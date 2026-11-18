@@ -3,6 +3,8 @@ package com.ainative.v2.ws;
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.PageResult;
 import com.ainative.v2.common.RequestContext;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 工作区(项目)接口:列表/创建/切换/成员/角色/申请/回收站。 */
+@Tag(name = "工作区", description = "项目列表、创建、成员与回收站")
 @RestController
 @RequestMapping("/api/workspaces")
 public class WorkspaceController {
@@ -33,11 +36,13 @@ public class WorkspaceController {
     }
 
     @GetMapping("/mine")
+    @Operation(summary = "列出项目。")
     public ApiResult<List<Map<String, Object>>> mine() {
         return ApiResult.ok(service.mine(RequestContext.requireUserId()));
     }
 
     @GetMapping("/all")
+    @Operation(summary = "列出项目。")
     public ApiResult<PageResult<Map<String, Object>>> all(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
@@ -46,32 +51,38 @@ public class WorkspaceController {
     }
 
     @PostMapping
+    @Operation(summary = "创建项目。")
     public ApiResult<Map<String, Object>> create(@RequestBody CreateRequest req) {
         return ApiResult.ok(service.create(req.name(), req.description(), RequestContext.requireUserId()));
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "更新项目。")
     public ApiResult<Map<String, Object>> update(@PathVariable long id, @RequestBody UpdateRequest req) {
         return ApiResult.ok(service.update(id, RequestContext.requireUserId(),
                 req.name(), req.description(), req.background(), req.version()));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "删除项目。")
     public ApiResult<Map<String, Object>> delete(@PathVariable long id) {
         return ApiResult.ok(service.delete(id, RequestContext.requireUserId()));
     }
 
     @PostMapping("/{id}/restore")
+    @Operation(summary = "项目·恢复。")
     public ApiResult<Map<String, Object>> restore(@PathVariable long id) {
         return ApiResult.ok(service.restore(id, RequestContext.requireUserId()));
     }
 
     @PostMapping("/{id}/switch")
+    @Operation(summary = "项目·切换。")
     public ApiResult<Map<String, Object>> switchWorkspace(@PathVariable long id) {
         return ApiResult.ok(service.switchWorkspace(id, RequestContext.requireUserId()));
     }
 
     @GetMapping("/recycle-bin")
+    @Operation(summary = "列出项目。")
     public ApiResult<PageResult<Map<String, Object>>> recycleBin(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
@@ -81,22 +92,26 @@ public class WorkspaceController {
     }
 
     @GetMapping("/current")
+    @Operation(summary = "列出项目。")
     public ApiResult<Map<String, Object>> current() {
         return ApiResult.ok(service.current(RequestContext.workspaceId(), RequestContext.requireUserId()));
     }
 
     @GetMapping("/current/membership")
+    @Operation(summary = "列出项目。")
     public ApiResult<Map<String, Object>> membership() {
         return ApiResult.ok(service.membership(RequestContext.workspaceId(), RequestContext.requireUserId()));
     }
 
     @GetMapping("/current/members")
+    @Operation(summary = "项目·成员。")
     public ApiResult<List<Map<String, Object>>> members() {
         long uid = RequestContext.requireUserId();
         return ApiResult.ok(service.members(RequestContext.workspaceId()));
     }
 
     @PostMapping("/current/members")
+    @Operation(summary = "项目·成员。")
     public ApiResult<Void> addMember(@RequestBody AddMemberRequest req) {
         long uid = RequestContext.requireUserId();
         service.addMember(RequestContext.workspaceId(), uid,
@@ -105,6 +120,7 @@ public class WorkspaceController {
     }
 
     @PutMapping("/current/members/{userId}/role")
+    @Operation(summary = "更新项目。")
     public ApiResult<Void> updateMemberRole(@PathVariable long userId, @RequestBody RoleRequest req) {
         long uid = RequestContext.requireUserId();
         // 前端传 {roleId};v2 以 role 字符串承载,roleId 为空时仅忽略角色细化
@@ -114,6 +130,7 @@ public class WorkspaceController {
 
     /** 身份标签(前端编辑成员弹窗);按成员维度持久化到 identity_tags_json。 */
     @PutMapping("/current/members/{userId}/identity-tags")
+    @Operation(summary = "身份标签(前端编辑成员弹窗);按成员维度持久化到 identity_tags_json。")
     public ApiResult<Void> identityTags(@PathVariable long userId,
                                         @RequestBody java.util.Map<String, Object> body) {
         long uid = RequestContext.requireUserId();
@@ -122,6 +139,7 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/current/members/{userId}")
+    @Operation(summary = "身份标签(前端编辑成员弹窗);按成员维度持久化到 identity_tags_json。")
     public ApiResult<Void> removeMember(@PathVariable long userId) {
         long uid = RequestContext.requireUserId();
         service.removeMember(RequestContext.workspaceId(), uid, userId);
@@ -129,6 +147,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/current/owner/transfer")
+    @Operation(summary = "创建项目。")
     public ApiResult<Void> transferOwner(@RequestBody TransferRequest req) {
         long uid = RequestContext.requireUserId();
         Long target = req.targetUserId() != null ? req.targetUserId() : req.userId();
@@ -137,18 +156,21 @@ public class WorkspaceController {
     }
 
     @GetMapping("/current/roles")
+    @Operation(summary = "列出项目。")
     public ApiResult<List<Map<String, Object>>> roles() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.roles(RequestContext.workspaceId()));
     }
 
     @GetMapping("/current/access-requests")
+    @Operation(summary = "列出项目。")
     public ApiResult<List<Map<String, Object>>> accessRequests() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.accessRequests(RequestContext.workspaceId()));
     }
 
     @PostMapping("/current/access-requests/{requestId}/approve")
+    @Operation(summary = "项目·审批。")
     public ApiResult<Void> approve(@PathVariable long requestId) {
         long uid = RequestContext.requireUserId();
         service.decideAccessRequest(RequestContext.workspaceId(), requestId, uid, true);
@@ -156,6 +178,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/current/access-requests/{requestId}/reject")
+    @Operation(summary = "项目·驳回。")
     public ApiResult<Void> reject(@PathVariable long requestId) {
         long uid = RequestContext.requireUserId();
         service.decideAccessRequest(RequestContext.workspaceId(), requestId, uid, false);
@@ -163,11 +186,13 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{id}/access-requests")
+    @Operation(summary = "创建项目。")
     public ApiResult<Map<String, Object>> submitAccessRequest(@PathVariable long id) {
         return ApiResult.ok(service.submitAccessRequest(id, RequestContext.requireUserId()));
     }
 
     @PostMapping("/{id}/access-requests/{requestId}/cancel")
+    @Operation(summary = "创建项目。")
     public ApiResult<Void> cancelAccessRequest(@PathVariable long id, @PathVariable long requestId) {
         service.cancelAccessRequest(id, requestId, RequestContext.requireUserId());
         return ApiResult.ok(null);

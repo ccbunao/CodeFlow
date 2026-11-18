@@ -2,6 +2,8 @@ package com.ainative.v2.cv;
 
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.RequestContext;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "需求交付", description = "AI 用量统计")
 @RestController
 @RequestMapping("/api/workitems/{workitemId}/ai-usage")
 public class UsageController {
@@ -20,6 +23,7 @@ public class UsageController {
     }
 
     @GetMapping
+    @Operation(summary = "列出AI 用量。")
     public ApiResult<List<Map<String, Object>>> usage(@PathVariable long workitemId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.usage(workitemId));

@@ -21,6 +21,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers-bom</artifactId>
+      <version>1.20.4</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -38,6 +45,29 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
       <version>${spring-boot.version}</version>
+    </dependency>
+    <!-- 接口与单元测试 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>${spring-boot.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- OpenAPI/Swagger 文档:自动扫描全部 @RestController,路径与参数来自真实代码 -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mysql</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.mysql</groupId>

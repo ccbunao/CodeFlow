@@ -8,6 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import java.util.Map;
  * 补齐前端在用的长尾接口(自进化 / 需求文档 / 提及候选 / 模板目录 / 模型目录等)。
  * 每个端点都映射到 v2 真实表;外部依赖(如 zentao 项目搜索)走 ex_binding 配置。
  */
+@Tag(name = "开放平台", description = "长尾接口与运行器运维")
 @RestController
 public class GapsController {
     public record ProposalRequest(String title, String contentMd) {}
@@ -49,6 +52,7 @@ public class GapsController {
     // ================================================================ 自进化
 
     @GetMapping("/api/evolution/admin/overview")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> evolutionOverview() {
         RequestContext.requireUserId();
         Map<String, Object> out = new LinkedHashMap<>();
@@ -61,6 +65,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/evolution/admin/asset-manifest")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> assetManifest() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -71,42 +76,49 @@ public class GapsController {
     }
 
     @PostMapping("/api/evolution/proposals/{id}/validate")
+    @Operation(summary = "运行器运维·校验。")
     public ApiResult<Map<String, Object>> validate(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "VALIDATED", null);
     }
 
     @PostMapping("/api/evolution/proposals/{id}/approve")
+    @Operation(summary = "运行器运维·审批。")
     public ApiResult<Map<String, Object>> approve(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "APPROVED", null);
     }
 
     @PostMapping("/api/evolution/proposals/{id}/reject")
+    @Operation(summary = "运行器运维·驳回。")
     public ApiResult<Map<String, Object>> reject(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "REJECTED", null);
     }
 
     @PostMapping("/api/evolution/proposals/{id}/release")
+    @Operation(summary = "运行器运维·发布。")
     public ApiResult<Map<String, Object>> release(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "RELEASED", null);
     }
 
     @PostMapping("/api/evolution/proposals/{id}/agent-release")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> agentRelease(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "AGENT_RELEASED", null);
     }
 
     @PostMapping("/api/evolution/proposals/{id}/trial/decide")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> trialDecide(@PathVariable long id, @RequestBody TrialDecisionRequest req) {
         RequestContext.requireUserId();
         return decide(id, Boolean.TRUE.equals(req.accept()) ? "TRIAL_ACCEPTED" : "TRIAL_REJECTED", req.comment());
     }
 
     @PostMapping("/api/evolution/proposals/{id}/trial/evidence")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> trialEvidence(@PathVariable long id,
                                                         @RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();
@@ -132,6 +144,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/evolution/orchestrate")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> orchestrate(@RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();
         // 编排入口:由平台级巡检任务驱动;此处登记一次编排意图
@@ -141,12 +154,14 @@ public class GapsController {
     }
 
     @PostMapping("/api/evolution/replay/execute")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> replay(@RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();
         return ApiResult.ok(Map.of("accepted", true, "message", "重放任务已登记,由巡检执行器消费"));
     }
 
     @PostMapping("/api/evolution/rollback/{id}")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> rollback(@PathVariable long id) {
         RequestContext.requireUserId();
         return decide(id, "ROLLED_BACK", null);
@@ -155,6 +170,7 @@ public class GapsController {
     // ================================================================ 工作项长尾
 
     @GetMapping("/api/workitems/{id}/mention-candidates")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> mentionCandidates(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -170,6 +186,7 @@ public class GapsController {
      * 外部侧新增的条目会入库并建立链接。此前只有 GET(仅查链接),前端发 POST 直接 500。
      */
     @PostMapping("/api/workitems/{id}/external-sync")
+    @Operation(summary = "外部同步(前端「同步外部系统」按钮):把该需求所属的外部绑定重新拉一遍,。")
     public ApiResult<Map<String, Object>> syncExternal(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> bindings = jdbc.queryForList(
@@ -192,6 +209,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/workitems/{id}/external-sync")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> externalSync(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> links = jdbc.queryForList(
@@ -205,6 +223,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/workitems/{id}/requirement-documents")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> reqDocs(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -213,6 +232,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/workitems/{id}/requirement-documents")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> saveReqDoc(@PathVariable long id, @RequestBody DocumentRequest req) {
         RequestContext.requireUserId();
         String content = req.contentMd() == null ? "" : req.contentMd();
@@ -228,6 +248,7 @@ public class GapsController {
     }
 
     @DeleteMapping("/api/workitems/{id}/requirement-documents/{docId}")
+    @Operation(summary = "删除运行器运维。")
     public ApiResult<Void> deleteReqDoc(@PathVariable long id, @PathVariable long docId) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE as_artifact SET deleted_at=NOW() WHERE id=? AND ticket_id=? AND kind='REQUIREMENT_DOC'", docId, id);
@@ -235,6 +256,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/workitems/{id}/scheduled-start")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> scheduledStart(@PathVariable long id, @RequestBody ScheduledStartRequest req) {
         RequestContext.requireUserId();
         jdbc.update("INSERT INTO pf_task (workspace_id, name, cron_expr, ticket_template_json, enabled) VALUES (?,?,?,?,1)",
@@ -249,6 +271,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/scheduled-task-runs/{id}/mention-candidates")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> runMentionCandidates(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -258,6 +281,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/attachments/{attachmentId}/preview")
+    @Operation(summary = "运行器运维·预览。")
     public ApiResult<Map<String, Object>> attachmentPreview(@PathVariable long workitemId,
                                                             @PathVariable long conversationId,
                                                             @PathVariable long attachmentId) {
@@ -275,6 +299,7 @@ public class GapsController {
     // ================================================================ 小队模板与运行视图
 
     @GetMapping("/api/squad-templates")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> squadTemplates() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -283,6 +308,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/squad-templates/{id}")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> squadTemplate(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -295,6 +321,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/squad-templates/{id}/apply")
+    @Operation(summary = "运行器运维·应用。")
     public ApiResult<Map<String, Object>> applyTemplate(@PathVariable long id, @RequestBody ApplyTemplateRequest req) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -310,6 +337,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/squads/{id}/executors")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> squadExecutors(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -319,6 +347,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/squads/{id}/workflow")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> squadWorkflow(@PathVariable long id) {
         RequestContext.requireUserId();
         Map<String, Object> out = new LinkedHashMap<>();
@@ -333,6 +362,7 @@ public class GapsController {
     // ================================================================ 模型目录与执行器命令
 
     @GetMapping("/api/executor-model-catalogs")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> modelCatalogs(@RequestParam(required = false) String provider) {
         RequestContext.requireUserId();
         String sql = "SELECT id, provider, model AS modelCode, model AS displayName, reason AS status"
@@ -345,6 +375,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/executor-model-catalogs/{idOrProvider}")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> modelCatalog(@PathVariable String idOrProvider) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -363,6 +394,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/executors/{id}/launch-command/preview")
+    @Operation(summary = "运行器运维·预览。")
     public ApiResult<Map<String, Object>> launchPreview(@PathVariable long id) {
         RequestContext.requireUserId();
         Map<String, Object> cmd = jdbc.queryForList(
@@ -375,6 +407,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/executors/{id}/launch-command/apply")
+    @Operation(summary = "运行器运维·应用。")
     public ApiResult<Map<String, Object>> launchApply(@PathVariable long id,
                                                       @RequestBody(required = false) Map<String, Object> body) {
         RequestContext.requireUserId();
@@ -386,6 +419,7 @@ public class GapsController {
     // ================================================================ 其它长尾
 
     @GetMapping("/api/artifacts/{id}/download")
+    @Operation(summary = "列出运行器运维。")
     public ResponseEntity<byte[]> artifactDownload(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -411,6 +445,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/artifacts/{id}/preview")
+    @Operation(summary = "运行器运维·预览。")
     public ApiResult<Map<String, Object>> artifactPreview(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -427,6 +462,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/audit-logs/count")
+    @Operation(summary = "运行器运维·计数。")
     public ApiResult<Long> auditCount() {
         RequestContext.requireUserId();
         Long n = jdbc.queryForObject("SELECT COUNT(*) FROM pf_audit WHERE workspace_id=?", Long.class, ws());
@@ -434,6 +470,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/debug-logs")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> debugLogs(@RequestParam(required = false) Long workitemId) {
         RequestContext.requireUserId();
         if (workitemId != null) {
@@ -447,6 +484,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/capabilities/scheduled-task")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> scheduledTaskCapability() {
         RequestContext.requireUserId();
         // 前端门禁契约:available + mode=V037_READY + clusterReady + reason=null 缺一即整页「暂时不可用」。
@@ -470,6 +508,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/environment-variables/{id}/value")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> envValue(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -485,6 +524,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/repos/{id}/scan")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> scanRepo(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -501,6 +541,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/integrations/channels/group-config")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> groupConfigs() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -508,6 +549,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/integrations/zentao/projects/search")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> zentaoSearch(@RequestParam(required = false) String keyword) {
         RequestContext.requireUserId();
         List<Map<String, Object>> bindings = jdbc.queryForList(
@@ -517,6 +559,7 @@ public class GapsController {
     }
 
     @PostMapping("/api/integrations/feishu/callback")
+    @Operation(summary = "创建运行器运维。")
     public ApiResult<Map<String, Object>> feishuCallback(@RequestBody(required = false) Map<String, Object> body) {
         // 回调入口:渠道校验密钥后回执;实际消息处理走异步队列
         return ApiResult.ok(Map.of("challenge", body == null ? "" : body.getOrDefault("challenge", ""),
@@ -524,6 +567,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/workspaces/current/member-candidates")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> memberCandidates(@RequestParam(required = false) String keyword) {
         RequestContext.requireUserId();
         String like = keyword == null || keyword.isBlank() ? "%" : "%" + keyword.trim() + "%";
@@ -535,6 +579,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/workspaces/current/roles/{id}")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> roleDetail(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -547,6 +592,7 @@ public class GapsController {
     }
 
     @DeleteMapping("/api/workspaces/current/roles/{id}")
+    @Operation(summary = "删除运行器运维。")
     public ApiResult<Void> deleteRole(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE id_ws_role SET deleted_at=NOW() WHERE id=? AND workspace_id=?", id, ws());
@@ -554,6 +600,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/memories/reviews/count")
+    @Operation(summary = "运行器运维·计数。")
     public ApiResult<Long> memoryReviewCount() {
         RequestContext.requireUserId();
         Long n = jdbc.queryForObject(
@@ -562,6 +609,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/dispatches/{id}/diagnostics")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<List<Map<String, Object>>> diagnostics(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -570,6 +618,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/dispatches/{id}/diagnostics/{eventId}")
+    @Operation(summary = "列出运行器运维。")
     public ApiResult<Map<String, Object>> diagnostic(@PathVariable long id, @PathVariable long eventId) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -582,6 +631,7 @@ public class GapsController {
     }
 
     @GetMapping("/api/dispatches/{id}/diagnostics/{eventId}/download")
+    @Operation(summary = "列出运行器运维。")
     public ResponseEntity<byte[]> diagnosticDownload(@PathVariable long id, @PathVariable long eventId) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(

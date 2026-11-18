@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 状态机模板编辑:节点(状态)与转移边。 */
+@Tag(name = "配置资产", description = "状态模板编辑与流转边")
 @RestController
 @RequestMapping("/api/status-templates")
 public class StatusTemplateEditController {
@@ -45,6 +48,7 @@ public class StatusTemplateEditController {
 
     /** 新建状态模板(按需求类型分域)。前端「新建模板」此前没有对应后端端点。 */
     @PostMapping
+    @Operation(summary = "新建状态模板(按需求类型分域)。前端「新建模板」此前没有对应后端端点。")
     public ApiResult<Map<String, Object>> createTemplate(@RequestBody TemplateRequest req) {
         RequestContext.requireUserId();
         if (req.name() == null || req.name().isBlank()) {
@@ -70,6 +74,7 @@ public class StatusTemplateEditController {
     // ---------------------------------------------------------------- 节点
 
     @PostMapping("/{id}/nodes")
+    @Operation(summary = "创建状态模板。")
     public ApiResult<Map<String, Object>> addNode(@PathVariable long id, @RequestBody NodeRequest req) {
         RequestContext.requireUserId();
         requireFlow(id);
@@ -85,6 +90,7 @@ public class StatusTemplateEditController {
     }
 
     @PutMapping("/{id}/nodes/{nodeId}")
+    @Operation(summary = "更新状态模板。")
     public ApiResult<Map<String, Object>> updateNode(@PathVariable long id, @PathVariable long nodeId,
                                                      @RequestBody NodeRequest req) {
         RequestContext.requireUserId();
@@ -102,6 +108,7 @@ public class StatusTemplateEditController {
     }
 
     @DeleteMapping("/{id}/nodes/{nodeId}")
+    @Operation(summary = "删除状态模板。")
     public ApiResult<Void> deleteNode(@PathVariable long id, @PathVariable long nodeId) {
         RequestContext.requireUserId();
         requireFlow(id);
@@ -117,6 +124,7 @@ public class StatusTemplateEditController {
     // ---------------------------------------------------------------- 转移边
 
     @PostMapping("/{id}/transitions")
+    @Operation(summary = "创建状态模板。")
     public ApiResult<Map<String, Object>> addEdge(@PathVariable long id, @RequestBody EdgeRequest req) {
         RequestContext.requireUserId();
         requireFlow(id);
@@ -140,6 +148,7 @@ public class StatusTemplateEditController {
     }
 
     @DeleteMapping("/{id}/transitions/{edgeId}")
+    @Operation(summary = "删除状态模板。")
     public ApiResult<Void> deleteEdge(@PathVariable long id, @PathVariable long edgeId) {
         RequestContext.requireUserId();
         requireFlow(id);

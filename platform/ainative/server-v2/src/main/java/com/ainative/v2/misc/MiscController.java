@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ import java.util.Map;
  * 杂项接口:Ai 会话(确认式编排) / AI 用量配额 / 工单分享链接 / memory-store 视图。
  * 都是前端在用的轻量端点;memory-stores 直接映射 mm_store/mm_doc/mm_acl。
  */
+@Tag(name = "开放平台", description = "AI 会话与自进化长尾接口")
 @RestController
 public class MiscController {
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -47,6 +50,7 @@ public class MiscController {
     // ================================================================ Ai 会话
 
     @GetMapping("/api/ai/sessions")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> sessions(@RequestParam(required = false) String scene,
                                                          @RequestParam(defaultValue = "20") int limit) {
         RequestContext.requireUserId();
@@ -61,6 +65,7 @@ public class MiscController {
     }
 
     @PostMapping("/api/ai/sessions")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> createSession(@RequestBody CreateSessionRequest req) {
         long uid = RequestContext.requireUserId();
         jdbc.update("INSERT INTO ag_ai_session (workspace_id, scene, biz_ref, user_id, status) VALUES (?,?,?,?,'OPEN')",
@@ -70,12 +75,14 @@ public class MiscController {
     }
 
     @GetMapping("/api/ai/sessions/{id}")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<Map<String, Object>> session(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(sessionMap(id));
     }
 
     @PostMapping("/api/ai/sessions/{id}/confirm")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> confirm(@PathVariable long id, @RequestBody(required = false) ConfirmRequest req) {
         RequestContext.requireUserId();
         boolean ok = req == null || req.confirmed() == null || req.confirmed();
@@ -85,6 +92,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/ai/sessions/{id}/messages")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> messages(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -93,6 +101,7 @@ public class MiscController {
     }
 
     @PostMapping("/api/ai/sessions/{id}/messages")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> addMessage(@PathVariable long id, @RequestBody MessageRequest req) {
         RequestContext.requireUserId();
         Integer seq = jdbc.queryForObject(
@@ -121,6 +130,7 @@ public class MiscController {
     // ================================================================ AI 用量
 
     @GetMapping("/api/ai-usage")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> usage(@RequestParam(defaultValue = "30") int days) {
         RequestContext.requireUserId();
         int n = Math.max(1, Math.min(days, 365));
@@ -131,6 +141,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/ai-usage/quota")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<Map<String, Object>> quota() {
         RequestContext.requireUserId();
         Long used = jdbc.queryForObject(
@@ -145,6 +156,7 @@ public class MiscController {
     // ================================================================ 工单分享
 
     @PostMapping("/api/workitems/{id}/share")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> share(@org.springframework.web.bind.annotation.PathVariable long id,
                                                 @RequestBody(required = false) ShareRequest req) {
         RequestContext.requireUserId();
@@ -164,6 +176,7 @@ public class MiscController {
 
     /** 公开分享视图(免登录):按令牌读取工单快照。 */
     @GetMapping("/api/share/workitems/{token}")
+    @Operation(summary = "公开分享视图(免登录):按令牌读取工单快照。")
     public ApiResult<Map<String, Object>> sharedView(@PathVariable String token) {
         List<Map<String, Object>> shares = jdbc.queryForList(
                 "SELECT id, ticket_id AS ticketId, expires_at FROM cv_share WHERE token=? AND deleted_at IS NULL", token);
@@ -192,6 +205,7 @@ public class MiscController {
     // ================================================================ 记忆库
 
     @GetMapping("/api/memory-stores")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> stores(@RequestParam(required = false) String keyword) {
         RequestContext.requireUserId();
         String like = keyword == null || keyword.isBlank() ? "%" : "%" + keyword.trim() + "%";
@@ -201,6 +215,7 @@ public class MiscController {
     }
 
     @PostMapping("/api/memory-stores")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> createStore(@RequestBody StoreRequest req) {
         RequestContext.requireUserId();
         if (req.name() == null || req.name().isBlank()) {
@@ -221,6 +236,7 @@ public class MiscController {
      * 每个归属 = 一个记忆库(当前实现:项目级 store 归当前用户,智能体级 store 归各 agent)。
      */
     @GetMapping("/api/memory-stores/directory")
+    @Operation(summary = "记忆归属目录(前端 MemoryDirectory 契约:{owners:[{scope,ownerRef,name,squadNames,。")
     public ApiResult<Map<String, Object>> directory() {
         long uid = RequestContext.requireUserId();
         List<Map<String, Object>> owners = new ArrayList<>();
@@ -245,6 +261,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<Map<String, Object>> store(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -256,6 +273,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}/documents")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> documents(@PathVariable long id,
                                                           @RequestParam(required = false) String keyword) {
         RequestContext.requireUserId();
@@ -267,6 +285,7 @@ public class MiscController {
     }
 
     @PostMapping("/api/memory-stores/{id}/documents")
+    @Operation(summary = "创建AI 会话。")
     public ApiResult<Map<String, Object>> saveDocument(@PathVariable long id, @RequestBody DocRequest req) {
         long uid = RequestContext.requireUserId();
         if (req.path() == null || req.path().isBlank()) {
@@ -290,6 +309,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}/topics")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> topics(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -298,6 +318,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}/acls")
+    @Operation(summary = "列出记忆授权(ACL)。")
     public ApiResult<List<Map<String, Object>>> acls(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -306,6 +327,7 @@ public class MiscController {
     }
 
     @PostMapping("/api/memory-stores/{id}/acls")
+    @Operation(summary = "授予记忆访问权限(ACL)。")
     public ApiResult<Map<String, Object>> grantAcl(@PathVariable long id, @RequestBody AclRequest req) {
         RequestContext.requireUserId();
         if (req.agentId() == null) {
@@ -318,6 +340,7 @@ public class MiscController {
     }
 
     @org.springframework.web.bind.annotation.DeleteMapping("/api/memory-stores/{id}/acls/{aclId}")
+    @Operation(summary = "撤销记忆授权(ACL)。")
     public ApiResult<Void> revokeAcl(@PathVariable long id, @PathVariable long aclId) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE mm_acl SET deleted_at=NOW() WHERE id=? AND store_id=?", aclId, id);
@@ -325,6 +348,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}/history")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> history(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -333,6 +357,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-stores/{id}/mutations")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> mutations(@PathVariable long id) {
         RequestContext.requireUserId();
         // 变更流水以文档表的修改记录近似:按天聚合
@@ -344,6 +369,7 @@ public class MiscController {
     // ================================================================ 记忆导入
 
     @GetMapping("/api/memory-imports")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> imports() {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(
@@ -352,6 +378,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-imports/{id}/status")
+    @Operation(summary = "AI 会话·状态。")
     public ApiResult<Map<String, Object>> importStatus(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -363,6 +390,7 @@ public class MiscController {
     }
 
     @GetMapping("/api/memory-imports/{id}/receipts")
+    @Operation(summary = "列出AI 会话。")
     public ApiResult<List<Map<String, Object>>> importReceipts(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(jdbc.queryForList(

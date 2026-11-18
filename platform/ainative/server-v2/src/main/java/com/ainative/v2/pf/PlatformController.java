@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 平台运维接口:品牌/设置/审计/通知/定时任务/IM 渠道/自进化/备份/调试日志。 */
+@Tag(name = "平台管理", description = "品牌、设置、审计、通知、定时任务与备份")
 @RestController
 @RequestMapping("/api")
 public class PlatformController {
@@ -56,17 +59,20 @@ public class PlatformController {
 
     // 品牌
     @GetMapping("/platform/branding/public")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> publicBranding() {
         return ApiResult.ok(service.publicBranding());
     }
 
     @GetMapping("/platform/branding")
+    @Operation(summary = "平台配置·品牌。")
     public ApiResult<Map<String, Object>> branding() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.publicBranding());
     }
 
     @PutMapping("/platform/branding")
+    @Operation(summary = "平台配置·品牌。")
     public ApiResult<Map<String, Object>> saveBranding(@RequestBody BrandingRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.saveBranding(req.platformName(), req.themeKey(), req.primaryColor(), req.domain()));
@@ -74,12 +80,14 @@ public class PlatformController {
 
     // 设置
     @GetMapping("/settings/{group}")
+    @Operation(summary = "平台配置·设置。")
     public ApiResult<List<Map<String, Object>>> settings(@PathVariable String group) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.settings(group));
     }
 
     @PutMapping("/settings/{group}")
+    @Operation(summary = "平台配置·设置。")
     public ApiResult<Void> saveSettings(@PathVariable String group, @RequestBody SettingsRequest req) {
         RequestContext.requireUserId();
         service.saveSettings(group, req.items());
@@ -88,6 +96,7 @@ public class PlatformController {
 
     // 审计
     @GetMapping("/audit-logs")
+    @Operation(summary = "平台配置·操作审计。")
     public ApiResult<PageResult<Map<String, Object>>> auditLogs(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize) {
@@ -97,6 +106,7 @@ public class PlatformController {
 
     // 通知
     @GetMapping("/notifications")
+    @Operation(summary = "平台配置·通知。")
     public ApiResult<PageResult<Map<String, Object>>> notifications(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize) {
@@ -104,11 +114,13 @@ public class PlatformController {
     }
 
     @GetMapping("/notifications/unread-count")
+    @Operation(summary = "平台配置·未读数。")
     public ApiResult<Long> unread() {
         return ApiResult.ok(service.unreadCount(RequestContext.requireUserId()));
     }
 
     @PostMapping("/notifications/{id}/read")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Void> read(@PathVariable long id) {
         RequestContext.requireUserId();
         service.markRead(id);
@@ -116,12 +128,14 @@ public class PlatformController {
     }
 
     @PostMapping("/notifications/read-all")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Void> readAll() {
         service.markAllRead(RequestContext.requireUserId());
         return ApiResult.ok(null);
     }
 
     @DeleteMapping("/notifications/{id}")
+    @Operation(summary = "平台配置·通知。")
     public ApiResult<Void> deleteNotification(@PathVariable long id) {
         RequestContext.requireUserId();
         service.deleteNotification(id);
@@ -130,6 +144,7 @@ public class PlatformController {
 
     /** 内部/测试用:发一条站内通知。 */
     @PostMapping("/notifications")
+    @Operation(summary = "内部/测试用:发一条站内通知。")
     public ApiResult<Map<String, Object>> notify(@RequestBody NotifyRequest req) {
         long uid = req.userId() == null ? RequestContext.requireUserId() : req.userId();
         return ApiResult.ok(service.notify(uid, req.eventType(), req.title(), req.bodyMd()));
@@ -137,42 +152,49 @@ public class PlatformController {
 
     // 定时任务
     @GetMapping("/scheduled-tasks")
+    @Operation(summary = "内部/测试用:发一条站内通知。")
     public ApiResult<List<Map<String, Object>>> tasks() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.tasks());
     }
 
     @PostMapping("/scheduled-tasks")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> createTask(@RequestBody TaskRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.createTask(req.name(), req.cronExpr(), req.templateJson()));
     }
 
     @GetMapping("/scheduled-tasks/{id}")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> task(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.task(id));
     }
 
     @PutMapping("/scheduled-tasks/{id}")
+    @Operation(summary = "更新平台配置。")
     public ApiResult<Map<String, Object>> updateTask(@PathVariable long id, @RequestBody TaskRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.updateTask(id, req.name(), req.cronExpr(), req.templateJson()));
     }
 
     @PostMapping("/scheduled-tasks/{id}/enable")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> enableTask(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.setTaskEnabled(id, true));
     }
 
     @PostMapping("/scheduled-tasks/{id}/pause")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> pauseTask(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.setTaskEnabled(id, false));
     }
 
     @DeleteMapping("/scheduled-tasks/{id}")
+    @Operation(summary = "删除平台配置。")
     public ApiResult<Void> deleteTask(@PathVariable long id) {
         RequestContext.requireUserId();
         service.deleteTask(id);
@@ -181,24 +203,28 @@ public class PlatformController {
 
     // IM 渠道
     @GetMapping("/platform/im-channels")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<List<Map<String, Object>>> imChannels() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.imChannels());
     }
 
     @PutMapping("/platform/im-channels/{channel}")
+    @Operation(summary = "更新平台配置。")
     public ApiResult<List<Map<String, Object>>> saveImChannel(@PathVariable String channel, @RequestBody ImChannelRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.saveImChannel(channel, req.appKey(), Boolean.TRUE.equals(req.enabled())));
     }
 
     @GetMapping("/platform/im-channels/selection")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> imSelection() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.imSelection());
     }
 
     @PutMapping("/platform/im-channels/selection")
+    @Operation(summary = "更新平台配置。")
     public ApiResult<Map<String, Object>> selectImChannel(@RequestBody ImSelectionRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.selectImChannel(req.provider()));
@@ -206,12 +232,14 @@ public class PlatformController {
 
     // 其它只读
     @GetMapping("/evolution/proposals")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<List<Map<String, Object>>> evolution() {
         RequestContext.requireUserId();
         return ApiResult.ok(service.evolutionProposals());
     }
 
     @GetMapping("/platform/branding/capability")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> brandingCapability() {
         long uid = RequestContext.requireUserId();
         boolean admin = jdbc.queryForList(
@@ -225,6 +253,7 @@ public class PlatformController {
 
     /** 平台 Logo:返回裸图片;未上传时 404,前端回落到默认图标。 */
     @GetMapping("/platform/branding/logo")
+    @Operation(summary = "平台 Logo:返回裸图片;未上传时 404,前端回落到默认图标。")
     public ResponseEntity<byte[]> brandingLogo() {
         Path file = logoFile();
         if (file == null || !Files.isReadable(file)) {
@@ -244,6 +273,7 @@ public class PlatformController {
     }
 
     @PostMapping("/platform/branding/logo")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> uploadLogo(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         RequestContext.requireUserId();
         if (file == null || file.isEmpty()) {
@@ -267,6 +297,7 @@ public class PlatformController {
     }
 
     @DeleteMapping("/platform/branding/logo")
+    @Operation(summary = "删除平台配置。")
     public ApiResult<Void> deleteLogo() {
         RequestContext.requireUserId();
         try {
@@ -281,6 +312,7 @@ public class PlatformController {
 
     /** 平台智能体状态横幅:平台内置执行器是否就绪。 */
     @GetMapping("/platform-agent/status")
+    @Operation(summary = "平台智能体状态横幅:平台内置执行器是否就绪。")
     public ApiResult<Map<String, Object>> platformAgentStatus() {
         RequestContext.requireUserId();
         long ws = RequestContext.workspaceId();
@@ -301,6 +333,7 @@ public class PlatformController {
     }
 
     @GetMapping("/platform/runtime-auto-update")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> runtimeAutoUpdate() {
         RequestContext.requireUserId();
         Map<String, Object> out = new LinkedHashMap<>();
@@ -310,6 +343,7 @@ public class PlatformController {
     }
 
     @GetMapping("/platform/im-channels/{channel}/group-chat")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> imGroupChat(@PathVariable String channel) {
         RequestContext.requireUserId();
         List<Map<String, Object>> rows = jdbc.queryForList(
@@ -339,24 +373,28 @@ public class PlatformController {
     }
 
     @GetMapping("/platform/backups")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<List<Map<String, Object>>> backups() {
         RequestContext.requireUserId();
         return ApiResult.ok(backups.list(1, 200));
     }
 
     @PostMapping("/platform/backups")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> createBackup(@RequestBody(required = false) BackupRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(backups.backup(req == null ? null : req.name()));
     }
 
     @PostMapping("/platform/backups/{id}/restore")
+    @Operation(summary = "平台配置·恢复。")
     public ApiResult<Map<String, Object>> restoreBackup(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(backups.restore(id));
     }
 
     @GetMapping("/platform/backups/{id}/file")
+    @Operation(summary = "列出平台配置。")
     public ResponseEntity<byte[]> backupFile(@PathVariable long id) {
         RequestContext.requireUserId();
         byte[] bytes = backups.archiveBytes(id);
@@ -368,6 +406,7 @@ public class PlatformController {
 
     // 工作区视图(前端设置页使用)
     @GetMapping("/workspaces/current/backups")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<List<Map<String, Object>>> workspaceBackups(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -376,12 +415,14 @@ public class PlatformController {
     }
 
     @PostMapping("/workspaces/current/backups")
+    @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> createWorkspaceBackup(@RequestBody(required = false) BackupRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(backups.backup(req == null ? null : req.name()));
     }
 
     @GetMapping("/workspaces/current/backups/{id}/download")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> downloadBackup(@PathVariable long id) {
         RequestContext.requireUserId();
         Map<String, Object> out = new LinkedHashMap<>();
@@ -391,6 +432,7 @@ public class PlatformController {
     }
 
     @GetMapping("/workitems/{workitemId}/debug-logs")
+    @Operation(summary = "列出平台配置。")
     public ApiResult<List<Map<String, Object>>> debugLogs(@PathVariable long workitemId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.debugLogs(workitemId));

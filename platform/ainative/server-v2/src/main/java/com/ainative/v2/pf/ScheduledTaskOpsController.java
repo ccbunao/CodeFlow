@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import java.util.Map;
  * 定时任务运维:立即执行 / 健康 / 运行历史(挂在 /api/scheduled-tasks/{id} 下)。
  * 文档管理(md_ 文档引用)与多轮工单派生在文档域落地后接入。
  */
+@Tag(name = "执行与自动化", description = "定时任务触发、运行记录与健康度")
 @RestController
 public class ScheduledTaskOpsController {
     private final JdbcTemplate jdbc;
@@ -41,6 +44,7 @@ public class ScheduledTaskOpsController {
 
     /** 立即触发一次(无视 cron),复用与调度器完全相同的建单派发链路。 */
     @PostMapping("/api/scheduled-tasks/{id}/run-now")
+    @Operation(summary = "立即触发一次(无视 cron),复用与调度器完全相同的建单派发链路。")
     public ApiResult<Map<String, Object>> runNow(@PathVariable long id) {
         RequestContext.requireUserId();
         require(id);
@@ -54,6 +58,7 @@ public class ScheduledTaskOpsController {
     }
 
     @GetMapping("/api/scheduled-tasks/{id}/runs")
+    @Operation(summary = "定时任务·运行记录。")
     public ApiResult<List<Map<String, Object>>> runs(@PathVariable long id,
                                                      @RequestParam(defaultValue = "20") int limit) {
         RequestContext.requireUserId();
@@ -65,6 +70,7 @@ public class ScheduledTaskOpsController {
     }
 
     @GetMapping("/api/scheduled-tasks/{id}/health")
+    @Operation(summary = "定时任务·健康度。")
     public ApiResult<Map<String, Object>> health(@PathVariable long id) {
         RequestContext.requireUserId();
         require(id);

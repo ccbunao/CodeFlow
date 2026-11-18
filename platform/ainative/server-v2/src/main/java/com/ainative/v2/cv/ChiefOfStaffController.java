@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +27,7 @@ import java.util.Map;
  * 会话标题固定 chief:{userId},管家 agent 复用项目内第一个智能体
  * (setup 时确保 agent+executor 就绪)。契约对齐 chiefOfStaff/api.ts。
  */
+@Tag(name = "开放平台", description = "AI 管家与自进化建议")
 @RestController
 public class ChiefOfStaffController {
     private final JdbcTemplate jdbc;
@@ -42,6 +45,7 @@ public class ChiefOfStaffController {
     // ---------------------------------------------------------------- setup
 
     @GetMapping("/api/platform-agent/setup")
+    @Operation(summary = "列出AI 管家。")
     public ApiResult<Map<String, Object>> setup() {
         long uid = RequestContext.requireUserId();
         Map<String, Object> out = new LinkedHashMap<>();
@@ -63,6 +67,7 @@ public class ChiefOfStaffController {
 
     /** 完成管家初始化:确保存在管家 agent 与在线执行器(复用现有资源,不重复建)。 */
     @PostMapping("/api/platform-agent/setup")
+    @Operation(summary = "完成管家初始化:确保存在管家 agent 与在线执行器(复用现有资源,不重复建)。")
     public ApiResult<Map<String, Object>> completeSetup(@RequestBody(required = false) Map<String, Object> body) {
         long ws = RequestContext.workspaceId();
         Long agentId = platformAgentId();
@@ -106,6 +111,7 @@ public class ChiefOfStaffController {
     // ---------------------------------------------------------------- 会话
 
     @GetMapping("/api/platform/conversations")
+    @Operation(summary = "列出AI 管家。")
     public ApiResult<List<Map<String, Object>>> list(@RequestParam(defaultValue = "false") boolean archived,
                                                      @RequestParam(defaultValue = "1") int page) {
         long uid = RequestContext.requireUserId();
@@ -124,6 +130,7 @@ public class ChiefOfStaffController {
     }
 
     @PostMapping("/api/platform/conversations")
+    @Operation(summary = "创建AI 管家。")
     public ApiResult<Map<String, Object>> create(@RequestBody(required = false) Map<String, Object> body) {
         long uid = RequestContext.requireUserId();
         Long agentId = body == null || body.get("agentId") == null ? platformAgentId()
@@ -147,12 +154,14 @@ public class ChiefOfStaffController {
     }
 
     @GetMapping("/api/platform/conversations/{id}")
+    @Operation(summary = "列出AI 管家。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long id) {
         long uid = RequestContext.requireUserId();
         return ApiResult.ok(detail(id, uid));
     }
 
     @PatchMapping("/api/platform/conversations/{id}")
+    @Operation(summary = "更新AI 管家。")
     public ApiResult<Map<String, Object>> patch(@PathVariable long id,
                                                 @RequestBody(required = false) Map<String, Object> body) {
         long uid = RequestContext.requireUserId();
@@ -165,6 +174,7 @@ public class ChiefOfStaffController {
     // ---------------------------------------------------------------- 回合
 
     @PostMapping("/api/platform/conversations/{id}/turns")
+    @Operation(summary = "创建AI 管家。")
     public ApiResult<Map<String, Object>> send(@PathVariable long id, @RequestBody Map<String, Object> body) {
         long uid = RequestContext.requireUserId();
         requireMine(id, uid);
@@ -176,6 +186,7 @@ public class ChiefOfStaffController {
     }
 
     @PostMapping("/api/platform/conversations/{id}/turns/{turnId}/cancel")
+    @Operation(summary = "创建AI 管家。")
     public ApiResult<Map<String, Object>> cancel(@PathVariable long id, @PathVariable long turnId) {
         RequestContext.requireUserId();
         jdbc.update("INSERT INTO ag_chat_turn_event (workspace_id, turn_id, event_type, detail_json) VALUES (?,?, 'TURN_CANCEL_REQUESTED', ?)",
@@ -184,6 +195,7 @@ public class ChiefOfStaffController {
     }
 
     @GetMapping("/api/platform/conversations/{id}/turns/{turnId}/events")
+    @Operation(summary = "AI 管家·事件。")
     public ApiResult<List<Map<String, Object>>> events(@PathVariable long id, @PathVariable long turnId,
                                                        @RequestParam(required = false) Long afterId) {
         RequestContext.requireUserId();
@@ -197,6 +209,7 @@ public class ChiefOfStaffController {
     }
 
     @GetMapping("/api/platform/conversations/{id}/turns/{turnId}/events/page")
+    @Operation(summary = "AI 管家·分页列表。")
     public ApiResult<Map<String, Object>> eventPage(@PathVariable long id, @PathVariable long turnId,
                                                     @RequestParam(required = false) Long afterId) {
         RequestContext.requireUserId();
@@ -216,6 +229,7 @@ public class ChiefOfStaffController {
     }
 
     @PostMapping("/api/platform/conversations/{id}/elicitations/{requestId}/reply")
+    @Operation(summary = "创建AI 管家。")
     public ApiResult<Map<String, Object>> elicitationReply(@PathVariable long id, @PathVariable String requestId,
                                                            @RequestBody Map<String, Object> body) {
         RequestContext.requireUserId();
@@ -224,12 +238,14 @@ public class ChiefOfStaffController {
     }
 
     @GetMapping("/api/platform/conversations/{id}/action-plans")
+    @Operation(summary = "列出AI 管家。")
     public ApiResult<List<Map<String, Object>>> plans(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(List.of());
     }
 
     @DeleteMapping("/api/platform/conversations/{id}")
+    @Operation(summary = "删除AI 管家。")
     public ApiResult<Void> archive(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE ag_chat SET deleted_at=NOW() WHERE id=?", id);

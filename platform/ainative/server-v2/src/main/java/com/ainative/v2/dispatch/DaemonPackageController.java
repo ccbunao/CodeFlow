@@ -4,6 +4,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 执行器下载 capsule 包(URL 自带 HMAC 签名,无需登录态)。 */
+@Tag(name = "运行节点", description = "运行节点领取任务包")
 @RestController
 @RequestMapping("/api/daemon")
 public class DaemonPackageController {
@@ -26,6 +29,7 @@ public class DaemonPackageController {
     }
 
     @GetMapping("/dispatches/{dispatchId}/package")
+    @Operation(summary = "执行器下载 capsule 包(URL 自带 HMAC 签名,无需登录态)。")
     public ResponseEntity<byte[]> packageOf(@PathVariable long dispatchId, @RequestParam(name = "k", required = false) String key) {
         List<Map<String, Object>> runs = jdbc.queryForList("SELECT attempt FROM rt_run WHERE id=?", dispatchId);
         if (runs.isEmpty()) {

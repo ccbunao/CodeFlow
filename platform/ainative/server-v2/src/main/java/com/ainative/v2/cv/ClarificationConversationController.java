@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import java.util.Map;
  * 澄清对话与智能体对话共用同一条真实 AI 通道(CONVERSATION_TURN)。
  * 附件落 as_artifact(ticket_id 关联),元数据行带 kind=CLARIFICATION。
  */
+@Tag(name = "需求交付", description = "澄清会话的逐轮问答")
 @RestController
 public class ClarificationConversationController {
     private static final String TITLE_PREFIX = "clarification:";
@@ -53,6 +56,7 @@ public class ClarificationConversationController {
     // ---------------------------------------------------------------- 会话
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations")
+    @Operation(summary = "列出澄清会话。")
     public ApiResult<List<Map<String, Object>>> list(@PathVariable long workitemId,
                                                      @RequestParam(required = false) Long agentId) {
         RequestContext.requireUserId();
@@ -76,6 +80,7 @@ public class ClarificationConversationController {
 
     /** 取或建:同一 (工单, 智能体) 只有一个澄清会话。 */
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations")
+    @Operation(summary = "取或建:同一 (工单, 智能体) 只有一个澄清会话。")
     public ApiResult<Map<String, Object>> create(@PathVariable long workitemId, @RequestBody CreateRequest req) {
         RequestContext.requireUserId();
         long agentId = req.agentId() == null ? defaultAgentId() : req.agentId();
@@ -95,6 +100,7 @@ public class ClarificationConversationController {
     }
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}")
+    @Operation(summary = "列出澄清会话。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long workitemId, @PathVariable long conversationId) {
         RequestContext.requireUserId();
         return ApiResult.ok(detailMap(workitemId, conversationId));
@@ -103,6 +109,7 @@ public class ClarificationConversationController {
     // ---------------------------------------------------------------- 回合
 
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/turns")
+    @Operation(summary = "创建澄清会话。")
     public ApiResult<Map<String, Object>> submitTurn(@PathVariable long workitemId,
                                                      @PathVariable long conversationId,
                                                      @RequestBody TurnRequest req) {
@@ -131,6 +138,7 @@ public class ClarificationConversationController {
     }
 
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/turns/{turnId}/cancel")
+    @Operation(summary = "创建澄清会话。")
     public ApiResult<Map<String, Object>> cancelTurn(@PathVariable long workitemId, @PathVariable long conversationId,
                                                      @PathVariable long turnId) {
         RequestContext.requireUserId();
@@ -144,6 +152,7 @@ public class ClarificationConversationController {
     }
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/turns/{turnId}/events")
+    @Operation(summary = "澄清会话·事件。")
     public ApiResult<List<Map<String, Object>>> turnEvents(@PathVariable long workitemId,
                                                            @PathVariable long conversationId,
                                                            @PathVariable long turnId,
@@ -160,6 +169,7 @@ public class ClarificationConversationController {
     }
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/events")
+    @Operation(summary = "澄清会话·事件。")
     public ApiResult<List<Map<String, Object>>> events(@PathVariable long workitemId,
                                                        @PathVariable long conversationId,
                                                        @RequestParam(required = false) Long afterId) {
@@ -179,6 +189,7 @@ public class ClarificationConversationController {
     // ---------------------------------------------------------------- 附件
 
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/attachments")
+    @Operation(summary = "创建澄清会话。")
     public ApiResult<Map<String, Object>> attach(@PathVariable long workitemId, @PathVariable long conversationId,
                                                  @RequestBody AttachRequest req) {
         RequestContext.requireUserId();
@@ -197,6 +208,7 @@ public class ClarificationConversationController {
     }
 
     @GetMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/attachments")
+    @Operation(summary = "列出澄清会话。")
     public ApiResult<List<Map<String, Object>>> attachments(@PathVariable long workitemId,
                                                             @PathVariable long conversationId) {
         RequestContext.requireUserId();
@@ -209,6 +221,7 @@ public class ClarificationConversationController {
     }
 
     @DeleteMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/attachments/{attachmentId}")
+    @Operation(summary = "删除澄清会话。")
     public ApiResult<Void> detach(@PathVariable long workitemId, @PathVariable long conversationId,
                                   @PathVariable long attachmentId) {
         RequestContext.requireUserId();
@@ -220,6 +233,7 @@ public class ClarificationConversationController {
     // ---------------------------------------------------------------- 交互卡片
 
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/elicitations/{requestId}/reply")
+    @Operation(summary = "创建澄清会话。")
     public ApiResult<Map<String, Object>> elicitationReply(@PathVariable long workitemId,
                                                            @PathVariable long conversationId,
                                                            @PathVariable String requestId,
@@ -244,6 +258,7 @@ public class ClarificationConversationController {
 
     /** 斜杠命令探针:执行器在线时由下次回合带回;此处只登记探针意图。 */
     @PostMapping("/api/workitems/{workitemId}/clarification-conversations/{conversationId}/commands/refresh")
+    @Operation(summary = "斜杠命令探针:执行器在线时由下次回合带回;此处只登记探针意图。")
     public ApiResult<Map<String, Object>> refreshCommands(@PathVariable long workitemId,
                                                           @PathVariable long conversationId) {
         RequestContext.requireUserId();

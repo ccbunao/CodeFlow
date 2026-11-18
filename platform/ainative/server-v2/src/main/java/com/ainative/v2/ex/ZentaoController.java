@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.RequestContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +29,7 @@ import java.util.Map;
  * 绑定落 ex_binding(provider=ZENTAO,project_id=外部项目 ID,config_json 存 baseUrl,
  * credential_ref 存 Token),拉取同步走既有 ExPullService。
  */
+@Tag(name = "外部连接", description = "禅道绑定与单据拉取")
 @RestController
 @RequestMapping("/api/integrations/zentao")
 public class ZentaoController {
@@ -43,6 +46,7 @@ public class ZentaoController {
                                  String externalProjectName, Integer pollIntervalSeconds, Boolean enabled) {}
 
     @PostMapping("/test")
+    @Operation(summary = "创建禅道绑定。")
     public ApiResult<Map<String, Object>> test(@RequestBody BindingRequest req) {
         Map<String, Object> out = new LinkedHashMap<>();
         if (req.baseUrl() == null || req.baseUrl().isBlank()) {
@@ -69,6 +73,7 @@ public class ZentaoController {
     }
 
     @PostMapping("/projects/search")
+    @Operation(summary = "创建禅道绑定。")
     public ApiResult<List<Map<String, Object>>> searchProjects(@RequestBody BindingRequest req) {
         List<Map<String, Object>> out = new ArrayList<>();
         try {
@@ -96,6 +101,7 @@ public class ZentaoController {
     }
 
     @PostMapping("/bindings")
+    @Operation(summary = "禅道绑定·绑定。")
     public ApiResult<Map<String, Object>> create(@RequestBody BindingRequest req) {
         long ws = RequestContext.workspaceId();
         String token = req.token() != null && !req.token().isBlank() ? req.token() : req.password();
@@ -128,6 +134,7 @@ public class ZentaoController {
     }
 
     @GetMapping("/bindings")
+    @Operation(summary = "禅道绑定·绑定。")
     public ApiResult<List<Map<String, Object>>> list() {
         long ws = RequestContext.workspaceId();
         List<Long> ids = jdbc.queryForList(

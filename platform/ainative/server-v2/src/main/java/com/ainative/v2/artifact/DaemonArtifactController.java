@@ -2,6 +2,8 @@ package com.ainative.v2.artifact;
 
 import com.ainative.v2.common.ApiResult;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** 运行器产物回传端点(带 HMAC 签名,与包下载同一套鉴权)。 */
+@Tag(name = "运行节点", description = "运行节点上传交付产物")
 @RestController
 @RequestMapping("/api/daemon/dispatches")
 public class DaemonArtifactController {
@@ -28,6 +31,7 @@ public class DaemonArtifactController {
     }
 
     @PostMapping("/{dispatchId}/artifacts")
+    @Operation(summary = "交付产物·产物。")
     public ApiResult<Map<String, Object>> upload(@PathVariable long dispatchId,
                                                  @RequestParam(name = "k", required = false) String key,
                                                  @RequestParam("file") MultipartFile file) {

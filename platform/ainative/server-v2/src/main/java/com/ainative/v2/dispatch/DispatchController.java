@@ -3,6 +3,8 @@ package com.ainative.v2.dispatch;
 import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.PageResult;
 import com.ainative.v2.common.RequestContext;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /** 调度域接口:派发记录/运行轨迹/恢复控制/需求单/指引/进度。 */
+@Tag(name = "需求交付", description = "派发执行、运行轨迹与交付进度")
 @RestController
 @RequestMapping("/api")
 public class DispatchController {
@@ -29,6 +32,7 @@ public class DispatchController {
     }
 
     @GetMapping("/dispatches")
+    @Operation(summary = "调度域接口:派发记录/运行轨迹/恢复控制/需求单/指引/进度。")
     public ApiResult<PageResult<Map<String, Object>>> list(
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int pageNum,
@@ -38,36 +42,42 @@ public class DispatchController {
     }
 
     @GetMapping("/dispatches/{id}")
+    @Operation(summary = "列出派发执行。")
     public ApiResult<Map<String, Object>> detail(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.run(id));
     }
 
     @GetMapping("/dispatches/{id}/runtime-trace")
+    @Operation(summary = "派发执行·运行轨迹。")
     public ApiResult<Map<String, Object>> trace(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.runtimeTrace(id));
     }
 
     @GetMapping("/dispatches/{id}/runtime-trace/events")
+    @Operation(summary = "派发执行·事件。")
     public ApiResult<Map<String, Object>> traceEvents(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.runtimeTrace(id));
     }
 
     @GetMapping("/workitems/{workitemId}/delivery-progress")
+    @Operation(summary = "派发执行·交付进度。")
     public ApiResult<Map<String, Object>> progress(@PathVariable long workitemId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.progress(workitemId));
     }
 
     @GetMapping("/workitems/{workitemId}/recovery")
+    @Operation(summary = "派发执行·恢复控制。")
     public ApiResult<Map<String, Object>> recovery(@PathVariable long workitemId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.recoveryState(workitemId));
     }
 
     @PostMapping("/workitems/{workitemId}/recovery")
+    @Operation(summary = "派发执行·恢复控制。")
     public ApiResult<Void> recovery(@PathVariable long workitemId, @RequestBody RecoveryRequest req) {
         long uid = RequestContext.requireUserId();
         service.recoveryAction(workitemId, req.action(), req.dispatchId(), uid, Boolean.TRUE.equals(req.force()));
@@ -75,24 +85,28 @@ public class DispatchController {
     }
 
     @PostMapping("/workitems/{workitemId}/dispatches/{dispatchId}/pause")
+    @Operation(summary = "创建派发执行。")
     public ApiResult<Void> pause(@PathVariable long workitemId, @PathVariable long dispatchId) {
         service.pause(workitemId, dispatchId, RequestContext.requireUserId());
         return ApiResult.ok(null);
     }
 
     @PostMapping("/workitems/{workitemId}/dispatches/{dispatchId}/continue")
+    @Operation(summary = "创建派发执行。")
     public ApiResult<Void> resume(@PathVariable long workitemId, @PathVariable long dispatchId) {
         service.resume(workitemId, dispatchId, RequestContext.requireUserId());
         return ApiResult.ok(null);
     }
 
     @GetMapping("/workitems/{workitemId}/dispatch-requests")
+    @Operation(summary = "列出派发执行。")
     public ApiResult<List<Map<String, Object>>> requests(@PathVariable long workitemId) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.requests(workitemId));
     }
 
     @PostMapping("/workitems/{workitemId}/dispatch-requests/{id}/reply")
+    @Operation(summary = "创建派发执行。")
     public ApiResult<Map<String, Object>> reply(@PathVariable long workitemId, @PathVariable long id,
                                                 @RequestBody ReplyRequest req) {
         RequestContext.requireUserId();
@@ -100,6 +114,7 @@ public class DispatchController {
     }
 
     @GetMapping("/dispatches/{dispatchId}/guidance")
+    @Operation(summary = "列出派发执行。")
     public ApiResult<List<Map<String, Object>>> guidance(@PathVariable long dispatchId,
             @RequestParam long workitemId) {
         RequestContext.requireUserId();
@@ -107,6 +122,7 @@ public class DispatchController {
     }
 
     @PostMapping("/dispatches/{dispatchId}/guidance")
+    @Operation(summary = "创建派发执行。")
     public ApiResult<Map<String, Object>> addGuidance(@PathVariable long dispatchId,
             @RequestParam long workitemId, @RequestBody GuidanceRequest req) {
         RequestContext.requireUserId();

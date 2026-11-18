@@ -4,6 +4,8 @@ import com.ainative.v2.common.ApiResult;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.common.RequestContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import java.util.Map;
  * 认证扩展(SSO 占位)与执行器运行轨迹扩展(activities/observations/turns 事件流)。
  * SSO 在 v2 的原则:未配置 IdP 时显式声明不可用,不伪造登录成功。
  */
+@Tag(name = "鉴权与用户", description = "登录链路追踪")
 @RestController
 public class AuthTraceController {
     private final JdbcTemplate jdbc;
@@ -33,6 +36,7 @@ public class AuthTraceController {
     // ================================================================ SSO
 
     @GetMapping("/api/auth/sso/providers")
+    @Operation(summary = "列出登录链路。")
     public ApiResult<List<Map<String, Object>>> ssoProviders() {
         List<Map<String, Object>> idps = jdbc.queryForList(
                 "SELECT id, name, status FROM id_idp WHERE deleted_at IS NULL AND status='ACTIVE'");
@@ -43,16 +47,19 @@ public class AuthTraceController {
     }
 
     @GetMapping("/api/auth/sso/session")
+    @Operation(summary = "列出登录链路。")
     public ApiResult<Map<String, Object>> ssoSession() {
         return ApiResult.ok(Map.of("authenticated", false, "provider", null));
     }
 
     @PostMapping("/api/auth/sso/bind")
+    @Operation(summary = "创建登录链路。")
     public ApiResult<Map<String, Object>> ssoBind(@RequestBody(required = false) Map<String, Object> body) {
         return ApiResult.ok(Map.of("bound", false, "message", "未配置身份提供商,无法绑定联邦身份"));
     }
 
     @GetMapping("/api/auth/sso/{idpId}/start")
+    @Operation(summary = "列出登录链路。")
     public ApiResult<Map<String, Object>> ssoStart(@PathVariable long idpId) {
         List<Map<String, Object>> idps = jdbc.queryForList(
                 "SELECT id, name FROM id_idp WHERE id=? AND deleted_at IS NULL AND status='ACTIVE'", idpId);
@@ -63,6 +70,7 @@ public class AuthTraceController {
     }
 
     @PostMapping("/api/auth/logout")
+    @Operation(summary = "创建登录链路。")
     public ApiResult<Void> logout() {
         RequestContext.requireUserId();
         // JWT 无状态:登出即客户端清 token;预留黑名单扩展点
@@ -74,6 +82,7 @@ public class AuthTraceController {
      * 请求体可为空(此时按登录态续签,兼容旧调用)。
      */
     @PostMapping("/api/auth/refresh")
+    @Operation(summary = "刷新访问令牌。前端在访问令牌过期时用 refreshToken 换新令牌;。")
     public ApiResult<Map<String, Object>> refresh(@RequestBody(required = false) Map<String, Object> body) {
         String refreshToken = body == null || body.get("refreshToken") == null
                 ? null : String.valueOf(body.get("refreshToken"));
@@ -99,6 +108,7 @@ public class AuthTraceController {
 
     /** 聚合活动视图:按 step 分组的事件摘要,给前端活动时间线。 */
     @GetMapping("/api/dispatches/{id}/runtime-trace/activities")
+    @Operation(summary = "聚合活动视图:按 step 分组的事件摘要,给前端活动时间线。")
     public ApiResult<List<Map<String, Object>>> activities(@PathVariable long id,
                                                            @RequestParam(defaultValue = "100") int limit) {
         RequestContext.requireUserId();
@@ -111,6 +121,7 @@ public class AuthTraceController {
 
     /** 观测事件(MCP 调用等):event_type 前缀过滤。 */
     @GetMapping("/api/dispatches/{id}/runtime-trace/observations/mcp")
+    @Operation(summary = "观测事件(MCP 调用等):event_type 前缀过滤。")
     public ApiResult<List<Map<String, Object>>> mcpObservations(@PathVariable long id,
                                                                 @RequestParam(required = false) Long afterId) {
         RequestContext.requireUserId();
@@ -124,6 +135,7 @@ public class AuthTraceController {
     }
 
     @GetMapping("/api/dispatches/{id}/runtime-trace/observations/{kind}")
+    @Operation(summary = "列出登录链路。")
     public ApiResult<List<Map<String, Object>>> observations(@PathVariable long id, @PathVariable String kind,
                                                              @RequestParam(required = false) Long afterId) {
         RequestContext.requireUserId();
@@ -138,6 +150,7 @@ public class AuthTraceController {
 
     /** 会话轮次轨迹:CONVERSATION_TURN 事件序列。 */
     @GetMapping("/api/dispatches/{id}/runtime-trace/turns")
+    @Operation(summary = "会话轮次轨迹:CONVERSATION_TURN 事件序列。")
     public ApiResult<List<Map<String, Object>>> turnTrace(@PathVariable long id,
                                                           @RequestParam(required = false) Long afterId) {
         RequestContext.requireUserId();
@@ -151,6 +164,7 @@ public class AuthTraceController {
     }
 
     @GetMapping("/api/dispatches/{id}/runtime-trace/context")
+    @Operation(summary = "列出登录链路。")
     public ApiResult<Map<String, Object>> traceContext(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> runs = jdbc.queryForList(
@@ -168,6 +182,7 @@ public class AuthTraceController {
 
     /** 实时活动摘要:最近事件 + 运行状态,给派发详情页的 live 面板。 */
     @GetMapping("/api/dispatches/{id}/live-activity")
+    @Operation(summary = "实时活动摘要:最近事件 + 运行状态,给派发详情页的 live 面板。")
     public ApiResult<Map<String, Object>> liveActivity(@PathVariable long id) {
         RequestContext.requireUserId();
         List<Map<String, Object>> runs = jdbc.queryForList(
