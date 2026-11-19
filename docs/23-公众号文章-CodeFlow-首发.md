@@ -194,9 +194,12 @@ Node.js 单进程，**零第三方运行时依赖**；内置 sqlite，降级可�
 
 ## 八、上手
 
+仓库地址和部署包不直接贴在这里——**关注公众号「一鸣AI编程」，回复 codeflow**，就能拿到项目地址、部署包和演示环境。
+
+clone 下来之后，上手只有一条命令：
+
 ```bash
-git clone https://github.com/qsumm/CodeFlow.git && cd CodeFlow
-cd platform
+cd CodeFlow/platform
 ./deploy.sh up
 ```
 
@@ -216,9 +219,8 @@ AI 的本质，从来都是以人为本。希望这套东西能帮你把重复�
 
 ---
 
-**项目地址**：https://github.com/qsumm/CodeFlow
 **部署**：`./deploy.sh up` · 数据库 seekdb · 表结构自动初始化
 
-❤️ **关注公众号「一鸣AI编程」**，回复 **codeflow** 拿部署包和演示环境地址
-❤️ 有问题欢迎留言，或者直接去仓库提 Issue
-❤️ 觉得有用的话，顺手去仓库点个 Star，真的很重要
+❤️ **关注公众号「一鸣AI编程」**，回复 **codeflow** 拿项目地址、部署包和演示环境地址
+❤️ 有问题欢迎留言，或者加我微信：**ymaicode**
+❤️ 觉得有用的话，帮忙点个「在看」或转发给需要的人，真的很重要
