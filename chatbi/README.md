@@ -10,7 +10,7 @@
 ## 快速开始
 
 ```bash
-cd CodeFlow          # 必须在仓库根,chatbi 才是可导入的包
+cd /Users/summer/CodeFlow-private          # 必须在仓库根,chatbi 才是可导入的包
 python3 -m chatbi "最近 7 天每天新增需求多少条"
 ```
 
@@ -38,7 +38,7 @@ SQL:WITH RECURSIVE ...
 ## 三个演示问题(可复现)
 
 ```bash
-cd CodeFlow
+cd /Users/summer/CodeFlow-private
 
 python3 -m chatbi "最近 7 天每天新增需求多少条"        # → 时序折线图
 python3 -m chatbi "哪个数字员工执行任务最多、成功率多少"  # → 分类柱状图
@@ -129,7 +129,7 @@ GRANT SELECT ON ainative_v2.* TO 'chatbi_ro'@'%';
 ## 测试
 
 ```bash
-cd CodeFlow
+cd /Users/summer/CodeFlow-private
 python3 -m pytest chatbi/tests/ -v
 ```
 

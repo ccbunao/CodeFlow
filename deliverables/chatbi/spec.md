@@ -175,7 +175,7 @@ chatbi/
 
 `spec.md`、`plan.md`、`01-立项说明.md` … `07-缺陷修复记录.md`(七件套)、`demo-session.md`、`README.md`(副本)、`测试报告.md`、`charts/*.html`(真实生成的图表)。
 
-> 说明:仓库根 `deliverables/` 目录现存其它需求的未入库文档。直接覆盖会永久丢失(该目录从未进过 git),故 ChatBI 产物统一落在 `deliverables/chatbi/`,既有文件原地不动。
+> 说明:仓库根 `deliverables/` 目录现存 10020 需求的未入库文档。直接覆盖会永久丢失(该目录从未进过 git),故 ChatBI 产物统一落在 `deliverables/chatbi/`,10020 文件原地不动。
 
 ## 8. 已知约束与风险
 

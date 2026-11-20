@@ -200,7 +200,7 @@ GROUP BY workspace_id
 ## 复现方式
 
 ```bash
-cd CodeFlow
+cd /Users/summer/CodeFlow-private
 
 # 1. 单测(150 条,全绿)
 python3 -m pytest chatbi/tests -q

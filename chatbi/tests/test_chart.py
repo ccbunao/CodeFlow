@@ -39,7 +39,7 @@ def test_large_categorical_returns_bar() -> None:
 def test_small_categorical_with_multiple_rows_returns_bar() -> None:
     """排名类问题返回全部候选(3 行)时,要出柱状图而不是表格。"""
     columns = ["agent_name", "total_runs", "success_rate"]
-    rows = [("前后端全栈开发", "4", "75"), ("公众号标题优化师", "1", "0"), ("另一个", "2", "50")]
+    rows = [("前后端全栈开发", "4", "75"), ("代码评审专家", "1", "0"), ("另一个", "2", "50")]
     assert choose_chart(columns, [0, 0, 0], rows, table_max_rows=20) == "bar"
 
 

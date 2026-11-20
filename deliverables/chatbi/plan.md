@@ -229,6 +229,6 @@ GRANT SELECT ON ainative_v2.* TO 'chatbi_ro'@'%';
 ## 7. 提交纪律
 
 - 分支:`feat/2000005-chatbi-agent`。
-- **只 add `chatbi/` 与 `deliverables/chatbi/`**,不带入其它未提交改动(`platform/`、`runtime/`、`scripts/` 等一律不碰)。
+- **只 add `chatbi/` 与 `deliverables/chatbi/`**,不带入 10020 的未提交改动(`platform/`、`runtime/`、`scripts/` 等一律不碰)。
 - `chatbi/.env` 由 `.gitignore` 拦截,提交前用 `git status` 核对。
-- 交付物目录内既有文档不纳入本次提交(原地保留)。
+- 交付物目录内 10020 文档不纳入本次提交(原地保留)。
