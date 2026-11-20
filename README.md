@@ -4,7 +4,7 @@
 
 开源自托管的 AI 需求交付平台：需求进平台后由数字员工按交付流程自动完成分析、开发、测试、验证与交接；每一步的派发记录、运行日志与交付产物全程留痕可回看——AI 负责把活干完，拍板权在人。
 
-[License](platform/ainative/LICENSE) · [Python](https://www.python.org/) · [Spring Boot](https://spring.io/) · [Docker Compose](platform/docker-compose.yml)
+[License](LICENSE) · [Python](https://www.python.org/) · [Spring Boot](https://spring.io/) · [Docker Compose](platform/docker-compose.yml)
 
 ![交付进度跟踪](docs/images/manual/41-workitem-delivery-tracking.png)
 
@@ -289,4 +289,11 @@ python -m pytest tests -q
 
 ## License
 
-平台源码以 MIT License 分发（见 [`platform/ainative/LICENSE`](platform/ainative/LICENSE)）。
+双许可结构：
+
+| 范围 | 许可 | 许可副本 |
+|---|---|---|
+| `runtime/` `scripts/` `tests/` | Apache-2.0 | [`LICENSE`](LICENSE) |
+| `platform/ainative/` `docs/` `branding/` | MIT | [`platform/ainative/LICENSE`](platform/ainative/LICENSE) |
+
+第三方依赖的许可与归属见 [`NOTICE`](NOTICE) 与 [`docs/platform-docs/THIRD-PARTY-NOTICES.md`](docs/platform-docs/THIRD-PARTY-NOTICES.md)。
