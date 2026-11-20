@@ -40,6 +40,22 @@ def make_provider(cfg: Config):
     raise ConfigError(f"unknown provider: {cfg.provider}")
 
 
+def conversation_workdir(data_dir: str, conversation_id: int) -> Path:
+    """澄清会话工作目录:返回前必须已存在。
+
+    无 capability 包的澄清会话没有下载环节,以前没人建这个目录,
+    写 claude-settings.json 时直接 FileNotFoundError —— 表现为「澄清首回合必失败」。
+
+    会话号会被拼进路径,因此只接受非负整数:其它值(尤其带 ../ 的字符串)
+    会把工作目录指到 data_dir 之外。
+    """
+    if not isinstance(conversation_id, int) or isinstance(conversation_id, bool) or conversation_id < 0:
+        raise ValueError(f"conversation_id must be a non-negative int, got: {conversation_id!r}")
+    workdir = Path(data_dir) / "conversations" / str(conversation_id)
+    workdir.mkdir(parents=True, exist_ok=True)
+    return workdir
+
+
 class Daemon:
     def __init__(self, cfg: Config):
         self.cfg = cfg
@@ -53,9 +69,9 @@ class Daemon:
         self._inflight_lock = threading.Lock()
         # 澄清会话(BL:CONVERSATION_TURN 协议实现):独立线程池,不阻塞派发与心跳
         self._conv_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="conversation")
-        self._conv_inflight: set[int] = set()
+        self._conv_inflight: set[tuple[int, int]] = set()   # (conversation_id, turn_id)
         self._conv_inflight_lock = threading.Lock()
-        self._conv_done: dict[int, dict] = {}  # turn_id -> ack frame(重投幂等重放)
+        self._conv_done: dict[tuple[int, int], dict] = {}  # (conversation_id, turn_id) -> ack frame
         self._heartbeat_thread: threading.Thread | None = None
 
     def _start_heartbeat_once(self) -> None:
@@ -301,6 +317,7 @@ class Daemon:
                         data = frames.decode_dispatch(frame)
                         self.on_dispatch(data)
                     elif frame.get("type") == "CONVERSATION_TURN":
+                        log.info("conversation.turn_received", turn_id=frame.get("turnId"))
                         self.on_conversation_turn(frames.decode_conversation_turn(frame))
                     else:
                         log.debug("frame.ignored", type=frame.get("type"))
@@ -336,18 +353,20 @@ class Daemon:
     # ---- 澄清会话(CONVERSATION_TURN) ----
 
     def on_conversation_turn(self, turn: dict) -> None:
-        turn_id = turn["turn_id"]
+        # 幂等键必须含会话:turn_id 是「会话内序号」,不同会话都有 turn_id=1,
+        # 只按 turn_id 去重会让新会话的首回合被误判成旧回合的重投(ACK 还会回错会话)。
+        key = (int(turn["conversation_id"]), int(turn["turn_id"]))
         with self._conv_inflight_lock:
-            if turn_id in self._conv_inflight:
-                log.info("conversation.duplicate_inflight", turn_id=turn_id)
+            if key in self._conv_inflight:
+                log.info("conversation.duplicate_inflight", conversation_id=key[0], turn_id=key[1])
                 return
-            done = self._conv_done.get(turn_id)
+            done = self._conv_done.get(key)
             if done is not None:
                 # 平台重投同一回合:重放既有 ACK(dispatchAttempt 回显为新帧值),不重跑
-                self._conv_inflight.add(turn_id)
+                self._conv_inflight.add(key)
                 self._conv_pool.submit(self._reack_conversation_turn, turn, done)
                 return
-            self._conv_inflight.add(turn_id)
+            self._conv_inflight.add(key)
         self._conv_pool.submit(self._run_conversation_turn, turn)
 
     def _reack_conversation_turn(self, turn: dict, done: dict) -> None:
@@ -356,16 +375,18 @@ class Daemon:
             if turn.get("dispatch_attempt"):
                 frame["dispatchAttempt"] = int(turn["dispatch_attempt"])
             self.send_frame(frame, durable=False)
-            log.info("conversation.reacked", turn_id=turn["turn_id"])
+            log.info("conversation.reacked", conversation_id=turn["conversation_id"],
+                     turn_id=turn["turn_id"])
         finally:
             with self._conv_inflight_lock:
-                self._conv_inflight.discard(turn["turn_id"])
+                self._conv_inflight.discard(
+                    (int(turn["conversation_id"]), int(turn["turn_id"])))
 
     def _run_conversation_turn(self, turn: dict) -> None:
         from . import conversation as conv
         turn_id = turn["turn_id"]
         try:
-            workdir = Path(self.cfg.data_dir) / "conversations" / str(turn["conversation_id"])
+            workdir = conversation_workdir(self.cfg.data_dir, turn["conversation_id"])
             capsule_dir = workdir / "capsule"
             if turn.get("capability_url"):
                 zip_path = conv.download_capability(turn["capability_url"],
@@ -401,7 +422,7 @@ class Daemon:
                                     session_id=result.get("session_id"),
                                     usage=result.get("usage"), model=result.get("model"))
             with self._conv_inflight_lock:
-                self._conv_done[turn_id] = ack  # 幂等重放留底
+                self._conv_done[(int(turn["conversation_id"]), int(turn["turn_id"]))] = ack  # 幂等重放留底
                 while len(self._conv_done) > 200:  # 只留最近回合,防无界增长
                     self._conv_done.pop(next(iter(self._conv_done)))
             self.send_frame(ack, durable=False)
@@ -418,7 +439,8 @@ class Daemon:
                 pass
         finally:
             with self._conv_inflight_lock:
-                self._conv_inflight.discard(turn_id)
+                self._conv_inflight.discard(
+                    (int(turn["conversation_id"]), int(turn["turn_id"])))
 
     def stop(self, *_):
         self._stop.set()
