@@ -4,7 +4,7 @@
 
 **需求说清楚，剩下的 AI 干，证据链摆在你面前。**
 
-[![License](https://img.shields.io/badge/License-MIT%20%2B%20Apache--2.0-blue)](LICENSE)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://www.python.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-green)](https://spring.io/)
 [![Docker](https://img.shields.io/badge/Docker-Compose%20v2-2496ED)](platform/docker-compose.yml)
@@ -243,14 +243,7 @@ scripts/run-tests.sh -Dtest='*ApiTest'  # 只跑接口集成
 
 ## License
 
-双许可结构：
-
-| 范围 | 许可 | 许可副本 |
-|---|---|---|
-| `runtime/` `scripts/` `tests/` | Apache-2.0 | [`LICENSE`](LICENSE) |
-| `platform/ainative/` `docs/` `branding/` | MIT | [`platform/ainative/LICENSE`](platform/ainative/LICENSE) |
-
-第三方依赖的许可与归属见 [`NOTICE`](NOTICE) 与 [`docs/platform-docs/THIRD-PARTY-NOTICES.md`](docs/platform-docs/THIRD-PARTY-NOTICES.md)。
+[GPL-3.0](LICENSE)。第三方依赖的许可与归属见 [`NOTICE`](NOTICE)。
 
 ## 作者
 
