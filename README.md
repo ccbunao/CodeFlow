@@ -252,3 +252,13 @@ scripts/run-tests.sh -Dtest='*ApiTest'  # 只跑接口集成
 > 这个平台从第一行代码到数字员工交付引擎的完整过程——每一次设计取舍、每一个踩过的坑——都在公众号里连载。
 
 官网：**[codeflow.com.cn](https://www.codeflow.com.cn)** · 公众号「一鸣AI编程」：真实交付复盘 / AI 编程实战 / 这个平台的全过程，更新不迷路。觉得有用的话，给仓库点个 Star ⭐，就是最好的支持。
+
+<div align="center">
+
+<img src="assets/wechat-qrcode.jpg" width="220" alt="公众号「一鸣AI编程」二维码">
+
+**微信扫码关注公众号「一鸣AI编程」**
+
+回复 `codeflow` 获取用户操作手册（图文版 v2.1.1）、部署包与演示环境
+
+</div>
