@@ -101,13 +101,13 @@ git clone https://gh-proxy.com/https://github.com/qsumm/CodeFlow.git && cd CodeF
 
 ## 交付过程看得见
 
-![交付进度跟踪](docs/images/manual/41-workitem-delivery-tracking.png)
+![交付进度跟踪](assets/41-workitem-delivery-tracking.png)
 
 每一轮派发的步骤、耗时、日志与产物都在需求详情页可回看；执行轨迹带时间戳，输出流自动折叠。
 
-![需求澄清](docs/images/manual/43-workitem-clarify.png)
+![需求澄清](assets/43-workitem-clarify.png)
 
-![架构一屏](docs/images/architecture.png)
+![架构一屏](assets/architecture.png)
 
 架构一屏：任务包下发、运行节点主动回连；交付结论只回写，不代改状态。
 
@@ -236,14 +236,14 @@ scripts/run-tests.sh -Dtest='*ApiTest'  # 只跑接口集成
 
 ## 文档
 
-- **用户操作手册**：[`docs/19-用户操作手册.md`](docs/19-用户操作手册.md)（图文版 v2.1.1，25 章；PDF 版见 [`docs/manual-pdf/`](docs/manual-pdf/)，平台内按 F1 也可打开）
-- **执行器运维**：[`docs/21-执行器运维能力.md`](docs/21-执行器运维能力.md) · **禅道集成**：[`docs/zentao-integration.md`](docs/zentao-integration.md)
-- **平台内部设计文档**：[`docs/platform-docs/`](docs/platform-docs/)
+- **用户操作手册**（图文版 v2.1.1，25 章 45 图；PDF 适合打印归档）——平台内按 **F1** 打开帮助中心在线预览/下载；完整手册不在开源包内，关注公众号「一鸣AI编程」回复 **codeflow** 获取
 - **接口契约**：服务启动后访问 `http://localhost:7001/swagger-ui.html`（由代码自动生成，随代码演进）
 
 ## License
 
 [GPL-3.0](LICENSE)。第三方依赖的许可与归属见 [`NOTICE`](NOTICE)。
+
+完整操作手册与设计文档不在开源包内：关注公众号「一鸣AI编程」回复 **codeflow** 获取。
 
 ## 作者
 
