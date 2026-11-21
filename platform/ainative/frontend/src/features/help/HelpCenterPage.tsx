@@ -278,7 +278,7 @@ export function HelpCenterPage() {
                   return (
                     <span className="help-pdf-actions">
                       <Button className="help-download" href={href} target="_blank" rel="noopener noreferrer" icon={<FileTextOutlined aria-hidden="true" />}>{t('pdf.preview')}</Button>
-                      <Button className="help-download" href={href} download="CodeFlow-用户操作手册-v2.1.1.pdf" icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
+                      <Button className="help-download" href={href} download icon={<DownloadOutlined aria-hidden="true" />}>{t('pdf.download')}</Button>
                     </span>
                   );
                 }
