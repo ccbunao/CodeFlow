@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/status-templates")
 public class StatusTemplateEditController {
-    public record NodeRequest(String name, String category, Integer sortNo) {}
+    public record NodeRequest(String code, String name, String category, Integer sortNo) {}
     public record TemplateRequest(String name, String workType, String description) {}
     public record EdgeRequest(Long fromNodeId, Long toNodeId) {}
 
@@ -83,8 +83,10 @@ public class StatusTemplateEditController {
         }
         String category = req.category() == null || req.category().isBlank() ? "IN_PROGRESS" : req.category();
         int sortNo = req.sortNo() == null ? nextSort(id) : req.sortNo();
-        jdbc.update("INSERT INTO wi_flow_state (workspace_id, flow_id, name, category, sort_no) VALUES (?,?,?,?,?)",
-                ws(), id, req.name().trim(), category, sortNo);
+        // code 缺省回填 name:历史客户端/种子脚本可能不带 code,避免前端读到 undefined
+        String code = req.code() == null || req.code().isBlank() ? req.name().trim() : req.code().trim();
+        jdbc.update("INSERT INTO wi_flow_state (workspace_id, flow_id, code, name, category, sort_no) VALUES (?,?,?,?,?,?)",
+                ws(), id, code, req.name().trim(), category, sortNo);
         Long nodeId = jdbc.queryForObject("SELECT MAX(id) FROM wi_flow_state WHERE flow_id=?", Long.class, id);
         return ApiResult.ok(nodeMap(nodeId));
     }
@@ -160,7 +162,7 @@ public class StatusTemplateEditController {
 
     private Map<String, Object> nodeMap(Long nodeId) {
         List<Map<String, Object>> rows = jdbc.queryForList(
-                "SELECT id, flow_id AS flowId, name, category, sort_no AS sortNo FROM wi_flow_state WHERE id=?", nodeId);
+                "SELECT id, flow_id AS flowId, code, name, category, sort_no AS sortNo FROM wi_flow_state WHERE id=?", nodeId);
         if (rows.isEmpty()) {
             throw new BizException("13008", "状态不存在");
         }

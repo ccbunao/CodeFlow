@@ -56,7 +56,7 @@ public class StatusTemplateController {
         }
         Map<String, Object> out = new LinkedHashMap<>(flows.get(0));
         out.put("nodes", jdbc.queryForList(
-                "SELECT id, name, category, sort_no AS sortNo FROM wi_flow_state WHERE flow_id=? ORDER BY sort_no", id));
+                "SELECT id, code, name, category, sort_no AS sortNo FROM wi_flow_state WHERE flow_id=? ORDER BY sort_no", id));
         out.put("transitions", jdbc.queryForList(
                 "SELECT from_state_id AS fromNodeId, to_state_id AS toNodeId FROM wi_flow_edge WHERE flow_id=?", id));
         return ApiResult.ok(out);

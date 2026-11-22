@@ -33,6 +33,11 @@ services:
       mysql -h seekdb -P 2881 -u root ainative_v2 < /schema/001-core.sql &&
       mysql -h seekdb -P 2881 -u root ainative_v2 < /schema/002-rest.sql &&
       mysql -h seekdb -P 2881 -u root ainative_v2 < /schema/003-workitem.sql &&
+      (mysql -h seekdb -P 2881 -u root ainative_v2 -e "ALTER TABLE wi_flow_state ADD COLUMN code VARCHAR(32) DEFAULT NULL AFTER flow_id; UPDATE wi_flow_state SET code=name WHERE code IS NULL" > /dev/null 2>&1 || true) &&
+      (mysql -h seekdb -P 2881 -u root ainative_v2 -e "ALTER TABLE wi_flow ADD COLUMN work_type VARCHAR(16) NOT NULL DEFAULT 'REQ' AFTER description" > /dev/null 2>&1 || true) &&
+      (mysql -h seekdb -P 2881 -u root ainative_v2 -e "ALTER TABLE wi_flow ADD KEY idx_wi_flow_type (workspace_id, work_type, deleted_at)" > /dev/null 2>&1 || true) &&
+      (mysql -h seekdb -P 2881 -u root ainative_v2 -e "ALTER TABLE ag_agent ADD COLUMN agent_md MEDIUMTEXT AFTER soul_md" > /dev/null 2>&1 || true) &&
+      (mysql -h seekdb -P 2881 -u root ainative_v2 -e "ALTER TABLE rt_run ADD COLUMN dispatch_snapshot MEDIUMTEXT AFTER agent_id" > /dev/null 2>&1 || true) &&
       echo "schema ready (106 tables)"
       '
     volumes:
