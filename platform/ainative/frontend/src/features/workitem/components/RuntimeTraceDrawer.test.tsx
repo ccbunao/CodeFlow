@@ -103,7 +103,7 @@ describe('RuntimeTraceDrawer', () => {
     );
 
     render(<RuntimeTraceDrawer node={{ key: 'dispatch:44', dispatchId: 44, agentName: '开发', status: 'SUCCEEDED' }} processGraph={{ nodes: [], edges: [] }} onClose={() => {}} />);
-    await screen.findByText('Runtime 与 流水线');
+    await screen.findByText('Runtime 与 交付流程');
     expect(screen.queryByText('Dispatch 失败原因')).not.toBeInTheDocument();
   });
 

@@ -34,7 +34,7 @@ function useCommonSettingsHandlers(overrides: Parameters<typeof server.use>) {
     }))),
     http.get('/api/ai-usage', () => HttpResponse.json(apiOk([
       { period: '2026-07', scene: '仓库扫描', callCount: 12, inputTokens: 1000, outputTokens: 500 },
-      { period: '2026-07', scene: '流水线生成', callCount: 3, inputTokens: 300, outputTokens: 120 },
+      { period: '2026-07', scene: '交付流程生成', callCount: 3, inputTokens: 300, outputTokens: 120 },
     ]))),
     http.get('/api/settings/AI', () => HttpResponse.json(apiOk([
       { key: 'default_model', valueJson: 'qwen-max', secret: false },

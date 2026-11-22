@@ -37,10 +37,10 @@ describe('WorkitemCreatePage', () => {
     expect(screen.getByText('需求列表')).toBeInTheDocument();
   });
 
-  it('does not render deprecated Pipeline field nor the scheduled delivery module', () => {
+  it('does not render deprecated Delivery workflow field nor the scheduled delivery module', () => {
     renderPage();
 
-    expect(screen.queryByLabelText(/流水线流程/)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/交付流程/)).not.toBeInTheDocument();
     expect(screen.queryByText('定时交付（可选）')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('编队')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('执行 Agent')).not.toBeInTheDocument();

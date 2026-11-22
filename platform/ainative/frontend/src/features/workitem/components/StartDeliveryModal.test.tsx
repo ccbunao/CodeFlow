@@ -46,7 +46,7 @@ describe('StartDeliveryModal', () => {
     expect(mutateAsync).not.toHaveBeenCalled(); expect(close).not.toHaveBeenCalled();
   });
 
-  it('loads squads instead of online agents and hides Pipeline selection', async () => {
+  it('loads squads instead of online agents and hides Delivery workflow selection', async () => {
     const requestedAgentUrls: string[] = [];
     let squadsRequested = false;
 
@@ -69,7 +69,7 @@ describe('StartDeliveryModal', () => {
 
     renderModal();
 
-    expect(screen.queryByLabelText('流水线流程')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('交付流程')).not.toBeInTheDocument();
     expect(await screen.findByLabelText('编队')).toBeInTheDocument();
     expect(screen.getByLabelText('首步执行 Agent')).toBeInTheDocument();
     await waitFor(() => expect(squadsRequested).toBe(true));

@@ -61,9 +61,9 @@ describe('useAccessCommand', () => {
     useAuthStore.getState().setReadOnlyDomains(['SDLC']);
     const { result } = renderHook(() => useAccessCommand());
 
-    act(() => result.current('READ_WRITE', '更新流水线流程', command, 'SDLC'));
+    act(() => result.current('READ_WRITE', '更新交付流程', command, 'SDLC'));
 
-    expect(error).toHaveBeenCalledWith('「流水线流程」对当前角色为只读，无法更新流水线流程。');
+    expect(error).toHaveBeenCalledWith('「交付流程」对当前角色为只读，无法更新交付流程。');
     expect(command).not.toHaveBeenCalled();
   });
 

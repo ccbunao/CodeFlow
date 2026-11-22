@@ -143,13 +143,15 @@ export function AgentEditPage() {
       form.setFieldsValue({
         roleName: versionDetail.roleName,
         roleCode: versionDetail.roleCode,
-        businessBackground: versionDetail.businessBackground,
-        responsibilities: versionDetail.responsibilities,
+        // 版本接口当前不返回人设正文(只回 snapshot),回落到员工详情:
+        // soulMd/agentMd 已在 api.ts 边界映射成 businessBackground/responsibilities。
+        businessBackground: agent?.businessBackground ?? versionDetail.businessBackground,
+        responsibilities: agent?.responsibilities ?? versionDetail.responsibilities,
         sdlcId: versionDetail.sdlcId,
         evolutionMode: versionDetail.evolutionMode || evolutionModeFromIdentity(versionDetail.identityJson),
       });
     }
-  }, [versionDetail, form]);
+  }, [versionDetail, agent, form]);
 
   useEffect(() => {
     if (!versionDetail) return;

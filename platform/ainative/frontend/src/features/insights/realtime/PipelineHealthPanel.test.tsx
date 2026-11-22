@@ -35,7 +35,7 @@ function renderPanel() {
 }
 
 async function panelRegion() {
-  return within(await screen.findByRole('region', { name: '流水线健康' }));
+  return within(await screen.findByRole('region', { name: '交付流程健康' }));
 }
 
 function cards(container: HTMLElement) {
@@ -215,7 +215,7 @@ it('keeps the panel usable when the query fails and recovers on retry', async ()
   const user = userEvent.setup();
   renderPanel();
 
-  expect(await screen.findByText('流水线健康加载失败')).toBeInTheDocument();
+  expect(await screen.findByText('交付流程健康加载失败')).toBeInTheDocument();
   expect(screen.getByText('pipeline 聚合失败')).toBeInTheDocument();
   expect(screen.queryByText('成功率')).not.toBeInTheDocument();
 
@@ -230,8 +230,8 @@ it('shows an empty state when the backend returns no health data', async () => {
   server.use(http.get('/api/dashboard/pipeline-health', () => ok(null)));
   renderPanel();
 
-  expect(await screen.findByText('暂无流水线健康数据')).toBeInTheDocument();
-  expect(screen.queryByText('流水线健康加载失败')).not.toBeInTheDocument();
+  expect(await screen.findByText('暂无交付流程健康数据')).toBeInTheDocument();
+  expect(screen.queryByText('交付流程健康加载失败')).not.toBeInTheDocument();
 });
 
 it('switches the whole panel to the current language without losing the range', async () => {
@@ -245,7 +245,7 @@ it('switches the whole panel to the current language without losing the range', 
 
   await act(async () => { await i18n.changeLanguage('en-US'); });
 
-  expect(screen.getByText('Pipeline health')).toBeInTheDocument();
+  expect(screen.getByText('Delivery workflow health')).toBeInTheDocument();
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('Rework rate')).toBeInTheDocument();
   expect(screen.getByText('Average duration')).toBeInTheDocument();

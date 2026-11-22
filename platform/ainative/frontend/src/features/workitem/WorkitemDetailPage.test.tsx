@@ -2022,7 +2022,7 @@ describe('WorkitemDetailPage start-delivery clarify reminder (需求 53315 / 548
     expect(currentSearch()).not.toContain('panel=clarify');
   });
 
-  it('does not remind once an Pipeline is bound and the button reads 重新指派', async () => {
+  it('does not remind once an Delivery workflow is bound and the button reads 重新指派', async () => {
     renderReminderPage({ sdlcId: '10' });
 
     await userEvent.click(await screen.findByRole('button', { name: /重新指派/ }));

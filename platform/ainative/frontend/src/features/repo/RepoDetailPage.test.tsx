@@ -150,7 +150,7 @@ describe('RepoDetailPage', () => {
           fromRepoId: 10001,
           toRepoId: 10000,
           relationType: 'SERVICE',
-          description: 'ainative是整个流水线的服务端平台',
+          description: 'ainative是整个交付流程的服务端平台',
           aiSessionId: null,
           gmtCreate: '2026-07-11T08:27:22.730+00:00',
         }],

@@ -25,7 +25,23 @@ public class ArtifactStorage {
     }
 
     public Stored store(long dispatchId, String filename, byte[] content) throws IOException {
-        Path dir = root.resolve(String.valueOf(dispatchId));
+        return storeIn(String.valueOf(dispatchId), filename, content);
+    }
+
+    /**
+     * 落在 <root>/<namespace>/ 下。namespace 可用 '/' 分层(如 conversations/12)。
+     *
+     * <p>会话产物必须与派发产物分目录:两者都是数字 id,共用一层会互相覆盖。
+     */
+    public Stored storeIn(String namespace, String filename, byte[] content) throws IOException {
+        Path dir = root;
+        if (namespace != null && !namespace.isBlank()) {
+            for (String segment : namespace.split("/")) {
+                if (!segment.isBlank()) {
+                    dir = dir.resolve(segment.replaceAll("[^A-Za-z0-9._-]", "_"));
+                }
+            }
+        }
         Files.createDirectories(dir);
         String safe = filename == null || filename.isBlank() ? "artifact" : filename.replaceAll("[^A-Za-z0-9._-]", "_");
         Path target = dir.resolve(safe);

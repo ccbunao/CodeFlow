@@ -51,7 +51,7 @@ it('renders the snapshot KPIs, category bars and the 100% status stack including
   expect(panel.getByRole('status', { name: '自动刷新' })).toHaveTextContent('30s');
   expect(panel.getByText('全部AI 成员 · 实时快照')).toBeInTheDocument();
   expect(panel.getByText('固定 30 秒自动刷新，不再提供刷新频率选项')).toBeInTheDocument();
-  expect(panel.getByText('与下方「流水线健康」的时间段互不关联')).toBeInTheDocument();
+  expect(panel.getByText('与下方「交付流程健康」的时间段互不关联')).toBeInTheDocument();
 
   const values = Array.from(container.querySelectorAll('.insight-kpi-value')).map((node) => node.textContent);
   expect(values).toEqual(['5', '7', '3', '21']);

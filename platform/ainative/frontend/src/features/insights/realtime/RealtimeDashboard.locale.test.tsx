@@ -110,7 +110,7 @@ function overviewRegion() {
 }
 
 function pipelineRegion() {
-  return within(screen.getByRole('region', { name: '流水线健康' }));
+  return within(screen.getByRole('region', { name: '交付流程健康' }));
 }
 
 beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('zh-CN'); });
@@ -123,10 +123,10 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
 
   await screen.findByRole('region', { name: '需求概况' });
   const costSection = screen.getByRole('region', { name: '成本分析' });
-  expect(screen.getByRole('region', { name: '流水线健康' })).toBeInTheDocument();
+  expect(screen.getByRole('region', { name: '交付流程健康' })).toBeInTheDocument();
   expect(screen.getByRole('status', { name: '自动刷新' })).toHaveTextContent('30s');
   expect(screen.getByText('固定 30 秒自动刷新，不再提供刷新频率选项')).toBeInTheDocument();
-  expect(screen.getByText('两版块统计口径独立 · 需求概况 = 实时快照 ／ 流水线健康 = 时间段聚合')).toBeInTheDocument();
+  expect(screen.getByText('两版块统计口径独立 · 需求概况 = 实时快照 ／ 交付流程健康 = 时间段聚合')).toBeInTheDocument();
   expect(screen.getByText('上下两区统计口径独立 · 筛选互不影响')).toBeInTheDocument();
   // v3：成本面板头部下不再有「统计口径：…」说明，口径改由来源构成 chip 表达
   expect(within(costSection).queryByText('统计口径：')).not.toBeInTheDocument();
@@ -172,7 +172,7 @@ it('keeps the snapshot, pipeline panel and open KPI modal intact across a langua
   expect(screen.getByText('Requirement overview')).toBeInTheDocument();
   expect(screen.getByText('Requirement categories')).toBeInTheDocument();
   expect(screen.getByRole('img', { name: 'Requirement status share stack' })).toBeInTheDocument();
-  expect(screen.getByText('Pipeline health')).toBeInTheDocument();
+  expect(screen.getByText('Delivery workflow health')).toBeInTheDocument();
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('1h 30m')).toBeInTheDocument();
   const timestamp = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date(overview.generatedAt));
@@ -268,7 +268,7 @@ it('updates the cached panels and accessible charts without resetting keyboard f
   expect(screen.getByRole('img', { name: 'Requirement status share stack' })).toBeInTheDocument();
   expect(screen.getByText('Canceled')).toBeInTheDocument();
   expect(screen.getAllByText('Requirements').length).toBeGreaterThan(0);
-  expect(screen.getByText('Pipeline health')).toBeInTheDocument();
+  expect(screen.getByText('Delivery workflow health')).toBeInTheDocument();
   expect(screen.getByText('Success rate')).toBeInTheDocument();
   expect(screen.getByText('1h 30m')).toBeInTheDocument();
   expect(screen.getByRole('img', { name: 'Busy members 1 / 4' }).firstElementChild).toHaveStyle({ width: '25%' });
@@ -418,21 +418,21 @@ it('switches loading and empty messages to the current language for all three pa
   routed(<RealtimeDashboard />);
 
   expect(await screen.findByText('加载需求概况…')).toBeInTheDocument();
-  expect(screen.getByText('加载流水线健康…')).toBeInTheDocument();
+  expect(screen.getByText('加载交付流程健康…')).toBeInTheDocument();
   expect(screen.getByText('加载实时看板…')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(screen.getByText('Loading overview…')).toBeInTheDocument();
-  expect(screen.getByText('Loading pipeline health…')).toBeInTheDocument();
+  expect(screen.getByText('Loading delivery workflow health…')).toBeInTheDocument();
   expect(screen.getByText('Loading realtime dashboard…')).toBeInTheDocument();
 
   await act(async () => { releaseOverview(); releasePipeline(); releaseRealtime(); });
 
   expect(await screen.findByText('No overview data available')).toBeInTheDocument();
-  expect(await screen.findByText('No pipeline health data')).toBeInTheDocument();
+  expect(await screen.findByText('No delivery workflow health data')).toBeInTheDocument();
   expect(await screen.findByText('No realtime data. Refresh again later.')).toBeInTheDocument();
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
   expect(screen.getByText('暂无需求概况数据')).toBeInTheDocument();
-  expect(screen.getByText('暂无流水线健康数据')).toBeInTheDocument();
+  expect(screen.getByText('暂无交付流程健康数据')).toBeInTheDocument();
   expect(screen.getByText('暂无实时数据，请稍后刷新')).toBeInTheDocument();
 
   cleanup();

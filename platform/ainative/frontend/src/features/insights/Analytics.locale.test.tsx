@@ -49,7 +49,7 @@ it('keeps member search and dates on a cached independent consumer', async () =>
 it('translates independent metric and analytical panel labels and hides decorative icons', async () => {
  const { container } = routed(<><MetricCards metrics={metrics} /><KeyInsights cards={[]} workerLabel="raw" /><Recommendations items={[]} /><SdlcLinkIssues findings={[{ worker: '<em>原名</em>', link: 'raw stage', issue: 'issue', impact: 'impact', signal: '1', severity: 'low' }]} /></>);
  await act(async () => { await i18n.changeLanguage('en-US'); });
- for (const text of ['Efficiency', 'Stability', 'Security', 'Key insights', 'Recommended actions', 'Updates with filters', 'Pipeline link issues', 'issue; impact', '30min']) expect(screen.getByText(text)).toBeInTheDocument();
+ for (const text of ['Efficiency', 'Stability', 'Security', 'Key insights', 'Recommended actions', 'Updates with filters', 'Delivery workflow link issues', 'issue; impact', '30min']) expect(screen.getByText(text)).toBeInTheDocument();
  expect(container.querySelectorAll('[role="img"]:not([aria-hidden="true"])')).toHaveLength(0); expect(container.querySelector('em')).toBeNull();
 });
 it('uses singular units for measured one and keeps the last thirty days across an English locale', async () => {

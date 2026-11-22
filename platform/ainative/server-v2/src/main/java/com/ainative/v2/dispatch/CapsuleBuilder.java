@@ -1,5 +1,6 @@
 package com.ainative.v2.dispatch;
 
+import com.ainative.v2.agent.Persona;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,9 @@ import java.util.zip.ZipOutputStream;
  * 打包执行器的 capsule 压缩包(与 ymai-codeflow 运行器契约一致):
  * manifest.json(schemaVersion=ainative.taskPackage.v1 + fileDigests)/ workitem.md /
  * sdlc.json / identity.json / roster.json / policy.json。
+ *
+ * <p>identity.json 携带数字员工人设(soulMd/agentMd/rules):运行时据此组装系统提示词,
+ * 干活的是"这个员工"而不是通用模型。
  */
 @Component
 public class CapsuleBuilder {
@@ -26,23 +30,23 @@ public class CapsuleBuilder {
     public record Capsule(byte[] bytes, String md5) {}
 
     public Capsule build(String title, String contentMd, List<Map<String, Object>> steps,
-                         String agentName, String roleCode, String roleName,
-                         List<Map<String, Object>> roster) {
+                         Persona.Snapshot persona, List<Map<String, Object>> roster) {
         try {
+            Persona.Snapshot p = persona == null
+                    ? Persona.snapshotOf("", "", "", "", "")
+                    : persona;
             List<byte[]> entries = new ArrayList<>();
             List<String> names = new ArrayList<>();
             String workitemMd = "# 工单\n" + title + "\n\n" + (contentMd == null ? "" : contentMd) + "\n";
             add(names, entries, "workitem.md", workitemMd.getBytes(StandardCharsets.UTF_8));
             add(names, entries, "sdlc.json", mapper.writeValueAsBytes(Map.of("steps", steps)));
-            add(names, entries, "identity.json", mapper.writeValueAsBytes(Map.of(
-                    "name", agentName == null ? "" : agentName,
-                    "roleCode", roleCode == null ? "" : roleCode)));
+            add(names, entries, "identity.json", mapper.writeValueAsBytes(p.toMap()));
             add(names, entries, "roster.json", mapper.writeValueAsBytes(Map.of("members", roster)));
             add(names, entries, "policy.json", mapper.writeValueAsBytes(Map.of()));
             Map<String, Object> manifest = new LinkedHashMap<>();
             manifest.put("schemaVersion", SCHEMA_VERSION);
-            manifest.put("roleCode", roleCode == null ? "FS_DEV" : roleCode);
-            manifest.put("roleName", roleName == null ? "" : roleName);
+            manifest.put("roleCode", p.roleCode().isEmpty() ? "FS_DEV" : p.roleCode());
+            manifest.put("roleName", p.roleName());
             manifest.put("sdlcStepId", "");
             Map<String, String> digests = new LinkedHashMap<>();
             for (int i = 0; i < names.size(); i++) {

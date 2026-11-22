@@ -65,7 +65,7 @@ describe('routed agent configuration languages', () => {
     await user.type(screen.getByLabelText('SOUL.md'), '<strong>原文</strong>');
     await user.click(screen.getByRole('button', { name: /^Create$/ }));
     expect(await screen.findByText('Saved agent')).toBeInTheDocument();
-    expect(payload).toMatchObject({ name: '<em>新员工</em>', roleName: '测试工程师', roleCode: 'QA', businessBackground: '<strong>原文</strong>' });
+    expect(payload).toMatchObject({ name: '<em>新员工</em>', roleName: '测试工程师', roleCode: 'QA', soulMd: '<strong>原文</strong>' });
   });
 
   it('localizes alias options live while keeping the chosen alias and its role code canonical', async () => {
@@ -129,7 +129,7 @@ describe('routed agent configuration languages', () => {
     expect(screen.getByText('用户技能')).toBeInTheDocument();
     expect(screen.getByText('constructor', { selector: '.ant-tag' })).toBeInTheDocument();
     expect(screen.getByText('toString', { selector: '.ant-tag' })).toBeInTheDocument();
-    await user.click(screen.getByLabelText('Pipeline template'));
+    await user.click(screen.getByLabelText('Delivery workflow template'));
     expect(await screen.findByText('用户模版 (Enabled)')).toBeInTheDocument();
   });
 
@@ -150,7 +150,7 @@ describe('routed agent configuration languages', () => {
     await act(async () => { release(); });
     expect(await screen.findByText('Draft saved')).toBeInTheDocument();
     expect(success).toHaveBeenCalledWith('Config saved as draft');
-    expect(payload).toMatchObject({ roleName: '测试工程师', roleCode: 'QA', businessBackground: '<strong>业务原文</strong>', responsibilities: '用户职责', evolutionMode: 'ASSISTED' });
+    expect(payload).toMatchObject({ roleName: '测试工程师', roleCode: 'QA', soulMd: '<strong>业务原文</strong>', agentMd: '用户职责', evolutionMode: 'ASSISTED' });
     await act(async () => { await i18n.changeLanguage('zh-CN'); });
     expect(await screen.findByText('草稿已保存')).toBeInTheDocument();
     expect(screen.queryByText('Draft saved')).not.toBeInTheDocument();

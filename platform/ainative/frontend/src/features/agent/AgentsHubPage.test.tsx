@@ -56,8 +56,8 @@ describe('AgentsHubPage', () => {
     renderHub();
     expect(screen.getByRole('heading', { name: 'AI 数字员工' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '数字员工' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: '版本审核' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: '编队' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /版本审核/ })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /编队/ })).toBeInTheDocument();
     expect(screen.getByTestId('agent-list-pane')).toBeInTheDocument();
     expect(screen.queryByTestId('squad-list-pane')).not.toBeInTheDocument();
     expect(screen.queryByTestId('agent-review-pane')).not.toBeInTheDocument();
@@ -79,7 +79,7 @@ describe('AgentsHubPage', () => {
     renderHub();
     expect(screen.getByTestId('hub-location')).toHaveTextContent('/agents(empty)');
 
-    await user.click(screen.getByRole('tab', { name: '编队' }));
+    await user.click(screen.getByRole('tab', { name: /编队/ }));
     expect(await screen.findByTestId('squad-list-pane')).toBeInTheDocument();
     await waitFor(() => expect(screen.getByTestId('hub-location')).toHaveTextContent('/agents?tab=squads'));
 
@@ -97,7 +97,7 @@ describe('AgentsHubPage', () => {
 
   it('keeps the reviews tab label plain when nothing is pending', () => {
     renderHub();
-    const reviewsTab = screen.getByRole('tab', { name: '版本审核' });
+    const reviewsTab = screen.getByRole('tab', { name: /版本审核/ });
     expect(reviewsTab.textContent).toBe('版本审核');
   });
 
@@ -109,7 +109,7 @@ describe('AgentsHubPage', () => {
     await user.click(screen.getByRole('tab', { name: '数字员工' }));
     expect(screen.queryByTestId('agent-review-pane')).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: '版本审核' }));
+    await user.click(screen.getByRole('tab', { name: /版本审核/ }));
     expect(screen.getByTestId('agent-review-pane')).toBeInTheDocument();
   });
 });

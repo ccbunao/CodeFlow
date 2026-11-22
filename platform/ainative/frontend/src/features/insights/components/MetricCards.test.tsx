@@ -66,7 +66,7 @@ describe('MetricCards', () => {
 
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     expect(screen.queryByText('总 Token:')).not.toBeInTheDocument();
-    expect(screen.queryByText('均/任务:')).not.toBeInTheDocument();
+    expect(screen.queryByText('每任务 Token:')).not.toBeInTheDocument();
     expect(screen.queryByText('日均:')).not.toBeInTheDocument();
     expect(screen.queryByText('100K')).not.toBeInTheDocument();
     expect(screen.queryByText('5.0K')).not.toBeInTheDocument();

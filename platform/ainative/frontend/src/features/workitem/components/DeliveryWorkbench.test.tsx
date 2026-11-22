@@ -40,14 +40,14 @@ describe('Delivery workbench', () => {
     ];
     render(<DeliveryProgress progress={progress} />);
     expect(screen.queryByTestId('step-duration-chart')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '流水线 阶段耗时' }));
-    const panel = await screen.findByRole('tabpanel', { name: '流水线 阶段耗时' });
+    fireEvent.click(screen.getByRole('button', { name: '交付流程 阶段耗时' }));
+    const panel = await screen.findByRole('tabpanel', { name: '交付流程 阶段耗时' });
     await waitFor(() => expect(within(panel).getByText('Current attempt')).toBeVisible());
     expect(within(panel).getByTestId('step-duration-chart')).toHaveTextContent('本次执行 #40');
     expect(within(panel).getByTestId('step-duration-chart')).toHaveTextContent('步骤累计 1分');
     // Pin the old dispatch through the existing execution trail, then inspect its timings.
     fireEvent.click(within(screen.getByTestId('delivery-workbench')).getByText('Dispatch 20 · 10分'));
-    fireEvent.click(screen.getByRole('tab', { name: '流水线 阶段耗时' }));
+    fireEvent.click(screen.getByRole('tab', { name: '交付流程 阶段耗时' }));
     await waitFor(() => expect(within(panel).getByText('Old attempt')).toBeVisible());
     expect(within(panel).getByText('步骤累计 10分')).toBeVisible();
     expect(within(panel).queryByText('Current attempt')).not.toBeInTheDocument();
@@ -96,7 +96,7 @@ describe('Delivery workbench', () => {
     expect(screen.getAllByText(/Dispatched:/).length).toBeGreaterThan(0);
     expect(screen.getByText('raw <error> 中文', { selector: 'pre' })).toBeInTheDocument();
   });
-  it('shows an interaction without an Pipeline agent and does not invent an end time for running work', () => {
+  it('shows an interaction without an Delivery workflow agent and does not invent an end time for running work', () => {
     render(<DeliveryProgress progress={{ steps: [], agents: [], executions: [{ dispatchId: 11281, agentId: 9, agentName: 'Comment agent', executorName: null, status: 'RUNNING', startedAt: null, durationMs: null }] }} />);
     expect(screen.getByTestId('current-agent-name')).toHaveTextContent('Comment agent');
     open();
@@ -264,8 +264,8 @@ describe('Delivery workbench', () => {
     expect(within(analyze).getByText(/失败/)).toBeInTheDocument();
     expect(within(analyze).getByText(/4秒/)).toBeInTheDocument();
     expect(within(details).getByText(failure, { selector: 'pre' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('tab', { name: '流水线 阶段耗时' }));
-    const timing = screen.getByRole('tabpanel', { name: '流水线 阶段耗时' });
+    fireEvent.click(screen.getByRole('tab', { name: '交付流程 阶段耗时' }));
+    const timing = screen.getByRole('tabpanel', { name: '交付流程 阶段耗时' });
     await waitFor(() => expect(within(timing).getByTestId('step-duration-chart')).toHaveTextContent('本次执行 #12238'));
     await waitFor(() => expect(within(timing).getByText('步骤累计 7秒')).toBeVisible());
     expect(within(timing).getByText('收集需求执行日志')).toBeVisible();
@@ -303,13 +303,13 @@ describe('Delivery workbench', () => {
     open();
     const workbench = within(screen.getByTestId('delivery-workbench'));
     expect(screen.getByTestId('selected-terminal')).toHaveTextContent('12255');
-    fireEvent.click(screen.getByRole('tab', { name: '流水线 阶段耗时' }));
-    let timing = screen.getByRole('tabpanel', { name: '流水线 阶段耗时' });
+    fireEvent.click(screen.getByRole('tab', { name: '交付流程 阶段耗时' }));
+    let timing = screen.getByRole('tabpanel', { name: '交付流程 阶段耗时' });
     await waitFor(() => expect(within(timing).getByTestId('step-duration-chart')).toHaveTextContent('本次执行 #12255'));
     await waitFor(() => expect(within(timing).getByText('步骤累计 26秒')).toBeVisible());
     fireEvent.click(workbench.getByText('Dispatch 12238 · 10秒'));
-    fireEvent.click(screen.getByRole('tab', { name: '流水线 阶段耗时' }));
-    timing = screen.getByRole('tabpanel', { name: '流水线 阶段耗时' });
+    fireEvent.click(screen.getByRole('tab', { name: '交付流程 阶段耗时' }));
+    timing = screen.getByRole('tabpanel', { name: '交付流程 阶段耗时' });
     await waitFor(() => expect(within(timing).getByTestId('step-duration-chart')).toHaveTextContent('本次执行 #12238'));
     await waitFor(() => expect(within(timing).getByText('步骤累计 7秒')).toBeVisible());
     expect(within(timing).queryByText('步骤累计 26秒')).not.toBeInTheDocument();

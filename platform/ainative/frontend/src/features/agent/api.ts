@@ -50,6 +50,37 @@ export interface AgentVersionSummary {
   gmtCreate: string;
 }
 
+/**
+ * 平台线上契约的人设字段是 soulMd(SOUL.md)/ agentMd(AGENT.md),UI 层沿用
+ * businessBackground / responsibilities。差异只存在于这条 API 边界,统一在这里转换。
+ */
+interface PersonaWire {
+  soulMd?: string | null;
+  agentMd?: string | null;
+}
+
+type AgentWire = Agent & PersonaWire;
+
+/** 请求方向:未填(undefined)的字段不发 —— 平台按「null=保持原值」处理。 */
+function toWirePersona(p: { businessBackground?: string | null; responsibilities?: string | null }) {
+  return {
+    soulMd: p.businessBackground ?? undefined,
+    agentMd: p.responsibilities ?? undefined,
+  };
+}
+
+/** 响应方向:线上字段回填成 UI 字段,详情页才能读到 SOUL.md/AGENT.md 正文。 */
+function fromWirePersona<T extends PersonaWire>(agent: T): T & {
+  businessBackground?: string | null;
+  responsibilities?: string | null;
+} {
+  return {
+    ...agent,
+    businessBackground: agent.soulMd ?? null,
+    responsibilities: agent.agentMd ?? null,
+  };
+}
+
 export interface AgentVersion {
   id: number;
   agentId: number;
@@ -128,10 +159,10 @@ export async function listAgents(params: {
   kind?: AgentKind;
   squadIds?: number[];
 }): Promise<Agent[]> {
-  const resp = await apiClient.get<Agent[]>('/api/agents', {
+  const resp = await apiClient.get<AgentWire[]>('/api/agents', {
     params: { ...params, squadIds: csvParam(params.squadIds) },
   });
-  return resp.data;
+  return resp.data.map(fromWirePersona);
 }
 
 // 后端单页 size 上限 100 且不返回 total，翻到不足一页为止，否则第 100 个之后的数字员工会静默消失。
@@ -153,13 +184,19 @@ export async function listAllAgents(params: {
 }
 
 export async function getAgent(id: number): Promise<Agent> {
-  const resp = await apiClient.get<Agent>(`/api/agents/${id}`);
-  return resp.data;
+  const resp = await apiClient.get<AgentWire>(`/api/agents/${id}`);
+  return fromWirePersona(resp.data);
 }
 
 export async function createAgent(params: CreateAgentRequest): Promise<Agent> {
-  const resp = await apiClient.post<Agent>('/api/agents', params);
-  return resp.data;
+  const resp = await apiClient.post<AgentWire>('/api/agents', {
+    name: params.name,
+    avatarUrl: params.avatarUrl,
+    roleName: params.roleName,
+    roleCode: params.roleCode,
+    ...toWirePersona(params),
+  });
+  return fromWirePersona(resp.data);
 }
 
 export async function updateAgent(id: number, payload: UpdateAgentRequest): Promise<Agent> {
@@ -178,7 +215,13 @@ export async function getVersion(agentId: number, versionNo: number): Promise<Ag
 }
 
 export async function editConfig(agentId: number, config: UpdateConfigRequest): Promise<AgentVersion> {
-  const resp = await apiClient.put<AgentVersion>(`/api/agents/${agentId}/config`, config);
+  const resp = await apiClient.put<AgentVersion>(`/api/agents/${agentId}/config`, {
+    roleName: config.roleName,
+    roleCode: config.roleCode,
+    sdlcId: config.sdlcId,
+    evolutionMode: config.evolutionMode,
+    ...toWirePersona(config),
+  });
   return resp.data;
 }
 

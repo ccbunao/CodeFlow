@@ -33,7 +33,7 @@ describe('WorkspaceRolesPanel', () => {
     expect(dialog.queryByText('访问等级')).not.toBeInTheDocument();
     expect(dialog.getByRole('button', { name: /^交付与需求协作/ })).toHaveAttribute('aria-expanded', 'false');
     await user.click(dialog.getByRole('button', { name: /^流程与项目配置/ }));
-    await user.click(within(dialog.getByRole('group', { name: '流水线流程' })).getByRole('radio', { name: '只读' }));
+    await user.click(within(dialog.getByRole('group', { name: '交付流程' })).getByRole('radio', { name: '只读' }));
     await user.click(dialog.getByRole('button', { name: /保\s*存/ }));
     await waitFor(() => expect(saved).toHaveBeenCalledWith({ name: '<QA> 验收', readOnlyDomains: ['SDLC'] }));
   });
@@ -51,7 +51,7 @@ describe('WorkspaceRolesPanel', () => {
       expect(dialog.getByRole('textbox', { name: 'Role name' })).toHaveValue('交付协作 / Delivery');
       expect(dialog.getByRole('button', { name: /^Workflow and workspace configuration/ })).toHaveTextContent('1 read only');
       await user.click(dialog.getByRole('button', { name: /^Workflow and workspace configuration/ }));
-      await user.click(within(dialog.getByRole('group', { name: 'Pipeline workflows' })).getByRole('radio', { name: 'Read/write' }));
+      await user.click(within(dialog.getByRole('group', { name: 'Delivery workflows' })).getByRole('radio', { name: 'Read/write' }));
       await user.click(dialog.getByRole('button', { name: 'Save' }));
       await waitFor(() => expect(saved).toHaveBeenCalledWith({ name: '交付协作 / Delivery', readOnlyDomains: [], version: 2 }));
     } finally { await act(async () => { await i18n.changeLanguage('zh-CN'); }); }
@@ -75,7 +75,7 @@ describe('WorkspaceRolesPanel', () => {
       expect(dialog.getByRole('textbox', { name: 'Role name' })).toHaveValue('Collaborator');
       expect(dialog.getByRole('textbox', { name: 'Role name' })).toBeDisabled();
       await user.click(dialog.getByRole('button', { name: /^Workflow and workspace configuration/ }));
-      await user.click(within(dialog.getByRole('group', { name: 'Pipeline workflows' })).getByRole('radio', { name: 'Read only' }));
+      await user.click(within(dialog.getByRole('group', { name: 'Delivery workflows' })).getByRole('radio', { name: 'Read only' }));
       await user.click(dialog.getByRole('button', { name: 'Save' }));
       await waitFor(() => expect(saved).toHaveBeenCalledWith({ readOnlyDomains: ['SDLC'], version: 0 }));
     } finally { await act(async () => { await i18n.changeLanguage('zh-CN'); }); }
@@ -105,7 +105,7 @@ describe('WorkspaceRolesPanel', () => {
     expect(dialog.getByRole('textbox', { name: '角色名称' })).toBeDisabled();
     expect(dialog.queryByRole('button', { name: /保\s*存/ })).not.toBeInTheDocument();
     await user.click(dialog.getByRole('button', { name: /^流程与项目配置/ }));
-    expect(within(dialog.getByRole('group', { name: '流水线流程' })).getByRole('radio', { name: '只读' })).toBeDisabled();
+    expect(within(dialog.getByRole('group', { name: '交付流程' })).getByRole('radio', { name: '只读' })).toBeDisabled();
     await user.click(dialog.getByRole('button', { name: '关闭' }));
     const collaborator = screen.getByText('读写者').closest('tr')!;
     await user.click(within(collaborator).getByRole('button', { name: '查看角色' }));

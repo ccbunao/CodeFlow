@@ -21,7 +21,8 @@ public class AssetDao {
 
     public record Repo(long id, String name, String url, String provider, String defaultBranch) {}
     public record EnvVar(long id, String keyName, String valueRef, boolean secret) {}
-    public record Artifact(long id, Long ticketId, String name, String kind, String objectKey, Long sizeBytes) {}
+    public record Artifact(long id, Long ticketId, Long runId, String name, String kind, String objectKey,
+                           Long sizeBytes, String gmtCreate) {}
 
     private final JdbcTemplate jdbc;
 
@@ -129,8 +130,11 @@ public class AssetDao {
 
     // ── 产物 ──
     public List<Artifact> artifactsOf(long ticketId) {
-        return jdbc.query("SELECT id, ticket_id, name, kind, object_key, size_bytes FROM as_artifact WHERE ticket_id=? AND deleted_at IS NULL ORDER BY id DESC",
-                (rs, i) -> new Artifact(rs.getLong(1), nLong(rs, "ticket_id"), rs.getString(3), rs.getString(4),
-                        rs.getString(5), nLong(rs, "size_bytes")), ticketId);
+        return jdbc.query("SELECT id, ticket_id, run_id, name, kind, object_key, size_bytes, gmt_create"
+                        + " FROM as_artifact WHERE ticket_id=? AND deleted_at IS NULL ORDER BY id DESC",
+                (rs, i) -> new Artifact(rs.getLong(1), nLong(rs, "ticket_id"), nLong(rs, "run_id"),
+                        rs.getString(4), rs.getString(5), rs.getString(6), nLong(rs, "size_bytes"),
+                        rs.getTimestamp(8) == null ? null : rs.getTimestamp(8).toLocalDateTime().toString()),
+                ticketId);
     }
 }

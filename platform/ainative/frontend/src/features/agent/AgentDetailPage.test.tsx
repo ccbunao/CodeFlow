@@ -98,11 +98,12 @@ describe('AgentDetailPage', () => {
   });
 
   it('renders business background and responsibilities from agent detail', async () => {
+    // 线上契约:人设正文走 soulMd / agentMd,前端在 api.ts 边界映射成 UI 字段。
     mockAgent({
       roleName: '项目管理员',
       roleCode: 'PROJECT_MANAGER',
-      businessBackground: '负责在钉钉群里作为项目接口人参与沟通。',
-      responsibilities: '推动需求流转、任务指派和进度汇报，不直接开发代码。',
+      soulMd: '负责在钉钉群里作为项目接口人参与沟通。',
+      agentMd: '推动需求流转、任务指派和进度汇报，不直接开发代码。',
     });
 
     renderPage();
@@ -294,7 +295,7 @@ describe('AgentDetailPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('流水线:标准需求开发流程')).toBeInTheDocument();
+    expect(await screen.findByText('交付流程:标准需求开发流程')).toBeInTheDocument();
     expect(screen.getByText(/进化模式[:：]自动生成候选/)).toBeInTheDocument();
   });
 
@@ -307,7 +308,7 @@ describe('AgentDetailPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('流水线:#7')).toBeInTheDocument();
+    expect(await screen.findByText('交付流程:#7')).toBeInTheDocument();
   });
 
   it('falls back to unset labels when sdlc and evolution mode are missing', async () => {
@@ -315,7 +316,7 @@ describe('AgentDetailPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('流水线:未绑定')).toBeInTheDocument();
+    expect(await screen.findByText('交付流程:未绑定')).toBeInTheDocument();
     expect(screen.getByText(/进化模式:/)).toBeInTheDocument();
   });
 

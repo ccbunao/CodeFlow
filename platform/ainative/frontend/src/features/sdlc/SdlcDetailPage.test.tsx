@@ -133,7 +133,7 @@ describe('SdlcDetailPage', () => {
     await screen.findByText('标准流程');
 
     expect(screen.queryByRole('button', { name: /AI 辅助/ })).not.toBeInTheDocument();
-    expect(screen.queryByText('AI 辅助设计 流水线')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI 辅助设计 交付流程')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /添加步骤/ })).toBeInTheDocument();
   });
 
@@ -206,7 +206,7 @@ describe('SdlcDetailPage', () => {
     expect(requestedPath).toBe(`/api/sdlcs/${largeId}`);
   });
 
-  it('shows an empty overview when the Pipeline has no steps', async () => {
+  it('shows an empty overview when the Delivery workflow has no steps', async () => {
     server.use(
       http.get('/api/sdlcs/1', () => {
         return HttpResponse.json({
@@ -375,7 +375,7 @@ describe('SdlcDetailPage', () => {
     expect(JSON.parse(policy)).toEqual(otherPolicy);
   });
 
-  it('lets users view checklist and gate policy content via popovers on an ENABLED 流水线', async () => {
+  it('lets users view checklist and gate policy content via popovers on an ENABLED 交付流程', async () => {
     server.use(
       http.get('/api/sdlcs/1', () => {
         return HttpResponse.json({
@@ -554,7 +554,7 @@ describe('RetryBudgetTooltipContent', () => {
   });
 });
 
-it('refreshes both open Pipeline forms and existing errors without clearing raw drafts or pristine fields', async () => {
+it('refreshes both open Delivery workflow forms and existing errors without clearing raw drafts or pristine fields', async () => {
   useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
   const id = '334208147726012416';
   const rawJson = '[{"id":"tests-pass","text":"<b>原文</b>"}]';
@@ -595,7 +595,7 @@ it('refreshes both open Pipeline forms and existing errors without clearing raw 
   await act(async () => { await i18n.changeLanguage('zh-CN'); });
 });
 
-it('uses the completion locale for a pending Pipeline save', async () => {
+it('uses the completion locale for a pending Delivery workflow save', async () => {
   await i18n.changeLanguage('zh-CN');
   useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
   let finish!: () => void;

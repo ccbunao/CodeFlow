@@ -4,13 +4,17 @@ CREATE TABLE IF NOT EXISTS wi_flow (
   workspace_id BIGINT NOT NULL,
   name VARCHAR(128) NOT NULL,
   description VARCHAR(512) DEFAULT NULL,
+  -- 需求类型:REQ / TASK / BUG。状态模板按类型分域,否则「需求/任务/缺陷」三个页签
+  -- 会共用同一套模板(前端页签切了内容不变)。
+  work_type VARCHAR(16) NOT NULL DEFAULT 'REQ',
   is_default TINYINT NOT NULL DEFAULT 0,
   status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
   gmt_create DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   gmt_modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   deleted_at DATETIME DEFAULT NULL,
   PRIMARY KEY (id),
-  KEY idx_wi_flow_ws (workspace_id, deleted_at)
+  KEY idx_wi_flow_ws (workspace_id, deleted_at),
+  KEY idx_wi_flow_type (workspace_id, work_type, deleted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS wi_flow_state (
@@ -158,3 +162,7 @@ CREATE TABLE IF NOT EXISTS wi_restart_round (
   PRIMARY KEY (id),
   UNIQUE KEY uk_wi_restart (ticket_id, round_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ── 增量迁移:wi_flow 增加需求类型分域 ──────────────────────────────────────
+-- CREATE TABLE IF NOT EXISTS 对已存在的库不会补列。seekdb 不支持 PREPARE 动态 SQL,
+-- 故拆成独立迁移脚本,由 db-init 在建表后按需执行(见 004-workitem-flow-worktype.sql)。

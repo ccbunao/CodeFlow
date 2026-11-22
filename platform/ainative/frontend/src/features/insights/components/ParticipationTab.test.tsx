@@ -50,7 +50,7 @@ it('renders only completion stat cards, labels the slow tail as top 10 and expos
   expect(screen.getByText('Top 10')).toBeInTheDocument();
   await userEvent.hover(screen.getByRole('button', { name: '查看人机协作统计口径' }));
   const tooltip = await screen.findByRole('tooltip');
-  expect(tooltip).toHaveTextContent('与实时看板「流水线健康 · 平均耗时」同源：共享 T+1 快照事实层，今日为实时尾数据。');
+  expect(tooltip).toHaveTextContent('与实时看板「交付流程健康 · 平均耗时」同源：共享 T+1 快照事实层，今日为实时尾数据。');
   expect(tooltip).not.toHaveTextContent('缺少创建事件');
 });
 

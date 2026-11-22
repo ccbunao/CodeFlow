@@ -1,5 +1,6 @@
 package com.ainative.v2.dispatch;
 
+import com.ainative.v2.agent.Persona;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.daemon.ExecutorHub;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,22 +61,21 @@ public class DispatchLaunchService {
                 "SELECT title, body_md, sdlc_id FROM wi_ticket WHERE id=? AND deleted_at IS NULL", ticketId);
         Long effectiveSdlcId = sdlcId != null ? sdlcId : (Long) ticket.get("sdlc_id");
         List<Map<String, Object>> steps = stepsOf(effectiveSdlcId);
-        List<Map<String, Object>> agents = jdbc.queryForList(
-                "SELECT name, role_code, role_name FROM ag_agent WHERE id=? AND deleted_at IS NULL", agentId);
-        if (agents.isEmpty()) {
-            throw new com.ainative.v2.common.BizException("17001", "智能体不存在");
-        }
-        Map<String, Object> agent = agents.get(0);
+        Persona.Snapshot persona = personaOf(agentId);
         List<Map<String, Object>> roster = roster(ws());
+        // 快照在派发时冻结:人设/名册/工单/步骤任一项被改动,重建包体都会与派发时字节不同,
+        // 运行器按帧里的 md5 校验下载就会失败。
+        DispatchSnapshot snapshot = new DispatchSnapshot(persona,
+                String.valueOf(ticket.get("title")), (String) ticket.get("body_md"), steps, roster);
         CapsuleBuilder.Capsule capsule = capsuleBuilder.build(
-                String.valueOf(ticket.get("title")), (String) ticket.get("body_md"), steps,
-                String.valueOf(agent.get("name")), (String) agent.get("role_code"),
-                (String) agent.get("role_name"), roster);
+                snapshot.ticketTitle(), snapshot.ticketBodyMd(), snapshot.steps(),
+                snapshot.persona(), snapshot.roster());
         int attempt = maxAttempt(ticketId) + 1;
         // 先定执行器再落 run:rt_run.executor_id 必须等于真正收到指令的那个执行器,
         // 否则回写通道(备注鉴权按 rt_run.executor_id 关联执行器令牌)会取到错误的令牌。
         Long executorId = pickOnlineExecutor(agentId);
-        long dispatchId = dispatchDao.insertRun(ws(), ticketId, agentId, executorId, effectiveSdlcId, attempt);
+        long dispatchId = dispatchDao.insertRun(ws(), ticketId, agentId, executorId, effectiveSdlcId,
+                attempt, snapshot.toJson());
 
         // 发帧必须等事务提交:运行器收到帧会立刻下载包体,而下载端点要按 dispatchId
         // 查 rt_run 算签名 —— 事务未提交时查不到,直接 404(package_download_failed)。
@@ -125,29 +125,47 @@ public class DispatchLaunchService {
     /** 按 dispatchId 重建 capsule 字节(下载端点用,天然幂等)。 */
     public CapsuleBuilder.Capsule rebuild(long dispatchId) {
         List<Map<String, Object>> runs = jdbc.queryForList(
-                "SELECT ticket_id, sdlc_id, workspace_id FROM rt_run WHERE id=?", dispatchId);
+                "SELECT ticket_id, sdlc_id, workspace_id, agent_id, dispatch_snapshot FROM rt_run WHERE id=?",
+                dispatchId);
         if (runs.isEmpty()) {
             throw new BizException("14004", "派发不存在");
         }
-        long ticketId = ((Number) runs.get(0).get("ticket_id")).longValue();
+        Map<String, Object> run = runs.get(0);
+        // 有快照:只用快照重建,包体与派发时逐字节一致(帧里的 md5 才校验得过)。
+        DispatchSnapshot snapshot = DispatchSnapshot.fromJson((String) run.get("dispatch_snapshot"));
+        if (snapshot != null) {
+            return capsuleBuilder.build(snapshot.ticketTitle(), snapshot.ticketBodyMd(), snapshot.steps(),
+                    snapshot.persona(), snapshot.roster());
+        }
+        // 老派发(无快照):按实时数据重建,行为与改造前一致。
+        long ticketId = ((Number) run.get("ticket_id")).longValue();
         // 重建必须以该 run 记录的工作区为准:下载端点是 daemon 通道(无 Bearer),
         // 请求上下文会回落到默认工作区,导致 roster 与派发时不同 → 包字节不一致 → md5 校验失败。
-        long runWorkspace = runs.get(0).get("workspace_id") instanceof Number w ? w.longValue() : ws();
-        Object sdlc = runs.get(0).get("sdlc_id");
+        long runWorkspace = run.get("workspace_id") instanceof Number w ? w.longValue() : ws();
+        Object sdlc = run.get("sdlc_id");
         Long sdlcId = sdlc == null ? null : ((Number) sdlc).longValue();
         Map<String, Object> ticket = jdbc.queryForMap(
                 "SELECT title, body_md, sdlc_id FROM wi_ticket WHERE id=?", ticketId);
         Long effectiveSdlcId = sdlcId != null ? sdlcId : (Long) ticket.get("sdlc_id");
-        List<Map<String, Object>> runsAgent = jdbc.queryForList(
-                "SELECT agent_id FROM rt_run WHERE id=?", dispatchId);
-        Long agentId = runsAgent.isEmpty() || runsAgent.get(0).get("agent_id") == null ? null
-                : ((Number) runsAgent.get(0).get("agent_id")).longValue();
-        Map<String, Object> agent = agentId == null
-                ? Map.of("name", "AI 成员", "role_code", "FS_DEV", "role_name", "")
-                : jdbc.queryForMap("SELECT name, role_code, role_name FROM ag_agent WHERE id=?", agentId);
+        Long agentId = run.get("agent_id") == null ? null : ((Number) run.get("agent_id")).longValue();
+        Persona.Snapshot persona = agentId == null
+                ? Persona.snapshotOf("AI 成员", "FS_DEV", "", "", "")
+                : personaOf(agentId);
         return capsuleBuilder.build(String.valueOf(ticket.get("title")), (String) ticket.get("body_md"),
-                stepsOf(effectiveSdlcId), String.valueOf(agent.get("name")),
-                (String) agent.get("role_code"), (String) agent.get("role_name"), roster(runWorkspace));
+                stepsOf(effectiveSdlcId), persona, roster(runWorkspace));
+    }
+
+    /** 读数字员工人设(SOUL.md/AGENT.md),装配成可下发的快照。 */
+    private Persona.Snapshot personaOf(long agentId) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT name, role_code, role_name, soul_md, agent_md FROM ag_agent WHERE id=? AND deleted_at IS NULL",
+                agentId);
+        if (rows.isEmpty()) {
+            throw new BizException("17001", "智能体不存在");
+        }
+        Map<String, Object> a = rows.get(0);
+        return Persona.snapshotOf((String) a.get("name"), (String) a.get("role_code"),
+                (String) a.get("role_name"), (String) a.get("soul_md"), (String) a.get("agent_md"));
     }
 
     public String packageUrl(long dispatchId, int attempt) {

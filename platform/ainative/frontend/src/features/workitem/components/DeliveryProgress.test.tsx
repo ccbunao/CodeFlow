@@ -1332,7 +1332,7 @@ describe('DeliveryProgress', () => {
             turns: [{
               turnId: 't2', stepId: 'implementation', stepName: 'Implementation', status: 'INTERRUPTED',
               startedAt: '2026-07-30T10:01:01Z', endedAt: '2026-07-30T10:01:05Z', durationMs: 4000,
-              prompt: 'Run the implementation tests', systemPrompt: 'Follow the worker 流水线',
+              prompt: 'Run the implementation tests', systemPrompt: 'Follow the worker 交付流程',
               tokenUsage: { available: true, inputTokens: 500, outputTokens: 100, reasoningTokens: 20, cacheReadTokens: 0, cacheWriteTokens: 0, totalTokens: 600 },
               eventIds: [],
               spans: [
@@ -1388,14 +1388,14 @@ describe('DeliveryProgress', () => {
     expect(within(drawer).getAllByText(/12\.34 Token/).length).toBeGreaterThan(0);
     expect(within(drawer).queryByText(/tokens/)).not.toBeInTheDocument();
     expect(within(drawer).getByText(/Turn t2/)).toBeInTheDocument();
-    expect(within(drawer).getByText(/Runtime 与 流水线/)).toBeInTheDocument();
+    expect(within(drawer).getByText(/Runtime 与 交付流程/)).toBeInTheDocument();
     expect(within(drawer).getByText('runtime.recovery_completed')).toBeInTheDocument();
     fireEvent.click(within(drawer).getByText(/Turn t2/));
     expect(within(drawer).getByText('用户提示词')).toBeInTheDocument();
     expect(within(drawer).getByText('系统提示词')).toBeInTheDocument();
     expect(within(drawer).getByText(/pnpm test/)).toBeInTheDocument();
     expect(within(drawer).getByText('Run the implementation tests')).toBeInTheDocument();
-    expect(within(drawer).getByText('Follow the worker 流水线')).toBeInTheDocument();
+    expect(within(drawer).getByText('Follow the worker 交付流程')).toBeInTheDocument();
     expect(within(drawer).queryByText(/Usage unavailable/)).not.toBeInTheDocument();
     expect(within(drawer).getByText(/checkpoint #18/)).toBeInTheDocument();
   });
@@ -1661,7 +1661,7 @@ describe('DeliveryProgress', () => {
         lastUpdatedAt: '2026-09-02T10:00:00Z', currentAction: null,
         actions: [{
           eventId: 'e1', seq: 1, eventTime: '2026-09-02T10:00:00Z', eventType: 'step.completed',
-          actionType: '流水线_STEP', summary: '返工完成', status: 'COMPLETED', stepId: null,
+          actionType: '交付流程_STEP', summary: '返工完成', status: 'COMPLETED', stepId: null,
           stepKey: null, stepName: '编码', agentId: 41, dispatchId: 302, attempt: 2,
         }],
         totalActions: 1, truncated: false, awaitingRuntime: false,

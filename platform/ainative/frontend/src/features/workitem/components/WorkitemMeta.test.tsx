@@ -79,7 +79,7 @@ describe('WorkitemMeta', () => {
         sdlcName={null}
       />,
     );
-    expect(screen.queryByText(/流水线/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/交付流程/)).not.toBeInTheDocument();
     expect(screen.queryByText(/创建者/)).not.toBeInTheDocument();
     expect(screen.getByText((_, node) => node?.textContent === '处理人未指派')).toBeInTheDocument();
   });

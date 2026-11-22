@@ -64,7 +64,7 @@ describe('KpiDetailModal', () => {
     server.use(
       http.get('/api/dashboard/running', () =>
         ok([
-          { workitemId: 401, title: '部署流水线', agentName: 'Alice', stepName: '编码', runningMinutes: 5, runningDispatchCount: 1 },
+          { workitemId: 401, title: '部署交付流程', agentName: 'Alice', stepName: '编码', runningMinutes: 5, runningDispatchCount: 1 },
           { workitemId: 402, title: '修复缓存', agentName: 'Bob', stepName: '测试', runningMinutes: 12, runningDispatchCount: 2 },
           { workitemId: 403, title: null, agentName: null, stepName: null, runningMinutes: 0, runningDispatchCount: 1 },
         ]),
@@ -74,7 +74,7 @@ describe('KpiDetailModal', () => {
     renderModal('runningWorkitems');
 
     await waitFor(() => {
-      expect(screen.getByText('#401 部署流水线')).toBeInTheDocument();
+      expect(screen.getByText('#401 部署交付流程')).toBeInTheDocument();
     });
     expect(screen.getByText('#402 修复缓存')).toBeInTheDocument();
     expect(screen.getByText(/Alice · 编码 ·/)).toBeInTheDocument();

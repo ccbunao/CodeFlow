@@ -413,7 +413,7 @@ describe('AgentEditPage', () => {
 
     renderPage();
     expect(await screen.findByText(/编辑配置/)).toBeInTheDocument();
-    expect(screen.queryByText('流水线 模版')).not.toBeInTheDocument();
+    expect(screen.queryByText('交付流程 模版')).not.toBeInTheDocument();
     expect(screen.getByText('SOUL.md')).toBeInTheDocument();
     expect(screen.getByText('AGENT.md')).toBeInTheDocument();
   });
@@ -430,7 +430,7 @@ describe('AgentEditPage', () => {
 
     renderPage();
     expect(await screen.findByText(/编辑配置/)).toBeInTheDocument();
-    expect(screen.getByText('流水线 模版')).toBeInTheDocument();
+    expect(screen.getByText('交付流程 模版')).toBeInTheDocument();
   });
 
   it('locks the name and avatar inputs for platform agents', async () => {

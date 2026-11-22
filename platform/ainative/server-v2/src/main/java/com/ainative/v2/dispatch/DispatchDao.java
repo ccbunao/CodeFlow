@@ -85,18 +85,22 @@ public class DispatchDao {
         return n == null ? 0 : n;
     }
 
-    public long insertRun(long workspaceId, long ticketId, Long agentId, Long executorId, Long sdlcId, int attempt) {
+    public long insertRun(long workspaceId, long ticketId, Long agentId, Long executorId, Long sdlcId,
+                          int attempt, String dispatchSnapshot) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO rt_run (workspace_id, ticket_id, agent_id, executor_id, sdlc_id, attempt, status, started_at) VALUES (?,?,?,?,?,?, 'RUNNING', NOW())",
+                    "INSERT INTO rt_run (workspace_id, ticket_id, agent_id, dispatch_snapshot,"
+                            + " executor_id, sdlc_id, attempt, status, started_at)"
+                            + " VALUES (?,?,?,?,?,?,?, 'RUNNING', NOW())",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setLong(1, workspaceId);
             ps.setLong(2, ticketId);
             if (agentId == null) ps.setNull(3, java.sql.Types.BIGINT); else ps.setLong(3, agentId);
-            if (executorId == null) ps.setNull(4, java.sql.Types.BIGINT); else ps.setLong(4, executorId);
-            if (sdlcId == null) ps.setNull(5, java.sql.Types.BIGINT); else ps.setLong(5, sdlcId);
-            ps.setInt(6, attempt);
+            ps.setString(4, dispatchSnapshot);
+            if (executorId == null) ps.setNull(5, java.sql.Types.BIGINT); else ps.setLong(5, executorId);
+            if (sdlcId == null) ps.setNull(6, java.sql.Types.BIGINT); else ps.setLong(6, sdlcId);
+            ps.setInt(7, attempt);
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();

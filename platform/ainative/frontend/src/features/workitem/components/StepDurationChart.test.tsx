@@ -32,7 +32,7 @@ describe('StepDurationChart', () => {
     rerender(<StepDurationChart dispatchId={11574} steps={steps.map(step => step.stepId === 3 ? { ...step, durationMs: 360_000 } : step)} />);
     expect(screen.getByText('耗时最长').closest('li')).toHaveTextContent('补齐路线证据');
     await act(async () => { await i18n.changeLanguage('en-US'); });
-    expect(screen.getByRole('region', { name: 'Pipeline step duration' })).toBeVisible();
+    expect(screen.getByRole('region', { name: 'Delivery workflow step duration' })).toBeVisible();
     expect(screen.getByText('Longest').closest('li')).toHaveTextContent('补齐路线证据');
     expect(screen.getByText('Steps total 10m')).toBeVisible();
   });

@@ -5,7 +5,7 @@ describe('workflow member cards', () => {
   it('renders model labels as plain text and provides an accessible selection control', () => {
     const select = vi.fn();
     const node: WorkflowNode = { id: 'node', kind: 'MEMBER', agentId: '1', label: '<img src=x onerror=alert(1)>', responsibility: 'work' };
-    const card = createWorkflowNodeCard(node, '流水线 · 3 steps', select);
+    const card = createWorkflowNodeCard(node, '交付流程 · 3 steps', select);
     expect(card.querySelector('img')).toBeNull();
     expect(card.textContent).toContain(node.label);
     expect(card.getAttribute('aria-label')).toBe(node.label);

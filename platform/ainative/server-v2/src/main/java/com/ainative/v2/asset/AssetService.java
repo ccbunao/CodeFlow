@@ -115,10 +115,16 @@ public class AssetService {
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("id", a.id());
             m.put("workitemId", a.ticketId());
+            // run_id 为空的产物(澄清会话归档)不属于任何一次执行,前端归入「未关联执行」分组。
+            m.put("dispatchId", a.runId());
             m.put("name", a.name());
             m.put("kind", a.kind());
+            // 前端 Artifact 契约用的是 type/size,这里同时给出别名,两套字段并存不影响既有调用方。
+            m.put("type", a.kind());
             m.put("objectKey", a.objectKey());
             m.put("sizeBytes", a.sizeBytes());
+            m.put("size", a.sizeBytes());
+            m.put("gmtCreate", a.gmtCreate());
             return m;
         }).toList();
     }

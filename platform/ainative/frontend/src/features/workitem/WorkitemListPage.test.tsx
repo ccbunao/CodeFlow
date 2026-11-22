@@ -1065,7 +1065,7 @@ describe('WorkitemListPage 拖拽流转集成', () => {
 });
 
 // 需求列表收敛为 9 列、字段统一展示（当前处理人/中文优先级/去编号姓名/两行创建时间）：
-// 这里锁定表头顺序、移除的列（流水线、来源）以及各单元格的展示语义。
+// 这里锁定表头顺序、移除的列（交付流程、来源）以及各单元格的展示语义。
 describe('WorkitemListPage 表格列与字段展示', () => {
   function fieldRow(overrides: Record<string, unknown>) {
     return {
@@ -1112,9 +1112,9 @@ describe('WorkitemListPage 表格列与字段展示', () => {
     ]);
   });
 
-  it('keeps the Pipeline and 来源 columns out of the table', async () => {
+  it('keeps the Delivery workflow and 来源 columns out of the table', async () => {
     await renderTableView();
-    expect(screen.queryByRole('columnheader', { name: '流水线' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: '交付流程' })).not.toBeInTheDocument();
     expect(screen.queryByRole('columnheader', { name: '来源' })).not.toBeInTheDocument();
   });
 

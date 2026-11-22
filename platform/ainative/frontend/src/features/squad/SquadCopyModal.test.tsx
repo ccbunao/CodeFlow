@@ -132,7 +132,7 @@ describe('SquadCopyModal', () => {
     expect(within(list).getByText('能力 #3')).toBeInTheDocument();
     expect(within(list).getByText('插件 legacy-tool')).toBeInTheDocument();
     expect(within(list).getByText('环境变量 #7')).toBeInTheDocument();
-    expect(within(list).getByText('流水线流程 #30')).toBeInTheDocument();
+    expect(within(list).getByText('交付流程 #30')).toBeInTheDocument();
     // 未知种类保留服务端原样引用，不静默丢弃
     expect(within(list).getByText('mystery#1')).toBeInTheDocument();
     expect(screen.queryByTestId('copy-blocked-list')).not.toBeInTheDocument();

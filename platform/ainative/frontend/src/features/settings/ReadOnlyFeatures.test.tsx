@@ -18,7 +18,7 @@ describe('ReadOnlyFeatures', () => {
     expect(screen.getByRole('button', { name: /^AI 成员/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.getByRole('button', { name: /^流程与项目配置/ })).toHaveAttribute('aria-expanded', 'false');
     expect(screen.queryByRole('radio', { name: '读写' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('group', { name: '流水线流程' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: '交付流程' })).not.toBeInTheDocument();
     expect(screen.getByTestId('value')).toHaveTextContent('["SDLC","AI","AUTH"]');
   });
 
@@ -58,7 +58,7 @@ describe('ReadOnlyFeatures', () => {
       expect(screen.getByTestId('value')).toHaveTextContent('["MCP","SDLC"]');
       const configuration = screen.getByRole('region', { name: 'Workflow and workspace configuration' });
       await user.click(within(configuration).getByRole('button', { name: /^Workflow and workspace configuration/ }));
-      expect(within(within(configuration).getByRole('group', { name: 'Pipeline workflows' })).getByRole('radio', { name: 'Read only' })).toBeChecked();
+      expect(within(within(configuration).getByRole('group', { name: 'Delivery workflows' })).getByRole('radio', { name: 'Read only' })).toBeChecked();
       expect(screen.getByTestId('value')).toHaveTextContent('["MCP","SDLC"]');
     } finally { await act(async () => { await i18n.changeLanguage('zh-CN'); }); }
   });
@@ -68,7 +68,7 @@ describe('ReadOnlyFeatures', () => {
     render(<ReadOnlyFeatures value={['SDLC']} disabled />);
     const configuration = screen.getByRole('region', { name: '流程与项目配置' });
     await user.click(within(configuration).getByRole('button', { name: /^流程与项目配置/ }));
-    const sdlc = within(configuration).getByRole('group', { name: '流水线流程' });
+    const sdlc = within(configuration).getByRole('group', { name: '交付流程' });
     expect(within(sdlc).getByRole('radio', { name: '只读' })).toBeChecked();
     for (const radio of within(configuration).getAllByRole('radio')) expect(radio).toBeDisabled();
     for (const button of within(configuration).getAllByRole('button', { name: /全部设为/ })) expect(button).toBeDisabled();

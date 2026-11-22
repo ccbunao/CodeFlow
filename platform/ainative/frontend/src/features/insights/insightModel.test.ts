@@ -55,7 +55,7 @@ it('keeps real names and raw rejection heuristics across locales and canonical f
   expect(en.summaryCards[0].value).toBe(zh.summaryCards[0].value);
   expect(en.workerFindings[0].severity).toBe(zh.workerFindings[0].severity);
   expect(en.summaryCards[0].body).toContain('<em>coding甲</em>');
-  expect(en.insightCards[0].title).toBe('Pipeline link bottleneck');
+  expect(en.insightCards[0].title).toBe('Delivery workflow link bottleneck');
 });
 
 it('keeps original fallback stage positions across every supported date intensity', async () => {

@@ -83,7 +83,7 @@ public class AgentResourceController {
         RequestContext.requireUserId();
         requireAgent(id);
         Map<String, Object> agent = jdbc.queryForMap(
-                "SELECT name, role_code, role_name, soul_md, status FROM ag_agent WHERE id=?", id);
+                "SELECT name, role_code, role_name, soul_md, agent_md, status FROM ag_agent WHERE id=?", id);
         Integer next = jdbc.queryForObject(
                 "SELECT COALESCE(MAX(version_no),0)+1 FROM ag_version WHERE agent_id=?", Integer.class, id);
         String snapshot;
@@ -138,8 +138,15 @@ public class AgentResourceController {
         try {
             @SuppressWarnings("unchecked")
             Map<String, Object> snap = mapper.readValue(String.valueOf(rows.get(0).get("snapshot_json")), Map.class);
-            jdbc.update("UPDATE ag_agent SET name=?, role_code=?, role_name=?, soul_md=? WHERE id=?",
-                    snap.get("name"), snap.get("role_code"), snap.get("role_name"), snap.get("soul_md"), id);
+            // 老快照没有 agent_md 键:此时不动该列,否则会把现有 AGENT.md 抹成空。
+            boolean hasAgentMd = snap.containsKey("agent_md");
+            jdbc.update("UPDATE ag_agent SET name=?, role_code=?, role_name=?, soul_md=?"
+                            + (hasAgentMd ? ", agent_md=?" : "") + " WHERE id=?",
+                    hasAgentMd
+                            ? new Object[]{snap.get("name"), snap.get("role_code"), snap.get("role_name"),
+                                    snap.get("soul_md"), snap.get("agent_md"), id}
+                            : new Object[]{snap.get("name"), snap.get("role_code"), snap.get("role_name"),
+                                    snap.get("soul_md"), id});
         } catch (Exception e) {
             throw new BizException("17004", "版本快照损坏");
         }

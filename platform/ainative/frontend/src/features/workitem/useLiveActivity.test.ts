@@ -32,7 +32,7 @@ function buildResponse(overrides: Partial<DispatchLiveActivity> = {}): DispatchL
     currentAction: { eventId: 'e2', seq: 2, eventTime: '2026-09-02T10:00:00Z', eventType: 'bash.started', actionType: 'COMMAND', summary: 'running tests', status: 'RUNNING', stepId: null, stepKey: null, stepName: '编码', agentId: 5, dispatchId: 10, attempt: 1 },
     actions: [
       { eventId: 'e2', seq: 2, eventTime: '2026-09-02T10:00:00Z', eventType: 'bash.started', actionType: 'COMMAND', summary: 'running tests', status: 'RUNNING', stepId: null, stepKey: null, stepName: '编码', agentId: 5, dispatchId: 10, attempt: 1 },
-      { eventId: 'e1', seq: 1, eventTime: '2026-09-02T09:59:00Z', eventType: 'step.started', actionType: '流水线_STEP', summary: '开始编码', status: 'RUNNING', stepId: null, stepKey: null, stepName: '编码', agentId: 5, dispatchId: 10, attempt: 1 },
+      { eventId: 'e1', seq: 1, eventTime: '2026-09-02T09:59:00Z', eventType: 'step.started', actionType: '交付流程_STEP', summary: '开始编码', status: 'RUNNING', stepId: null, stepKey: null, stepName: '编码', agentId: 5, dispatchId: 10, attempt: 1 },
     ],
     totalActions: 2,
     truncated: false,
@@ -44,7 +44,7 @@ function buildResponse(overrides: Partial<DispatchLiveActivity> = {}): DispatchL
 function buildAction(seq: number): LiveActivityAction {
   return {
     eventId: `e${seq}`, seq, eventTime: '2026-09-02T10:00:00Z', eventType: 'step.progress',
-    actionType: '流水线_STEP', summary: `action ${seq}`, status: 'RUNNING', stepId: null,
+    actionType: '交付流程_STEP', summary: `action ${seq}`, status: 'RUNNING', stepId: null,
     stepKey: null, stepName: null, agentId: 5, dispatchId: 10, attempt: 1,
   };
 }
@@ -116,7 +116,7 @@ describe('useLiveActivity', () => {
         type: 'live-activity',
         payload: {
           lastSeq: 3,
-          action: { eventId: 'e3', seq: 3, eventTime: '2026-09-02T10:01:00Z', eventType: 'step.completed', actionType: '流水线_STEP', summary: '步骤完成', status: 'COMPLETED', stepId: null, stepKey: null, stepName: null, agentId: 5, dispatchId: 10, attempt: 1 },
+          action: { eventId: 'e3', seq: 3, eventTime: '2026-09-02T10:01:00Z', eventType: 'step.completed', actionType: '交付流程_STEP', summary: '步骤完成', status: 'COMPLETED', stepId: null, stepKey: null, stepName: null, agentId: 5, dispatchId: 10, attempt: 1 },
         },
       });
     });

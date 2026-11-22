@@ -21,8 +21,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/agents")
 public class AgentController {
-    public record CreateRequest(String name, String roleCode, String roleName, String soulMd) {}
-    public record ConfigRequest(String roleName, String soulMd) {}
+    public record CreateRequest(String name, String roleCode, String roleName, String soulMd, String agentMd) {}
+    /** null = 本次不涉及该字段(保持原值),空串 = 显式清空。 */
+    public record ConfigRequest(String roleName, String soulMd, String agentMd) {}
 
     private final AgentService service;
 
@@ -34,7 +35,8 @@ public class AgentController {
     @Operation(summary = "智能体接口(/api/agents)。")
     public ApiResult<Map<String, Object>> create(@RequestBody CreateRequest req) {
         RequestContext.requireUserId();
-        return ApiResult.ok(service.createAgent(req.name(), req.roleCode(), req.roleName(), req.soulMd()));
+        return ApiResult.ok(service.createAgent(req.name(), req.roleCode(), req.roleName(),
+                req.soulMd(), req.agentMd()));
     }
 
     @GetMapping
@@ -55,7 +57,7 @@ public class AgentController {
     @Operation(summary = "AI 数字员工·配置。")
     public ApiResult<Map<String, Object>> config(@PathVariable long id, @RequestBody ConfigRequest req) {
         RequestContext.requireUserId();
-        return ApiResult.ok(service.updateConfig(id, req.roleName(), req.soulMd()));
+        return ApiResult.ok(service.updateConfig(id, req.roleName(), req.soulMd(), req.agentMd()));
     }
 
     @DeleteMapping("/{id}")

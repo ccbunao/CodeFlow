@@ -239,7 +239,7 @@ it('refreshes known role chips and independent member subtitles without translat
     expect(screen.getAllByText('QA engineer')).toHaveLength(2);
     expect(screen.getAllByText('<b>用户角色</b>')).toHaveLength(2);
     expect(screen.getByText('原始职责')).toBeInTheDocument();
-    expect(screen.getAllByText(/Pipeline steps · Standard/)).toHaveLength(2);
+    expect(screen.getAllByText(/Delivery workflow steps · Standard/)).toHaveLength(2);
     expect(container.querySelector('em')).toBeNull();
     await act(async () => { await i18n.changeLanguage('zh-CN'); });
     expect(screen.getAllByText('测试工程师')).toHaveLength(2);

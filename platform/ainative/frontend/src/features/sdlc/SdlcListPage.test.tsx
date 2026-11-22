@@ -47,7 +47,7 @@ describe('SdlcListPage', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument(); expect(posts).toBe(0);
   });
 
-  it('renders Pipeline template table with create button', async () => {
+  it('renders Delivery workflow template table with create button', async () => {
     server.use(
       http.get('/api/sdlcs/page', () => {
         return sdlcPageResponse({
@@ -64,7 +64,7 @@ describe('SdlcListPage', () => {
     expect(screen.getByText('新建')).toBeInTheDocument();
   });
 
-  it('opens the squad workflow tab without leaving the Pipeline page', async () => {
+  it('opens the squad workflow tab without leaving the Delivery workflow page', async () => {
     useSquadsAndSdlcs([]);
     renderPage();
     await userEvent.click(await screen.findByRole('tab', { name: '编队工作流' }));
@@ -102,7 +102,7 @@ describe('SdlcListPage', () => {
 
     await userEvent.click(await screen.findByRole('button', { name: /新建$/ }));
 
-    expect(error).toHaveBeenCalledWith('当前为只读权限，新建 流水线 模版需要读写权限');
+    expect(error).toHaveBeenCalledWith('当前为只读权限，新建 交付流程 模版需要读写权限');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
@@ -115,7 +115,7 @@ describe('SdlcListPage', () => {
       http.get('/api/sdlcs/page', () => sdlcPageResponse({
         success: true, code: '0', message: '', traceId: null,
         data: [
-          { id: '40098', name: '代码评审流水线', description: '', status: 'DISABLED', workType: null, isDefault: 0, entryStepId: null, version: 1, gmtCreate: '2026-07-01', steps: [] },
+          { id: '40098', name: '代码评审交付流程', description: '', status: 'DISABLED', workType: null, isDefault: 0, entryStepId: null, version: 1, gmtCreate: '2026-07-01', steps: [] },
         ],
       })),
       http.delete('/api/sdlcs/40098', () => HttpResponse.json({
@@ -127,7 +127,7 @@ describe('SdlcListPage', () => {
     );
     renderPage();
 
-    await screen.findByText('代码评审流水线');
+    await screen.findByText('代码评审交付流程');
     const deleteIcon = document.querySelector('.anticon-delete');
     expect(deleteIcon).toBeTruthy();
     await userEvent.click(deleteIcon!.closest('button')!);
@@ -270,7 +270,7 @@ describe('SdlcListPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('暂无 流水线 模版')).toBeInTheDocument();
+    expect(await screen.findByText('暂无 交付流程 模版')).toBeInTheDocument();
   });
 
   async function rowOf(name: string) {
@@ -322,7 +322,7 @@ describe('SdlcListPage', () => {
   });
 });
 
-describe('Pipeline server pagination', () => {
+describe('Delivery workflow server pagination', () => {
   it.each(['grouped', 'list'])('recovers when the last page disappears in %s view', async (view) => {
     window.localStorage.setItem('ainative.sdlcs.view', view);
     window.localStorage.removeItem('ainative.sdlcs.pageSize');
@@ -351,7 +351,7 @@ describe('Pipeline server pagination', () => {
     window.localStorage.setItem('ainative.sdlcs.view', view);
     window.localStorage.removeItem('ainative.sdlcs.pageSize');
     const rows = Array.from({ length: 11 }, (_, index) => ({
-      id: String(40024 - index), name: index === 10 ? 'AW自迭代-研发流水线' : `流程-${index}`,
+      id: String(40024 - index), name: index === 10 ? 'AW自迭代-研发交付流程' : `流程-${index}`,
       description: '', status: 'ENABLED', stepCount: 4, squadIds: [], squadNames: [],
     }));
     const requests: number[] = [];
@@ -372,7 +372,7 @@ describe('Pipeline server pagination', () => {
     await screen.findByText('流程-0');
     expect(screen.getByText('共 11 条')).toBeInTheDocument();
     await userEvent.click(screen.getByTitle('2'));
-    expect(await screen.findByText('AW自迭代-研发流水线')).toBeInTheDocument();
+    expect(await screen.findByText('AW自迭代-研发交付流程')).toBeInTheDocument();
     expect(requests).toContain(2);
     expect(screen.getByText('共 11 条')).toBeInTheDocument();
     await userEvent.click(screen.getByTitle('1'));
@@ -409,7 +409,7 @@ describe('routed squad grouping localization', () => {
   });
 });
 
-it('switches a cached Pipeline route and open create errors while preserving draft and query identity', async () => {
+it('switches a cached Delivery workflow route and open create errors while preserving draft and query identity', async () => {
   await i18n.changeLanguage('zh-CN');
   useAuthStore.getState().setCurrentWorkspace({ id: 1, name: 'O', description: '' }, 'READ_WRITE');
   localStorage.setItem('ainative.sdlcs.view', 'list');
@@ -431,7 +431,7 @@ it('switches a cached Pipeline route and open create errors while preserving dra
   await screen.findByText('请输入名称');
   await act(async () => { await i18n.changeLanguage('en-US'); });
   expect(await screen.findByText('Enter a name')).toBeInTheDocument();
-  expect(screen.getByRole('dialog', { name: 'New Pipeline workflow' })).toBeInTheDocument();
+  expect(screen.getByRole('dialog', { name: 'New Delivery workflow' })).toBeInTheDocument();
   expect(screen.getByLabelText('Description')).toHaveValue('原始 draft <i>内容</i>');
   expect(screen.getAllByRole('button', { name: 'Delete pipeline' })[0]).toBeInTheDocument();
   expect(screen.getByText('Draft')).toBeInTheDocument();
@@ -455,6 +455,6 @@ it.each([[0, '0 workflows total'], [1, '1 workflow total'], [3, '3 workflows tot
   await screen.findByText(total);
   await userEvent.click(screen.getByRole('button', { name: 'New' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  expect(error).toHaveBeenCalledWith('Current access: Read-only access. New Pipeline workflow requires Read and write access.');
+  expect(error).toHaveBeenCalledWith('Current access: Read-only access. New Delivery workflow requires Read and write access.');
   error.mockRestore();
 });

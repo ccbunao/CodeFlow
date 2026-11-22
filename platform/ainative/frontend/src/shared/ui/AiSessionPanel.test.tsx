@@ -134,7 +134,7 @@ describe('AiSessionPanel', () => {
 
   it('does not render a raw structured result json as a long AI chat message', async () => {
     const resultJson = JSON.stringify({
-      name: '研发AI 成员内部流水线工作流',
+      name: '研发AI 成员内部交付流程工作流',
       description: '流程说明',
       steps: [
         { order: 1, name: '需求满足性分析', kind: 'analysis', instructionMd: '分析上下文是否足够。' },
@@ -163,7 +163,7 @@ describe('AiSessionPanel', () => {
     await user.click(screen.getByRole('button', { name: /发送/ }));
 
     expect(await screen.findByText('已生成结构化结果，请在右侧预览和确认。')).toBeInTheDocument();
-    expect(screen.queryByText(/\{\s*"name":\s*"研发AI 成员内部流水线工作流"/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\{\s*"name":\s*"研发AI 成员内部交付流程工作流"/)).not.toBeInTheDocument();
   });
 
   it('does not retry auto-start after create session fails', async () => {

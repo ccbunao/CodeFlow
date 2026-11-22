@@ -78,7 +78,7 @@ describe('SquadListPage', () => {
     expect(screen.getByText('3 个AI 成员')).toBeInTheDocument();
     expect(screen.getByText('2 类角色')).toBeInTheDocument();
     expect(screen.getByText('1/2 在线')).toBeInTheDocument();
-    expect(screen.getByText('1 个 流水线')).toBeInTheDocument();
+    expect(screen.getByText('1 个 交付流程')).toBeInTheDocument();
     expect(screen.getByText('新建编队')).toBeInTheDocument();
     expect(screen.getByText('成员')).toBeInTheDocument();
     expect(screen.getByText('编辑')).toBeInTheDocument();
@@ -126,7 +126,7 @@ describe('SquadListPage', () => {
     expect(screen.getByText('0 个AI 成员')).toBeInTheDocument();
   });
 
-  it('opens a visual squad detail modal with member role and Pipeline details', async () => {
+  it('opens a visual squad detail modal with member role and Delivery workflow details', async () => {
     const user = userEvent.setup();
     server.use(
       http.get('/api/squads', () => HttpResponse.json({
@@ -333,7 +333,7 @@ describe('SquadListPage', () => {
 
     renderPageAt('/agents?tab=squads&squadId=1');
 
-    // Squad tags on the agent / 流水线 / executor pages link here; no click is involved.
+    // Squad tags on the agent / 交付流程 / executor pages link here; no click is involved.
     expect(await screen.findByText('dev-machine-01')).toBeInTheDocument();
     expect(screen.getByText('关联运行器')).toBeInTheDocument();
     // Consumed once matched, otherwise closing the modal would immediately reopen it.
@@ -693,7 +693,7 @@ describe('routed squad detail and member localization', () => {
     vi.restoreAllMocks();
   });
 
-  it('keeps distinct role and Pipeline rows when a custom role matches a translated preset label', async () => {
+  it('keeps distinct role and Delivery workflow rows when a custom role matches a translated preset label', async () => {
     server.use(
       http.get('/api/squads', () => HttpResponse.json({ success: true, data: [{ id: 1, name: '<b>自定义编队</b>', memberCount: 3 }] })),
       http.get('/api/squads/1', () => HttpResponse.json({ success: true, data: {

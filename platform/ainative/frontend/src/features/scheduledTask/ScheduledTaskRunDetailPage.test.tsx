@@ -206,7 +206,7 @@ describe('ScheduledTaskRunDetailPage', () => {
     expect(within(workbench).getByTestId('delivery-step-10131')).toHaveTextContent('失败');
     expect(within(workbench).getByText('检查项 cl_2 未完成。')).toBeInTheDocument();
     expect(within(workbench).getByText(/checklist not fully checked/, { selector: 'pre' })).toBeInTheDocument();
-    fireEvent.click(within(workbench).getByRole('tab', { name: '流水线 阶段耗时' }));
+    fireEvent.click(within(workbench).getByRole('tab', { name: '交付流程 阶段耗时' }));
     const timing = await within(workbench).findByTestId('step-duration-chart');
     expect(timing).toHaveTextContent('本次执行 #12238');
     expect(timing).toHaveTextContent('步骤累计 7秒');

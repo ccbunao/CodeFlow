@@ -53,7 +53,7 @@ public class ProjectBackupService {
     static {
         EXPORT_TABLES.put("sq_sdlc", List.of("id", "name", "description", "status"));
         EXPORT_TABLES.put("sq_sdlc_step", List.of("id", "sdlc_id", "seq", "name", "kind", "instruction", "required"));
-        EXPORT_TABLES.put("ag_agent", List.of("id", "name", "role_code", "role_name", "soul_md", "status"));
+        EXPORT_TABLES.put("ag_agent", List.of("id", "name", "role_code", "role_name", "soul_md", "agent_md", "status"));
         EXPORT_TABLES.put("sq_squad", List.of("id", "name", "description", "status"));
         EXPORT_TABLES.put("sq_member", List.of("id", "squad_id", "agent_id", "role_code"));
         EXPORT_TABLES.put("as_repo", List.of("id", "name", "url", "provider", "default_branch"));

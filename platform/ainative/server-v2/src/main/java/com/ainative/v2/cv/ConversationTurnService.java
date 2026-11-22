@@ -1,11 +1,15 @@
 package com.ainative.v2.cv;
 
+import com.ainative.v2.agent.Persona;
+import com.ainative.v2.artifact.ClarificationArchiveService;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.daemon.ExecutorHub;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +29,15 @@ public class ConversationTurnService {
 
     private final JdbcTemplate jdbc;
     private final ExecutorHub hub;
+    private final ClarificationArchiveService archive;
     private final ObjectMapper mapper = new ObjectMapper();
     /** 回合幂等留底:chatId+turnId → 已落库的回复(turnId 在会话内唯一,跨会话会重复) */
     private final Map<String, Map<String, Object>> done = new ConcurrentHashMap<>();
 
-    public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub) {
+    public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub, ClarificationArchiveService archive) {
         this.jdbc = jdbc;
         this.hub = hub;
+        this.archive = archive;
     }
 
     /** 用户发送消息:落库 USER 回合 → 下发给在线执行器;无在线执行器时排队等待重放。 */
@@ -157,12 +163,23 @@ public class ConversationTurnService {
         markDelivery(chatId, (int) turnId, "ANSWERED");
         Integer seq = jdbc.queryForObject(
                 "SELECT COALESCE(MAX(seq),0)+1 FROM ag_chat_turn WHERE chat_id=?", Integer.class, chatId);
-        if ("SUCCESS".equals(status)) {
-            jdbc.update("INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (?,?,?,'ASSISTANT',?)",
-                    workspaceId(), chatId, seq, reply);
-        } else {
-            jdbc.update("INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (?,?,?,'ASSISTANT',?)",
-                    workspaceId(), chatId, seq, "对话失败:" + error);
+        int replySeq = seq == null ? 1 : seq;
+        String content = "SUCCESS".equals(status) ? reply : "对话失败:" + error;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(con -> {
+            var ps = con.prepareStatement(
+                    "INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (?,?,?,'ASSISTANT',?)",
+                    java.sql.Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, workspaceId());
+            ps.setLong(2, chatId);
+            ps.setInt(3, replySeq);
+            ps.setString(4, content);
+            return ps;
+        }, keyHolder);
+        Number replyTurnId = keyHolder.getKey();
+        if ("SUCCESS".equals(status) && replyTurnId != null) {
+            // 澄清会话的产出要进需求产物区:每轮结论归档成产物,交付时可直接引用。
+            archive.archive(chatId, replyTurnId.longValue(), replySeq, agentIdOf(chatId), reply);
         }
         Object usage = frame.get("usage");
         if (usage instanceof Map<?, ?> u && u.get("input_tokens") != null) {
@@ -178,10 +195,21 @@ public class ConversationTurnService {
         log.info("conversation ack chatId={} turnId={} status={}", chatId, turnId, status);
     }
 
+    /** 会话下发的系统提示词:带数字员工人设(SOUL.md/AGENT.md),不是通用助手口吻。 */
     private String systemPrompt(long agentId) {
-        List<String> rows = jdbc.queryForList("SELECT soul_md FROM ag_agent WHERE id=?", String.class, agentId);
-        String soul = rows.isEmpty() || rows.get(0) == null ? "" : rows.get(0);
-        return "你是 AINative 的数字员工。" + (soul.isBlank() ? "" : "\n" + soul);
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT role_name, soul_md, agent_md FROM ag_agent WHERE id=?", agentId);
+        if (rows.isEmpty()) {
+            return Persona.systemPrompt("", "", "");
+        }
+        Map<String, Object> a = rows.get(0);
+        return Persona.systemPrompt((String) a.get("role_name"),
+                (String) a.get("soul_md"), (String) a.get("agent_md"));
+    }
+
+    private long agentIdOf(long chatId) {
+        List<Long> rows = jdbc.queryForList("SELECT agent_id FROM ag_chat WHERE id=?", Long.class, chatId);
+        return rows.isEmpty() || rows.get(0) == null ? 0L : rows.get(0);
     }
 
     private long workspaceId() {

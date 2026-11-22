@@ -42,11 +42,12 @@ public class AgentService {
         this.executorHub = executorHub;
     }
 
-    public Map<String, Object> createAgent(String name, String roleCode, String roleName, String soulMd) {
+    public Map<String, Object> createAgent(String name, String roleCode, String roleName,
+                                           String soulMd, String agentMd) {
         if (name == null || name.isBlank()) {
             throw new BizException("10001", "名称不能为空");
         }
-        return agentDetail(dao.insertAgent(name.trim(), roleCode, roleName, soulMd));
+        return agentDetail(dao.insertAgent(name.trim(), roleCode, roleName, soulMd, agentMd));
     }
 
     public Map<String, Object> agentDetail(long id) {
@@ -57,6 +58,7 @@ public class AgentService {
         m.put("roleCode", a.roleCode());
         m.put("roleName", a.roleName());
         m.put("soulMd", a.soulMd());
+        m.put("agentMd", a.agentMd());
         m.put("status", a.status());
         m.put("executors", executorsOf(id));
         return m;
@@ -78,9 +80,9 @@ public class AgentService {
     }
 
     @Transactional
-    public Map<String, Object> updateConfig(long id, String roleName, String soulMd) {
+    public Map<String, Object> updateConfig(long id, String roleName, String soulMd, String agentMd) {
         dao.findAgent(id).orElseThrow(() -> new BizException("17001", "智能体不存在"));
-        dao.updateAgentConfig(id, roleName, soulMd);
+        dao.updateAgentConfig(id, roleName, soulMd, agentMd);
         return agentDetail(id);
     }
 

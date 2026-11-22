@@ -47,7 +47,7 @@ describe('SettingsModal', () => {
     renderModal();
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: '系统配置' }));
-    expect(await screen.findByText('默认流水线流程')).toBeInTheDocument();
+    expect(await screen.findByText('默认交付流程')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '系统配置' })).toHaveAttribute('aria-current', 'page');
   });
 

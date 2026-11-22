@@ -18,7 +18,7 @@ function buildAction(overrides: Partial<LiveActivityAction> = {}): LiveActivityA
     seq: 1,
     eventTime: '2026-09-02T10:00:00Z',
     eventType: 'step.started',
-    actionType: '流水线_STEP',
+    actionType: '交付流程_STEP',
     summary: '开始编码实现',
     status: 'RUNNING',
     stepId: 100,
@@ -120,7 +120,7 @@ describe('LiveActivityPanel', () => {
   it('renders action timeline in collapse', () => {
     const actions = [
       buildAction({ eventId: 'e1', seq: 1, summary: '准备上下文' }),
-      buildAction({ eventId: 'e2', seq: 2, summary: '开始编码', actionType: '流水线_STEP' }),
+      buildAction({ eventId: 'e2', seq: 2, summary: '开始编码', actionType: '交付流程_STEP' }),
     ];
     mockUseLiveActivity.mockReturnValue({
       actions, currentAction: actions[1], lastUpdatedAt: '2026-09-02T10:00:00Z',

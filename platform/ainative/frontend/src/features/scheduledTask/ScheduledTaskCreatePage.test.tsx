@@ -114,7 +114,7 @@ describe('ScheduledTaskCreatePage', () => {
     expect(await screen.findByText('任务详情')).toBeInTheDocument();
   });
 
-  it('renders the server-authoritative preview and selected Agent Pipeline context', async () => {
+  it('renders the server-authoritative preview and selected Agent Delivery workflow context', async () => {
     server.use(
       http.get('/api/squads', () => HttpResponse.json({ success: true, code: '0', message: '', data: [{ id: 1, name: '研发编队', description: '', memberCount: 1, gmtCreate: '' }] })),
       http.get('/api/squads/1/members', () => HttpResponse.json({ success: true, code: '0', message: '', data: [{ agentId: 11, agentName: '回归工程师', roleCode: 'TEST', sdlcName: '回归流程', sdlcSteps: [{ id: 100, stepOrder: 1, name: '执行回归', handlerType: 'AGENT', handlerRoleRef: null }] }] })),

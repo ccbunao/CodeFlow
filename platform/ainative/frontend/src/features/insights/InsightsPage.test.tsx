@@ -25,7 +25,7 @@ function renderPage() {
   );
 }
 
-// 页面默认 realtime tab 会挂载 RealtimeDashboard 并触发快照、流水线、实时与AI 成员查询；
+// 页面默认 realtime tab 会挂载 RealtimeDashboard 并触发快照、交付流程、实时与AI 成员查询；
 // 各用例按需显式打桩，避免 MSW 严格模式报未处理请求。
 const overviewHandler = http.get('/api/dashboard/overview', () =>
   HttpResponse.json(ok(overviewDashboardPayload)),
@@ -310,7 +310,7 @@ describe('InsightsPage realtime cost', () => {
     // 成本接口失败不影响实时看板其余模块
     expect(await screen.findByText('正在运行')).toBeInTheDocument();
     expect(screen.getByText('需求分类')).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: '流水线健康' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '交付流程健康' })).toBeInTheDocument();
   });
 
   it('keeps the cost query independent from the overview refresh button', async () => {

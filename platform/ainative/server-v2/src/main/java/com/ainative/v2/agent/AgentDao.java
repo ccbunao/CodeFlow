@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,8 @@ public class AgentDao {
     }
 
 
-    public record Agent(long id, String name, String roleCode, String roleName, String soulMd, String status) {}
+    public record Agent(long id, String name, String roleCode, String roleName, String soulMd,
+                        String agentMd, String status) {}
     public record Executor(long id, long agentId, String name, String clientKind, String status, String lastHeartbeat) {}
     public record McpToken(long id, Long userId, String name, String tokenHash, String expiresAt) {}
 
@@ -36,37 +38,61 @@ public class AgentDao {
 
     // ── Agent ──
     public Optional<Agent> findAgent(long id) {
-        List<Agent> rows = jdbc.query("SELECT id, name, role_code, role_name, soul_md, status FROM ag_agent WHERE id=? AND deleted_at IS NULL",
+        List<Agent> rows = jdbc.query("SELECT id, name, role_code, role_name, soul_md, agent_md, status FROM ag_agent WHERE id=? AND deleted_at IS NULL",
                 (rs, i) -> new Agent(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6)), id);
+                        rs.getString(5), rs.getString(6), rs.getString(7)), id);
         return rows.stream().findFirst();
     }
 
     public List<Agent> listAgents() {
-        return jdbc.query("SELECT id, name, role_code, role_name, soul_md, status FROM ag_agent WHERE workspace_id=" + ws() + " AND deleted_at IS NULL ORDER BY id",
+        return jdbc.query("SELECT id, name, role_code, role_name, soul_md, agent_md, status FROM ag_agent WHERE workspace_id=" + ws() + " AND deleted_at IS NULL ORDER BY id",
                 (rs, i) -> new Agent(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6)));
+                        rs.getString(5), rs.getString(6), rs.getString(7)));
     }
 
-    public long insertAgent(String name, String roleCode, String roleName, String soulMd) {
+    public long insertAgent(String name, String roleCode, String roleName, String soulMd, String agentMd) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO ag_agent (workspace_id, name, role_code, role_name, soul_md, status) VALUES (" + ws() + ",?,?,?,?, 'ACTIVE')",
+                    "INSERT INTO ag_agent (workspace_id, name, role_code, role_name, soul_md, agent_md, status) VALUES (" + ws() + ",?,?,?,?,?, 'ACTIVE')",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, roleCode);
             ps.setString(3, roleName);
             ps.setString(4, soulMd);
+            ps.setString(5, agentMd);
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
         return key == null ? 0 : key.longValue();
     }
 
-    public void updateAgentConfig(long id, String roleName, String soulMd) {
-        jdbc.update("UPDATE ag_agent SET role_name=?, soul_md=?, version=version+1 WHERE id=? AND deleted_at IS NULL",
-                roleName, soulMd, id);
+    /**
+     * 配置更新:null 表示"本次不涉及该字段"(保持原值),空串表示显式清空。
+     * 全量覆盖语义会把"调用方没传"当成"要清空",前端表单与脚本混用时会抹掉已有正文。
+     */
+    public void updateAgentConfig(long id, String roleName, String soulMd, String agentMd) {
+        List<String> sets = new ArrayList<>();
+        List<Object> args = new ArrayList<>();
+        if (roleName != null) {
+            sets.add("role_name=?");
+            args.add(roleName);
+        }
+        if (soulMd != null) {
+            sets.add("soul_md=?");
+            args.add(soulMd);
+        }
+        if (agentMd != null) {
+            sets.add("agent_md=?");
+            args.add(agentMd);
+        }
+        if (sets.isEmpty()) {
+            return;
+        }
+        sets.add("version=version+1");
+        args.add(id);
+        jdbc.update("UPDATE ag_agent SET " + String.join(", ", sets) + " WHERE id=? AND deleted_at IS NULL",
+                args.toArray());
     }
 
     public void deleteAgent(long id) {

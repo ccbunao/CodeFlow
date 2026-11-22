@@ -107,7 +107,7 @@ const readyGraph: WorkflowGraph = {
       {
         id: 'f-1',
         kind: 'INFORMATION',
-        summary: '评审节点未配置 流水线',
+        summary: '评审节点未配置 交付流程',
         nodeIds: ['n-review'],
         edgeIds: [],
         evidenceRefs: [],
@@ -256,7 +256,7 @@ describe('SquadWorkflowPanel', () => {
     expect(await screen.findByText('实现需求并移交评审')).toBeInTheDocument();
     expect(screen.getByText('提交代码与自测')).toBeInTheDocument();
     expect(screen.getByText('负责实现')).toBeInTheDocument();
-    expect(screen.getByText('评审节点未配置 流水线')).toBeInTheDocument();
+    expect(screen.getByText('评审节点未配置 交付流程')).toBeInTheDocument();
 
     await act(async () => {
       graphInstances[0].events.get('edge:click')?.({ target: { id: 'edge:e-dev-review' } });
