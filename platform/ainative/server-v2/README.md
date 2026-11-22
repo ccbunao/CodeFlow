@@ -1,6 +1,6 @@
 # CodeFlow 服务端(v2)
 
-Spring Boot 3.3 / Java 21 / JdbcTemplate / MySQL(seekdb 兼容)的 REST 服务端。
+Spring Boot 3.3 / Java 21 / JdbcTemplate / seekdb（MySQL 协议兼容）的 REST 服务端。
 前端构建产物随 jar 内嵌(单镜像部署)。
 
 ## 接口文档(Swagger / OpenAPI)
