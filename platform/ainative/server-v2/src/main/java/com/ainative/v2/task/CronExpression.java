@@ -53,7 +53,8 @@ public final class CronExpression {
             }
             int from;
             int to;
-            if ("*".equals(p)) {
+            // Quartz 风格 "?":表示"不指定",语义与 * 一致(常见于 日/周 字段)
+            if ("*".equals(p) || "?".equals(p)) {
                 from = min;
                 to = max;
             } else if (p.contains("-")) {

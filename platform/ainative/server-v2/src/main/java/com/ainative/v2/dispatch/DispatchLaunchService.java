@@ -224,12 +224,23 @@ public class DispatchLaunchService {
      * 选一个真正在线的执行器。
      * DB 里的 ONLINE 可能是僵尸(运行器已退出),逐个用 hub 校验真实连接;
      * 没有真实连接时返回 null(run 落 PENDING,等待执行器上线后重放)。
+     *
+     * <p>候选与澄清会话同一套语义:绑定该智能体的执行器优先,其后是共享节点池
+     * (daemon 能替任意数字员工干活,dispatch 包自带 persona);并复用健康优先
+     * 选法 —— 缺 ANTHROPIC 鉴权的旧 daemon 注册在低 id 上,按 id 升序会抢到任务
+     * 然后回复 "Not logged in"。
      */
     private Long pickOnlineExecutor(long agentId) {
-        List<Long> online = jdbc.queryForList(
+        List<Long> bound = jdbc.queryForList(
                 "SELECT id FROM ag_executor WHERE agent_id=? AND status='ONLINE' AND deleted_at IS NULL ORDER BY id",
                 Long.class, agentId);
-        return online.stream().filter(hub::isOnline).findFirst().orElse(null);
+        List<Long> shared = jdbc.queryForList(
+                "SELECT id FROM ag_executor WHERE status='ONLINE' AND deleted_at IS NULL ORDER BY id",
+                Long.class);
+        List<Long> candidates =
+                com.ainative.v2.cv.ConversationTurnService.mergeExecutorCandidates(bound, shared);
+        return com.ainative.v2.cv.ConversationTurnService.pickExecutor(
+                candidates, hub::isOnline, hub::isHealthy);
     }
 
     private int maxAttempt(long ticketId) {

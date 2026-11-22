@@ -305,6 +305,7 @@ class Daemon:
                         data = frames.decode_dispatch(frame)
                         self.on_dispatch(data)
                     elif frame.get("type") == "CONVERSATION_TURN":
+                        log.info("conversation.turn_received", turn_id=frame.get("turnId"))
                         self.on_conversation_turn(frames.decode_conversation_turn(frame))
                     else:
                         log.debug("frame.ignored", type=frame.get("type"))
@@ -371,6 +372,9 @@ class Daemon:
         try:
             workdir = Path(self.cfg.data_dir) / "conversations" / str(turn["conversation_id"])
             capsule_dir = workdir / "capsule"
+            # 无 capability 包的澄清会话没有下载环节,这里必须显式建目录,
+            # 否则 write_conversation_settings 落 claude-settings.json 直接 FileNotFoundError。
+            workdir.mkdir(parents=True, exist_ok=True)
             if turn.get("capability_url"):
                 zip_path = conv.download_capability(turn["capability_url"],
                                                     turn.get("capability_sha256") or "", capsule_dir)

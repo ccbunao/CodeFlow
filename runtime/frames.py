@@ -38,14 +38,21 @@ def task_handoff(dispatch_id: int, workitem_id: int, to: str, to_type: str = "AG
             "to": to, "toType": to_type, "nextRole": next_role, "reason": reason}
 
 
-def heartbeat(owned=None, running=None, capacity=1) -> dict:
-    """dispatch_inventory_v1 心跳:owned/running 必须为数组且 owned ⊇ running(§reconciler 契约)。"""
+def heartbeat(owned=None, running=None, capacity=1, healthy: bool | None = None) -> dict:
+    """dispatch_inventory_v1 心跳:owned/running 必须为数组且 owned ⊇ running(§reconciler 契约)。
+
+    healthy:启动自检结果(HOME 可写 / agent_cmd 可执行 / ANTHROPIC_BASE_URL 可达)。
+    新 daemon 恒上报;老 daemon 缺该字段,服务端按不健康处理(宁缺毋滥)。
+    """
     owned = sorted(int(x) for x in (owned or []))
     running = sorted(int(x) for x in (running or []))
-    return {"type": "HEARTBEAT", "protocolFeatures": list(PROTOCOL_FEATURES),
-            "dispatchInventoryReady": True, "maxConcurrentDispatches": max(1, int(capacity)),
-            "ownedDispatchIds": owned, "runningDispatchIds": running,
-            "runningConversationTurnIds": []}
+    f = {"type": "HEARTBEAT", "protocolFeatures": list(PROTOCOL_FEATURES),
+         "dispatchInventoryReady": True, "maxConcurrentDispatches": max(1, int(capacity)),
+         "ownedDispatchIds": owned, "runningDispatchIds": running,
+         "runningConversationTurnIds": []}
+    if healthy is not None:
+        f["healthy"] = bool(healthy)
+    return f
 
 
 def decode_dispatch(payload: dict) -> dict:

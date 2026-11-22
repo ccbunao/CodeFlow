@@ -1,6 +1,7 @@
 package com.ainative.v2.cv;
 
 import com.ainative.v2.agent.Persona;
+import com.ainative.v2.agent.AgentService;
 import com.ainative.v2.artifact.ClarificationArchiveService;
 import com.ainative.v2.common.BizException;
 import com.ainative.v2.daemon.ExecutorHub;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +32,19 @@ public class ConversationTurnService {
     private final JdbcTemplate jdbc;
     private final ExecutorHub hub;
     private final ClarificationArchiveService archive;
+    private final AgentService agentService;
     private final ObjectMapper mapper = new ObjectMapper();
     /** 回合幂等留底:chatId+turnId → 已落库的回复(turnId 在会话内唯一,跨会话会重复) */
     private final Map<String, Map<String, Object>> done = new ConcurrentHashMap<>();
+    /** 会话级 clarify MCP 令牌明文缓存:chatId → token(明文只在签发时拿得到一次) */
+    private final Map<Long, String> clarifyTokens = new ConcurrentHashMap<>();
 
-    public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub, ClarificationArchiveService archive) {
+    public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub, ClarificationArchiveService archive,
+                                   AgentService agentService) {
         this.jdbc = jdbc;
         this.hub = hub;
         this.archive = archive;
+        this.agentService = agentService;
     }
 
     /** 用户发送消息:落库 USER 回合 → 下发给在线执行器;无在线执行器时排队等待重放。 */
@@ -68,7 +75,7 @@ public class ConversationTurnService {
             log.info("conversation turn queued (no online executor) chatId={} seq={}", chatId, nextSeq);
             return out;
         }
-        Map<String, Object> frame = conversationFrame(chatId, nextSeq, agentId, contentMd);
+        Map<String, Object> frame = conversationFrame(chatId, nextSeq, agentId, contentMd, userId);
         boolean sent = hub.send(executorId, frame);
         if (!sent) {
             out.put("status", "QUEUED");
@@ -82,17 +89,21 @@ public class ConversationTurnService {
     }
 
     /**
-     * 执行器上线后重放积压回合(仅该智能体、最近 20 条 PENDING)。
+     * 执行器上线后重放积压回合(全部智能体共享节点池、最近 20 条 PENDING)。
      * 返回成功投递条数。失败不影响上线流程,下次上线继续重试。
+     *
+     * <p>帧里的 agentId 必须取会话自己的(c.agent_id),不能取执行器注册名下的
+     * agent —— 运行节点是共享池,重放别的数字员工的会话时若带上执行器的
+     * agentId,MCP 令牌与人格都会装错人。
      */
-    public int replayPending(long executorId, long agentId) {
+    public int replayPending(long executorId) {
         List<Map<String, Object>> pending;
         try {
             pending = jdbc.queryForList(
-                    "SELECT t.chat_id, t.seq, t.content_md FROM ag_chat_turn t"
-                            + " JOIN ag_chat c ON c.id=t.chat_id AND c.agent_id=?"
+                    "SELECT t.chat_id, t.seq, t.content_md, c.agent_id FROM ag_chat_turn t"
+                            + " JOIN ag_chat c ON c.id=t.chat_id"
                             + " WHERE t.role='USER' AND t.delivery_status='PENDING' AND t.deleted_at IS NULL"
-                            + " ORDER BY t.id LIMIT 20", agentId);
+                            + " ORDER BY t.id LIMIT 20");
         } catch (Exception e) {
             log.warn("conversation replay query failed executorId={} error={}", executorId, e.getMessage());
             return 0;
@@ -102,8 +113,9 @@ public class ConversationTurnService {
             long chatId = num(row.get("chat_id"));
             int seq = ((Number) row.get("seq")).intValue();
             String content = String.valueOf(row.get("content_md"));
+            long chatAgentId = num(row.get("agent_id"));
             try {
-                if (hub.send(executorId, conversationFrame(chatId, seq, agentId, content))) {
+                if (hub.send(executorId, conversationFrame(chatId, seq, chatAgentId, content, 0L))) {
                     markDelivery(chatId, seq, "SENT");
                     sent++;
                 } else {
@@ -120,7 +132,8 @@ public class ConversationTurnService {
         return sent;
     }
 
-    private Map<String, Object> conversationFrame(long chatId, int seq, long agentId, String contentMd) {
+    /** 单测可见(public):下发帧里必须带 mcpToken,否则运行器无法注册 ainative MCP、数字员工读不了需求。 */
+    public Map<String, Object> conversationFrame(long chatId, int seq, long agentId, String contentMd, long userId) {
         Map<String, Object> frame = new LinkedHashMap<>();
         frame.put("type", "CONVERSATION_TURN");
         frame.put("conversationId", chatId);
@@ -129,14 +142,126 @@ public class ConversationTurnService {
         frame.put("content", contentMd);
         frame.put("dispatchAttempt", 0);
         frame.put("systemPrompt", systemPrompt(agentId));
+        frame.put("mcpToken", clarifyMcpToken(chatId, userId));
         return frame;
     }
 
+    /**
+     * 会话级 clarify MCP 令牌:同一 chatId 复用同一枚令牌。
+     *
+     * <p>明文只在签发那一刻拿得到(库里只有 sha256),所以缓存在内存;服务重启缓存丢失时,
+     * 按名字约定 <code>clarify-&lt;chatId&gt;</code> 找到旧令牌撤销后重新签发 ——
+     * 保证令牌表里每个会话至多一枚活跃 clarify 令牌,不会无限膨胀。
+     * 会话删除时由 {@link #revokeClarifyToken(long)} 撤销。
+     */
+    public String clarifyMcpToken(long chatId, long userId) {
+        String cached = clarifyTokens.get(chatId);
+        if (cached != null) {
+            return cached;
+        }
+        long uid = userId > 0 ? userId : chatUserId(chatId);
+        String name = "clarify-" + chatId;
+        return clarifyTokens.compute(chatId, (id, prev) -> {
+            if (prev != null) {
+                return prev;
+            }
+            try {
+                agentService.listMcpTokens(uid > 0 ? uid : null).stream()
+                        .filter(t -> name.equals(String.valueOf(t.get("name"))))
+                        .forEach(t -> agentService.revokeMcpToken(((Number) t.get("id")).longValue()));
+                Map<String, Object> token = agentService.createMcpToken(uid > 0 ? uid : 1L, name);
+                return String.valueOf(token.get("token"));
+            } catch (Exception e) {
+                // 签发失败不阻断回合:运行器只是拿不到 MCP 工具,下一轮重试
+                log.warn("clarify mcp token issue failed chatId={} error={}", id, e.getMessage());
+                return null;
+            }
+        });
+    }
+
+    /** 会话结束(删除)时撤销该会话的 clarify 令牌。 */
+    public void revokeClarifyToken(long chatId) {
+        String cached = clarifyTokens.remove(chatId);
+        if (cached == null) {
+            return;
+        }
+        long uid = chatUserId(chatId);
+        String name = "clarify-" + chatId;
+        try {
+            agentService.listMcpTokens(uid > 0 ? uid : null).stream()
+                    .filter(t -> name.equals(String.valueOf(t.get("name"))))
+                    .forEach(t -> agentService.revokeMcpToken(((Number) t.get("id")).longValue()));
+        } catch (Exception e) {
+            log.warn("clarify mcp token revoke failed chatId={} error={}", chatId, e.getMessage());
+        }
+    }
+
+    private long chatUserId(long chatId) {
+        try {
+            List<Long> rows = jdbc.queryForList("SELECT user_id FROM ag_chat WHERE id=?", Long.class, chatId);
+            return rows.isEmpty() || rows.get(0) == null ? 0L : rows.get(0);
+        } catch (Exception e) {
+            return 0L;
+        }
+    }
+
     private Long onlineExecutorOf(long agentId) {
-        List<Long> executors = jdbc.queryForList(
+        List<Long> bound = jdbc.queryForList(
                 "SELECT id FROM ag_executor WHERE agent_id=? AND status='ONLINE' AND deleted_at IS NULL ORDER BY id",
                 Long.class, agentId);
-        return executors.stream().filter(hub::isOnline).findFirst().orElse(null);
+        List<Long> shared = jdbc.queryForList(
+                "SELECT id FROM ag_executor WHERE status='ONLINE' AND deleted_at IS NULL ORDER BY id",
+                Long.class);
+        return pickExecutor(mergeExecutorCandidates(bound, shared), hub::isOnline, hub::isHealthy);
+    }
+
+    /**
+     * 候选节点 = 绑定该智能体的执行器优先,其后是其余在线执行器(共享节点池,去重保序)。
+     *
+     * <p>回归背景:运行节点是机器级共享池 —— daemon 注册在某个 agent 名下,但
+     * CONVERSATION_TURN 帧自带 agentId,能替任意数字员工干活。按 agent_id 严格
+     * 过滤会让绑定到其他数字员工的澄清会话永远 QUEUED(UI 走查实测:会话绑定
+     * 「需求澄清师」而 daemon 注册在 agent 1,服务端日志 conversation turn
+     * queued (no online executor),回合无人投递)。
+     */
+    public static List<Long> mergeExecutorCandidates(List<Long> agentBound, List<Long> allOnline) {
+        LinkedHashMap<Long, Boolean> merged = new LinkedHashMap<>();
+        for (Long id : agentBound) {
+            if (id != null) {
+                merged.put(id, Boolean.TRUE);
+            }
+        }
+        for (Long id : allOnline) {
+            if (id != null) {
+                merged.putIfAbsent(id, Boolean.FALSE);
+            }
+        }
+        return new ArrayList<>(merged.keySet());
+    }
+
+    /**
+     * 选节点:优先「自检健康(healthy=true)」的在线执行器;只有当没有任何健康节点在线时,
+     * 才回退旧逻辑(按 id 升序取第一个在线者)。
+     *
+     * <p>回归背景:桌面侧会自动拉起低 id 的旧 daemon,其进程环境缺 ANTHROPIC 鉴权,
+     * 接到澄清回合只会回复 "Not logged in"。healthy 由 daemon 启动自检后随心跳上报,
+     * 不上报该标志的老 daemon 一律视作不健康(宁缺毋滥)。
+     */
+    public static Long pickExecutor(List<Long> orderedIds, java.util.function.LongPredicate isOnline,
+                                    java.util.function.LongPredicate isHealthy) {
+        Long fallback = null;
+        for (Long id : orderedIds) {
+            if (id == null || !isOnline.test(id)) {
+                continue;
+            }
+            if (isHealthy.test(id)) {
+                return id;
+            }
+            if (fallback == null) {
+                fallback = id;
+            }
+        }
+        return fallback;
     }
 
     private void markDelivery(long chatId, int seq, String status) {

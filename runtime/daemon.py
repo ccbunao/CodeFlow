@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import signal
 import socket
 import sys
 import os
 import threading
 import time
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlencode
@@ -24,6 +26,65 @@ from .store import StateStore
 from .wsclient import WsClient, WsClosed, WsIdleTimeout
 
 PROVIDERS = {"mock": MockProvider}
+
+# 桌面侧自动拉起 daemon 时会向进程注入 ZCode 自身的会话变量,
+# claude 读到会判定「已会话化」而走错分支(表现为 Not logged in)。
+# 防御:启动时剔除,spawn claude 的 env 构造处再过滤一次(双保险)。
+CLAUDE_DIRTY_ENV_VARS = ("CLAUDE_SESSION_ID", "CLAUDE_CODE_SESSION_ID", "CLAUDE_PROJECT_DIR")
+
+
+def strip_claude_env(env: dict) -> dict:
+    """从传给 claude 的 env 中剔除桌面侧注入的脏变量(见 CLAUDE_DIRTY_ENV_VARS)。"""
+    return {k: v for k, v in env.items() if k not in CLAUDE_DIRTY_ENV_VARS}
+
+
+def env_self_check(cfg: Config) -> tuple[bool, str]:
+    """启动自检:HOME 可写、agent_cmd 可执行、ANTHROPIC_BASE_URL /v1/models 可达。
+
+    结果经心跳帧上报 healthy 字段,服务端选节点时优先健康执行器。
+    只收集不及格项;全部通过返回 (True, "")。
+    """
+    problems: list[str] = []
+    home = Path.home()
+    if not (home.is_dir() and os.access(home, os.W_OK)):
+        problems.append(f"HOME not writable: {home}")
+    agent_cmd = str(cfg.agent_cmd or "")
+    if not (shutil.which(agent_cmd)
+            or (os.path.isfile(agent_cmd) and os.access(agent_cmd, os.X_OK))):
+        problems.append(f"agent_cmd not executable: {agent_cmd}")
+    merged_env = {**os.environ, **(cfg.extra_env or {})}
+    base = merged_env.get("ANTHROPIC_BASE_URL", "")
+    if cfg.provider != "claude":
+        pass  # mock 等本地 provider 无外部模型端点,跳过该检查
+    elif not base:
+        problems.append("ANTHROPIC_BASE_URL missing")
+    else:
+        try:
+            req = urllib.request.Request(base.rstrip("/") + "/v1/models")
+            token = merged_env.get("ANTHROPIC_AUTH_TOKEN", "")
+            if token:
+                req.add_header("Authorization", f"Bearer {token}")
+                req.add_header("x-api-key", token)
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                if resp.status >= 400:
+                    problems.append(f"ANTHROPIC_BASE_URL /v1/models HTTP {resp.status}")
+        except Exception as e:  # noqa: BLE001 - 自检只收集结论
+            problems.append(f"ANTHROPIC_BASE_URL unreachable: {e}")
+    return (not problems), "; ".join(problems)
+
+
+def write_mcp_token_file(workdir: Path, token: str) -> Path:
+    """把当轮有效 mcpToken 写入 <workdir>/.secrets/mcp_token(0600)。
+
+    AI 有时会读该文件直调 /api/mcp/rpc;残留过期令牌会报 10403。
+    daemon 每回合覆盖写,保证 AI 拿到的一定是当前有效令牌。
+    """
+    secrets_dir = workdir / ".secrets"
+    secrets_dir.mkdir(mode=0o777, exist_ok=True)
+    path = secrets_dir / "mcp_token"
+    path.write_text(token, encoding="utf-8")
+    os.chmod(path, 0o600)
+    return path
 
 
 def make_provider(cfg: Config):
@@ -73,6 +134,12 @@ class Daemon:
         self._conv_inflight_lock = threading.Lock()
         self._conv_done: dict[tuple[int, int], dict] = {}  # (conversation_id, turn_id) -> ack frame
         self._heartbeat_thread: threading.Thread | None = None
+        # 启动自检:结果随心跳上报 healthy,服务端据此优先选择健康执行器
+        self.healthy, self.health_detail = env_self_check(cfg)
+        if self.healthy:
+            log.info("daemon.self_check_passed")
+        else:
+            log.warn("daemon.self_check_failed", detail=self.health_detail)
 
     def _start_heartbeat_once(self) -> None:
         """One heartbeat thread per daemon process; leaked threads flood the server (DEF-008)."""
@@ -141,7 +208,8 @@ class Daemon:
             try:
                 with self._inflight_lock:
                     inflight = sorted(self._inflight)
-                self.send_frame(frames.heartbeat(inflight, inflight, self.cfg.max_concurrent), durable=False)
+                self.send_frame(frames.heartbeat(inflight, inflight, self.cfg.max_concurrent,
+                                                 healthy=self.healthy), durable=False)
             except (WsClosed, OSError, socket.timeout) as e:
                 log.warn("heartbeat.send_failed", error=str(e))
             self._stop.wait(self.cfg.heartbeat_sec)
@@ -382,6 +450,13 @@ class Daemon:
                 self._conv_inflight.discard(
                     (int(turn["conversation_id"]), int(turn["turn_id"])))
 
+    def _default_ainative_mcp_server(self, mcp_token: str) -> dict:
+        """无 capability 包时的兜底:平台内置 MCP 端点(澄清会话场景)。"""
+        scheme = "https" if self.cfg.use_tls else "http"
+        return {"type": "http",
+                "url": f"{scheme}://{self.cfg.ws_hostport}/api/mcp",
+                "headers": {"Authorization": f"Bearer {mcp_token}"}}
+
     def _run_conversation_turn(self, turn: dict) -> None:
         from . import conversation as conv
         turn_id = turn["turn_id"]
@@ -394,11 +469,20 @@ class Daemon:
                 conv.extract_capability(zip_path, capsule_dir)
             settings_path = conv.write_conversation_settings(workdir, self.cfg.extra_env or {},
                                                              turn.get("mcp_token"))
-            conv.write_mcp_config(workdir, conv.ainative_mcp_server(capsule_dir, turn.get("mcp_token") or ""))
+            if turn.get("mcp_token"):
+                # 每回合刷新:AI 有时会读 .secrets/mcp_token 直调平台 MCP,
+                # 残留过期令牌会 10403 —— 覆盖写为当轮有效 token
+                write_mcp_token_file(workdir, turn["mcp_token"])
             mcp_server = conv.ainative_mcp_server(capsule_dir, turn.get("mcp_token") or "")
+            if mcp_server is None and turn.get("mcp_token"):
+                # 澄清会话没有 capability 包(capsule/skills.json 不存在),
+                # 回退到平台内置 MCP 端点,否则 mcpToken 到了也挂不上 MCP 工具
+                mcp_server = self._default_ainative_mcp_server(turn["mcp_token"])
+            conv.write_mcp_config(workdir, mcp_server)
             if mcp_server and turn.get("mcp_token"):
                 conv.register_mcp_server(self.cfg.agent_cmd, workdir,
-                                         dict(os.environ) | (self.cfg.extra_env or {}) | {"HOME": str(workdir)},
+                                         strip_claude_env(dict(os.environ) | (self.cfg.extra_env or {}))
+                                         | {"HOME": str(workdir)},
                                          mcp_server["url"], turn["mcp_token"])
             # MCP 工具预授权:settings.permissions.allow 为权威路径,此处通配双保险
             allowed = ",".join(t for t in (self.cfg.agent_allowed_tools or "",
@@ -411,7 +495,8 @@ class Daemon:
                 settings_path=settings_path,
                 max_turns=self.cfg.agent_max_turns,
                 allowed_tools=allowed,
-                env=dict(os.environ) | (self.cfg.extra_env or {}) | {"HOME": str(workdir)},
+                env=strip_claude_env(dict(os.environ) | (self.cfg.extra_env or {}))
+                | {"HOME": str(workdir)},
             )
             if result["is_error"]:
                 ack = conv.turn_ack(turn["conversation_id"], turn_id, turn.get("dispatch_attempt"),
@@ -451,6 +536,11 @@ class Daemon:
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    # 防御桌面侧拉起场景:进程级剔除 ZCode 注入的脏变量,避免污染后续 spawn 的 claude
+    for dirty in CLAUDE_DIRTY_ENV_VARS:
+        if dirty in os.environ:
+            log.warn("daemon.dirty_env_removed", var=dirty)
+            os.environ.pop(dirty, None)
     # 平台启动命令形态:`ainative connect --ws-url ... --token ... --executor-id ...`。
     # `connect` 子命令后的全部 CLI 参数都会转成配置覆盖(优先级高于环境变量)。
     if argv and argv[0] == 'connect':

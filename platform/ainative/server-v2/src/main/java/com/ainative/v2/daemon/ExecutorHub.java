@@ -12,12 +12,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** 在线执行器会话注册表:executorId → WebSocketSession。 */
+/** 在线执行器会话注册表:executorId → WebSocketSession,并跟踪启动自检健康标志。 */
 @Component
 public class ExecutorHub {
     private static final Logger log = LoggerFactory.getLogger(ExecutorHub.class);
     private final Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    // 执行器心跳自检结果(healthy):老 daemon 不上报该字段,一律视为不健康(宁缺毋滥)。
+    // 仅存内存:执行器重连/服务重启后由最新心跳重新判定。
+    private final Map<Long, Boolean> healthyFlags = new ConcurrentHashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
+
+    /** 记录执行器健康标志(来自 HEARTBEAT 帧的 healthy 字段)。 */
+    public void markHealthy(long executorId, boolean healthy) {
+        healthyFlags.put(executorId, healthy);
+    }
+
+    /** 执行器是否自检健康:未上报过该标志的执行器(老 daemon)视作不健康。 */
+    public boolean isHealthy(long executorId) {
+        return Boolean.TRUE.equals(healthyFlags.get(executorId));
+    }
 
     public void register(long executorId, WebSocketSession session) {
         WebSocketSession previous = sessions.put(executorId, session);
@@ -32,6 +45,7 @@ public class ExecutorHub {
 
     public void unregister(long executorId, WebSocketSession session) {
         sessions.remove(executorId, session);
+        healthyFlags.remove(executorId);
     }
 
     public boolean isOnline(long executorId) {

@@ -249,6 +249,7 @@ public class ChiefOfStaffController {
     public ApiResult<Void> archive(@PathVariable long id) {
         RequestContext.requireUserId();
         jdbc.update("UPDATE ag_chat SET deleted_at=NOW() WHERE id=?", id);
+        turns.revokeClarifyToken(id);
         return ApiResult.ok(null);
     }
 

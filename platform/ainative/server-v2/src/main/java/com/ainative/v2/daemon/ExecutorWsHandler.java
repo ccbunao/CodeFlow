@@ -64,12 +64,13 @@ public class ExecutorWsHandler extends TextWebSocketHandler {
         session.getAttributes().put("executorId", executorId);
         jdbc.update("UPDATE ag_executor SET status='ONLINE', last_heartbeat=NOW() WHERE id=?", executorId);
         hub.register(executorId, session);
+        // 连接建立先按不健康处理(宁缺毋滥):待首个 HEARTBEAT 帧上报自检结果后刷新。
+        // 老 daemon 不上报 healthy 字段 → 始终视为不健康,仅在无健康节点时才轮到它们。
+        hub.markHealthy(executorId, false);
         // 上线即补投:运行器离线期间用户发的对话回合已落库为 PENDING,这里重放。
+        // 执行器是共享节点池,不按注册名下的 agent 过滤积压(帧里带会话自己的 agentId)。
         try {
-            Long agentId = jdbc.queryForObject("SELECT agent_id FROM ag_executor WHERE id=?", Long.class, executorId);
-            if (agentId != null) {
-                conversationTurns.replayPending(executorId, agentId);
-            }
+            conversationTurns.replayPending(executorId);
         } catch (Exception e) {
             log.warn("conversation replay on connect failed executorId={} error={}", executorId, e.getMessage());
         }
@@ -95,8 +96,12 @@ public class ExecutorWsHandler extends TextWebSocketHandler {
             JsonNode frame = mapper.readTree(message.getPayload());
             String type = frame.path("type").asText("");
             switch (type) {
-                case "HEARTBEAT" -> jdbc.update(
+                case "HEARTBEAT" -> {
+                    // healthy 缺省 false:老 daemon 不上报自检结果,视作不健康
+                    hub.markHealthy(executorId, frame.path("healthy").asBoolean(false));
+                    jdbc.update(
                         "UPDATE ag_executor SET status='ONLINE', last_heartbeat=NOW() WHERE id=?", executorId);
+                }
                 case "TASK_ACK" -> log.info("executor ack executorId={} dispatchId={}",
                         executorId, frame.path("dispatchId").asLong());
                 case "TASK_PROGRESS" -> onProgress(frame);

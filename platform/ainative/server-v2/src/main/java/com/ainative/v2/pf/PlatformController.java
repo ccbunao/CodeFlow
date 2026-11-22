@@ -165,35 +165,35 @@ public class PlatformController {
         return ApiResult.ok(service.createTask(req.name(), req.cronExpr(), req.templateJson()));
     }
 
-    @GetMapping("/scheduled-tasks/{id}")
+    @GetMapping("/scheduled-tasks/{id:\\d+}")
     @Operation(summary = "列出平台配置。")
     public ApiResult<Map<String, Object>> task(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.task(id));
     }
 
-    @PutMapping("/scheduled-tasks/{id}")
+    @PutMapping("/scheduled-tasks/{id:\\d+}")
     @Operation(summary = "更新平台配置。")
     public ApiResult<Map<String, Object>> updateTask(@PathVariable long id, @RequestBody TaskRequest req) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.updateTask(id, req.name(), req.cronExpr(), req.templateJson()));
     }
 
-    @PostMapping("/scheduled-tasks/{id}/enable")
+    @PostMapping("/scheduled-tasks/{id:\\d+}/enable")
     @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> enableTask(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.setTaskEnabled(id, true));
     }
 
-    @PostMapping("/scheduled-tasks/{id}/pause")
+    @PostMapping("/scheduled-tasks/{id:\\d+}/pause")
     @Operation(summary = "创建平台配置。")
     public ApiResult<Map<String, Object>> pauseTask(@PathVariable long id) {
         RequestContext.requireUserId();
         return ApiResult.ok(service.setTaskEnabled(id, false));
     }
 
-    @DeleteMapping("/scheduled-tasks/{id}")
+    @DeleteMapping("/scheduled-tasks/{id:\\d+}")
     @Operation(summary = "删除平台配置。")
     public ApiResult<Void> deleteTask(@PathVariable long id) {
         RequestContext.requireUserId();

@@ -65,3 +65,14 @@ def test_heartbeat_defaults_empty():
     f = frames.heartbeat()
     assert f["ownedDispatchIds"] == [] and f["runningDispatchIds"] == []
     assert f["maxConcurrentDispatches"] == 1
+
+
+def test_heartbeat_healthy_flag_reported():
+    """新 daemon 自检结果必须随心跳上报 healthy 字段(服务端据此优先选健康节点)。"""
+    assert frames.heartbeat(healthy=True)["healthy"] is True
+    assert frames.heartbeat(owned=[1], running=[1], capacity=2, healthy=False)["healthy"] is False
+
+
+def test_heartbeat_healthy_absent_when_not_checked():
+    """未做自检(如 --once-smoke)时不上报 healthy;老 daemon 也不上报 —— 服务端缺字段即按不健康处理。"""
+    assert "healthy" not in frames.heartbeat()

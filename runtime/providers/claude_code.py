@@ -110,8 +110,19 @@ class ClaudeCodeProvider:
     def _system_prompt(self, capsule) -> str:
         ident = capsule.identity or {}
         lines = [f"你是 AINative 数字员工:{ident.get('name', '')}({capsule.manifest.get('roleName', '')})。"]
-        for rule in ident.get("rules") or []:
-            lines.append(f"- {rule}")
+        rules = [str(r).strip() for r in (ident.get("rules") or []) if str(r).strip()]
+        if rules:
+            lines.extend(f"- {rule}" for rule in rules)
+        else:
+            # 老平台的任务包没有 rules:回落到人设原文,数字员工仍按 SOUL.md/AGENT.md 干活。
+            soul = str(ident.get("soulMd") or "").strip()
+            agent_md = str(ident.get("agentMd") or "").strip()
+            if soul:
+                lines.append("【SOUL.md · 业务背景与角色定位】")
+                lines.append(soul)
+            if agent_md:
+                lines.append("【AGENT.md · 工作方法与输出格式】")
+                lines.append(agent_md)
         lines.append("严格按当前 SDLC 步骤的目标与完成门执行;产出写入 deliverables/ 目录。")
         return "\n".join(lines)
 
