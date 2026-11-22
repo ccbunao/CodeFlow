@@ -33,7 +33,9 @@ public class ClarificationConversationController {
     private static final String TITLE_PREFIX = "clarification:";
 
     public record CreateRequest(Long agentId) {}
-    public record TurnRequest(String contentMd, String clientMessageId, List<Long> attachmentIds) {}
+    // contentMd 为标准字段;content 是历史客户端(以及部分外部 MCP 客户端)仍在发送的别名,
+    // 两者都收,避免「消息发送失败,请重试」的静默失败(前端发 content、后端只认 contentMd 曾互相对不上)。
+    public record TurnRequest(String contentMd, String content, String clientMessageId, List<Long> attachmentIds) {}
     public record AttachRequest(Long artifactId, String name, Long sizeBytes) {}
     public record ElicitationReplyRequest(String action, String content) {}
 
@@ -117,7 +119,8 @@ public class ClarificationConversationController {
         requireConversation(workitemId, conversationId);
         Map<String, Object> chat = jdbc.queryForMap("SELECT agent_id FROM ag_chat WHERE id=?", conversationId);
         long agentId = ((Number) chat.get("agent_id")).longValue();
-        String content = req.contentMd() == null ? "" : req.contentMd();
+        String content = req.contentMd() != null && !req.contentMd().isBlank() ? req.contentMd()
+                : (req.content() == null ? "" : req.content());
         if (req.attachmentIds() != null && !req.attachmentIds().isEmpty()) {
             StringBuilder names = new StringBuilder();
             for (Long artifactId : req.attachmentIds()) {
