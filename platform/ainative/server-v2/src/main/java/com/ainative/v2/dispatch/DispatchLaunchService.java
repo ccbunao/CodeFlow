@@ -57,12 +57,23 @@ public class DispatchLaunchService {
     /** 返回 dispatchId;无在线执行器时 run 置 PENDING 并返回 id。 */
     @Transactional
     public long start(long ticketId, long agentId, Long sdlcId) {
+        return start(ticketId, agentId, sdlcId, ws());
+    }
+
+    /**
+     * 显式指定工作区的派发入口。
+     *
+     * <p>后台触发(定时任务)没有请求上下文,RequestContext.workspaceId() 会回退到 1 ——
+     * 工单和 run 就会挂到 1 号项目名下。这类场景必须由任务自己的 workspace_id 驱动。
+     */
+    @Transactional
+    public long start(long ticketId, long agentId, Long sdlcId, long workspaceId) {
         Map<String, Object> ticket = jdbc.queryForMap(
                 "SELECT title, body_md, sdlc_id FROM wi_ticket WHERE id=? AND deleted_at IS NULL", ticketId);
         Long effectiveSdlcId = sdlcId != null ? sdlcId : (Long) ticket.get("sdlc_id");
         List<Map<String, Object>> steps = stepsOf(effectiveSdlcId);
         Persona.Snapshot persona = personaOf(agentId);
-        List<Map<String, Object>> roster = roster(ws());
+        List<Map<String, Object>> roster = roster(workspaceId);
         // 快照在派发时冻结:人设/名册/工单/步骤任一项被改动,重建包体都会与派发时字节不同,
         // 运行器按帧里的 md5 校验下载就会失败。
         DispatchSnapshot snapshot = new DispatchSnapshot(persona,
@@ -74,7 +85,7 @@ public class DispatchLaunchService {
         // 先定执行器再落 run:rt_run.executor_id 必须等于真正收到指令的那个执行器,
         // 否则回写通道(备注鉴权按 rt_run.executor_id 关联执行器令牌)会取到错误的令牌。
         Long executorId = pickOnlineExecutor(agentId);
-        long dispatchId = dispatchDao.insertRun(ws(), ticketId, agentId, executorId, effectiveSdlcId,
+        long dispatchId = dispatchDao.insertRun(workspaceId, ticketId, agentId, executorId, effectiveSdlcId,
                 attempt, snapshot.toJson());
 
         // 发帧必须等事务提交:运行器收到帧会立刻下载包体,而下载端点要按 dispatchId

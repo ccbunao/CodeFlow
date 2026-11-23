@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,11 @@ import java.util.Map;
 public class ScheduledTaskRunner {
     private static final Logger log = LoggerFactory.getLogger(ScheduledTaskRunner.class);
 
+    /** 当前工作区(请求上下文);后台调度路径一律用任务自己的 workspace_id。 */
+    private static long ws() {
+        return com.ainative.v2.common.RequestContext.workspaceId();
+    }
+
     private final JdbcTemplate jdbc;
     private final DispatchLaunchService dispatchLaunch;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -35,8 +42,10 @@ public class ScheduledTaskRunner {
     @Scheduled(fixedDelay = 30_000)
     public void tick() {
         LocalDateTime now = dbNow();
+        // 扫全部工作区:此前写死 workspace_id=1,其它项目建的定时任务永远不会触发。
+        // 任务自己的 workspace_id 随记录带出,执行时按它建工单/运行记录。
         List<Map<String, Object>> tasks = jdbc.queryForList(
-                "SELECT id, name, cron_expr, ticket_template_json FROM pf_task WHERE workspace_id=1 AND enabled=1 AND deleted_at IS NULL");
+                "SELECT id, workspace_id, name, cron_expr, ticket_template_json FROM pf_task WHERE enabled=1 AND deleted_at IS NULL");
         for (Map<String, Object> t : tasks) {
             try {
                 CronExpression cron = CronExpression.parse(String.valueOf(t.get("cron_expr")));
@@ -44,10 +53,12 @@ public class ScheduledTaskRunner {
                     continue;
                 }
                 long taskId = ((Number) t.get("id")).longValue();
+                long workspaceId = ((Number) t.get("workspace_id")).longValue();
                 if (alreadyRan(taskId)) {
                     continue;
                 }
-                trigger(taskId, String.valueOf(t.get("name")), String.valueOf(t.get("ticket_template_json")));
+                trigger(taskId, workspaceId, String.valueOf(t.get("name")),
+                        String.valueOf(t.get("ticket_template_json")));
             } catch (Exception e) {
                 log.warn("scheduled task tick failed error={}", e.getMessage());
             }
@@ -73,7 +84,12 @@ public class ScheduledTaskRunner {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("taskId", taskId);
         try {
-            trigger(taskId, name, templateJson);
+            // 「立即执行」也按任务自己的工作区建单:任务的归属以 pf_task.workspace_id 为准,
+            // 不能跟着发起人的当前项目走(否则会把工单建到别人的项目里)
+            Long taskWorkspace = jdbc.queryForObject(
+                    "SELECT workspace_id FROM pf_task WHERE id=? AND deleted_at IS NULL", Long.class, taskId);
+            long workspaceId = taskWorkspace == null ? ws() : taskWorkspace;
+            trigger(taskId, workspaceId, name, templateJson);
             Long runId = jdbc.queryForObject(
                     "SELECT MAX(id) FROM pf_task_run WHERE task_id=?", Long.class, taskId);
             out.put("runId", runId);
@@ -92,7 +108,7 @@ public class ScheduledTaskRunner {
         return n != null && n > 0;
     }
 
-    private void trigger(long taskId, String name, String templateJson) {
+    private void trigger(long taskId, long workspaceId, String name, String templateJson) {
         JsonNode tpl;
         try {
             tpl = mapper.readTree(templateJson == null || templateJson.isBlank() ? "{}" : templateJson);
@@ -109,17 +125,31 @@ public class ScheduledTaskRunner {
         String title = tpl.path("title").asText(name);
         String content = tpl.path("contentMd").asText("定时任务:" + name);
 
-        jdbc.update("INSERT INTO pf_task_run (workspace_id, task_id, status, started_at) VALUES (1,?, 'RUNNING', NOW())", taskId);
+        jdbc.update("INSERT INTO pf_task_run (workspace_id, task_id, status, started_at) VALUES (?,?, 'RUNNING', NOW())",
+                workspaceId, taskId);
         Long runId = jdbc.queryForObject("SELECT MAX(id) FROM pf_task_run WHERE task_id=?", Long.class, taskId);
         try {
-            Long flowId = defaultFlowId();
+            Long flowId = defaultFlowId(workspaceId);
             Long stateId = flowId == null ? null : firstStateId(flowId);
-            jdbc.update("INSERT INTO wi_ticket (workspace_id, title, body_md, type, priority, flow_id, state_id, version) VALUES (1,?,?, 'REQ', 2,?,?, 0)",
-                    title, content, flowId, stateId);
-            long ticketId = idOfLastTicket();
-            jdbc.update("INSERT INTO wi_journal (workspace_id, ticket_id, event_type, actor_type, to_val) VALUES (1,?, 'SCHEDULED_TRIGGER', 'SYSTEM', ?)",
-                    ticketId, name);
-            long dispatchId = dispatchLaunch.start(ticketId, agentId, sdlcId);
+            // 工单 id 用自增主键回读:此前用 SELECT MAX(id) 取,并发触发时会拿到别的工单的 id
+            KeyHolder ticketKey = new GeneratedKeyHolder();
+            jdbc.update(con -> {
+                var ps = con.prepareStatement(
+                        "INSERT INTO wi_ticket (workspace_id, title, body_md, type, priority, flow_id, state_id, version)"
+                                + " VALUES (?,?,?, 'REQ', 2,?,?, 0)",
+                        java.sql.Statement.RETURN_GENERATED_KEYS);
+                ps.setLong(1, workspaceId);
+                ps.setString(2, title);
+                ps.setString(3, content);
+                ps.setLong(4, flowId == null ? 0L : flowId);
+                ps.setLong(5, stateId == null ? 0L : stateId);
+                return ps;
+            }, ticketKey);
+            Number ticketKeyValue = ticketKey.getKey();
+            long ticketId = ticketKeyValue == null ? 0L : ticketKeyValue.longValue();
+            jdbc.update("INSERT INTO wi_journal (workspace_id, ticket_id, event_type, actor_type, to_val) VALUES (?,?, 'SCHEDULED_TRIGGER', 'SYSTEM', ?)",
+                    workspaceId, ticketId, name);
+            long dispatchId = dispatchLaunch.start(ticketId, agentId, sdlcId, workspaceId);
             jdbc.update("UPDATE pf_task_run SET status='DISPATCHED', result_json=? WHERE id=?",
                     "{\"ticketId\":" + ticketId + ",\"dispatchId\":" + dispatchId + "}", runId);
             log.info("scheduled task triggered taskId={} runId={} ticketId={} dispatchId={}",
@@ -131,10 +161,10 @@ public class ScheduledTaskRunner {
         }
     }
 
-    private Long defaultFlowId() {
+    private Long defaultFlowId(long workspaceId) {
         List<Long> ids = jdbc.queryForList(
-                "SELECT id FROM wi_flow WHERE workspace_id=1 AND deleted_at IS NULL ORDER BY is_default DESC, id LIMIT 1",
-                Long.class);
+                "SELECT id FROM wi_flow WHERE workspace_id=? AND deleted_at IS NULL ORDER BY is_default DESC, id LIMIT 1",
+                Long.class, workspaceId);
         return ids.isEmpty() ? null : ids.get(0);
     }
 
@@ -148,8 +178,4 @@ public class ScheduledTaskRunner {
         return ids.isEmpty() ? null : ids.get(0);
     }
 
-    private long idOfLastTicket() {
-        Long id = jdbc.queryForObject("SELECT MAX(id) FROM wi_ticket WHERE workspace_id=1", Long.class);
-        return id == null ? 0 : id;
-    }
 }

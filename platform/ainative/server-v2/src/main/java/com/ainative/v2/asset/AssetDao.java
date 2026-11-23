@@ -73,7 +73,7 @@ public class AssetDao {
     }
 
     public void addRelation(long fromRepoId, long toRepoId, String type) {
-        jdbc.update("INSERT IGNORE INTO as_repo_relation (workspace_id, from_repo_id, to_repo_id, rel_type) VALUES (1,?,?,?)",
+        jdbc.update("INSERT IGNORE INTO as_repo_relation (workspace_id, from_repo_id, to_repo_id, rel_type) VALUES (" + ws() + ",?,?,?)",
                 fromRepoId, toRepoId, type);
     }
 

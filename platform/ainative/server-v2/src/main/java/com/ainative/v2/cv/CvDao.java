@@ -46,7 +46,7 @@ public class CvDao {
         int n = jdbc.update("UPDATE cv_clarification SET content_md=?, status=?, version=version+1 WHERE ticket_id=?",
                 contentMd, status, ticketId);
         if (n == 0) {
-            jdbc.update("INSERT INTO cv_clarification (workspace_id, ticket_id, content_md, status) VALUES (1,?,?,?)",
+            jdbc.update("INSERT INTO cv_clarification (workspace_id, ticket_id, content_md, status) VALUES (" + ws() + ",?,?,?)",
                     ticketId, contentMd, status);
         }
     }
@@ -67,7 +67,7 @@ public class CvDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO ag_chat (workspace_id, agent_id, title, user_id, status) VALUES (1,?,?,?, 'OPEN')",
+                    "INSERT INTO ag_chat (workspace_id, agent_id, title, user_id, status) VALUES (" + ws() + ",?,?,?, 'OPEN')",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setLong(1, agentId);
             ps.setString(2, title);
@@ -92,7 +92,7 @@ public class CvDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (1,?,?,?,?)",
+                    "INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (" + ws() + ",?,?,?,?)",
                     PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setLong(1, chatId);
             ps.setInt(2, seq);

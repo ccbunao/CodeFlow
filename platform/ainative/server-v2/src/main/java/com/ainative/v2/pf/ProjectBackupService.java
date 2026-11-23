@@ -66,6 +66,11 @@ public class ProjectBackupService {
     private final ObjectMapper mapper = new ObjectMapper();
     private final Path root;
 
+    /** 当前工作区:备份是项目级资产,必须按项目隔离(此前全部写死 1)。 */
+    private static long ws() {
+        return com.ainative.v2.common.RequestContext.workspaceId();
+    }
+
     public ProjectBackupService(JdbcTemplate jdbc,
                                 @Value("${ainative.artifact-dir:}") String configuredDir) {
         this.jdbc = jdbc;
@@ -83,8 +88,9 @@ public class ProjectBackupService {
      */
     public Map<String, Object> backup(String name) {
         String backupName = (name == null || name.isBlank() ? "配置备份" : name.trim()) + "-" + TS.format(LocalDateTime.now());
-        jdbc.update("INSERT INTO pf_backup (workspace_id, name, status, size_bytes) VALUES (1,?, 'RUNNING', 0)", backupName);
-        Long id = jdbc.queryForObject("SELECT MAX(id) FROM pf_backup WHERE workspace_id=1", Long.class);
+        jdbc.update("INSERT INTO pf_backup (workspace_id, name, status, size_bytes) VALUES (?,?, 'RUNNING', 0)",
+                ws(), backupName);
+        Long id = jdbc.queryForObject("SELECT MAX(id) FROM pf_backup WHERE workspace_id=?", Long.class, ws());
         try {
             Map<String, Object> payload = new LinkedHashMap<>();
             payload.put("schemaVersion", "codeflow.backup.v1");
@@ -130,7 +136,7 @@ public class ProjectBackupService {
             return List.of();
         }
         try {
-            jdbc.query("SELECT " + String.join(", ", actual) + " FROM " + table + " WHERE workspace_id=1"
+            jdbc.query("SELECT " + String.join(", ", actual) + " FROM " + table + " WHERE workspace_id=?"
                             + (hasColumn(table, "deleted_at") ? " AND deleted_at IS NULL" : ""),
                     rs -> {
                         Map<String, Object> row = new LinkedHashMap<>();
@@ -138,7 +144,7 @@ public class ProjectBackupService {
                             row.put(actual.get(i), rs.getObject(i + 1));
                         }
                         rows.add(row);
-                    });
+                    }, ws());
         } catch (Exception e) {
             // 单表读取失败不应让整体备份失败,记空数组即可。
             return List.of();
@@ -202,7 +208,8 @@ public class ProjectBackupService {
         return jdbc.queryForList(
                 "SELECT id, name, status, object_key AS ossRef, size_bytes AS sizeBytes, sha256, error_message AS errorMessage,"
                         + " gmt_create AS createdAt, finished_at AS finishedAt FROM pf_backup"
-                        + " WHERE workspace_id=1 AND deleted_at IS NULL ORDER BY id DESC LIMIT " + limit + " OFFSET " + offset);
+                        + " WHERE workspace_id=? AND deleted_at IS NULL ORDER BY id DESC LIMIT " + limit + " OFFSET " + offset,
+                ws());
     }
 
     // ---------------------------------------------------------------- 恢复
@@ -289,10 +296,10 @@ public class ProjectBackupService {
     /** 读取归档文件字节;优先读盘,回落数据库 detail_json。 */
     public byte[] archiveBytes(long backupId) {
         String[] holder = new String[2];
-        jdbc.query("SELECT object_key, detail_json FROM pf_backup WHERE id=? AND workspace_id=1", rs -> {
+        jdbc.query("SELECT object_key, detail_json FROM pf_backup WHERE id=? AND workspace_id=?", rs -> {
             holder[0] = rs.getString("object_key");
             holder[1] = rs.getString("detail_json");
-        }, backupId);
+        }, backupId, ws());
         if (holder[0] == null && holder[1] == null) {
             throw new BizException("21002", "备份不存在");
         }
