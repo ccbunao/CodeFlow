@@ -150,7 +150,7 @@ cd platform/ainative/server-v2 && scripts/run-tests.sh    # 53 用例，宿主�
 
 **一鸣** · 公众号「一鸣AI编程」——从第一行代码到交付引擎的完整过程都在公众号连载。
 
-官网：**[codeflow.com.cn](https://www.codeflow.com.cn)** · 完整操作手册（图文版 v2.1.1，25 章）：平台内按 F1，或公众号回复 **codeflow** 获取
+官网：**[codeflow.com.cn](https://www.codeflow.com.cn)**
 
 <div align="center">
 
