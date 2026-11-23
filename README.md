@@ -2,9 +2,9 @@
 
 # CodeFlow
 
-**需求进，交付出。**
+**AI 需求交付平台:需求进,交付出。**
 
-AI 数字员工按交付流程干完整条链路——每一步留痕，拍板权在人。
+AI 数字员工按交付流程完成分析/开发/测试/验证/交接,全过程留痕可回看。
 
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://spring.io/)
