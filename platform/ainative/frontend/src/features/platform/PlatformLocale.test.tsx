@@ -8,6 +8,7 @@ import { http, HttpResponse } from 'msw';
 import { server } from '@/test/mocks/server';
 import { createAppRoutes } from '@/app/router';
 import { useAuthStore } from '@/shared/auth/store';
+import aboutEn from '@/shared/i18n/locales/en-US/about.json';
 import { i18n } from '@/shared/i18n';
 import { BrandingConfigPage } from './BrandingConfigPage';
 import { PlatformAdminPanel } from './PlatformAdminPanel';
@@ -159,14 +160,18 @@ describe('platform and about language boundaries', () => {
     await language('en-US'); expect(screen.getByRole('region', { name: 'About the platform' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Automated software product delivery platform' })).toBeInTheDocument();
     expect(screen.getAllByRole('listitem')).toEqual(nodes);
+    // 线路图上只放「编号 + 站名」短标记,九句解释另起「站序说明」栏
+    // 断言取自 i18n 词条本身:站名/描述改版时不必再手改这串字面量
+    // (此前写死旧文案,9 号线改站名后一直红着,像系统坏了,其实只是断言过期)。
+    const en = aboutEn;
+    const stepKeys = ['clarification', 'start', 'development', 'verification', 'review',
+      'deployment', 'testing', 'delivery', 'ops'];
     expect(nodes.map(item => item.textContent)).toEqual([
-      '1Requirement clarificationAI dialogue aligns acceptance criteria', '2StartPick a squad · dispatch the task',
-      '3DevelopmentRunners write the code', '4VerificationCompletion gate checks output', '5ReviewCommits reviewed',
-      '6DeploymentDeploy to target environment', '7TestingAutomated regression', '8DeliveryReport & artifacts archived',
-      '9OperationsMonitor & iterate',
+      ...stepKeys.map((k, i) => `${i + 1}${en[k]}`),
+      ...stepKeys.map((k, i) => `${i + 1}${en[k]}${en[`${k}Desc`]}`),
     ]);
     expect(screen.getByText('Continuous iteration')).toBeInTheDocument(); expect(screen.getByText('raw+version')).toBeInTheDocument(); expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    await language('zh-CN'); expect(screen.getAllByRole('listitem')).toEqual(nodes); expect(nodes[0]).toHaveTextContent('1需求澄清');
+    await language('zh-CN'); expect(screen.getAllByRole('listitem')).toEqual(nodes); expect(nodes[0]).toHaveTextContent('1问清需求');
   });
 });
 

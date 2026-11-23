@@ -84,7 +84,7 @@ describe('LoginPage', () => {
     expect(screen.getByText('CODE')).toBeInTheDocument();
     expect(screen.getByText('FLOW')).toBeInTheDocument();
     const value = screen.getByLabelText('从需求到交付的生命周期');
-    expect(value.textContent).toContain('需求澄清');
+    expect(value.textContent).toContain('问清需求');
     expect(value.textContent).toContain('交付');
     expect(value.textContent).not.toContain('运维');
 
