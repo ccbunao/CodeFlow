@@ -13,6 +13,10 @@ AI 数字员工按交付流程干完整条链路——每一步留痕，拍板�
 
 **开源自托管的 AI 需求交付平台**
 
+<img src="assets/wechat-qrcode.jpg" width="120" alt="公众号「一鸣AI编程」">
+
+**公众号「一鸣AI编程」**——从第一行代码到交付引擎的完整过程都在连载。觉得不错的话，欢迎点个 ⭐ Star 支持一下。
+
 </div>
 
 <div align="center">
