@@ -20,6 +20,33 @@ public class DispatchDao {
         return com.ainative.v2.common.RequestContext.workspaceId();
     }
 
+    /**
+     * 运行记录所属工作区。
+     *
+     * <p>按 runId 查 rt_run:写事件/恢复/指引的路径既有请求内调用,也有工作节点 WS
+     * 线程里的回报(appendEvent 由 TASK_PROGRESS/TASK_RESULT 触发)。WS 线程没有请求
+     * 上下文,取兜底值会把事件挂到 1 号项目名下。runId 全局唯一,查库是唯一权威口径。
+     */
+    private long workspaceOfRun(long runId) {
+        if (runId <= 0) {
+            return ws();
+        }
+        List<Long> ids = jdbc.queryForList("SELECT workspace_id FROM rt_run WHERE id=?", Long.class, runId);
+        if (ids.isEmpty() || ids.get(0) == null) {
+            return ws();
+        }
+        return ids.get(0);
+    }
+
+    /** 需求单所属工作区:按工单查(ticketId 全局唯一)。 */
+    private long workspaceOfTicket(long ticketId) {
+        List<Long> ids = jdbc.queryForList("SELECT workspace_id FROM wi_ticket WHERE id=?", Long.class, ticketId);
+        if (ids.isEmpty() || ids.get(0) == null) {
+            return ws();
+        }
+        return ids.get(0);
+    }
+
 
     public record Run(long id, long ticketId, Long agentId, Long executorId, Long sdlcId, int attempt,
                       String status, String error, LocalDateTime startedAt, LocalDateTime endedAt) {}
@@ -118,8 +145,8 @@ public class DispatchDao {
 
     // ── 事件 ──
     public void appendEvent(long runId, int seq, String eventType, String stepId, String detailJson) {
-        jdbc.update("INSERT INTO rt_event (workspace_id, run_id, seq, event_type, step_id, detail_json) VALUES (" + ws() + ",?,?,?,?,?)",
-                runId, seq, eventType, stepId, detailJson);
+        jdbc.update("INSERT INTO rt_event (workspace_id, run_id, seq, event_type, step_id, detail_json) VALUES (?,?,?,?,?,?)",
+                workspaceOfRun(runId), runId, seq, eventType, stepId, detailJson);
     }
 
     public List<Event> eventsOf(long runId, int limit) {
@@ -131,8 +158,8 @@ public class DispatchDao {
 
     // ── 恢复控制 ──
     public void recordRecovery(long runId, String action, Long actorId, String detailJson) {
-        jdbc.update("INSERT INTO rt_recovery (workspace_id, run_id, action, actor_id, detail_json) VALUES (" + ws() + ",?,?,?,?)",
-                runId, action, actorId, detailJson);
+        jdbc.update("INSERT INTO rt_recovery (workspace_id, run_id, action, actor_id, detail_json) VALUES (?,?,?,?,?)",
+                workspaceOfRun(runId), runId, action, actorId, detailJson);
     }
 
     // ── 需求单(执行中向人求助) ──
@@ -155,8 +182,8 @@ public class DispatchDao {
 
     // ── 指引 ──
     public void addGuidance(long ticketId, Long runId, String bodyMd) {
-        jdbc.update("INSERT INTO rt_guidance (workspace_id, ticket_id, run_id, body_md, status) VALUES (" + ws() + ",?,?,?, 'OPEN')",
-                ticketId, runId, bodyMd);
+        jdbc.update("INSERT INTO rt_guidance (workspace_id, ticket_id, run_id, body_md, status) VALUES (?,?,?,?, 'OPEN')",
+                workspaceOfTicket(ticketId), ticketId, runId, bodyMd);
     }
 
     public List<Guidance> guidanceOf(long ticketId) {

@@ -152,7 +152,10 @@ public abstract class IntegrationTestBase {
     /** 注册并登录一个测试用户,返回 {userId, username, workspaceId, token}。workspace 随注册自动创建。 */
     protected Map<String, Object> newUser(String tag) throws Exception {
         long seq = USER_SEQ.incrementAndGet();
-        String username = "it_" + tag + "_" + seq;
+        // 用户名带进程内随机后缀:序号每 JVM 重启都从 1000 重来,同一个测试库跑第二遍
+        // 就会撞「用户名已存在」—— 测试不该要求空库。
+        String username = "it_" + tag + "_" + seq + "_"
+                + Long.toHexString(java.util.concurrent.ThreadLocalRandom.current().nextLong() & 0xFFFFFFL);
         String registerBody = JSON.writeValueAsString(Map.of(
                 "username", username,
                 "password", "Passw0rd!" + seq,

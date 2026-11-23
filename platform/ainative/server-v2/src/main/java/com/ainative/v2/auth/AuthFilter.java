@@ -28,6 +28,8 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+        // 标记请求边界:请求外(WS 线程、定时调度)不允许回退到默认工作区
+        com.ainative.v2.common.RequestContext.markInRequest();
         String header = request.getHeader("Authorization");
         String token = header != null && header.startsWith("Bearer ") ? header.substring(7) : header;
         JwtService.TokenClaims claims = jwt.verifyClaims(token);

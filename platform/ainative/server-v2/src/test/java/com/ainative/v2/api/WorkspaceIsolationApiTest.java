@@ -23,6 +23,9 @@ class WorkspaceIsolationApiTest extends IntegrationTestBase {
     @Autowired
     ScheduledTaskRunner taskRunner;
 
+    @Autowired
+    com.ainative.v2.cv.ConversationTurnService conversationTurns;
+
     /**
      * 直接落一条启用状态的定时任务。
      *
@@ -75,6 +78,7 @@ class WorkspaceIsolationApiTest extends IntegrationTestBase {
         // 造一条属于本项目的启用任务,并把 cron 设成每分钟都匹配
         long taskId = createEnabledTask(ws, "触发-任务", 1L);
         jdbc.update("UPDATE pf_task SET cron_expr='* * * * * *' WHERE id=?", taskId);
+        Long ticketBefore = jdbc.queryForObject("SELECT MAX(id) FROM wi_ticket", Long.class);
 
         taskRunner.tick();
 
@@ -82,10 +86,10 @@ class WorkspaceIsolationApiTest extends IntegrationTestBase {
         Integer runsWrong = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM pf_task_run WHERE task_id=? AND workspace_id<>?", Integer.class, taskId, ws);
         assertThat(runsWrong).isZero();
-        Integer ticketsWrong = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM wi_ticket WHERE workspace_id NOT IN (SELECT workspace_id FROM pf_task WHERE id=?)",
-                Integer.class, taskId);
-        assertThat(ticketsWrong).as("定时任务建出的工单不得落到别的项目").isZero();
+        // 只看本次触发新建的工单(库里还有其它用例留下的历史数据)
+        List<Long> newTicketWorkspaces = jdbc.queryForList(
+                "SELECT workspace_id FROM wi_ticket WHERE id>?", Long.class, ticketBefore == null ? 0L : ticketBefore);
+        newTicketWorkspaces.forEach(w -> assertThat(w).as("定时任务建出的工单必须落在任务所属项目").isEqualTo(ws));
     }
 
     @Test
@@ -119,6 +123,36 @@ class WorkspaceIsolationApiTest extends IntegrationTestBase {
     }
 
     @Test
+    void assistant_reply_from_executor_thread_lands_in_the_chats_workspace() throws Exception {
+        // 真实链路:工作节点在线程里回报 ACK(没有请求上下文),回复必须落在会话所属项目
+        Map<String, Object> user = newUser("ws_iso_ack");
+        long ws = ((Number) user.get("workspaceId")).longValue();
+        Long agentId = jdbc.queryForObject(
+                "SELECT id FROM ag_agent WHERE workspace_id=? AND deleted_at IS NULL ORDER BY id LIMIT 1",
+                Long.class, ws);
+        assertThat(agentId).isNotNull();
+        String ackTitle = "隔离ACK:" + ws + ":" + System.nanoTime();
+        jdbc.update("INSERT INTO ag_chat (workspace_id, agent_id, title, user_id, status) VALUES (?,?,?,?, 'OPEN')",
+                ws, agentId, ackTitle, ((Number) user.get("userId")).longValue());
+        Long chatId = jdbc.queryForObject("SELECT MAX(id) FROM ag_chat WHERE title=?", Long.class, ackTitle);
+        jdbc.update("INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md, delivery_status)"
+                + " VALUES (?,?,1,'USER','提问', 'SENT')", ws, chatId);
+
+        // 模拟工作节点 WS 线程:清掉请求上下文后回报 ACK
+        com.ainative.v2.common.RequestContext.clear();
+        conversationTurns.handleAck(java.util.Map.of(
+                "conversationId", chatId, "turnId", 1, "status", "SUCCESS", "replyMarkdown", "AI 的回复"));
+
+        Long replyWorkspace = jdbc.queryForObject(
+                "SELECT workspace_id FROM ag_chat_turn WHERE chat_id=? AND role='ASSISTANT'", Long.class, chatId);
+        assertThat(replyWorkspace).as("AI 回复回合必须落在会话所属工作区(此前静默写成 1)").isEqualTo(ws);
+        // 用量行可能没有(本次 ACK 未带 usage),0 行不算失败
+        List<Long> usageWorkspaces = jdbc.queryForList(
+                "SELECT workspace_id FROM ag_chat_usage WHERE chat_id=?", Long.class, chatId);
+        usageWorkspaces.forEach(u -> assertThat(u).as("会话用量必须落在会话所属工作区").isEqualTo(ws));
+    }
+
+    @Test
     void clarification_session_rows_belong_to_the_workspace() throws Exception {
         Map<String, Object> user = newUser("ws_iso_chat");
         long ws = ((Number) user.get("workspaceId")).longValue();
@@ -127,10 +161,12 @@ class WorkspaceIsolationApiTest extends IntegrationTestBase {
                 "SELECT id FROM ag_agent WHERE workspace_id=? AND deleted_at IS NULL ORDER BY id LIMIT 1",
                 Long.class, ws);
         assertThat(agentId).isNotNull();
+        // 标题带唯一后缀:同一个测试库可重复运行,固定标题会累积历史行
+        String title = "隔离:" + ws + ":" + System.nanoTime();
         jdbc.update("INSERT INTO ag_chat (workspace_id, agent_id, title, user_id, status) VALUES (?,?,?,?, 'OPEN')",
-                ws, agentId, "隔离:1:%", ((Number) user.get("userId")).longValue());
+                ws, agentId, title, ((Number) user.get("userId")).longValue());
         Integer wrong = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM ag_chat WHERE title=? AND workspace_id<>?", Integer.class, "隔离:1:%", ws);
+                "SELECT COUNT(*) FROM ag_chat WHERE title=? AND workspace_id<>?", Integer.class, title, ws);
         assertThat(wrong).isZero();
     }
 }

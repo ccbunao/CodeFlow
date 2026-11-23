@@ -160,9 +160,9 @@ public class ConversationTurnService {
                 "SELECT COALESCE(MAX(seq),0)+1 FROM ag_chat_turn WHERE chat_id=?", Integer.class, chatId);
         int nextSeq = seq == null ? 1 : seq;
         jdbc.update("INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md, delivery_status) VALUES (?,?,?,'USER',?, 'PENDING')",
-                workspaceId(), chatId, nextSeq, contentMd);
+                workspaceIdOfChat(chatId), chatId, nextSeq, contentMd);
         jdbc.update("INSERT INTO ag_chat_turn_event (workspace_id, turn_id, event_type, detail_json) VALUES (?,?,'USER_MESSAGE',?)",
-                workspaceId(), nextSeq, null);
+                workspaceIdOfChat(chatId), nextSeq, null);
 
         // 找到该智能体的在线执行器并下发
         // DB 里的 ONLINE 可能已是僵尸(运行器进程已退出),逐个用 hub 校验真实连接
@@ -398,7 +398,7 @@ public class ConversationTurnService {
             var ps = con.prepareStatement(
                     "INSERT INTO ag_chat_turn (workspace_id, chat_id, seq, role, content_md) VALUES (?,?,?,'ASSISTANT',?)",
                     java.sql.Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1, workspaceId());
+            ps.setLong(1, workspaceIdOfChat(chatId));
             ps.setLong(2, chatId);
             ps.setInt(3, replySeq);
             ps.setString(4, content);
@@ -414,7 +414,7 @@ public class ConversationTurnService {
             long in = num(u.get("input_tokens"));
             long out = num(u.get("output_tokens"));
             jdbc.update("INSERT INTO ag_chat_usage (workspace_id, chat_id, tokens_in, tokens_out) VALUES (?,?,?,?)",
-                    workspaceId(), chatId, in, out);
+                    workspaceIdOfChat(chatId), chatId, in, out);
         }
         Map<String, Object> record = new LinkedHashMap<>();
         record.put("status", status);
@@ -454,8 +454,22 @@ public class ConversationTurnService {
         return rows.isEmpty() || rows.get(0) == null ? 0L : rows.get(0);
     }
 
-    private long workspaceId() {
-        return com.ainative.v2.common.RequestContext.workspaceId();
+    /**
+     * 会话所属工作区。
+     *
+     * <p>按 chatId 查库,而不是取请求上下文:落库有两条路径 —— 用户发送(请求线程)
+     * 与运行节点回报 ACK(工作节点 WS 线程),后者根本没有请求上下文,取到的会是
+     * 兜底值 1,于是非默认项目的 AI 回复、用量、事件全挂到 1 号项目名下
+     * (2026-11-23 实测:项目 2 的会话,其 AI 回复回合 workspace_id=1)。
+     * chatId 全局唯一,查库拿到的归属是唯一权威口径。
+     */
+    private long workspaceIdOfChat(long chatId) {
+        List<Long> ids = jdbc.queryForList("SELECT workspace_id FROM ag_chat WHERE id=?", Long.class, chatId);
+        if (ids.isEmpty() || ids.get(0) == null) {
+            // 会话查不到:退回请求上下文(仅请求内可能走到这里)
+            return com.ainative.v2.common.RequestContext.workspaceId();
+        }
+        return ids.get(0);
     }
 
     private static long num(Object v) {
