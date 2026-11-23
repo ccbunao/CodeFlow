@@ -207,11 +207,26 @@ export function AboutPlatformPage() {
                     <span className="aam-stop-no">{i + 1}</span>
                     <span className="aam-stop-nm">{t(step)}</span>
                   </span>
-                  <span className="aam-stop-ds">{t(STEP_DESC_KEYS[step])}</span>
                 </li>
               ))}
             </ol>
           </div>
+        </div>
+        {/* 站序说明:九站各一句解释。线路图上站间距只有 ~180px,30~44 字的长句
+            必然压到相邻站牌(2026-11-23 走查:文字溢出卡片),故长句移出图面,
+            单独成栏按卡片宽度自动折行;文案一字未改。 */}
+        <div className="aam-stations">
+          <ol className="aam-stations-grid">
+            {LIFECYCLE_STEPS.map((step, i) => (
+              <li key={step} className="aam-station">
+                <span className="aam-station-no">{i + 1}</span>
+                <span className="aam-station-copy">
+                  <span className="aam-station-nm">{t(step)}</span>
+                  <span className="aam-station-ds">{t(STEP_DESC_KEYS[step])}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
         <div className="aam-foot">
           <span>{t('metroFootStops')}</span>

@@ -19,11 +19,23 @@ describe('AboutPlatformPage', () => {
     expect(screen.getByRole('region', { name: '关于平台' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '软件产品自动交付平台' })).toBeInTheDocument();
     expect(screen.getByText('从需求到交付的一站式 AI 交付平台')).toBeInTheDocument();
-    // 「交付 9 号线」地铁图:9 个站名牌(编号 + 站名 + 一句说明),交付之后新增运维形成闭环
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
-      '1需求澄清AI 对话对齐验收标准', '2启动选择小队 · 派发任务', '3开发运行器编写代码',
-      '4验证完成门自动校验', '5评审版本提交审核', '6部署部署到目标环境',
-      '7测试自动化回归验证', '8交付报告与产物归档', '9运维持续监控与迭代',
+    // 「交付 9 号线」地铁图:线路上只放「编号 + 站名」短标记,
+    // 九句解释另起「站序说明」栏(线路图站间距放不下长句,会压到相邻站牌溢出卡片)。
+    const items = screen.getAllByRole('listitem').map((item) => item.textContent);
+    expect(items.slice(0, 9)).toEqual([
+      '1问清需求', '2启动交付', '3编码开发', '4测试验证', '5代码评审',
+      '6部署上线', '7上线回归', '8验收归档', '9持续运维',
+    ]);
+    expect(items.slice(9)).toEqual([
+      '1问清需求你提需求,AI 反问到能开工为止:边界、技术栈、验收标准逐条确认,产出方案文档',
+      '2启动交付你点「启动交付」,任务包下发到你的电脑:AI 在你的机器上开工,代码不出内网',
+      '3编码开发AI 按方案文档写代码:每个分支对应一个需求,改了什么、为什么改,全程有记录',
+      '4测试验证AI 跑通测试才算写完:单测、自测脚本、验收标准逐条自动校验,不达标停在当前步并说明原因',
+      '5代码评审评审员检查通过才放行:产物完整性、完成门达标逐项核对,不通过打回返工',
+      '6部署上线可运行产物直接部署:代码、启动/停止脚本、部署路径一并交付,拿来就能跑',
+      '7上线回归上线前自动化回归:验证整条链路在真实环境可用,回归不通过不放行',
+      '8验收归档你验收,结论自动回写:8 个产物与交付报告归档进工单,验收结论写回禅道/TAPD',
+      '9持续运维上线后继续盯着:运行记录可查,新需求/缺陷进来就是下一轮迭代',
     ]);
     expect(screen.getByText('交付 9 号线 · 一单一趟,全程有站')).toBeInTheDocument();
     expect(screen.getByText('全程 9 站 · 全程留痕,产物归档')).toBeInTheDocument();

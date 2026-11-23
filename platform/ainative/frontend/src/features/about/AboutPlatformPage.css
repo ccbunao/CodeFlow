@@ -210,7 +210,9 @@ main .about-an-page > .cf-page-heading:not(.ant-card-head-title .cf-page-heading
   .aam-train { display: none; }
 }
 
-/* 站名牌(HTML,可选中/可读屏):站环上方或下方 16px 处 */
+/* 站名牌(HTML,可选中/可读屏):站环上方或下方 16px 处
+ * 站环上只放「编号 + 站名」这类短标记 —— 站间距只有 ~180px,
+ * 放不下 30~44 字的长句(会压到相邻站牌并溢出卡片)。 */
 .aam-stops {
   position: absolute;
   inset: 0;
@@ -251,10 +253,56 @@ main .about-an-page > .cf-page-heading:not(.ant-card-head-title .cf-page-heading
   font-size: 14.5px;
   font-weight: 700;
 }
-.aam-stop-ds {
-  margin-left: 24px;
-  color: var(--cf-muted);
+
+/* 站序说明:九站逐站一句话,独立成栏随宽度折行(文案一字未改) */
+.aam-stations {
+  margin-top: 13px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cf-border);
+}
+.aam-stations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.aam-station {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
+.aam-station-no {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--aam-line);
+  color: #fff;
   font-size: 11px;
+  font-weight: 700;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  flex-shrink: 0;
+}
+.aam-station-copy { min-width: 0; }
+.aam-station-nm {
+  display: block;
+  color: var(--cf-text);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.aam-station-ds {
+  display: block;
+  margin-top: 1px;
+  color: var(--cf-muted);
+  font-size: 11.5px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 /* 票务行 */
@@ -293,6 +341,9 @@ body.cf-custom-bg .about-an-page {
 }
 
 /* ── 窄屏:横向滚动看图,票头信息收敛 ── */
+@media (max-width: 1080px) {
+  .aam-stations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 720px) {
   .about-an-page { justify-content: flex-start; padding-top: 16px; }
   .aam { padding: 16px 16px 10px; }
@@ -301,4 +352,5 @@ body.cf-custom-bg .about-an-page {
   .aam-map { overflow-x: auto; }
   .aam-canvas { min-width: 760px; }
   .aam-foot { flex-direction: column; gap: 4px; }
+  .aam-stations-grid { grid-template-columns: minmax(0, 1fr); }
 }
