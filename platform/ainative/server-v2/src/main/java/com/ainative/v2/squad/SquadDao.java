@@ -77,7 +77,8 @@ public class SquadDao {
     }
 
     public void addMember(long squadId, long agentId, String roleCode) {
-        jdbc.update("INSERT IGNORE INTO sq_member (workspace_id, squad_id, agent_id, role_code) VALUES (1,?,?,?)",
+        // workspace_id 必须跟当前项目走:此前写死 1,非默认项目里加的成员会挂到 1 号项目名下
+        jdbc.update("INSERT IGNORE INTO sq_member (workspace_id, squad_id, agent_id, role_code) VALUES (" + ws() + ",?,?,?)",
                 squadId, agentId, roleCode);
     }
 

@@ -34,7 +34,11 @@ class TextCliProvider:
         self.timeout_sec = timeout_sec
 
     def _argv(self, prompt: str) -> list[str]:
-        if self.kind in ("gemini", "cursor"):
+        if self.kind == "cursor":
+            # --force:非交互下跳过工具审批询问。不加的话 CLI 会卡在等审批,
+            # 一直挂到超时(1800 秒)才以 timed_out 收场
+            return [self.cli_binary, "-p", prompt, "--force"]
+        if self.kind == "gemini":
             return [self.cli_binary, "-p", prompt]
         return [self.cli_binary, "exec", prompt]  # codex
 

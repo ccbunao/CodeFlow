@@ -17,14 +17,17 @@ public class AuthService {
     private final JwtService jwt;
     private final JdbcTemplate jdbc;
     private final com.ainative.v2.ws.WorkspaceProvisioner provisioner;
+    private final com.ainative.v2.ws.BuiltinRosterProvisioner roster;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public AuthService(UserDao users, JwtService jwt, JdbcTemplate jdbc,
-                       com.ainative.v2.ws.WorkspaceProvisioner provisioner) {
+                       com.ainative.v2.ws.WorkspaceProvisioner provisioner,
+                       com.ainative.v2.ws.BuiltinRosterProvisioner roster) {
         this.users = users;
         this.jwt = jwt;
         this.jdbc = jdbc;
         this.provisioner = provisioner;
+        this.roster = roster;
     }
 
     /**
@@ -107,6 +110,8 @@ public class AuthService {
         jdbc.update("INSERT INTO id_org_member (org_id, user_id, role) VALUES (?,?, 'OWNER')", id, userId);
         if (id != null) {
             provisioner.ensureDefaultFlow(id);
+            // 开户即带全套内置数字员工/编队/流程:否则新项目里需求澄清选不到人
+            roster.ensure(id);
         }
         return id == null ? 0L : id;
     }

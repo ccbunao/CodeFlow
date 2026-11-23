@@ -457,9 +457,57 @@ class Daemon:
                 "url": f"{scheme}://{self.cfg.ws_hostport}/api/mcp",
                 "headers": {"Authorization": f"Bearer {mcp_token}"}}
 
+    def _conversation_event_emitter(self, turn: dict):
+        """构造本回合的流式事件回调:on_event(eventType, payload)。
+
+        文字/思考增量按 120ms 合批再发:模型逐字吐 delta,一个字一帧会把 WebSocket
+        刷爆,且前端每帧都要重排时间线。工具调用等离散事件不合并,直接发。
+        """
+        from . import conversation as conv  # noqa: F401 - 与 _run_conversation_turn 同一模块
+        conversation_id = int(turn["conversation_id"])
+        turn_id = int(turn["turn_id"])
+        attempt = turn.get("dispatch_attempt")
+        buffered: dict[str, dict] = {}
+        lock = threading.Lock()
+        last_flush = [time.monotonic()]
+        FLUSH_INTERVAL_SEC = 0.12
+
+        def _send(event_type: str, payload: dict) -> None:
+            self.send_frame(frames.conversation_event(
+                conversation_id, turn_id, event_type, payload, attempt), durable=False)
+
+        def flush() -> None:
+            with lock:
+                batch = list(buffered.items())
+                buffered.clear()
+            for event_type, payload in batch:
+                _send(event_type, payload)
+            last_flush[0] = time.monotonic()
+
+        def emit(event_type: str, payload: dict) -> None:
+            if event_type not in ("text", "thinking"):
+                flush()
+                _send(event_type, payload)
+                return
+            with lock:
+                current = buffered.get(event_type)
+                if current:
+                    current["content"] += payload["content"]
+                else:
+                    buffered[event_type] = dict(payload)
+            if time.monotonic() - last_flush[0] >= FLUSH_INTERVAL_SEC:
+                flush()
+
+        emit.flush = flush  # type: ignore[attr-defined]
+        return emit
+
     def _run_conversation_turn(self, turn: dict) -> None:
         from . import conversation as conv
         turn_id = turn["turn_id"]
+        emit_event = self._conversation_event_emitter(turn)
+        # 对话命令行按执行器种类分流:claude 的参数(--output-format / --settings /
+        # --append-system-prompt)其它 CLI 一律不认,此前 codex/cursor/gemini 的澄清回合必挂
+        kind = conv.conversation_kind(self.cfg.provider)
         try:
             workdir = conversation_workdir(self.cfg.data_dir, turn["conversation_id"])
             capsule_dir = workdir / "capsule"
@@ -467,8 +515,10 @@ class Daemon:
                 zip_path = conv.download_capability(turn["capability_url"],
                                                     turn.get("capability_sha256") or "", capsule_dir)
                 conv.extract_capability(zip_path, capsule_dir)
-            settings_path = conv.write_conversation_settings(workdir, self.cfg.extra_env or {},
-                                                             turn.get("mcp_token"))
+            # --settings 是 claude 专属:用它钉死模型端点,其它 CLI 各自读自己的配置
+            settings_path = (conv.write_conversation_settings(workdir, self.cfg.extra_env or {},
+                                                              turn.get("mcp_token"))
+                             if kind == "claude" else None)
             if turn.get("mcp_token"):
                 # 每回合刷新:AI 有时会读 .secrets/mcp_token 直调平台 MCP,
                 # 残留过期令牌会 10403 —— 覆盖写为当轮有效 token
@@ -478,26 +528,34 @@ class Daemon:
                 # 澄清会话没有 capability 包(capsule/skills.json 不存在),
                 # 回退到平台内置 MCP 端点,否则 mcpToken 到了也挂不上 MCP 工具
                 mcp_server = self._default_ainative_mcp_server(turn["mcp_token"])
-            conv.write_mcp_config(workdir, mcp_server)
-            if mcp_server and turn.get("mcp_token"):
+            if kind == "claude":
+                conv.write_mcp_config(workdir, mcp_server)
+            has_mcp = bool(mcp_server and turn.get("mcp_token"))
+            if has_mcp and kind == "claude":
                 conv.register_mcp_server(self.cfg.agent_cmd, workdir,
                                          strip_claude_env(dict(os.environ) | (self.cfg.extra_env or {}))
                                          | {"HOME": str(workdir)},
                                          mcp_server["url"], turn["mcp_token"])
-            # MCP 工具预授权:settings.permissions.allow 为权威路径,此处通配双保险
-            allowed = ",".join(t for t in (self.cfg.agent_allowed_tools or "",
-                                           "mcp__ainative,mcp__ainative__*" if turn.get("mcp_token") else "")
-                               if t) or None
-            result = conv.run_claude_turn(
-                self.cfg.agent_cmd, workdir, turn["content"],
+            elif has_mcp:
+                # cursor / gemini 读工作目录下的项目级 MCP 配置;codex 走命令行覆盖项
+                conv.write_conversation_mcp(kind, workdir, mcp_server["url"], turn["mcp_token"])
+            # MCP 工具预授权:settings.permissions.allow 为权威路径,此处通配双保险(claude 专属)
+            allowed = (",".join(t for t in (self.cfg.agent_allowed_tools or "",
+                                            "mcp__ainative,mcp__ainative__*" if has_mcp else "")
+                                if t) or None) if kind == "claude" else None
+            result = conv.run_conversation_turn(
+                kind, self.cfg.agent_cmd, workdir, turn["content"],
                 session_ref=turn.get("cli_session_ref"),
                 system_prompt=turn.get("system_prompt"),
                 settings_path=settings_path,
                 max_turns=self.cfg.agent_max_turns,
                 allowed_tools=allowed,
+                mcp={"url": mcp_server["url"], "token": turn["mcp_token"]} if has_mcp else None,
+                on_event=emit_event,
                 env=strip_claude_env(dict(os.environ) | (self.cfg.extra_env or {}))
                 | {"HOME": str(workdir)},
             )
+            emit_event.flush()  # 尾批增量在 ACK 之前必须发完,否则流式内容会比落库回复少一截
             if result["is_error"]:
                 ack = conv.turn_ack(turn["conversation_id"], turn_id, turn.get("dispatch_attempt"),
                                     "FAILED", error=result.get("error") or "claude failed")
@@ -505,14 +563,17 @@ class Daemon:
                 ack = conv.turn_ack(turn["conversation_id"], turn_id, turn.get("dispatch_attempt"),
                                     "SUCCESS", reply_markdown=result["text"],
                                     session_id=result.get("session_id"),
-                                    usage=result.get("usage"), model=result.get("model"))
+                                    usage=result.get("usage"), model=result.get("model"),
+                                    provider=kind)
             with self._conv_inflight_lock:
                 self._conv_done[(int(turn["conversation_id"]), int(turn["turn_id"]))] = ack  # 幂等重放留底
                 while len(self._conv_done) > 200:  # 只留最近回合,防无界增长
                     self._conv_done.pop(next(iter(self._conv_done)))
             self.send_frame(ack, durable=False)
             log.info("conversation.turned", turn_id=turn_id,
-                     success=not result["is_error"], duration_ms=result.get("duration_ms"))
+                     success=not result["is_error"], duration_ms=result.get("duration_ms"),
+                     stream_events=result.get("stream_events"),
+                     stream_lines=result.get("stream_line_types"))
         except Exception as e:  # noqa: BLE001 - 会话失败必须回 ACK,不能黑洞
             log.error("conversation.failed", turn_id=turn_id, error=repr(e))
             try:

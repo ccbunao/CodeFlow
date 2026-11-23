@@ -38,13 +38,116 @@ public class ConversationTurnService {
     private final Map<String, Map<String, Object>> done = new ConcurrentHashMap<>();
     /** 会话级 clarify MCP 令牌明文缓存:chatId → token(明文只在签发时拿得到一次) */
     private final Map<Long, String> clarifyTokens = new ConcurrentHashMap<>();
+    /** 流式事件序号:chatId:turnId → 已分配的最大 seq(前端按 dispatchAttempt+eventSeq 去重排序) */
+    private final Map<String, java.util.concurrent.atomic.AtomicInteger> eventSeqs = new ConcurrentHashMap<>();
 
+    private final com.ainative.v2.realtime.RealtimeHub realtime;
+
+    /**
+     * 回合方向的表达式:库里存的是角色(USER/ASSISTANT),前端契约是 IN/OUT。
+     * 之前把 t.role 直接当 direction 返回,前端只认 IN/INBOUND → 用户消息也被画成
+     * 左侧的 AI 气泡(2026-11-23 走查:用户发的与 AI 回的挤在同一侧)。
+     */
+    public static final String TURN_DIRECTION_SQL =
+            "CASE WHEN t.role='USER' THEN 'IN' ELSE 'OUT' END AS direction";
+
+    @org.springframework.beans.factory.annotation.Autowired
     public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub, ClarificationArchiveService archive,
-                                   AgentService agentService) {
+                                   AgentService agentService, com.ainative.v2.realtime.RealtimeHub realtime) {
         this.jdbc = jdbc;
         this.hub = hub;
         this.archive = archive;
         this.agentService = agentService;
+        this.realtime = realtime;
+    }
+
+    public ConversationTurnService(JdbcTemplate jdbc, ExecutorHub hub, ClarificationArchiveService archive,
+                                   AgentService agentService) {
+        this(jdbc, hub, archive, agentService, new com.ainative.v2.realtime.RealtimeHub());
+    }
+
+    /** 频道名与前端 useClarificationEvents 的订阅口径一致。 */
+    public static String conversationChannel(long chatId) {
+        return "conversation:" + chatId;
+    }
+
+    /**
+     * 是否有可接活的执行器在线(共享节点池口径,与选节点同一语义)。
+     * 前端的「支持流式 / 支持取消」等能力位都由它推导。
+     */
+    public boolean anyExecutorOnline() {
+        List<Long> online = jdbc.queryForList(
+                "SELECT id FROM ag_executor WHERE status='ONLINE' AND deleted_at IS NULL ORDER BY id", Long.class);
+        return online.stream().anyMatch(id -> id != null && hub.isOnline(id));
+    }
+
+    /**
+     * 会话当前是否「AI 正在回复」:最后一条回合是用户消息且尚未被应答(PENDING/SENT)。
+     *
+     * <p>10 分钟窗口:执行器中途挂掉时回合会永远停在 SENT,不加窗口会让输入框被
+     * 永久禁用;超时后按「无人应答」处理,用户可以重发。
+     *
+     * @return 回合 id;不处于回复中返回 null
+     */
+    public Long processingTurnIdOf(long chatId) {
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                "SELECT t.id, t.role, t.delivery_status, t.gmt_create FROM ag_chat_turn t"
+                        + " WHERE t.chat_id=? AND t.deleted_at IS NULL ORDER BY t.id DESC LIMIT 1", chatId);
+        if (rows.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> last = rows.get(0);
+        boolean awaiting = "USER".equals(String.valueOf(last.get("role")))
+                && ("PENDING".equals(String.valueOf(last.get("delivery_status")))
+                    || "SENT".equals(String.valueOf(last.get("delivery_status"))));
+        if (!awaiting) {
+            return null;
+        }
+        Integer fresh = jdbc.queryForObject(
+                "SELECT COUNT(*) FROM ag_chat_turn WHERE id=? AND gmt_create > NOW() - INTERVAL 10 MINUTE",
+                Integer.class, ((Number) last.get("id")).longValue());
+        return fresh != null && fresh > 0 ? ((Number) last.get("id")).longValue() : null;
+    }
+
+    /**
+     * 运行器上报的流式事件(文字增量/思考增量/工具调用):编号后实时推给订阅该
+     * 会话的浏览器。增量不落库 —— 一轮回复几百个 delta,落库只会撑爆事件表;
+     * 落库的权威内容仍以 ACK 里的完整回复为准。
+     */
+    public void handleTurnEvent(Map<String, Object> frame) {
+        long chatId = num(frame.get("conversationId"));
+        long turnId = num(frame.get("turnId"));
+        String eventType = String.valueOf(frame.getOrDefault("eventType", ""));
+        if (chatId == 0 || turnId == 0 || eventType.isBlank()) {
+            return;
+        }
+        int seq = eventSeqs.computeIfAbsent(chatId + ":" + turnId, k -> new java.util.concurrent.atomic.AtomicInteger())
+                .incrementAndGet();
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("conversationId", chatId);
+        payload.put("turnId", turnId);
+        payload.put("dispatchAttempt", frame.getOrDefault("dispatchAttempt", 0));
+        payload.put("eventSeq", seq);
+        payload.put("eventType", eventType);
+        payload.put("payload", frame.get("payload"));
+        int delivered = realtime.publish(conversationChannel(chatId), "CONVERSATION_TURN_EVENT", payload);
+        // 增量事件是体验增强:没有订阅者(浏览器没开面板)不算错,但要留痕便于排查
+        if (delivered == 0) {
+            log.info("conversation turn event has no subscriber chatId={} turnId={} type={}",
+                    chatId, turnId, eventType);
+        }
+    }
+
+    /** 回合终结(成功或失败):推一条 status 事件,前端据此收起流式区并拉取落库的回复。 */
+    private void publishTurnStatus(long chatId, long turnId, String state) {
+        eventSeqs.remove(chatId + ":" + turnId);
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("conversationId", chatId);
+        payload.put("turnId", turnId);
+        payload.put("eventSeq", Integer.MAX_VALUE);
+        payload.put("eventType", "status");
+        payload.put("payload", Map.of("state", state));
+        realtime.publish(conversationChannel(chatId), "CONVERSATION_TURN_EVENT", payload);
     }
 
     /** 用户发送消息:落库 USER 回合 → 下发给在线执行器;无在线执行器时排队等待重放。 */
@@ -318,6 +421,20 @@ public class ConversationTurnService {
         record.put("replyMarkdown", reply);
         done.put(key, record);
         log.info("conversation ack chatId={} turnId={} status={}", chatId, turnId, status);
+        // ACK 落库后再推终结事件:前端收到后重新拉详情,拿到的一定是已落库的回复。
+        // 必须等事务提交 —— 提前推的话前端重拉读到的是提交前的快照,回复气泡会闪空。
+        String state = "SUCCESS".equals(status) ? "completed" : "error";
+        if (org.springframework.transaction.support.TransactionSynchronizationManager.isSynchronizationActive()) {
+            org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
+                    new org.springframework.transaction.support.TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            publishTurnStatus(chatId, turnId, state);
+                        }
+                    });
+        } else {
+            publishTurnStatus(chatId, turnId, state);
+        }
     }
 
     /** 会话下发的系统提示词:带数字员工人设(SOUL.md/AGENT.md),不是通用助手口吻。 */

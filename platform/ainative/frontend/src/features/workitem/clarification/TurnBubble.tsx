@@ -9,7 +9,7 @@ import { SentAttachments } from './Attachments';
 import { TurnDetailToggle } from './TurnDetailToggle';
 import { CLARIFICATION_THEME, agentBlockStyle, userBubbleStyle } from './theme';
 import { conversationNotice } from './conversationNotice';
-import { findPairedInboundTurnId, isOutboundTurnDirection } from './hooks';
+import { findPairedInboundTurnId, isOutboundTurnDirection, isUserTurnDirection } from './hooks';
 import type { ClarificationTurn } from './types';
 
 export function OutboundTurnDetailToggle({ workitemId, conversationId, turns, index, coveredQuestionIds }: {
@@ -49,7 +49,8 @@ export function TurnBubble({
   onArtifactClick: (artifact: Artifact) => void;
 }) {
   const { t } = useTranslation('workitem');
-  const isUser = turn.direction === 'IN' || turn.direction === 'INBOUND';
+  // 用户消息靠右、AI 回复靠左：判定口径与 hooks.isUserTurnDirection 同源
+  const isUser = isUserTurnDirection(turn.direction);
   const hasContent = !!turn.content && turn.content.trim().length > 0;
 
   const statusTag = turn.status === 'CANCELED' ? (

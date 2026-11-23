@@ -15,6 +15,19 @@ def task_ack(dispatch_id: int) -> dict:
     return {"type": "TASK_ACK", "dispatchId": dispatch_id}
 
 
+def conversation_event(conversation_id: int, turn_id: int, event_type: str, payload: dict,
+                       dispatch_attempt: int | None = None) -> dict:
+    """CONVERSATION_TURN_EVENT:回合执行中的流式事件(text/thinking/tool_use/tool_result)。
+
+    平台只转发给订阅该会话的浏览器,不落库;序号由平台统一分配,这里不带。
+    """
+    frame: dict[str, Any] = {"type": "CONVERSATION_TURN_EVENT", "conversationId": int(conversation_id),
+                             "turnId": int(turn_id), "eventType": event_type, "payload": payload}
+    if dispatch_attempt:
+        frame["dispatchAttempt"] = int(dispatch_attempt)
+    return frame
+
+
 def task_progress(dispatch_id: int, result_summary: str, *, step_order: int | None = None,
                   step_id: str | None = None, step_name: str | None = None,
                   message: str | None = None, error: str | None = None) -> dict:

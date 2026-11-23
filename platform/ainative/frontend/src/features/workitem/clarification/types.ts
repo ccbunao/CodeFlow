@@ -59,6 +59,8 @@ export interface ClarificationAttachment {
 
 export interface ClarificationTurn {
   id: number;
+  /** 会话内序号(与运行器事件里的 turnId 同一空间);行 id 用于问答卡片关联,两者不可混用。 */
+  seq?: number;
   direction: string;
   content: string;
   status: string;

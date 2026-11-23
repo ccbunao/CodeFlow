@@ -165,6 +165,8 @@ export function useClarificationEvents(
   workitemId: number | string,
   conversationId: number | null,
   processingTurnId: number | null | undefined,
+  /** 处理中轮次的会话内序号:运行器事件里的 turnId 是序号,行 id 对不上,必须用序号过滤。 */
+  processingTurnSeq?: number | null,
 ) {
   const queryClient = useQueryClient();
   const [streamedEvents, setStreamedEvents] = useState<StreamedEvent[]>([]);
@@ -249,9 +251,15 @@ export function useClarificationEvents(
     // 无处理中轮次时（终态后、会话查询还没翻出下一个 processingTurnId），
     // 回退到事件流中最后一个 turnId，而不是放开全部累积事件——否则跨轮次的
     // text 事件会被拼进 streamedText，产生重复气泡（工单 50720 返工根因）。
-    const targetTurnId = processingTurnId ?? streamedEvents[streamedEvents.length - 1].turnId;
+    // 事件里的 turnId 是会话内序号,processingTurnId 是库里的行 id:两者不是同一个数,
+    // 直接比较会把本轮事件全过滤掉(流式气泡渲染成空的)。
+    // 优先用序号;调用方没给序号时退回 processingTurnId(旧契约:它就在事件空间里);
+    // 两者都没有才跟着最后一条事件走。
+    const targetTurnId = processingTurnSeq
+      ?? processingTurnId
+      ?? streamedEvents[streamedEvents.length - 1].turnId;
     return streamedEvents.filter((e) => e.turnId === targetTurnId);
-  }, [streamedEvents, processingTurnId]);
+  }, [streamedEvents, processingTurnSeq, processingTurnId]);
 
   const currentAttemptEvents = useMemo(() => {
     const attempt = visibleEvents.reduce((highest, event) => Math.max(highest, event.dispatchAttempt ?? 0), 0);
@@ -330,8 +338,17 @@ export function useClarificationEvents(
 
 const TERMINAL_TURN_STATUS = new Set(['COMPLETED', 'SUCCESS', 'CANCELED', 'FAILED']);
 
+/**
+ * 用户一侧的回合。除契约值 IN / INBOUND 外也认 USER：服务端早期直接把库里的
+ * 角色列（USER / ASSISTANT）当 direction 返回，接口若回退到旧口径，用户消息
+ * 会被画成左侧的 AI 气泡（2026-11-23 走查实拍）。
+ */
+export function isUserTurnDirection(direction: string): boolean {
+  return direction === 'IN' || direction === 'INBOUND' || direction === 'USER';
+}
+
 export function isOutboundTurnDirection(direction: string): boolean {
-  return direction !== 'IN' && direction !== 'INBOUND';
+  return !isUserTurnDirection(direction);
 }
 
 /**

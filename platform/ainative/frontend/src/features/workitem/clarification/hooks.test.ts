@@ -14,6 +14,8 @@ import {
   findPairedInboundTurnId,
   useClarificationConversation,
   isClarificationReplyingStatus,
+  isOutboundTurnDirection,
+  isUserTurnDirection,
   clarificationConversationRefetchInterval,
   clarificationQueryRetry,
   isClarificationNonRetryableError,
@@ -938,5 +940,65 @@ describe('clarificationQueryRetry（需求 55411 有界重试）', () => {
     const unknown = new ApiError('99999', '未知错误', null);
     expect(isClarificationNonRetryableError(unknown)).toBe(false);
     expect(clarificationQueryRetry(0, unknown)).toBe(true);
+  });
+});
+
+describe('回合方向判定', () => {
+  // 回归：服务端早期把库里的角色列（USER/ASSISTANT）当 direction 返回，
+  // 前端只认 IN/INBOUND → 用户发的消息被画成左侧的 AI 气泡
+  it('USER 角色值也判为用户一侧', () => {
+    expect(isUserTurnDirection('USER')).toBe(true);
+    expect(isOutboundTurnDirection('USER')).toBe(false);
+  });
+
+  it('契约值 IN / INBOUND 判为用户，其余（含 ASSISTANT / OUT）判为 AI', () => {
+    expect(isUserTurnDirection('IN')).toBe(true);
+    expect(isUserTurnDirection('INBOUND')).toBe(true);
+    for (const d of ['OUT', 'OUTBOUND', 'ASSISTANT', 'SYSTEM']) {
+      expect(isUserTurnDirection(d)).toBe(false);
+      expect(isOutboundTurnDirection(d)).toBe(true);
+    }
+  });
+});
+
+describe('流式事件按会话内序号关联(2026-11-23 走查)', () => {
+  // 回归:服务端 processingTurnId 是库里的行 id(1000023),而运行器事件里的 turnId
+  // 是会话内序号(25)—— 两者不是同一个数。用行 id 去过滤,本轮流式事件会被全部滤掉,
+  // 流式气泡渲染成空白(实测:元素在、字数恒为 0)。
+  it('用序号过滤本轮事件,行 id 对不上时不再误滤', () => {
+    const { result } = renderHook(
+      () => useClarificationEvents('100', 1, 1000023, 25),
+      { wrapper },
+    );
+
+    act(() => {
+      emitTurnEvent(capturedCallback!, makeEvent(25, 1, 'text', '本轮回复'));
+      emitTurnEvent(capturedCallback!, makeEvent(24, 1, 'text', '上一轮残留'));
+    });
+
+    expect(result.current.streamedText).toBe('本轮回复');
+    expect(result.current.streamedText).not.toContain('上一轮残留');
+  });
+
+  it('没有序号时按 processingTurnId 过滤(旧契约:它就在事件空间里)', () => {
+    // 调用方给不出序号时,processingTurnId 必须在事件空间里才过滤得住;
+    // 给的是库里的行 id(1000023)则本轮事件对不上,流式区保持空而不是显示别的轮次。
+    const legacy = renderHook(
+      () => useClarificationEvents('100', 1, 25, null),
+      { wrapper },
+    );
+    act(() => {
+      emitTurnEvent(capturedCallback!, makeEvent(25, 1, 'text', '本轮回复'));
+    });
+    expect(legacy.result.current.streamedText).toBe('本轮回复');
+
+    const mismatch = renderHook(
+      () => useClarificationEvents('100', 1, 1000023, null),
+      { wrapper },
+    );
+    act(() => {
+      emitTurnEvent(capturedCallback!, makeEvent(25, 1, 'text', '本轮回复'));
+    });
+    expect(mismatch.result.current.streamedText).toBe('');
   });
 });

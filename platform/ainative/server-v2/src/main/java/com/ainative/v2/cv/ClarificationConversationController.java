@@ -294,7 +294,8 @@ public class ClarificationConversationController {
         Map<String, Object> row = rows.get(0);
         decorate(row, workitemId, chatId);
         List<Map<String, Object>> turns = jdbc.queryForList(
-                "SELECT t.id, t.role AS direction, t.content_md AS content, t.delivery_status AS status,"
+                "SELECT t.id, t.seq, " + ConversationTurnService.TURN_DIRECTION_SQL
+                        + ", t.content_md AS content, t.delivery_status AS status,"
                         + " t.gmt_create AS gmtCreate FROM ag_chat_turn t"
                         + " WHERE t.chat_id=? AND t.deleted_at IS NULL ORDER BY t.id", chatId);
         row.put("turns", turns);
@@ -312,19 +313,19 @@ public class ClarificationConversationController {
 
     /** 前端契约字段:在线状态/能力声明由执行器真实连接推导。 */
     private void decorate(Map<String, Object> row, long workitemId, long chatId) {
-        long agentId = row.get("agentId") instanceof Number n ? n.longValue() : 0L;
-        Long online = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM ag_executor WHERE agent_id=? AND status='ONLINE' AND deleted_at IS NULL",
-                Long.class, agentId);
-        boolean executorOnline = online != null && online > 0;
+        // 执行器是共享节点池:会话绑定的数字员工名下没有专属执行器也能干活
+        boolean executorOnline = turns.anyExecutorOnline();
         row.put("channelConversationId", "clarification-" + workitemId + "-" + chatId);
         row.put("executorOnline", executorOnline);
         row.put("streamingSupported", executorOnline);
         row.put("cancelSupported", executorOnline);
         row.put("acpInteractionSupported", executorOnline);
         row.put("cliSessionRef", null);
-        row.put("processingStatus", null);
-        row.put("processingTurnId", null);
+        // 回复中状态必须真实上报:前端靠它显示「思考中」并轮询详情,写死 null 的话
+        // 发送完成后界面毫无反馈,直到回复凭空出现。
+        Long processingTurnId = turns.processingTurnIdOf(chatId);
+        row.put("processingStatus", processingTurnId == null ? null : "PROCESSING");
+        row.put("processingTurnId", processingTurnId);
     }
 
     private long defaultAgentId() {

@@ -95,6 +95,9 @@ public class ExecutorWsHandler extends TextWebSocketHandler {
         try {
             JsonNode frame = mapper.readTree(message.getPayload());
             String type = frame.path("type").asText("");
+            if ("CONVERSATION_TURN_EVENT".equals(type)) {
+                log.info("executor frame received type={} executorId={}", type, executorId);
+            }
             switch (type) {
                 case "HEARTBEAT" -> {
                     // healthy 缺省 false:老 daemon 不上报自检结果,视作不健康
@@ -112,6 +115,12 @@ public class ExecutorWsHandler extends TextWebSocketHandler {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> payload = mapper.convertValue(frame, Map.class);
                     conversationTurns.handleAck(payload);
+                }
+                // 流式事件(文字/思考增量、工具调用):只转发给在线浏览器,不落库
+                case "CONVERSATION_TURN_EVENT" -> {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> payload = mapper.convertValue(frame, Map.class);
+                    conversationTurns.handleTurnEvent(payload);
                 }
                 default -> log.debug("executor frame ignored type={}", type);
             }

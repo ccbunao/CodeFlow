@@ -156,6 +156,13 @@ export function WorkitemClarificationPanel({
   });
 
   const convData = conversation.data;
+  // 处理中轮次的序号:processingTurnId 是库里的行 id,而运行器事件里的 turnId 是
+  // 会话内序号 —— 两者不是同一个数,不换算就会把本轮流式事件全过滤掉(气泡空白)。
+  const processingTurnSeq = useMemo(() => {
+    const pt = convData?.processingTurnId;
+    if (pt == null) return null;
+    return convData?.turns?.find((t) => t.id === pt)?.seq ?? null;
+  }, [convData?.processingTurnId, convData?.turns]);
   // 待发送附件：上传即落服务端（turn_id 为空），发送成功才绑定轮次。
   const [pendingAttachments, setPendingAttachments] = useState<PendingClarificationAttachment[]>([]);
   const pendingAttachmentsRef = useRef<PendingClarificationAttachment[]>(pendingAttachments);
@@ -238,6 +245,8 @@ export function WorkitemClarificationPanel({
     workitemId,
     conversationId,
     conversation.data?.processingTurnId,
+    // 处理中轮次的会话内序号:事件流按序号关联(行 id 对不上)
+    processingTurnSeq,
   );
 
   const isCreatingConversation = createMutation.isPending;

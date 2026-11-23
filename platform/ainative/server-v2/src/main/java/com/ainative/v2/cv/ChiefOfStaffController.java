@@ -284,25 +284,24 @@ public class ChiefOfStaffController {
 
     private List<Map<String, Object>> turnsOf(long chatId) {
         return jdbc.queryForList(
-                "SELECT t.id, t.role AS direction, t.content_md AS content, t.delivery_status AS status,"
+                "SELECT t.id, " + ConversationTurnService.TURN_DIRECTION_SQL
+                        + ", t.content_md AS content, t.delivery_status AS status,"
                         + " t.gmt_create AS gmtCreate FROM ag_chat_turn t"
                         + " WHERE t.chat_id=? AND t.deleted_at IS NULL ORDER BY t.id", chatId);
     }
 
     private void decorate(Map<String, Object> row, long chatId) {
-        long agentId = row.get("agentId") instanceof Number n ? n.longValue() : 0;
-        Long online = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM ag_executor WHERE agent_id=? AND status='ONLINE' AND deleted_at IS NULL",
-                Long.class, agentId);
-        boolean executorOnline = online != null && online > 0;
+        // 执行器是共享节点池:与澄清面板同一口径
+        boolean executorOnline = turns.anyExecutorOnline();
         row.put("channelConversationId", "chief-" + chatId);
         row.put("executorOnline", executorOnline);
         row.put("streamingSupported", executorOnline);
         row.put("cancelSupported", executorOnline);
         row.put("acpInteractionSupported", executorOnline);
         row.put("cliSessionRef", null);
-        row.put("processingStatus", null);
-        row.put("processingTurnId", null);
+        Long processingTurnId = turns.processingTurnIdOf(chatId);
+        row.put("processingStatus", processingTurnId == null ? null : "PROCESSING");
+        row.put("processingTurnId", processingTurnId);
         row.put("availableCommands", List.of());
     }
 }
